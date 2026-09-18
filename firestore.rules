@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================================
+    // FUNGSI BANTUAN
+    // ============================================================
+    
+    // Cek apakah user sudah login (admin)
+    function isAdmin() {
+      return request.auth != null && request.auth.uid != null;
+    }
+    
+    // ============================================================
+    // SETTINGS
+    // ============================================================
+    match /settings/{document} {
+      allow read: if true;  // Semua orang bisa membaca
+      allow write: if isAdmin();  // Hanya admin yang bisa menulis
+    }
+    
+    // ============================================================
+    // PROGRAMS (Kursus & Pelatihan)
+    // ============================================================
+    match /programs/{document} {
+      allow read: if true;  // Semua orang bisa membaca
+      allow create: if isAdmin();  // Hanya admin yang bisa membuat
+      allow update: if isAdmin();  // Hanya admin yang bisa mengupdate
+      allow delete: if isAdmin();  // Hanya admin yang bisa menghapus
+    }
+    
+    // ============================================================
+    // SERVICES (Computer Service)
+    // ============================================================
+    match /services/{document} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================================
+    // TESTIMONIALS
+    // ============================================================
+    match /testimonials/{document} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================================
+    // FAQS
+    // ============================================================
+    match /faqs/{document} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================================
+    // LANDING PAGE CONTENT
+    // ============================================================
+    match /landingPage/{document} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================================
+    // USER DATA (untuk admin)
+    // ============================================================
+    match /users/{document} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+    
+  }
+}

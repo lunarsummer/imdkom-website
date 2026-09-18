@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin | IMDKOM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-brand min-h-screen hidden md:block">
+            <div class="p-6 border-b border-brand-light">
+                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="dashboard.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Dashboard</a>
+                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Landing Page</a>
+                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Program Kursus</a>
+                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
+                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
+                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
+                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Pengaturan</a>
+                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
+            </nav>
+        </aside>
+
+        <!-- Mobile -->
+        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center">
+            <span class="text-white font-bold">IMDKOM Admin</span>
+            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-brand">Dashboard</h2>
+                <span class="text-gray-500 text-sm" id="adminEmail">admin@imdkom.com</span>
+            </div>
+
+            <!-- Alert jika database belum diinisialisasi -->
+            <div id="dbAlert" class="hidden bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <p class="text-yellow-800 text-sm">
+                    ⚠️ Database belum memiliki data. 
+                    <button id="initDbBtn" class="text-brand hover:underline font-medium">Klik di sini</button>
+                    untuk membuat data default.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="text-3xl font-bold text-brand" id="totalPrograms">0</div>
+                    <div class="text-sm text-gray-500">Program Aktif</div>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="text-3xl font-bold text-brand" id="totalServices">0</div>
+                    <div class="text-sm text-gray-500">Layanan Aktif</div>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="text-3xl font-bold text-brand" id="totalTestimonials">0</div>
+                    <div class="text-sm text-gray-500">Testimoni</div>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="text-3xl font-bold text-brand" id="totalFaqs">0</div>
+                    <div class="text-sm text-gray-500">FAQ</div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <p class="text-gray-500 text-sm">
+                    Selamat datang di dashboard admin IMDKOM. Gunakan menu di samping untuk mengelola konten website.
+                </p>
+                <p class="text-gray-400 text-xs mt-1">
+                    Tips: Upload gambar ke folder <code class="bg-gray-100 px-1 rounded">assets/images/</code> dan masukkan path-nya di form.
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, where } from '../assets/js/firebase.js';
+        import { initDatabase } from '../assets/js/init-db.js';
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById('adminEmail').textContent = user.email;
+                loadStats();
+                checkDatabase();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+        document.getElementById('mobileLogout').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        // Cek database
+        async function checkDatabase() {
+            try {
+                const progSnap = await getDocs(query(collection(db, 'programs'), limit(1)));
+                const servSnap = await getDocs(query(collection(db, 'services'), limit(1)));
+                
+                if (progSnap.empty && servSnap.empty) {
+                    document.getElementById('dbAlert').classList.remove('hidden');
+                }
+            } catch (error) {
+                // Jika error, kemungkinan database belum ada
+                document.getElementById('dbAlert').classList.remove('hidden');
+            }
+        }
+
+        // Init database button
+        document.getElementById('initDbBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('initDbBtn');
+            btn.textContent = 'Membuat data...';
+            btn.disabled = true;
+            
+            const result = await initDatabase();
+            
+            if (result.success) {
+                btn.textContent = '✅ Selesai!';
+                document.getElementById('dbAlert').classList.add('hidden');
+                loadStats();
+            } else {
+                btn.textContent = '❌ Gagal, coba lagi';
+                btn.disabled = false;
+            }
+        });
+
+        async function loadStats() {
+            try {
+                const progQuery = query(collection(db, 'programs'), where('aktif', '==', true));
+                const progSnap = await getDocs(progQuery);
+                document.getElementById('totalPrograms').textContent = progSnap.size;
+
+                const servQuery = query(collection(db, 'services'), where('aktif', '==', true));
+                const servSnap = await getDocs(servQuery);
+                document.getElementById('totalServices').textContent = servSnap.size;
+
+                const testSnap = await getDocs(collection(db, 'testimonials'));
+                document.getElementById('totalTestimonials').textContent = testSnap.size;
+
+                const faqSnap = await getDocs(collection(db, 'faqs'));
+                document.getElementById('totalFaqs').textContent = faqSnap.size;
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+    </script>
+
+</body>
+</html>

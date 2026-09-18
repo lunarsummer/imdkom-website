@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail Program | IMDKOM</title>
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 py-3">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2">
+                <span class="text-2xl font-bold text-brand">IMDKOM</span>
+                <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="text-gray-600 hover:text-brand">Computer Service</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="py-12 md:py-16">
+        <div class="container mx-auto px-4">
+            <div id="programDetailContainer">
+                <div class="text-center text-gray-500 py-10">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                    <p class="mt-3">Memuat detail program...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-gray-200 bg-gray-50">
+        <div class="container mx-auto px-4 text-center text-sm text-gray-500">
+            <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+            <a href="admin/login.html" class="text-xs text-gray-300 hover:text-gray-500 transition-colors">Login</a>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp -->
+    <a href="#" id="floatingWhatsApp" class="fixed bottom-6 right-6 bg-[#25d366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg z-50 hover:scale-105 transition-transform">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
+        </svg>
+    </a>
+
+    <script type="module">
+        import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
+        import { loadProgramDetail } from './assets/js/app.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProgramDetail();
+            
+            document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
+                e.preventDefault();
+                openWhatsAppGeneric();
+            });
+        });
+    </script>
+
+</body>
+</html>

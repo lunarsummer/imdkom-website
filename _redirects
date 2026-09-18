@@ -1,0 +1,7 @@
+# Netlify redirects
+# Semua request yang tidak ditemukan → 404.html
+
+/*    /index.html   200
+
+# Redirect admin
+/admin    /admin/login.html   200

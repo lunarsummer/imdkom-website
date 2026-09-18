@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Computer Service | Admin IMDKOM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-brand min-h-screen hidden md:block">
+            <div class="p-6 border-b border-brand-light">
+                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
+                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Landing Page</a>
+                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Program Kursus</a>
+                <a href="services.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Computer Service</a>
+                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
+                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
+                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Pengaturan</a>
+                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
+            </nav>
+        </aside>
+
+        <!-- Mobile -->
+        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center">
+            <span class="text-white font-bold">IMDKOM Admin</span>
+            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-brand">Computer Service</h2>
+                <a href="service-form.html" class="bg-brand hover:bg-brand-light text-white font-medium px-4 py-2 rounded-lg transition-colors">
+                    + Tambah Layanan
+                </a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Urutan</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Nama</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Kategori</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Harga Mulai</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Status</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Gambar</th>
+                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicesList">
+                        <tr>
+                            <td colspan="7" class="text-center text-gray-500 py-8">
+                                <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
+                                <p class="mt-2">Memuat layanan...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from '../assets/js/firebase.js';
+        import { getImageUrl, escapeHtml, formatRupiah } from '../assets/js/utils.js';
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+            else loadServices();
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+        document.getElementById('mobileLogout').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        async function loadServices() {
+            const container = document.getElementById('servicesList');
+            try {
+                const q = query(collection(db, 'services'), orderBy('order', 'asc'));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <tr><td colspan="7" class="text-center text-gray-500 py-8">
+                            Belum ada layanan. <a href="service-form.html" class="text-brand hover:underline">Tambah layanan</a>
+                        </td></tr>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const imageUrl = getImageUrl(data.gambar, 'assets/images/services/default.jpg');
+                    
+                    html += `
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="py-3 px-2">${data.order || '-'}</td>
+                            <td class="py-3 px-2 font-medium">${escapeHtml(data.nama || 'Tanpa nama')}</td>
+                            <td class="py-3 px-2 text-gray-600">${escapeHtml(data.kategori || '-')}</td>
+                            <td class="py-3 px-2">${formatRupiah(data.hargaMulai)}</td>
+                            <td class="py-3 px-2">
+                                <span class="px-2 py-1 rounded-full text-xs ${data.aktif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
+                                    ${data.aktif ? 'Aktif' : 'Nonaktif'}
+                                </span>
+                            </td>
+                            <td class="py-3 px-2"><img src="${imageUrl}" alt="${escapeHtml(data.nama || '')}" class="table-img" /></td>
+                            <td class="py-3 px-2">
+                                <a href="service-form.html?id=${doc.id}" class="text-brand hover:text-brand-light text-sm border-b border-brand hover:border-brand-light transition-colors">Edit</a>
+                                <button class="delete-btn text-red-600 hover:text-red-800 text-sm border-b border-red-600 hover:border-red-800 transition-colors ml-3" 
+                                        data-id="${doc.id}" data-name="${escapeHtml(data.nama || '')}">Hapus</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                container.innerHTML = html;
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const name = btn.dataset.name;
+                        if (confirm(`Hapus layanan "${name}"?`)) {
+                            await deleteDoc(doc(db, 'services', id));
+                            loadServices();
+                        }
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error loading services:', error);
+                container.innerHTML = `
+                    <tr><td colspan="7" class="text-center text-red-600 py-8">
+                        Gagal memuat layanan. Silakan refresh halaman.
+                    </td></tr>
+                `;
+            }
+        }
+    </script>
+
+</body>
+</html>

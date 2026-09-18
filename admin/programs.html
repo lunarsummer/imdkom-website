@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Program Kursus | Admin IMDKOM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .table-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flex min-h-screen">
+        <!-- ============================================================
+             SIDEBAR
+             ============================================================ -->
+        <aside class="w-64 bg-brand min-h-screen hidden md:block">
+            <div class="p-6 border-b border-brand-light">
+                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
+                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Landing Page</a>
+                <a href="programs.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Program Kursus</a>
+                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
+                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
+                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
+                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Pengaturan</a>
+                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
+            </nav>
+        </aside>
+
+        <!-- ============================================================
+             MOBILE HEADER
+             ============================================================ -->
+        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center fixed top-0 left-0 z-50">
+            <span class="text-white font-bold">IMDKOM Admin</span>
+            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
+        </div>
+
+        <!-- ============================================================
+             MAIN CONTENT
+             ============================================================ -->
+        <main class="flex-1 p-6 md:pt-6 pt-20">
+            <!-- Header -->
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-brand">Program Kursus</h2>
+                <a href="program-form.html" class="bg-brand hover:bg-brand-light text-white font-medium px-4 py-2 rounded-lg transition-colors">
+                    + Tambah Program
+                </a>
+            </div>
+
+            <!-- Info -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-blue-800">
+                    💡 <strong>Tips:</strong> Upload gambar program ke folder 
+                    <code class="bg-white px-1 rounded">assets/images/programs/</code> 
+                    lalu masukkan path-nya di form.
+                </p>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto bg-white border border-gray-200 rounded-lg">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200 bg-gray-50">
+                            <th class="text-left py-3 px-3 font-semibold text-gray-600">Urutan</th>
+                            <th class="text-left py-3 px-3 font-semibold text-gray-600">Gambar</th>
+                            <th class="text-left py-3 px-3 font-semibold text-gray-600">Nama</th>
+                            <th class="text-left py-3 px-3 font-semibold text-gray-600">Kategori</th>
+                            <th class="text-left py-3 px-3 font-semibold text-gray-600">Harga</th>
+                            <th class="text-left py-3 px-3 font-semibold text-gray-600">Status</th>
+                            <th class="text-left py-3 px-3 font-semibold text-gray-600">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="programsList">
+                        <tr>
+                            <td colspan="7" class="text-center text-gray-500 py-8">
+                                <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
+                                <p class="mt-2">Memuat program...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================ -->
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from '../assets/js/firebase.js';
+        import { getImageUrl, escapeHtml, formatRupiah } from '../assets/js/utils.js';
+
+        // ============================================================
+        // AUTH CHECK
+        // ============================================================
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                loadPrograms();
+            }
+        });
+
+        // ============================================================
+        // LOGOUT
+        // ============================================================
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+        document.getElementById('mobileLogout').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // LOAD PROGRAMS
+        // ============================================================
+        async function loadPrograms() {
+            const container = document.getElementById('programsList');
+            
+            try {
+                const q = query(collection(db, 'programs'), orderBy('order', 'asc'));
+                const snapshot = await getDocs(q);
+                
+                // Jika kosong
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center text-gray-500 py-8">
+                                Belum ada program. 
+                                <a href="program-form.html" class="text-brand hover:underline font-medium">Tambah program</a>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                // Build rows
+                let html = '';
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const imageUrl = getImageUrl(data.gambar, 'assets/images/programs/default.jpg');
+                    
+                    html += `
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="py-3 px-3 text-gray-600">${data.order || '-'}</td>
+                            <td class="py-3 px-3">
+                                <img src="${imageUrl}" 
+                                     alt="${escapeHtml(data.nama || 'Program')}" 
+                                     class="table-img" 
+                                     loading="lazy" />
+                            </td>
+                            <td class="py-3 px-3 font-medium text-gray-800">${escapeHtml(data.nama || 'Tanpa nama')}</td>
+                            <td class="py-3 px-3 text-gray-600">${escapeHtml(data.kategori || '-')}</td>
+                            <td class="py-3 px-3 text-gray-600">${formatRupiah(data.harga)}</td>
+                            <td class="py-3 px-3">
+                                <span class="px-2 py-1 rounded-full text-xs ${data.aktif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
+                                    ${data.aktif ? 'Aktif' : 'Nonaktif'}
+                                </span>
+                            </td>
+                            <td class="py-3 px-3">
+                                <a href="program-form.html?id=${docSnap.id}" 
+                                   class="text-brand hover:text-brand-light text-sm font-medium border-b border-brand hover:border-brand-light transition-colors">
+                                    Edit
+                                </a>
+                                <button class="delete-btn text-red-600 hover:text-red-800 text-sm font-medium border-b border-red-600 hover:border-red-800 transition-colors ml-3" 
+                                        data-id="${docSnap.id}" 
+                                        data-name="${escapeHtml(data.nama || '')}">
+                                    Hapus
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                container.innerHTML = html;
+
+                // ============================================================
+                // DELETE EVENT LISTENER
+                // ============================================================
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const name = btn.dataset.name;
+                        
+                        if (confirm(`Hapus program "${name}"?\n\nTindakan ini tidak dapat dibatalkan.`)) {
+                            try {
+                                btn.textContent = 'Menghapus...';
+                                btn.disabled = true;
+                                
+                                await deleteDoc(doc(db, 'programs', id));
+                                
+                                // Reload
+                                loadPrograms();
+                            } catch (error) {
+                                console.error('Error deleting program:', error);
+                                alert('Gagal menghapus program: ' + error.message);
+                                btn.textContent = 'Hapus';
+                                btn.disabled = false;
+                            }
+                        }
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error loading programs:', error);
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-red-600 py-8">
+                            Gagal memuat program. Silakan refresh halaman.
+                            <br><small class="text-xs text-gray-500">${error.message}</small>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+    </script>
+
+</body>
+</html>

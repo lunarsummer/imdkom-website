@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CMS Landing Page | Admin IMDKOM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .form-preview-img { max-height: 150px; border-radius: 4px; border: 1px solid #e5e7eb; }
+    </style>
+</head>
+<body>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-brand min-h-screen hidden md:block">
+            <div class="p-6 border-b border-brand-light">
+                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
+                <a href="landing-page.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Landing Page</a>
+                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Program Kursus</a>
+                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
+                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
+                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
+                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Pengaturan</a>
+                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
+            </nav>
+        </aside>
+
+        <!-- Mobile -->
+        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center">
+            <span class="text-white font-bold">IMDKOM Admin</span>
+            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-brand">CMS Landing Page</h2>
+                <a href="../index.html" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors">Lihat Website →</a>
+            </div>
+
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <form id="landingPageForm">
+                    <!-- Hero Section -->
+                    <h3 class="text-lg font-semibold text-brand border-b border-gray-200 pb-2 mb-4">Hero Section</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="heroHeading" class="block text-sm font-medium text-gray-700 mb-1">Heading</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="heroHeading" placeholder="IMDKOM" />
+                        </div>
+                        <div>
+                            <label for="heroSubheading" class="block text-sm font-medium text-gray-700 mb-1">Subheading</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="heroSubheading" placeholder="Kursus &amp; Pelatihan • Computer Service" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="heroDescription" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                               id="heroDescription" placeholder="Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda." />
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="heroSubtext" class="block text-sm font-medium text-gray-700 mb-1">Subtext (deskripsi tambahan)</label>
+                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                  id="heroSubtext" rows="2" placeholder="IMDKOM adalah lembaga kursus dan pelatihan komputer..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label for="heroCtaText" class="block text-sm font-medium text-gray-700 mb-1">CTA Text</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="heroCtaText" placeholder="Lihat Program" />
+                        </div>
+                        <div>
+                            <label for="heroImage" class="block text-sm font-medium text-gray-700 mb-1">URL Gambar Hero</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="heroImage" placeholder="assets/images/hero/hero-default.jpg" />
+                            <div id="heroImagePreview" class="mt-2 hidden">
+                                <img src="" alt="Preview" class="form-preview-img" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- About Section -->
+                    <h3 class="text-lg font-semibold text-brand border-b border-gray-200 pb-2 mt-8 mb-4">About Section</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="aboutTitle" class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="aboutTitle" placeholder="Tentang IMDKOM" />
+                        </div>
+                        <div>
+                            <label for="aboutImage" class="block text-sm font-medium text-gray-700 mb-1">URL Gambar About</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="aboutImage" placeholder="assets/images/about/about-imdkom.jpg" />
+                            <div id="aboutImagePreview" class="mt-2 hidden">
+                                <img src="" alt="Preview" class="form-preview-img" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="aboutDescription" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                  id="aboutDescription" rows="3" placeholder="Deskripsi tentang IMDKOM..."></textarea>
+                    </div>
+
+                    <!-- Contact Section -->
+                    <h3 class="text-lg font-semibold text-brand border-b border-gray-200 pb-2 mt-8 mb-4">Contact &amp; Footer</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="contactWhatsapp" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="contactWhatsapp" placeholder="0856-0191-3435" />
+                        </div>
+                        <div>
+                            <label for="contactInstagram" class="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="contactInstagram" placeholder="@imdkom" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="footerCopyright" class="block text-sm font-medium text-gray-700 mb-1">Copyright Text</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                               id="footerCopyright" placeholder="&copy; 2026 IMDKOM. All rights reserved." />
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 mt-8 pt-4 border-t border-gray-200">
+                        <button type="submit" class="bg-brand hover:bg-brand-light text-white font-medium px-6 py-2 rounded-lg transition-colors">Simpan Perubahan</button>
+                    </div>
+                    <div id="formMessage" class="mt-3"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from '../assets/js/firebase.js';
+        import { getImageUrl } from '../assets/js/utils.js';
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+            else loadContent();
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+        document.getElementById('mobileLogout').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        async function loadContent() {
+            try {
+                const docSnap = await getDoc(doc(db, 'landingPage', 'content'));
+                if (!docSnap.exists()) return;
+                
+                const data = docSnap.data();
+                
+                // Hero
+                if (data.hero) {
+                    document.getElementById('heroHeading').value = data.hero.heading || '';
+                    document.getElementById('heroSubheading').value = data.hero.subheading || '';
+                    document.getElementById('heroDescription').value = data.hero.deskripsi || '';
+                    document.getElementById('heroSubtext').value = data.hero.subtext || '';
+                    document.getElementById('heroCtaText').value = data.hero.ctaText || '';
+                    document.getElementById('heroImage').value = data.hero.gambar || '';
+                    if (data.hero.gambar) {
+                        const preview = document.getElementById('heroImagePreview');
+                        preview.querySelector('img').src = getImageUrl(data.hero.gambar);
+                        preview.classList.remove('hidden');
+                    }
+                }
+                
+                // About
+                if (data.about) {
+                    document.getElementById('aboutTitle').value = data.about.judul || '';
+                    document.getElementById('aboutDescription').value = data.about.deskripsi || '';
+                    document.getElementById('aboutImage').value = data.about.gambar || '';
+                    if (data.about.gambar) {
+                        const preview = document.getElementById('aboutImagePreview');
+                        preview.querySelector('img').src = getImageUrl(data.about.gambar);
+                        preview.classList.remove('hidden');
+                    }
+                }
+                
+                // Contact
+                if (data.contact) {
+                    document.getElementById('contactWhatsapp').value = data.contact.whatsapp || '';
+                    document.getElementById('contactInstagram').value = data.contact.instagram || '';
+                }
+                
+                // Footer
+                if (data.footer) {
+                    document.getElementById('footerCopyright').value = data.footer.copyright || '';
+                }
+                
+            } catch (error) {
+                console.error('Error loading content:', error);
+            }
+        }
+
+        // Preview gambar
+        document.getElementById('heroImage').addEventListener('input', function() {
+            const preview = document.getElementById('heroImagePreview');
+            const img = preview.querySelector('img');
+            if (this.value.trim()) {
+                img.src = getImageUrl(this.value.trim());
+                preview.classList.remove('hidden');
+            } else {
+                preview.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('aboutImage').addEventListener('input', function() {
+            const preview = document.getElementById('aboutImagePreview');
+            const img = preview.querySelector('img');
+            if (this.value.trim()) {
+                img.src = getImageUrl(this.value.trim());
+                preview.classList.remove('hidden');
+            } else {
+                preview.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('landingPageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const messageEl = document.getElementById('formMessage');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
+            messageEl.innerHTML = '';
+
+            const data = {
+                hero: {
+                    heading: document.getElementById('heroHeading').value.trim(),
+                    subheading: document.getElementById('heroSubheading').value.trim(),
+                    deskripsi: document.getElementById('heroDescription').value.trim(),
+                    subtext: document.getElementById('heroSubtext').value.trim(),
+                    ctaText: document.getElementById('heroCtaText').value.trim(),
+                    gambar: document.getElementById('heroImage').value.trim()
+                },
+                about: {
+                    judul: document.getElementById('aboutTitle').value.trim(),
+                    deskripsi: document.getElementById('aboutDescription').value.trim(),
+                    gambar: document.getElementById('aboutImage').value.trim()
+                },
+                contact: {
+                    whatsapp: document.getElementById('contactWhatsapp').value.trim(),
+                    instagram: document.getElementById('contactInstagram').value.trim()
+                },
+                footer: {
+                    copyright: document.getElementById('footerCopyright').value.trim()
+                },
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                await setDoc(doc(db, 'landingPage', 'content'), data);
+                messageEl.innerHTML = `<p class="text-green-600">Konten landing page berhasil diupdate!</p>`;
+            } catch (error) {
+                console.error('Error saving content:', error);
+                messageEl.innerHTML = `<p class="text-red-600">Gagal menyimpan: ${error.message}</p>`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Simpan Perubahan';
+            }
+        });
+    </script>
+
+</body>
+</html>

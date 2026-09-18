@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pengaturan | Admin IMDKOM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-brand min-h-screen hidden md:block">
+            <div class="p-6 border-b border-brand-light">
+                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
+                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Landing Page</a>
+                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Program Kursus</a>
+                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
+                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
+                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
+                <a href="settings.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Pengaturan</a>
+                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
+            </nav>
+        </aside>
+
+        <!-- Mobile -->
+        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center">
+            <span class="text-white font-bold">IMDKOM Admin</span>
+            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-brand">Pengaturan</h2>
+                <a href="../index.html" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors">Lihat Website →</a>
+            </div>
+
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <form id="settingsForm">
+                    <h3 class="text-lg font-semibold text-brand border-b border-gray-200 pb-2 mb-4">Kontak</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="whatsapp" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="whatsapp" placeholder="0856-0191-3435" />
+                            <p class="text-xs text-gray-400 mt-1">Nomor WhatsApp untuk tombol konsultasi.</p>
+                        </div>
+                        <div>
+                            <label for="instagram" class="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   id="instagram" placeholder="@imdkom" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                               id="alamat" placeholder="Jl. ..." />
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="jamOperasional" class="block text-sm font-medium text-gray-700 mb-1">Jam Operasional</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                               id="jamOperasional" placeholder="Senin-Jumat, 08:00 - 17:00" />
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="googleMaps" class="block text-sm font-medium text-gray-700 mb-1">Google Maps URL</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                               id="googleMaps" placeholder="https://maps.google.com/..." />
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 mt-8 pt-4 border-t border-gray-200">
+                        <button type="submit" class="bg-brand hover:bg-brand-light text-white font-medium px-6 py-2 rounded-lg transition-colors">Simpan Pengaturan</button>
+                    </div>
+                    <div id="formMessage" class="mt-3"></div>
+                </form>
+
+                <!-- Informasi Admin -->
+                <div class="mt-8 pt-4 border-t border-gray-200">
+                    <h3 class="text-lg font-semibold text-brand mb-4">Informasi Admin</h3>
+                    <p class="text-sm text-gray-600" id="adminInfo">Email: <span id="adminEmail">-</span></p>
+                    <p class="text-sm text-gray-400 mt-2">Untuk mengganti password, gunakan Firebase Console.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from '../assets/js/firebase.js';
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById('adminEmail').textContent = user.email;
+                loadSettings();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+        document.getElementById('mobileLogout').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        async function loadSettings() {
+            try {
+                const docSnap = await getDoc(doc(db, 'settings', 'general'));
+                if (!docSnap.exists()) return;
+                
+                const data = docSnap.data();
+                document.getElementById('whatsapp').value = data.whatsapp || '';
+                document.getElementById('instagram').value = data.instagram || '';
+                document.getElementById('alamat').value = data.alamat || '';
+                document.getElementById('jamOperasional').value = data.jamOperasional || '';
+                document.getElementById('googleMaps').value = data.googleMaps || '';
+                
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const messageEl = document.getElementById('formMessage');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
+            messageEl.innerHTML = '';
+
+            const data = {
+                whatsapp: document.getElementById('whatsapp').value.trim(),
+                instagram: document.getElementById('instagram').value.trim(),
+                alamat: document.getElementById('alamat').value.trim(),
+                jamOperasional: document.getElementById('jamOperasional').value.trim(),
+                googleMaps: document.getElementById('googleMaps').value.trim(),
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                await setDoc(doc(db, 'settings', 'general'), data);
+                messageEl.innerHTML = `<p class="text-green-600">Pengaturan berhasil diupdate!</p>`;
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                messageEl.innerHTML = `<p class="text-red-600">Gagal menyimpan: ${error.message}</p>`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Simpan Pengaturan';
+            }
+        });
+    </script>
+
+</body>
+</html>
