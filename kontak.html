@@ -5,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kontak | IMDKOM</title>
     <meta name="description" content="Hubungi IMDKOM untuk informasi kursus dan layanan computer service." />
+    
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-     <!-- 🎨 THEME CSS — Ganti tema di sini -->
+    <!-- 🎨 THEME CSS -->
     <link rel="stylesheet" href="assets/css/theme.css">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#c2410c' },
                     },
                     fontFamily: {
                         sans: ['Poppins', 'system-ui', 'sans-serif'],
@@ -32,24 +33,26 @@
             }
         }
     </script>
-    
-    <!-- Custom CSS (jika ada) -->
-    <style>
-        body {
-            font-family: 'Poppins', system-ui, sans-serif;
-        }
-    </style>
 </head>
-<body>
+<body class="font-sans">
 
-    <!-- Navigation -->
+    <!-- ============================================================
+    NAVIGATION
+    ============================================================ -->
     <nav class="bg-white border-b border-gray-200 py-3">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-2">
                 <span class="text-2xl font-bold text-brand">IMDKOM</span>
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
             </a>
-            <div class="flex items-center gap-6">
+            
+            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none" aria-label="Toggle menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            
+            <div id="mainNav" class="hidden md:flex items-center gap-6">
                 <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
                 <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
                 <a href="service.html" class="text-gray-600 hover:text-brand">Computer Service</a>
@@ -58,106 +61,121 @@
                 <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600">Login</a>
             </div>
         </div>
+        
+        <div id="mobileNav" class="hidden md:hidden bg-white border-t border-gray-200 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="index.html" class="text-gray-600 hover:text-brand py-1">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="text-gray-600 hover:text-brand py-1">Computer Service</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1">Tentang</a>
+                <a href="kontak.html" class="text-brand font-semibold py-1">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1">Login</a>
+            </div>
+        </div>
     </nav>
 
-    <!-- Main Content -->
-    <section class="py-12 md:py-16">
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <section class="py-8 sm:py-12 md:py-16">
         <div class="container mx-auto px-4 max-w-4xl">
-            <h1 class="text-3xl md:text-4xl font-bold text-brand text-center">Hubungi IMDKOM</h1>
-            <p class="text-gray-500 text-center mt-2 mb-8">Kami siap membantu Anda.</p>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand text-center">Hubungi IMDKOM</h1>
+            <p class="text-sm sm:text-base text-gray-500 text-center mt-2 mb-6 sm:mb-8">Kami siap membantu Anda.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                <!-- Kolom Kiri: Info Kontak -->
                 <div class="space-y-4">
-                    <h2 class="text-xl font-semibold text-brand">Kontak</h2>
+                    <h2 class="text-lg sm:text-xl font-semibold text-brand">Kontak</h2>
                     
+                    <!-- Alamat -->
                     <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-brand mt-1" fill="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 text-brand mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
                         <div>
-                            <p class="font-medium">Alamat</p>
-                            <p class="text-gray-600" id="contactAlamat">Jl. ... (isi alamat lengkap)</p>
+                            <p class="font-medium text-sm sm:text-base">Alamat</p>
+                            <p class="text-gray-600 text-sm sm:text-base" id="contactAlamat">Jl. ... (isi alamat lengkap)</p>
                         </div>
                     </div>
                     
+                    <!-- WhatsApp -->
                     <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-brand mt-1" fill="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 text-brand mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                         </svg>
                         <div>
-                            <p class="font-medium">WhatsApp</p>
-                            <p class="text-gray-600" id="contactWhatsapp">0856-0191-3435</p>
-                            <a href="#" id="contactWhatsappBtn" class="text-sm text-brand hover:underline">Hubungi via WhatsApp →</a>
+                            <p class="font-medium text-sm sm:text-base">WhatsApp</p>
+                            <p class="text-gray-600 text-sm sm:text-base" id="contactWhatsapp">0856-0191-3435</p>
+                            <button id="contactWhatsappBtn" class="text-sm text-brand hover:underline">Hubungi via WhatsApp →</button>
                         </div>
                     </div>
                     
+                    <!-- Instagram -->
                     <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-brand mt-1" fill="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 text-brand mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2zm-.2 2A3.6 3.6 0 004 7.6v8.8C4 18.4 5.6 20 7.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6C20 5.6 18.4 4 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 2a3 3 0 100 6 3 3 0 000-6z"/>
                         </svg>
                         <div>
-                            <p class="font-medium">Instagram</p>
-                            <p class="text-gray-600" id="contactInstagram">@imdkom_yk</p>
-                            <a href="https://instagram.com/imdkom" target="_blank" class="text-sm text-brand hover:underline">Kunjungi Instagram →</a>
+                            <p class="font-medium text-sm sm:text-base">Instagram</p>
+                            <p class="text-gray-600 text-sm sm:text-base" id="contactInstagram">@imdkom_yk</p>
+                            <a href="https://instagram.com/imdkom_yk" target="_blank" class="text-sm text-brand hover:underline">Kunjungi Instagram →</a>
                         </div>
                     </div>
                     
+                    <!-- Jam Operasional -->
                     <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-brand mt-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        <svg class="w-5 h-5 text-brand mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                         </svg>
                         <div>
-                            <p class="font-medium">Jam Operasional</p>
-                            <p class="text-gray-600" id="contactJamOperasional">Senin-Jumat, 08:00 - 17:00</p>
+                            <p class="font-medium text-sm sm:text-base">Jam Operasional</p>
+                            <p class="text-gray-600 text-sm sm:text-base" id="contactJamOperasional">Senin-Jumat, 08:00 - 17:00</p>
                         </div>
                     </div>
                 </div>
                 
+                <!-- Kolom Kanan: Lokasi -->
                 <div>
-                    <h2 class="text-xl font-semibold text-brand mb-4">Lokasi</h2>
-                    <div class="bg-gray-100 rounded-lg h-64 flex items-center justify-center text-gray-400 border border-gray-200">
-                        <div class="text-center">
-                            <svg class="w-12 h-12 mx-auto text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                            </svg>
-                            <p class="mt-2">Map akan tampil di sini</p>
-                            <p class="text-xs">(Tambahkan Google Maps URL di admin)</p>
-                        </div>
+                    <h2 class="text-lg sm:text-xl font-semibold text-brand mb-4">Lokasi</h2>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+                        <svg class="w-12 h-12 mx-auto text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <p class="text-gray-600 mt-2 text-sm sm:text-base" id="contactAlamatDisplay">Jl. ... (isi alamat lengkap)</p>
+                        <a href="https://maps.google.com/?q=IMDKOM" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-block mt-3 text-brand hover:underline font-medium text-sm sm:text-base">
+                            Buka Lokasi di Google Maps →
+                        </a>
                     </div>
-                    <div id="googleMapsContainer" class="mt-2">
-    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
-        <svg class="w-12 h-12 mx-auto text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-        </svg>
-        <p class="text-gray-600 mt-2" id="contactAlamatDisplay">Jl. ... (isi alamat lengkap)</p>
-        <a href="https://maps.google.com/?q=IMDKOM" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           class="inline-block mt-3 text-brand hover:underline font-medium">
-            Buka Lokasi di Google Maps →
-        </a>
-    </div>
-</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-8 border-t border-gray-200 bg-gray-50">
-        <div class="container mx-auto px-4 text-center text-sm text-gray-500">
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer class="py-6 sm:py-8 border-t border-gray-200 bg-gray-50">
+        <div class="container mx-auto px-4 text-center text-xs sm:text-sm text-gray-500">
             <p>&copy; 2026 IMDKOM. All rights reserved.</p>
             <a href="admin/login.html" class="text-xs text-gray-300 hover:text-gray-500 transition-colors">Login</a>
         </div>
     </footer>
 
-    <!-- Floating WhatsApp -->
-    <a href="#" id="floatingWhatsApp" class="fixed bottom-6 right-6 bg-[#25d366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg z-50 hover:scale-105 transition-transform">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+    <!-- ============================================================
+    FLOATING WHATSAPP
+    ============================================================ -->
+    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
     </a>
 
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
     <script type="module">
         import { openWhatsAppGeneric, openWhatsApp } from './assets/js/whatsapp.js';
         import { db, getDoc, doc } from './assets/js/firebase.js';
@@ -181,22 +199,24 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    if (data.alamat) document.getElementById('contactAlamat').textContent = data.alamat;
+                    if (data.alamat) {
+                        document.getElementById('contactAlamat').textContent = data.alamat;
+                        document.getElementById('contactAlamatDisplay').textContent = data.alamat;
+                    }
                     if (data.whatsapp) document.getElementById('contactWhatsapp').textContent = data.whatsapp;
                     if (data.instagram) document.getElementById('contactInstagram').textContent = data.instagram;
                     if (data.jamOperasional) document.getElementById('contactJamOperasional').textContent = data.jamOperasional;
-                    
-                    // Google Maps
-                    if (data.googleMaps) {
-                        const container = document.getElementById('googleMapsContainer');
-                        const iframe = document.getElementById('googleMapsIframe');
-                        container.classList.remove('hidden');
-                        iframe.src = data.googleMaps;
-                    }
                 }
             } catch (error) {
                 console.error('Error loading contact data:', error);
             }
+        });
+    </script>
+    
+    <!-- Mobile Menu Toggle -->
+    <script>
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mobileNav').classList.toggle('hidden');
         });
     </script>
 
