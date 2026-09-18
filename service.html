@@ -6,18 +6,36 @@
     <title>Computer Service | IMDKOM</title>
     <meta name="description" content="Layanan computer service dari IMDKOM untuk laptop, PC, dan printer." />
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
-                    }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'system-ui', 'sans-serif'],
+                    },
                 }
             }
         }
     </script>
+    
+    <!-- Custom CSS (jika ada) -->
+    <style>
+        body {
+            font-family: 'Poppins', system-ui, sans-serif;
+        }
+    </style>
 </head>
 <body>
 
