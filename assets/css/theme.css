@@ -1,0 +1,244 @@
+/* ============================================================
+   IMDKOM THEME — CSS Variables
+   ============================================================
+   
+   🎨 CARA GANTI TEMA:
+   1. Buka file ini
+   2. Ganti 3 baris warna di bagian "WARNA BRAND UTAMA"
+   3. Simpan & push ke GitHub
+   4. Selesai! Semua halaman otomatis berubah.
+   
+   ============================================================ */
+
+:root {
+    /* ============================================
+       🎨 WARNA BRAND UTAMA — GANTI DI SINI
+       ============================================ */
+    --color-brand: #0057ad;          /* Warna utama (tombol, heading) */
+    --color-brand-light: #ff8800;    /* Warna hover (lebih terang) */
+    --color-brand-dark: #c2410c;     /* Warna aksen (orange tua) */
+    
+    /* ============================================
+       WARNA TEXT
+       ============================================ */
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #6c757d;
+    --color-text-white: #ffffff;
+    
+    /* ============================================
+       WARNA BACKGROUND
+       ============================================ */
+    --color-bg-white: #ffffff;
+    --color-bg-light: #f8f9fa;
+    
+    /* ============================================
+       WARNA BORDER
+       ============================================ */
+    --color-border: #dee2e6;
+    
+    /* ============================================
+       WARNA STATUS
+       ============================================ */
+    --color-success: #16a34a;
+    --color-danger: #dc2626;
+    --color-warning: #d97706;
+    --color-info: #0284c7;
+    
+    /* ============================================
+       WARNA WHATSAPP
+       ============================================ */
+    --color-whatsapp: #25d366;
+    --color-whatsapp-dark: #1da851;
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+body {
+    color: var(--color-text-primary);
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    line-height: 1.7;
+}
+
+/* ============================================================
+   UTILITY CLASSES — BRAND COLORS
+   ============================================================ */
+
+/* Background */
+.bg-brand { background-color: var(--color-brand) !important; }
+.bg-brand-light { background-color: var(--color-brand-light) !important; }
+.bg-brand-dark { background-color: var(--color-brand-dark) !important; }
+
+/* Text */
+.text-brand { color: var(--color-brand) !important; }
+.text-brand-light { color: var(--color-brand-light) !important; }
+.text-brand-dark { color: var(--color-brand-dark) !important; }
+
+/* Border */
+.border-brand { border-color: var(--color-brand) !important; }
+.border-brand-light { border-color: var(--color-brand-light) !important; }
+.border-brand-dark { border-color: var(--color-brand-dark) !important; }
+
+/* ============================================================
+   HOVER STATES
+   ============================================================ */
+
+.hover\:bg-brand:hover { background-color: var(--color-brand) !important; }
+.hover\:bg-brand-light:hover { background-color: var(--color-brand-light) !important; }
+.hover\:bg-brand-dark:hover { background-color: var(--color-brand-dark) !important; }
+
+.hover\:text-brand:hover { color: var(--color-brand) !important; }
+.hover\:text-brand-light:hover { color: var(--color-brand-light) !important; }
+.hover\:text-brand-dark:hover { color: var(--color-brand-dark) !important; }
+
+.hover\:border-brand:hover { border-color: var(--color-brand) !important; }
+.hover\:border-brand-light:hover { border-color: var(--color-brand-light) !important; }
+
+/* ============================================================
+   FOCUS STATES
+   ============================================================ */
+
+.focus\:ring-brand:focus { 
+    --tw-ring-color: var(--color-brand) !important; 
+}
+.focus\:border-brand:focus { 
+    border-color: var(--color-brand) !important; 
+}
+
+/* ============================================================
+   WHATSAPP
+   ============================================================ */
+
+.bg-whatsapp { background-color: var(--color-whatsapp) !important; }
+.hover\:bg-whatsapp:hover { background-color: var(--color-whatsapp-dark) !important; }
+.text-whatsapp { color: var(--color-whatsapp) !important; }
+
+/* ============================================================
+   STATUS COLORS
+   ============================================================ */
+
+.bg-success { background-color: var(--color-success) !important; }
+.bg-danger { background-color: var(--color-danger) !important; }
+.text-success { color: var(--color-success) !important; }
+.text-danger { color: var(--color-danger) !important; }
+.text-warning { color: var(--color-warning) !important; }
+.text-info { color: var(--color-info) !important; }
+
+/* ============================================================
+   CUSTOM COMPONENTS
+   ============================================================ */
+
+/* Floating WhatsApp Button */
+.floating-wa {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-wa:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+/* Course & Service Items */
+.course-item:hover, .service-item:hover {
+    opacity: 0.85;
+}
+
+/* Images */
+.hero-image, .detail-image {
+    aspect-ratio: 4/3;
+    object-fit: cover;
+}
+
+/* Table Images */
+.table-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Form Preview Images */
+.form-preview-img {
+    max-height: 200px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+}
+
+/* ============================================================
+   SMOOTH TRANSITIONS
+   ============================================================ */
+
+* {
+    transition: opacity 0.2s ease, color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ============================================================
+   SCROLLBAR (Opsional)
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-brand-light);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand);
+}
+
+/* ============================================================
+   PALET TEMA SIAP PAKAI
+   ============================================================
+   
+   Ganti 3 baris di atas dengan salah satu palet berikut:
+   
+   🔵 BIRU NAVY (Default — Profesional)
+   --color-brand: #1a3c5e;
+   --color-brand-light: #2a5a7a;
+   --color-brand-dark: #0f2a42;
+   
+   🟠 ORANGE (Energetic & Friendly)
+   --color-brand: #ea580c;
+   --color-brand-light: #f97316;
+   --color-brand-dark: #c2410c;
+   
+   🟢 HIJAU (Edukasi & Pertumbuhan)
+   --color-brand: #16a34a;
+   --color-brand-light: #22c55e;
+   --color-brand-dark: #15803d;
+   
+   🟣 UNGU (Premium & Modern)
+   --color-brand: #7c3aed;
+   --color-brand-light: #8b5cf6;
+   --color-brand-dark: #6d28d9;
+   
+   🔴 MERAH (Berani & Powerful)
+   --color-brand: #dc2626;
+   --color-brand-light: #ef4444;
+   --color-brand-dark: #b91c1c;
+   
+   🔷 TEAL (Teknologi & Tenang)
+   --color-brand: #0d9488;
+   --color-brand-light: #14b8a6;
+   --color-brand-dark: #0f766e;
+   
+   🟡 AMBER (Hangat & Kreatif)
+   --color-brand: #d97706;
+   --color-brand-light: #f59e0b;
+   --color-brand-dark: #b45309;
+   
+   🩷 PINK (Ramah & Modern)
+   --color-brand: #db2777;
+   --color-brand-light: #ec4899;
+   --color-brand-dark: #be185d;
+   
+   ============================================================ */
