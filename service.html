@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Computer Service | IMDKOM Yogyakarta</title>
-    <meta name="description" content="Layanan computer service profesional dari IMDKOM Yogyakarta. Service laptop, PC, printer. Bisa datang ke toko atau service panggil ke lokasi." />
+    <meta name="description" content="Layanan computer service profesional dari IMDKOM Yogyakarta. Service laptop, PC, printer, dan lainnya." />
     
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     
@@ -66,21 +66,6 @@
             min-height: 100vh;
         }
         
-        .service-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .service-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(26, 60, 94, 0.15);
-        }
-        
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-        
         @keyframes pulse-wa {
             0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
             50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
@@ -97,220 +82,308 @@
         [data-lucide] {
             stroke-width: 2;
         }
-        
-        /* Radio button card style */
-        .tipe-service-option input:checked + .tipe-service-card {
-            border-color: #1a3c5e;
-            background-color: rgba(26, 60, 94, 0.08);
-            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
+
+        /* ============================================================
+           LOGO SHINE EFFECT
+           ============================================================ */
+        .logo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 2px 4px;
         }
         
-        .tipe-service-option input:checked + .tipe-service-card .tipe-icon {
-            color: #1a3c5e;
+        .logo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.75) 50%,
+                transparent 70%
+            );
+            animation: shine-sweep 3s infinite;
+            z-index: 2;
+            pointer-events: none;
         }
         
-        .tipe-service-card {
-            transition: all 0.2s ease;
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
         }
         
-        .tipe-service-card:hover {
-            border-color: rgba(26, 60, 94, 0.5);
-            background-color: rgba(26, 60, 94, 0.04);
+        .logo-shine img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
+            transition: filter 0.3s ease;
+        }
+        
+        .logo-shine:hover img {
+            filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
         }
 
         /* ============================================================
-   LOGO SHINE EFFECT (Opsi 2: Shine Sweep)
-   ============================================================ */
-.logo-shine {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    overflow: hidden;
-    border-radius: 6px;
-    padding: 2px 4px;
-}
-
-.logo-shine::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.75) 50%,
-        transparent 70%
-    );
-    animation: shine-sweep 3s infinite;
-    z-index: 2;
-    pointer-events: none;
-}
-
-@keyframes shine-sweep {
-    0% {
-        left: -100%;
-    }
-    50%, 100% {
-        left: 100%;
-    }
-}
-
-.logo-shine img {
-    position: relative;
-    z-index: 1;
-    display: block;
-    filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
-    transition: filter 0.3s ease;
-}
-
-.logo-shine:hover img {
-    filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
-}
+           SERVICE MENU CARD
+           ============================================================ */
+        .service-menu-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1a3c5e, #c2410c);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+        
+        .service-menu-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .service-menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(26, 60, 94, 0.15);
+        }
+        
+        .service-menu-card:hover .menu-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, #1a3c5e, #2a5a7a);
+            color: white;
+        }
+        
+        .service-menu-card:hover .menu-arrow {
+            transform: translateX(4px);
+            opacity: 1;
+        }
+        
+        .menu-icon {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .menu-arrow {
+            transition: all 0.3s ease;
+            opacity: 0.3;
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
 
     <!-- ============================================================
-NAVIGATION
-============================================================ -->
-<nav class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 sticky top-0 z-40">
-    <div class="container mx-auto px-4 flex items-center justify-between">
-        <a href="index.html" class="flex items-center gap-3 logo-shine">
-    <img src="assets/images/logo/imd.svg" 
-         alt="Logo IMDKOM" 
-         class="h-7 w-auto" />
-    <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
-</a>
-        
-        <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
-            <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
-        
-        <div id="mainNav" class="hidden md:flex items-center gap-6">
-            <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
-            <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
-            <a href="service.html" class="text-brand font-semibold">Computer Service</a>
-            <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
-            <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
-            <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600">Login</a>
-        </div>
-    </div>
-    
-    <!-- Mobile Menu -->
-    <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-        <div class="container mx-auto px-4 flex flex-col gap-2">
-            <a href="index.html" class="text-gray-600 hover:text-brand py-1">Beranda</a>
-            <a href="kursus.html" class="text-gray-600 hover:text-brand py-1">Kursus &amp; Pelatihan</a>
-            <a href="service.html" class="text-brand font-semibold py-1">Computer Service</a>
-            <a href="tentang.html" class="text-gray-600 hover:text-brand py-1">Tentang</a>
-            <a href="kontak.html" class="text-gray-600 hover:text-brand py-1">Kontak</a>
-            <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1">Login</a>
-        </div>
-    </div>
-</nav>
-
-    <!-- ============================================================
-    HERO SECTION
+    NAVIGATION — TIDAK DIUBAH
     ============================================================ -->
-    <section class="py-12 sm:py-16 md:py-20 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-72 h-72 bg-brand/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-brand-dark/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
-        
-        <div class="container mx-auto px-4 relative">
-            <div class="max-w-3xl mx-auto text-center">
-                <!-- Badge -->
-                <span class="inline-flex items-center gap-2 glass px-4 py-1.5 rounded-full text-xs font-medium text-brand mb-4">
-                    <i data-lucide="wrench" class="w-3.5 h-3.5"></i>
-                    Layanan Profesional
-                </span>
-                
-                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-brand leading-tight">
-                    Computer Service
-                </h1>
-                <p class="text-base sm:text-lg text-gray-600 mt-3 max-w-xl mx-auto">
-                    Layanan perbaikan dan konsultasi perangkat komputer untuk laptop, PC, dan printer.
-                </p>
-                
-                <!-- Quick Actions -->
-                <div class="flex flex-wrap justify-center gap-3 mt-8">
-                    <button onclick="scrollToServices()" 
-                            class="inline-flex items-center gap-2 bg-brand hover:bg-brand-light text-white font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-brand/20">
-                        <i data-lucide="list" class="w-4 h-4"></i>
-                        Lihat Layanan
-                    </button>
-                    <button onclick="openBookingModal()" 
-                            class="inline-flex items-center gap-2 bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-brand-dark/20">
-                       <i data-lucide="calendar-check" class="w-4 h-4"></i>
-                       Booking Service
-                    </button>
-                </div>
+    <nav class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 sticky top-0 z-40">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 logo-shine">
+                <img src="assets/images/logo/imd.svg" 
+                     alt="Logo IMDKOM" 
+                     class="h-7 w-auto" />
+                <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
+            </a>
+            
+            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            
+            <div id="mainNav" class="hidden md:flex items-center gap-6">
+                <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="text-brand font-semibold">Computer Service</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600">Login</a>
             </div>
         </div>
-    </section>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="index.html" class="text-gray-600 hover:text-brand py-1">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="text-brand font-semibold py-1">Computer Service</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1">Login</a>
+            </div>
+        </div>
+    </nav>
 
     <!-- ============================================================
-    FITUR UNGGULAN
+    MENU GRID — KATALOG LAYANAN
     ============================================================ -->
-    <section class="pb-8 sm:pb-12">
+    <section class="py-8 sm:py-12" id="servicesSection">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
-    <!-- Fitur 1: Teknisi Berpengalaman -->
-    <div class="glass rounded-2xl p-5 text-center">
-        <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-            <i data-lucide="shield-check" class="w-6 h-6 text-brand"></i>
-        </div>
-        <h3 class="font-semibold text-gray-800 text-sm">Teknisi Berpengalaman</h3>
-        <p class="text-xs text-gray-500 mt-1">Ditangani ahli di bidangnya</p>
-    </div>
-    
-    <!-- Fitur 2: Proses Cepat -->
-    <div class="glass rounded-2xl p-5 text-center">
-        <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-            <i data-lucide="zap" class="w-6 h-6 text-brand"></i>
-        </div>
-        <h3 class="font-semibold text-gray-800 text-sm">Proses Cepat</h3>
-        <p class="text-xs text-gray-500 mt-1">Estimasi waktu jelas</p>
-    </div>
-    
-    <!-- Fitur 3: Harga Transparan -->
-    <div class="glass rounded-2xl p-5 text-center">
-        <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-            <i data-lucide="wallet" class="w-6 h-6 text-brand"></i>
-        </div>
-        <h3 class="font-semibold text-gray-800 text-sm">Harga Transparan</h3>
-        <p class="text-xs text-gray-500 mt-1">Tanpa biaya tersembunyi</p>
-    </div>
-    
-  <!-- Fitur 4: Bergaransi 2 Bulan -->
-<div class="glass rounded-2xl p-5 text-center border-2 border-success/30 relative overflow-hidden">
-    <div class="absolute top-2 right-2">
-    </div>
-    <div class="inline-flex items-center justify-center w-12 h-12 bg-success/10 rounded-xl mb-3">
-        <i data-lucide="badge-check" class="w-6 h-6 text-success"></i>
-    </div>
-    <h3 class="font-semibold text-gray-800 text-sm">Bergaransi 2 Bulan</h3>
-    <p class="text-xs text-gray-500 mt-1">Garansi service terpercaya</p>
-</div>
-</div>
-    </section>
-
-    <!-- ============================================================
-    DAFTAR LAYANAN
-    ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16" id="servicesSection">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-8 sm:mb-12">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Layanan Kami</h2>
-                <p class="text-sm sm:text-base text-gray-500 mt-2">Pilih layanan yang Anda butuhkan</p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+                
+                <!-- Menu 1: Service Laptop -->
+                <a href="service-laptop.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                            <i data-lucide="laptop" class="w-7 h-7"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                    </div>
+                    <h3 class="font-bold text-brand text-base sm:text-lg">Service Laptop</h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Perbaikan semua merek laptop</p>
+                </a>
+                
+                <!-- Menu 2: Service PC -->
+                <a href="service-pc.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                            <i data-lucide="monitor" class="w-7 h-7"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                    </div>
+                    <h3 class="font-bold text-brand text-base sm:text-lg">Service PC</h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Desktop & komputer rakitan</p>
+                </a>
+                
+                <!-- Menu 3: Service Printer -->
+                <a href="service-printer.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                            <i data-lucide="printer" class="w-7 h-7"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                    </div>
+                    <h3 class="font-bold text-brand text-base sm:text-lg">Service Printer</h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Semua merek printer</p>
+                </a>
+                
+                <!-- Menu 4: Service Panggil -->
+                <a href="service-panggil.html" class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 group relative overflow-hidden">
+                    <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full">POPULER</span>
+                    
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white">
+                            <i data-lucide="home" class="w-7 h-7"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-white !opacity-100"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-base sm:text-lg">Service Panggil</h3>
+                    <p class="text-xs sm:text-sm text-white/80 mt-1">Teknisi datang ke lokasi</p>
+                </a>
+                
+                <!-- Menu 5: Sparepart -->
+                <a href="sparepart.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                            <i data-lucide="cpu" class="w-7 h-7"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                    </div>
+                    <h3 class="font-bold text-brand text-base sm:text-lg">Sparepart</h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Suku cadang berkualitas</p>
+                </a>
+                
+                <!-- Menu 6: Upgrade -->
+                <a href="upgrade.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                            <i data-lucide="trending-up" class="w-7 h-7"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                    </div>
+                    <h3 class="font-bold text-brand text-base sm:text-lg">Upgrade</h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Tingkatkan performa</p>
+                </a>
+                
+                <!-- Menu 7: Instalasi -->
+                <a href="instalasi.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                            <i data-lucide="download" class="w-7 h-7"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                    </div>
+                    <h3 class="font-bold text-brand text-base sm:text-lg">Instalasi</h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">OS & software</p>
+                </a>
+                
+                <!-- Menu 8: Konsultasi -->
+                <a href="#" onclick="openWhatsAppConsultation(); return false;" class="service-menu-card glass-dark rounded-2xl p-5 sm:p-6 group relative overflow-hidden">
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white">
+                            <i data-lucide="message-circle" class="w-7 h-7"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-white !opacity-100"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-base sm:text-lg">Konsultasi</h3>
+                    <p class="text-xs sm:text-sm text-white/70 mt-1">Chat via WhatsApp</p>
+                </a>
+                
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6" id="allServicesContainer">
-                <div class="col-span-full text-center text-gray-500 py-12">
-                    <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-brand border-t-transparent"></div>
-                    <p class="mt-3 text-sm">Memuat layanan...</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    KEUNGGULAN
+    ============================================================ -->
+    <section class="py-12 sm:py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">
+                    Keunggulan <span class="text-brand-dark">Layanan</span> Kami
+                </h2>
+                <p class="text-sm sm:text-base text-gray-500 mt-2">Kami berkomitmen memberikan layanan terbaik.</p>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
+                
+                <!-- Keunggulan 1 -->
+                <div class="glass rounded-2xl p-5 text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-success/10 rounded-xl mb-3">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-success"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 text-sm">Bergaransi</h3>
+                    <p class="text-xs text-gray-500 mt-1">Garansi service 2 bulan</p>
                 </div>
+                
+                <!-- Keunggulan 2 -->
+                <div class="glass rounded-2xl p-5 text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
+                        <i data-lucide="zap" class="w-6 h-6 text-brand"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 text-sm">Proses Cepat</h3>
+                    <p class="text-xs text-gray-500 mt-1">Estimasi waktu jelas</p>
+                </div>
+                
+                <!-- Keunggulan 3 -->
+                <div class="glass rounded-2xl p-5 text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
+                        <i data-lucide="wallet" class="w-6 h-6 text-brand"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 text-sm">Harga Transparan</h3>
+                    <p class="text-xs text-gray-500 mt-1">Tanpa biaya tersembunyi</p>
+                </div>
+                
+                <!-- Keunggulan 4 -->
+                <div class="glass rounded-2xl p-5 text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
+                        <i data-lucide="users" class="w-6 h-6 text-brand"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 text-sm">Teknisi Ahli</h3>
+                    <p class="text-xs text-gray-500 mt-1">Berpengalaman</p>
+                </div>
+                
             </div>
         </div>
     </section>
@@ -322,26 +395,26 @@ NAVIGATION
         <div class="container mx-auto px-4">
             <div class="text-center mb-10">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Cara Kerja</h2>
-                <p class="text-sm sm:text-base text-gray-500 mt-2">Cepat, aman, Bergaransi</p>
+                <p class="text-sm sm:text-base text-gray-500 mt-2">Cepat, aman, bergaransi</p>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
                 <!-- Step 1 -->
                 <div class="text-center">
                     <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
-                        <i data-lucide="message-circle" class="w-6 h-6 text-brand"></i>
+                        <i data-lucide="mouse-pointer-click" class="w-6 h-6 text-brand"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-800">Konsultasi</h3>
-                    <p class="text-sm text-gray-500 mt-2">Ceritakan masalah perangkat Anda via WhatsApp</p>
+                    <h3 class="font-semibold text-gray-800">Pilih Layanan</h3>
+                    <p class="text-sm text-gray-500 mt-2">Pilih layanan dari menu di atas</p>
                 </div>
                 
                 <!-- Step 2 -->
                 <div class="text-center">
                     <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
-                        <i data-lucide="calendar-clock" class="w-6 h-6 text-brand"></i>
+                        <i data-lucide="message-circle" class="w-6 h-6 text-brand"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-800">Booking</h3>
-                    <p class="text-sm text-gray-500 mt-2">Pilih datang ke toko atau service panggil</p>
+                    <h3 class="font-semibold text-gray-800">Konsultasi</h3>
+                    <p class="text-sm text-gray-500 mt-2">Chat WhatsApp untuk konsultasi gratis</p>
                 </div>
                 
                 <!-- Step 3 -->
@@ -350,7 +423,7 @@ NAVIGATION
                         <i data-lucide="check-circle-2" class="w-6 h-6 text-brand"></i>
                     </div>
                     <h3 class="font-semibold text-gray-800">Selesai</h3>
-                    <p class="text-sm text-gray-500 mt-2">Perangkat Anda kembali normal dan siap digunakan</p>
+                    <p class="text-sm text-gray-500 mt-2">Perangkat normal & bergaransi</p>
                 </div>
             </div>
         </div>
@@ -366,30 +439,23 @@ NAVIGATION
                 
                 <div class="relative">
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-                        Perangkat Bermasalah?
+                        Butuh Bantuan Cepat?
                     </h2>
                     <p class="text-white/80 mt-3 max-w-lg mx-auto text-sm sm:text-base">
-                        Konsultasikan sekarang juga. Tim kami siap membantu Anda.
+                        Konsultasikan masalah perangkat Anda langsung via WhatsApp.
                     </p>
-                    <div class="flex flex-wrap justify-center gap-3 mt-6">
-                        <button onclick="openBookingModal()" 
-                                class="inline-flex items-center gap-2 bg-white text-brand hover:bg-gray-100 font-medium px-6 py-3 rounded-xl transition-all">
-                            <i data-lucide="calendar-plus" class="w-4 h-4"></i>
-                            Booking Service
-                        </button>
-                        <button onclick="openWhatsAppConsultation()" 
-                                class="inline-flex items-center gap-2 bg-[#25d366] hover:bg-[#1da851] text-white font-medium px-6 py-3 rounded-xl transition-all">
-                            <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            Konsultasi Gratis
-                        </button>
-                    </div>
+                    <button onclick="openWhatsAppConsultation()" 
+                            class="mt-6 inline-flex items-center gap-2 bg-white text-brand hover:bg-gray-100 font-medium px-6 py-3 rounded-xl transition-all">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        Konsultasi Gratis
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ============================================================
-    FOOTER
+    FOOTER — TIDAK DIUBAH
     ============================================================ -->
     <footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
         <div class="container mx-auto px-4">
@@ -415,282 +481,22 @@ NAVIGATION
     </a>
 
     <!-- ============================================================
-    BOOKING MODAL
-    ============================================================ -->
-    <div id="bookingModal" class="fixed inset-0 z-50 hidden">
-        <div class="modal-overlay absolute inset-0" onclick="closeBookingModal()"></div>
-        
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
-                <!-- Header -->
-                <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
-                    <div>
-                        <h3 class="text-lg font-bold text-brand">Booking Service</h3>
-                        <p class="text-xs text-gray-500 mt-0.5">Isi form untuk memesan layanan</p>
-                    </div>
-                    <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600 p-1">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-                
-                <!-- Form -->
-                <form id="bookingForm" class="p-5 space-y-4">
-                    
-                    <!-- ============================================================
-                         TIPE SERVICE (BARU)
-                         ============================================================ -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Service *</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <!-- Opsi 1: Datang ke Toko -->
-                            <label class="tipe-service-option cursor-pointer">
-                                <input type="radio" name="tipeService" value="Datang ke Toko" class="sr-only" checked />
-                                <div class="tipe-service-card glass rounded-xl p-4 text-center border-2 border-transparent h-full">
-                                    <i data-lucide="store" class="tipe-icon w-6 h-6 text-gray-400 mx-auto mb-2 transition-colors"></i>
-                                    <p class="font-semibold text-sm text-gray-800">Datang ke Toko</p>
-                                    <p class="text-xs text-gray-500 mt-1 leading-tight">Bawa perangkat ke IMDKOM</p>
-                                </div>
-                            </label>
-                            
-                            <!-- Opsi 2: Service Panggil -->
-                            <label class="tipe-service-option cursor-pointer">
-                                <input type="radio" name="tipeService" value="Service Panggil" class="sr-only" />
-                                <div class="tipe-service-card glass rounded-xl p-4 text-center border-2 border-transparent h-full">
-                                    <i data-lucide="home" class="tipe-icon w-6 h-6 text-gray-400 mx-auto mb-2 transition-colors"></i>
-                                    <p class="font-semibold text-sm text-gray-800">Service Panggil</p>
-                                    <p class="text-xs text-gray-500 mt-1 leading-tight">Teknisi ke lokasi Anda</p>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- NAMA -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
-                        <div class="relative">
-                            <i data-lucide="user" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="bookingNama" required
-                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
-                                   placeholder="Contoh: Budi Santoso" />
-                        </div>
-                    </div>
-                    
-                    <!-- WHATSAPP -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
-                        <div class="relative">
-                            <i data-lucide="phone" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="tel" id="bookingWa" required
-                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
-                                   placeholder="08xxxxxxxxxx" />
-                        </div>
-                    </div>
-                    
-                    <!-- ALAMAT (Muncul jika Service Panggil) -->
-                    <div id="alamatField" class="hidden">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lokasi *</label>
-                        <div class="relative">
-                            <i data-lucide="map-pin" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
-                            <textarea id="bookingAlamat" rows="2"
-                                      class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
-                                      placeholder="Alamat lengkap untuk teknisi datang..."></textarea>
-                        </div>
-                        <p class="text-xs text-gray-500 mt-1">Biaya transportasi akan diinfokan via WhatsApp</p>
-                    </div>
-
-                    <!-- JENIS LAYANAN -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Layanan *</label>
-                        <div class="relative">
-                            <i data-lucide="wrench" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                            <select id="bookingLayanan" required
-                                    class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm appearance-none">
-                                <option value="">Pilih layanan</option>
-                                <option value="Service Laptop">Service Laptop</option>
-                                <option value="Service PC">Service PC</option>
-                                <option value="Service Printer">Service Printer</option>
-                                <option value="Sparepart">Sparepart</option>
-                                <option value="Upgrade">Upgrade</option>
-                                <option value="Lainnya">Lainnya</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- DESKRIPSI MASALAH -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
-                        <div class="relative">
-                            <i data-lucide="file-text" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
-                            <textarea id="bookingMasalah" required rows="3"
-                                      class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
-                                      placeholder="Ceritakan masalah perangkat Anda..."></textarea>
-                        </div>
-                    </div>
-                    
-                    <!-- JADWAL -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jadwal Kunjungan</label>
-                        <div class="relative">
-                            <i data-lucide="calendar" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                            <select id="bookingJadwal"
-                                    class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm appearance-none">
-                                <option value="Hari ini">Hari ini</option>
-                                <option value="Besok">Besok</option>
-                                <option value="2-3 hari lagi">2-3 hari lagi</option>
-                                <option value="Minggu depan">Minggu depan</option>
-                                <option value="Fleksibel">Fleksibel</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- TOMBOL -->
-                    <div class="flex gap-3 pt-2">
-                        <button type="button" onclick="closeBookingModal()" 
-                                class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
-                            Batal
-                        </button>
-                        <button type="submit" 
-                                class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand hover:bg-brand-light text-white rounded-xl transition-colors text-sm font-medium">
-                            <i data-lucide="send" class="w-4 h-4"></i>
-                            Kirim Booking
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================
     JAVASCRIPT
     ============================================================ -->
     <script type="module">
         import { openWhatsAppGeneric, openWhatsApp } from './assets/js/whatsapp.js';
-        import { loadAllServices } from './assets/js/app.js';
 
-        // ============================================================
-        // SCROLL TO SERVICES
-        // ============================================================
-        window.scrollToServices = function() {
-            document.getElementById('servicesSection').scrollIntoView({ behavior: 'smooth' });
-        };
-
-        // ============================================================
-        // BOOKING MODAL
-        // ============================================================
-        window.openBookingModal = function() {
-            document.getElementById('bookingModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        };
-
-        window.closeBookingModal = function() {
-            document.getElementById('bookingModal').classList.add('hidden');
-            document.body.style.overflow = '';
-        };
-
-        // ============================================================
-        // WHATSAPP CONSULTATION
-        // ============================================================
+        // Konsultasi WhatsApp
         window.openWhatsAppConsultation = function() {
             const message = 'Halo IMDKOM, saya ingin konsultasi mengenai service perangkat komputer saya.';
             openWhatsApp(message);
         };
 
-        // ============================================================
-        // TOGGLE ALAMAT FIELD
-        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
-            const tipeServiceRadios = document.querySelectorAll('input[name="tipeService"]');
-            const alamatField = document.getElementById('alamatField');
-            const bookingAlamat = document.getElementById('bookingAlamat');
-            
-            tipeServiceRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'Service Panggil') {
-                        alamatField.classList.remove('hidden');
-                        bookingAlamat.required = true;
-                        if (typeof lucide !== 'undefined') lucide.createIcons();
-                    } else {
-                        alamatField.classList.add('hidden');
-                        bookingAlamat.required = false;
-                        bookingAlamat.value = '';
-                    }
-                });
-            });
-        });
-
-        // ============================================================
-        // SUBMIT BOOKING
-        // ============================================================
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Ambil tipe service
-            const tipeService = document.querySelector('input[name="tipeService"]:checked')?.value || 'Datang ke Toko';
-            
-            const nama = document.getElementById('bookingNama').value.trim();
-            const wa = document.getElementById('bookingWa').value.trim();
-            const alamat = document.getElementById('bookingAlamat').value.trim();
-            const layanan = document.getElementById('bookingLayanan').value;
-            const masalah = document.getElementById('bookingMasalah').value.trim();
-            const jadwal = document.getElementById('bookingJadwal').value;
-            
-            // Validasi dasar
-            if (!nama || !wa || !layanan || !masalah) {
-                alert('Mohon lengkapi semua field yang wajib diisi.');
-                return;
-            }
-            
-            // Validasi alamat jika Service Panggil
-            if (tipeService === 'Service Panggil' && !alamat) {
-                alert('Mohon isi alamat lokasi untuk Service Panggil.');
-                return;
-            }
-            
-             // Format pesan WhatsApp (tanpa emoji, pakai quote block)
-             let message = `*BOOKING SERVICE - IMDKOM*\n\n`;
-             message += `> Tipe: ${tipeService}\n`;
-             message += `> Nama: ${nama}\n`;
-             message += `> No. WhatsApp: ${wa}\n`;
-
-             // Tambah alamat jika Service Panggil
-             if (tipeService === 'Service Panggil' && alamat) {
-             message += `> Alamat: ${alamat}\n`;
-              }
-
-             message += `> Layanan: ${layanan}\n`;
-             message += `> Masalah: ${masalah}\n`;
-             message += `> Jadwal: ${jadwal}\n\n`;
-             message += `Mohon konfirmasi booking saya. Terima kasih!`;
-            
-            // Buka WhatsApp
-            openWhatsApp(message);
-            
-            // Close modal & reset
-            closeBookingModal();
-            this.reset();
-            
-            // Reset state alamat & tipe service
-            document.getElementById('alamatField').classList.add('hidden');
-            document.getElementById('bookingAlamat').required = false;
-            
-            // Reset radio button ke "Datang ke Toko"
-            const defaultRadio = document.querySelector('input[name="tipeService"][value="Datang ke Toko"]');
-            if (defaultRadio) defaultRadio.checked = true;
-        });
-
-        // ============================================================
-        // LOAD SERVICES & INIT ICONS
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            // Init Lucide icons
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
             
-            loadAllServices();
-            
-            // Floating WhatsApp
             document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
                 e.preventDefault();
                 openWhatsAppGeneric();
@@ -705,20 +511,18 @@ NAVIGATION
         });
     </script>
 
-<script>
-    // Sembunyikan badge Netlify
-    document.addEventListener('DOMContentLoaded', function() {
-        // Cari semua link ke netlify.com
-        const netlifyBadge = document.querySelector('a[href*="netlify.com"]');
-        if (netlifyBadge && netlifyBadge.textContent.includes('Powered by')) {
-            netlifyBadge.style.display = 'none';
-        }
-        
-        // Alternatif: hapus elemen dengan id atau class tertentu
-        const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
-        badges.forEach(badge => badge.remove());
-    });
-</script>
+    <!-- Hide Netlify Badge -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const netlifyBadge = document.querySelector('a[href*="netlify.com"]');
+            if (netlifyBadge && netlifyBadge.textContent.includes('Powered by')) {
+                netlifyBadge.style.display = 'none';
+            }
+            
+            const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
+            badges.forEach(badge => badge.remove());
+        });
+    </script>
 
 </body>
 </html>

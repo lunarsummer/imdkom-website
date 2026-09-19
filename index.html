@@ -27,6 +27,9 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <!-- Tailwind Config -->
     <script>
         tailwind.config = {
@@ -43,59 +46,63 @@
         }
     </script>
 
-<style>
-    /* ============================================================
-       LOGO SHINE EFFECT (Shine Sweep)
-       ============================================================ */
-    .logo-shine {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        overflow: hidden;
-        border-radius: 6px;
-        padding: 2px 4px;
-    }
-    
-    .logo-shine::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            120deg,
-            transparent 30%,
-            rgba(255, 255, 255, 0.75) 50%,
-            transparent 70%
-        );
-        animation: shine-sweep 3s infinite;
-        z-index: 2;
-        pointer-events: none;
-    }
-    
-    @keyframes shine-sweep {
-        0% {
+    <style>
+        /* ============================================================
+           LOGO SHINE EFFECT (Shine Sweep)
+           ============================================================ */
+        .logo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 2px 4px;
+        }
+        
+        .logo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
             left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.75) 50%,
+                transparent 70%
+            );
+            animation: shine-sweep 3s infinite;
+            z-index: 2;
+            pointer-events: none;
         }
-        50%, 100% {
-            left: 100%;
+        
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
         }
-    }
-    
-    .logo-shine img {
-        position: relative;
-        z-index: 1;
-        display: block;
-        filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
-        transition: filter 0.3s ease;
-    }
-    
-    .logo-shine:hover img {
-        filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
-    }
-</style>
-
+        
+        .logo-shine img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
+            transition: filter 0.3s ease;
+        }
+        
+        .logo-shine:hover img {
+            filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
+        }
+        
+        /* Floating WhatsApp pulse */
+        @keyframes pulse-wa {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+        }
+        .floating-wa {
+            animation: pulse-wa 2s infinite;
+        }
+    </style>
 </head>
 <body class="font-sans">
 
@@ -105,12 +112,12 @@
     <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 logo-shine">
-               <img src="assets/images/logo/imdkom.svg" 
-                alt="Logo IMDKOM" 
-                class="h-4 w-auto" 
-                loading="eager" />
+                <img src="assets/images/logo/imdkom.svg" 
+                     alt="Logo IMDKOM" 
+                     class="h-4 w-auto" 
+                     loading="eager" />
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
-             </a>
+            </a>
             
             <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,27 +150,20 @@
 
     <!-- ============================================================
     HERO SECTION
-    Mobile: Overlay di atas gambar
-    Desktop: 2 kolom (text + gambar)
     ============================================================ -->
     <section class="relative" id="heroSection">
 
-        <!-- ========================================================
-             MOBILE VERSION (Overlay di atas gambar)
-             ======================================================== -->
+        <!-- MOBILE VERSION -->
         <div class="relative md:hidden">
-            <!-- Background Image -->
             <img src="assets/images/hero/hero-default.jpg" 
                  alt="IMDKOM - Kursus dan Computer Service" 
                  class="w-full object-cover" 
                  style="height: 90vh; min-height: 550px;"
                  loading="lazy" />
             
-            <!-- Overlay Gradient -->
             <div class="absolute inset-0" 
                  style="background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 40%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.15) 100%);"></div>
             
-            <!-- Text Overlay -->
             <div class="absolute inset-0 flex flex-col justify-end p-6 pb-10 text-white">
                 <h1 class="text-3xl font-extrabold leading-tight" id="heroHeading">
                     IMDKOM YOGYAKARTA
@@ -178,7 +178,6 @@
                     IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
                 </p>
                 
-                <!-- CTA Buttons Mobile -->
                 <div class="flex flex-wrap gap-2 mt-5">
                     <a href="kursus.html" 
                        class="bg-brand hover:bg-brand-light text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" 
@@ -199,13 +198,10 @@
             </div>
         </div>
 
-        <!-- ========================================================
-             DESKTOP VERSION (2 kolom)
-             ======================================================== -->
+        <!-- DESKTOP VERSION -->
         <div class="hidden md:block py-16 lg:py-24">
             <div class="container mx-auto px-4">
                 <div class="flex flex-row items-center gap-12 lg:gap-16">
-                    <!-- Text Content -->
                     <div class="w-1/2">
                         <h1 class="text-5xl lg:text-6xl font-extrabold text-brand leading-tight" id="heroHeadingDesktop">
                             IMDKOM YOGYAKARTA
@@ -220,7 +216,6 @@
                             IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
                         </p>
                         
-                        <!-- CTA Buttons Desktop -->
                         <div class="flex flex-wrap gap-3 mt-8">
                             <a href="kursus.html" 
                                class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3.5 rounded transition-colors text-base" 
@@ -240,7 +235,6 @@
                         </div>
                     </div>
                     
-                    <!-- Image -->
                     <div class="w-1/2">
                         <img src="assets/images/hero/hero-default.jpg" 
                              alt="IMDKOM - Kursus dan Computer Service" 
@@ -290,7 +284,6 @@
             <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10">Program pelatihan komputer untuk berbagai kebutuhan.</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8" id="coursePreviewContainer">
-                <!-- Akan dimuat dari JavaScript -->
                 <div class="col-span-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
                     <p class="mt-3 text-sm">Memuat program...</p>
@@ -314,7 +307,6 @@
             <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10">Layanan perbaikan dan kebutuhan perangkat komputer.</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8" id="servicePreviewContainer">
-                <!-- Akan dimuat dari JavaScript -->
                 <div class="col-span-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
                     <p class="mt-3 text-sm">Memuat layanan...</p>
@@ -336,9 +328,7 @@
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand">Testimoni</h2>
             <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10">Apa kata mereka tentang IMDKOM.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8" id="testimonialsContainer">
-                <!-- Akan dimuat dari JavaScript -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8" id="testimonialsContainer"></div>
         </div>
     </section>
 
@@ -349,9 +339,7 @@
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand">Pertanyaan Umum</h2>
             <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10">Informasi yang sering ditanyakan.</p>
-            <div class="max-w-3xl mx-auto space-y-3" id="faqContainer">
-                <!-- Akan dimuat dari JavaScript -->
-            </div>
+            <div class="max-w-3xl mx-auto space-y-3" id="faqContainer"></div>
         </div>
     </section>
 
@@ -390,16 +378,47 @@
     JAVASCRIPT
     ============================================================ -->
     <script type="module" src="assets/js/firebase.js"></script>
-    <script type="module" src="assets/js/init-db.js"></script>
     <script type="module" src="assets/js/utils.js"></script>
     <script type="module" src="assets/js/whatsapp.js"></script>
+    <script type="module" src="assets/js/init-db.js"></script>
     <script type="module" src="assets/js/app.js"></script>
-    
-    <!-- Mobile Menu Toggle -->
-    <script>
+
+    <script type="module">
+        import { initDatabase } from './assets/js/init-db.js';
+        
+        // ✅ Auto-init database saat halaman dibuka
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Memulai init database...');
+            try {
+                const result = await initDatabase();
+                console.log('✅ Init result:', result);
+            } catch (error) {
+                console.error('❌ Init error:', error);
+            }
+            
+            // Init Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Mobile Menu Toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mobileNav').classList.toggle('hidden');
         });
     </script>
+    
+    <!-- Hide Netlify Badge -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const netlifyBadge = document.querySelector('a[href*="netlify.com"]');
+            if (netlifyBadge && netlifyBadge.textContent.includes('Powered by')) {
+                netlifyBadge.style.display = 'none';
+            }
+            const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
+            badges.forEach(badge => badge.remove());
+        });
+    </script>
+
 </body>
 </html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Laptop | IMDKOM Yogyakarta</title>
+    <meta name="description" content="Layanan service laptop profesional di IMDKOM Yogyakarta. Semua merek, teknisi ahli, bergaransi 2 bulan." />
+    
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- 🎨 THEME CSS -->
+    <link rel="stylesheet" href="assets/css/theme.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#c2410c' },
+                        success: { DEFAULT: '#059669', light: '#10b981', dark: '#047857' },
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+        
+        .glass-dark {
+            background: rgba(26, 60, 94, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .page-bg {
+            background: 
+                radial-gradient(circle at 20% 10%, rgba(26, 60, 94, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 90%, rgba(194, 65, 12, 0.08) 0%, transparent 40%),
+                linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        @keyframes pulse-wa {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+        }
+        
+        .floating-wa {
+            animation: pulse-wa 2s infinite;
+        }
+        
+        html { scroll-behavior: smooth; }
+        [data-lucide] { stroke-width: 2; }
+
+        .logo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 2px 4px;
+        }
+        
+        .logo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 50%, transparent 70%);
+            animation: shine-sweep 3s infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        
+        .logo-shine img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
+            transition: filter 0.3s ease;
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="font-sans page-bg">
+
+    <!-- ============================================================
+    NAVIGATION — TIDAK DIUBAH
+    ============================================================ -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 sticky top-0 z-40">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 logo-shine">
+                <img src="assets/images/logo/imd.svg" alt="Logo IMDKOM" class="h-7 w-auto" />
+                <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
+            </a>
+            
+            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            
+            <div id="mainNav" class="hidden md:flex items-center gap-6">
+                <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="text-brand font-semibold">Computer Service</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600">Login</a>
+            </div>
+        </div>
+        
+        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="index.html" class="text-gray-600 hover:text-brand py-1">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="text-brand font-semibold py-1">Computer Service</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+    BREADCRUMB
+    ============================================================ -->
+    <div class="bg-white/40 backdrop-blur-sm border-b border-white/40 py-3">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+                <a href="index.html" class="hover:text-brand">Beranda</a>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <a href="service.html" class="hover:text-brand">Service</a>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <span class="text-brand font-medium" id="breadcrumbName">Service Laptop</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    HERO SERVICE
+    ============================================================ -->
+    <section class="py-8 sm:py-12 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-72 h-72 bg-brand/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-brand-dark/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        
+        <div class="container mx-auto px-4 relative">
+            <div id="serviceHeroContainer">
+                <div class="text-center text-gray-500 py-10">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                    <p class="mt-3 text-sm">Memuat layanan...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    PRICELIST
+    ============================================================ -->
+    <section class="py-8 sm:py-12" id="pricelistSection">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold text-brand">Pricelist</h2>
+                <p class="text-sm text-gray-500 mt-1">Daftar harga layanan kami</p>
+            </div>
+            
+            <div id="pricelistContainer">
+                <div class="text-center text-gray-500 py-10">
+                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
+                    <p class="mt-3 text-sm">Memuat pricelist...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    DOKUMENTASI
+    ============================================================ -->
+    <section class="py-8 sm:py-12 bg-white/40 backdrop-blur-sm" id="documentationSection">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold text-brand">Dokumentasi</h2>
+                <p class="text-sm text-gray-500 mt-1">Galeri foto kegiatan service kami</p>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="documentationContainer">
+                <div class="col-span-full text-center text-gray-500 py-10">
+                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
+                    <p class="mt-3 text-sm">Memuat dokumentasi...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    CTA SECTION
+    ============================================================ -->
+    <section class="py-12 sm:py-16">
+        <div class="container mx-auto px-4">
+            <div class="glass-dark rounded-3xl p-8 sm:p-12 text-center max-w-3xl mx-auto relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+                
+                <div class="relative">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                        Ada Pertanyaan?
+                    </h2>
+                    <p class="text-white/80 mt-3 max-w-lg mx-auto text-sm sm:text-base">
+                        Konsultasikan masalah perangkat Anda. Tim kami siap membantu.
+                    </p>
+                    <button onclick="openConsultationModal('laptop', 'Service Laptop')" 
+                            class="mt-6 inline-flex items-center gap-2 bg-white text-brand hover:bg-gray-100 font-medium px-6 py-3 rounded-xl transition-all">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        Konsultasi Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FOOTER — TIDAK DIUBAH
+    ============================================================ -->
+    <footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <span class="text-xl font-bold text-brand">IMDKOM</span>
+                    <p class="text-gray-500 text-xs mt-1">Kursus &amp; Pelatihan • Computer Service</p>
+                </div>
+                <div class="text-center text-xs text-gray-500">
+                    <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    FLOATING WHATSAPP
+    ============================================================ -->
+    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-50" aria-label="Hubungi via WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+    </a>
+
+    <!-- ============================================================
+    MODAL KONSULTASI
+    ============================================================ -->
+    <div id="consultationModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeConsultationModal()"></div>
+        
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
+                <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
+                    <div>
+                        <h3 class="text-lg font-bold text-brand">Konsultasi Service</h3>
+                        <p class="text-xs text-gray-500 mt-0.5" id="consultationServiceLabel">Konsultasi Service</p>
+                    </div>
+                    <button onclick="closeConsultationModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <form id="consultationForm" class="p-5 space-y-4">
+                    <input type="hidden" id="consultationService" />
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
+                        <div class="relative">
+                            <i data-lucide="user" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="consultationNama" required
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                                   placeholder="Contoh: Budi Santoso" />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
+                        <div class="relative">
+                            <i data-lucide="phone" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                            <input type="tel" id="consultationWa" required
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                                   placeholder="08xxxxxxxxxx" />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Device / Perangkat *</label>
+                        <div class="relative">
+                            <i data-lucide="laptop" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="consultationDevice" required
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                                   placeholder="Contoh: Asus VivoBook A412" />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
+                        <div class="relative">
+                            <i data-lucide="file-text" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
+                            <textarea id="consultationMasalah" required rows="3"
+                                      class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
+                                      placeholder="Ceritakan masalah perangkat Anda..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="closeConsultationModal()" 
+                                class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand hover:bg-brand-light text-white rounded-xl transition-colors text-sm font-medium">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            Kirim Konsultasi
+                        </button>
+                    </div>
+                    
+                    <div id="consultationMessage" class="text-center"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    IMAGE MODAL
+    ============================================================ -->
+    <div id="imageModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="closeImageModal()"></div>
+        
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="max-w-4xl w-full">
+                <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 w-10 h-10 rounded-full flex items-center justify-center">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <img id="imageModalImg" src="" alt="" class="w-full rounded-2xl shadow-2xl" />
+                <p id="imageModalCaption" class="text-white text-center mt-4"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script type="module">
+        import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
+        import { initDatabase } from './assets/js/init-db.js';
+        import './assets/js/service-detail.js';
+        import './assets/js/consultation.js';
+        
+        // ✅ Init database + Lucide saat DOM ready
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Memulai init database...');
+            try {
+                const result = await initDatabase();
+                console.log('✅ Init result:', result);
+            } catch (error) {
+                console.error('❌ Init error:', error);
+            }
+            
+            // Init Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Floating WhatsApp
+        document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
+            e.preventDefault();
+            openWhatsAppGeneric();
+        });
+        
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mobileNav').classList.toggle('hidden');
+        });
+    </script>
+    
+    <!-- Hide Netlify Badge -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const netlifyBadge = document.querySelector('a[href*="netlify.com"]');
+            if (netlifyBadge && netlifyBadge.textContent.includes('Powered by')) {
+                netlifyBadge.style.display = 'none';
+            }
+            const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
+            badges.forEach(badge => badge.remove());
+        });
+    </script>
+
+</body>
+</html>
