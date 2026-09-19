@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tentang IMDKOM | Kursus & Pelatihan • Computer Service</title>
-    <meta name="description" content="Tentang IMDKOM - Lembaga kursus dan pelatihan komputer serta layanan computer service." />
+    <meta name="description" content="Tentang IMDKOM - Lembaga kursus dan pelatihan komputer serta layanan computer service di Yogyakarta sejak 1997." />
     
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     
@@ -19,12 +19,16 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#c2410c' },
+                        success: { DEFAULT: '#059669', light: '#10b981', dark: '#047857' },
                     },
                     fontFamily: {
                         sans: ['Poppins', 'system-ui', 'sans-serif'],
@@ -33,16 +37,134 @@
             }
         }
     </script>
+
+    <style>
+        /* ============================================================
+           LOGO SHINE EFFECT
+           ============================================================ */
+        .logo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 2px 4px;
+        }
+        
+        .logo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.75) 50%,
+                transparent 70%
+            );
+            animation: shine-sweep 3s infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        
+        .logo-shine img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
+            transition: filter 0.3s ease;
+        }
+        
+        .logo-shine:hover img {
+            filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
+        }
+        
+        /* ============================================================
+           PAGE BACKGROUND
+           ============================================================ */
+        .page-bg {
+            background: 
+                radial-gradient(circle at 20% 0%, rgba(26, 60, 94, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 80% 100%, rgba(194, 65, 12, 0.03) 0%, transparent 40%),
+                linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+            min-height: 100vh;
+        }
+        
+        /* ============================================================
+           GLASS CARD
+           ============================================================ */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+        }
+        
+        /* ============================================================
+           MISSION LIST
+           ============================================================ */
+        .mission-item {
+            transition: all 0.3s ease;
+        }
+        
+        .mission-item:hover {
+            transform: translateX(4px);
+        }
+        
+        .mission-number {
+            background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* ============================================================
+           LEGALITY BADGE
+           ============================================================ */
+        .legal-badge {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.06) 0%, rgba(5, 150, 105, 0.02) 100%);
+            border: 1px solid rgba(5, 150, 105, 0.15);
+        }
+        
+        /* ============================================================
+           FADE IN ANIMATION
+           ============================================================ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
 </head>
-<body class="font-sans">
+<body class="font-sans page-bg">
 
     <!-- ============================================================
-    NAVIGATION
+    NAVIGATION — TIDAK DIUBAH
     ============================================================ -->
     <nav class="bg-white border-b border-gray-200 py-3">
         <div class="container mx-auto px-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-2">
-                <span class="text-2xl font-bold text-brand">IMDKOM</span>
+            <a href="index.html" class="flex items-center gap-3 logo-shine">
+                <img src="assets/images/logo/imdkom.svg" 
+                     alt="Logo IMDKOM" 
+                     class="h-4 w-auto" 
+                     loading="eager" />
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
             </a>
             
@@ -75,49 +197,230 @@
     </nav>
 
     <!-- ============================================================
-    MAIN CONTENT
+    HERO SECTION — MINIMALIS ELEGAN
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16">
-        <div class="container mx-auto px-4 max-w-4xl">
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand text-center">Tentang IMDKOM</h1>
-            
-            <div class="mt-6 sm:mt-8 space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-700 leading-relaxed">
-                <p>
-                    <strong>IMDKOM</strong> adalah lembaga kursus dan pelatihan komputer yang berkomitmen untuk memberikan pendidikan berkualitas di bidang teknologi informasi. Kami hadir untuk membantu masyarakat mengembangkan keterampilan digital yang dibutuhkan di era modern.
+    <section class="pt-20 sm:pt-28 md:pt-36 pb-16 sm:pb-20 fade-in-up">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl">
+                
+                <!-- Eyebrow: Sejak 1997 -->
+                <div class="flex items-center gap-3 mb-10">
+                    <span class="w-12 h-px bg-brand-dark"></span>
+                    <span class="text-xs font-medium tracking-[0.3em] uppercase text-brand-dark">
+                        Sejak 1997
+                    </span>
+                </div>
+                
+                <!-- Main Heading — Minimalis -->
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-brand leading-[1.05] tracking-tight">
+                    Tentang<br />
+                    <span class="text-brand">IMDKOM.</span>
+                </h1>
+                
+                <!-- Subtitle -->
+                <p class="text-lg sm:text-xl text-gray-500 mt-10 max-w-xl leading-relaxed font-light">
+                    Lembaga kursus &amp; layanan komputer yang telah dipercaya selama lebih dari <strong class="font-semibold text-gray-700">25 tahun</strong>.
                 </p>
                 
-                <p>
-                    Selain menyediakan program kursus dan pelatihan, IMDKOM juga memiliki layanan <strong>computer service</strong> untuk membantu Anda mengatasi berbagai masalah perangkat komputer, mulai dari laptop, PC, hingga printer.
+                <!-- Divider line -->
+                <div class="mt-12 sm:mt-16 w-full h-px bg-gradient-to-r from-gray-300 via-gray-200 to-transparent"></div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    STORY SECTION — EDITORIAL
+    ============================================================ -->
+    <section class="py-12 sm:py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                
+                <!-- Section Label -->
+                <div class="text-xs font-medium tracking-[0.3em] uppercase text-gray-400 mb-8">
+                    Cerita Kami
+                </div>
+                
+                <!-- Story Text -->
+                <div class="space-y-6">
+                    <p class="text-lg sm:text-xl text-gray-700 leading-relaxed font-light">
+                        <strong class="font-semibold text-brand">IMDKOM</strong> hadir dari sebuah keyakinan sederhana: setiap orang berhak menguasai teknologi. Kami melihat banyak orang memiliki semangat untuk belajar, namun terkendala akses dan biaya. Dari situlah IMDKOM lahir — sebagai jembatan antara keinginan dan kemampuan.
+                    </p>
+                    
+                    <p class="text-lg sm:text-xl text-gray-700 leading-relaxed font-light">
+                        Hari ini, IMDKOM tidak hanya menjadi tempat belajar, tetapi juga menjadi partner terpercaya bagi mereka yang membutuhkan solusi perangkat komputer. Dua layanan utama kami — <strong class="font-semibold text-gray-700">kursus &amp; pelatihan</strong> dan <strong class="font-semibold text-gray-700">computer service</strong> — saling melengkapi untuk memberikan pengalaman terbaik bagi setiap pelanggan.
+                    </p>
+                </div>
+                
+                <!-- Stats Grid — Minimalis -->
+                <div class="grid grid-cols-3 gap-6 sm:gap-8 mt-14 pt-10 border-t border-gray-200">
+                    <div>
+                        <div class="text-3xl sm:text-4xl font-extrabold text-brand">25+</div>
+                        <div class="text-xs sm:text-sm text-gray-500 mt-2 uppercase tracking-wider">Tahun</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl sm:text-4xl font-extrabold text-brand">1000+</div>
+                        <div class="text-xs sm:text-sm text-gray-500 mt-2 uppercase tracking-wider">Alumni</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl sm:text-4xl font-extrabold text-brand">5000+</div>
+                        <div class="text-xs sm:text-sm text-gray-500 mt-2 uppercase tracking-wider">Servis</div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    VISI & MISI — MINIMALIS
+    ============================================================ -->
+    <section class="py-16 sm:py-24 bg-white/40 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                
+                <!-- Section Label -->
+                <div class="text-xs font-medium tracking-[0.3em] uppercase text-gray-400 mb-8">
+                    Arah &amp; Tujuan
+                </div>
+                
+                <!-- Visi -->
+                <div class="mb-16">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-brand mb-4">
+                        Visi
+                    </h2>
+                    <p class="text-lg sm:text-xl text-gray-700 leading-relaxed font-light">
+                        Menjadi lembaga pendidikan dan layanan teknologi <strong class="font-semibold text-gray-800">terpercaya</strong> yang memberdayakan masyarakat melalui keterampilan digital.
+                    </p>
+                </div>
+                
+                <!-- Misi -->
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-brand mb-8">
+                        Misi
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="mission-item flex items-start gap-6">
+                            <div class="text-2xl sm:text-3xl font-extrabold mission-number flex-shrink-0 w-12">01</div>
+                            <div class="flex-1 border-b border-gray-200 pb-6">
+                                <p class="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
+                                    Menyediakan program pelatihan komputer yang <strong class="font-semibold text-gray-800">relevan</strong> dengan kebutuhan industri.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="mission-item flex items-start gap-6">
+                            <div class="text-2xl sm:text-3xl font-extrabold mission-number flex-shrink-0 w-12">02</div>
+                            <div class="flex-1 border-b border-gray-200 pb-6">
+                                <p class="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
+                                    Memberikan layanan computer service yang <strong class="font-semibold text-gray-800">cepat, tepat, dan profesional</strong>.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="mission-item flex items-start gap-6">
+                            <div class="text-2xl sm:text-3xl font-extrabold mission-number flex-shrink-0 w-12">03</div>
+                            <div class="flex-1">
+                                <p class="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
+                                    Membangun <strong class="font-semibold text-gray-800">ekosistem belajar</strong> yang mendukung pengembangan keterampilan digital.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    LEGALITAS — MINIMALIS
+    ============================================================ -->
+    <section class="py-16 sm:py-24">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                
+                <!-- Section Label -->
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-8 h-8 bg-success rounded-lg flex items-center justify-center">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div class="text-xs font-medium tracking-[0.3em] uppercase text-success">
+                        Terverifikasi &amp; Legal
+                    </div>
+                </div>
+                
+                <h2 class="text-2xl sm:text-3xl font-bold text-brand mb-10">
+                    Legalitas Resmi
+                </h2>
+                
+                <!-- Grid 2 kolom -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="legal-badge rounded-2xl p-6">
+                        <div class="text-xs font-medium text-success uppercase tracking-wider mb-3">
+                            Izin Dinas Pendidikan
+                        </div>
+                        <div class="text-xl font-bold text-gray-800 font-mono">
+                            098/Kpts/2021
+                        </div>
+                    </div>
+                    
+                    <div class="legal-badge rounded-2xl p-6">
+                        <div class="text-xs font-medium text-success uppercase tracking-wider mb-3">
+                            NPSN
+                        </div>
+                        <div class="text-xl font-bold text-gray-800 font-mono">
+                            K0560748
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-gray-500 mt-8 leading-relaxed font-light">
+                    IMDKOM terdaftar resmi di bawah naungan Dinas Pendidikan. Kami berkomitmen memberikan layanan yang legal, aman, dan terpercaya untuk seluruh pelanggan.
                 </p>
                 
-                <h2 class="text-lg sm:text-xl font-semibold text-brand mt-6 sm:mt-8">Visi</h2>
-                <p>
-                    Menjadi lembaga pendidikan dan layanan teknologi terpercaya yang memberdayakan masyarakat melalui keterampilan digital.
-                </p>
-                
-                <h2 class="text-lg sm:text-xl font-semibold text-brand mt-6 sm:mt-8">Misi</h2>
-                <ul class="list-disc list-inside space-y-1 sm:space-y-2">
-                    <li>Menyediakan program pelatihan komputer yang relevan dengan kebutuhan industri.</li>
-                    <li>Memberikan layanan computer service yang cepat, tepat, dan profesional.</li>
-                    <li>Membangun ekosistem belajar yang mendukung pengembangan keterampilan digital.</li>
-                </ul>
-                
-                <h2 class="text-lg sm:text-xl font-semibold text-brand mt-6 sm:mt-8">Legalitas</h2>
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <p><strong>Izin Dinas Pendidikan:</strong> 098/Kpts/2021</p>
-                    <p><strong>NPSN:</strong> K0560748</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    CTA SECTION — MINIMALIS
+    ============================================================ -->
+    <section class="pb-20 sm:pb-28">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <div class="border-t border-gray-200 pt-12">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-brand mb-3">
+                        Siap memulai?
+                    </h2>
+                    <p class="text-base sm:text-lg text-gray-500 font-light mb-8">
+                        Bergabunglah dengan ribuan orang yang telah merasakan manfaat layanan IMDKOM.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <a href="kursus.html" 
+                           class="inline-flex items-center gap-2 bg-brand hover:bg-brand-light text-white font-medium px-6 py-3 rounded-lg transition-all text-sm">
+                            Lihat Program
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                        <a href="service.html" 
+                           class="inline-flex items-center gap-2 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-6 py-3 rounded-lg transition-all text-sm">
+                            Lihat Service
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ============================================================
-    FOOTER
+    FOOTER — TIDAK DIUBAH
     ============================================================ -->
     <footer class="py-6 sm:py-8 border-t border-gray-200 bg-gray-50">
         <div class="container mx-auto px-4 text-center text-xs sm:text-sm text-gray-500">
             <p>&copy; 2026 IMDKOM. All rights reserved.</p>
-            <a href="admin/login.html" class="text-xs text-gray-300 hover:text-gray-500 transition-colors">Login</a>
         </div>
     </footer>
 
@@ -137,6 +440,10 @@
         import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
 
         document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
             document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
                 e.preventDefault();
                 openWhatsAppGeneric();

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X7 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="429.432mm" height="69.9435mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 6655 1084"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <font id="FontID0" horiz-adv-x="754" font-variant="normal" style="fill-rule:nonzero" font-style="normal,italic" font-weight="800">
+	<font-face 
+		font-family="Poppins ExtraBold">
+		<font-face-src>
+			<font-face-name name="Poppins ExtraBold Italic"/>
+		</font-face-src>
+	</font-face>
+   <missing-glyph><path d="M0 0z"/></missing-glyph>
+   <glyph unicode="D" horiz-adv-x="734" d="M409 705c64.6667,0 120.667,-11.4998 168.001,-34.5005 47.3327,-22.9996 83.3331,-55.4999 108,-97.4998 24.667,-41.9999 36.9999,-91 36.9999,-147 0,-25.3327 -2.33304,-49.6658 -7.00016,-72.9993 -12.0001,-68.0003 -37.8331,-128.667 -77.5,-182 -39.6669,-53.3333 -90.0004,-95.1668 -151,-125.5 -61.0002,-30.3337 -128.5,-45.5 -202.5,-45.5l-279 0 125 705 278.999 0zm-109 -533c57.3337,0 105,15.833 143,47.5002 38.0006,31.6661 62.3336,76.1665 73.0003,133.5 2.66692,13.3325 4.00038,27.6667 4.00038,42.9995 0,44.6668 -13.6675,78.9998 -41.0003,103 -27.3329,24.0002 -65.6663,36.0004 -115,36.0004l-66.9997 0 -65.0006 -363 68.0003 0z"/>
+   <glyph unicode="O" horiz-adv-x="786" d="M346 -7.00016c-59.3339,0 -111.667,12.334 -157,36.9999 -45.3336,24.667 -80.3333,59.3339 -105,104.001 -24.667,44.6658 -36.9999,95.9999 -36.9999,153.999 0,83.3331 17.5004,157.5 52.5001,222.5 34.9997,65.0006 83.9998,115.501 147,151.5 62.9993,36.0004 135.166,54 216.499,54 60.6673,0 113.834,-12.1665 159.501,-36.4996 45.6664,-24.3331 80.8336,-58.6661 105.5,-103 24.667,-44.3329 36.9999,-95.4996 36.9999,-153.5 0,-82.6663 -17.6658,-156.666 -52.9994,-222 -35.3336,-65.3334 -84.6665,-116.334 -148,-153 -63.3343,-36.6671 -136.001,-55.0006 -218,-55.0006zm29.9998 182c39.333,0 73.8335,10.3338 103.5,31.0004 29.6659,20.6666 52.3327,48.1669 67.9993,82.4999 15.6666,34.333 23.4999,71.5004 23.4999,111.5 0,42.6666 -11.4998,75.8336 -34.4994,99.5 -22.9996,23.6664 -55.8338,35.5001 -98.5004,35.5001 -39.333,0 -73.9999,-10.1674 -104,-30.5001 -29.9998,-20.3337 -53.0004,-47.5002 -68.9999,-81.5003 -16.0005,-34.0002 -24.0002,-71.333 -24.0002,-111.999 0,-42.0009 11.6673,-75.1669 34.9997,-99.5 23.3335,-24.3341 56.6669,-36.5007 100,-36.5007z"/>
+   <glyph unicode="I" horiz-adv-x="307" d="M326 705l-124.001 -705 -197 0 125 705 196 0z"/>
+   <glyph unicode="K" horiz-adv-x="725" d="M452 362l208 -362 -237.001 0 -167 310 -54 -310 -197 0 125 705 196 0 -54 -305 273 305 226 0 -319 -343z"/>
+   <glyph unicode="M" horiz-adv-x="935" d="M953 705l-125 -705 -195 0 68.9999 390 -203 -390 -164 0 -64 392 -68.9999 -392 -197 0 125 705 237 0 97.0005 -457 253 457 236 0z"/>
+  </font>
+  <style type="text/css">
+   <![CDATA[
+    @font-face { font-family:"Poppins ExtraBold";font-variant:normal;font-style:normal,italic;font-weight:800;src:url("#FontID0") format(svg)}
+    .fil0 {fill:#0C43B0}
+    .fnt0 {font-style:italic;font-weight:800;font-size:1499.2px;font-family:'Poppins ExtraBold'}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <text x="-7" y="1073"  class="fil0 fnt0">IMDKOM</text>
+ </g>
+</svg>

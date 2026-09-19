@@ -423,3 +423,41 @@ section {
 .admin-table td {
     vertical-align: middle;
 }
+.logo-shine {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.logo-shine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.8) 50%,
+        transparent 70%
+    );
+    animation: shine 3s infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+    50%, 100% {
+        left: 100%;
+    }
+}
+
+.logo-shine img {
+    position: relative;
+    z-index: 0;
+    display: block;
+}
