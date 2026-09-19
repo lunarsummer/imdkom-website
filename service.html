@@ -641,5 +641,20 @@
         });
     </script>
 
+<script>
+    // Sembunyikan badge Netlify
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cari semua link ke netlify.com
+        const netlifyBadge = document.querySelector('a[href*="netlify.com"]');
+        if (netlifyBadge && netlifyBadge.textContent.includes('Powered by')) {
+            netlifyBadge.style.display = 'none';
+        }
+        
+        // Alternatif: hapus elemen dengan id atau class tertentu
+        const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
+        badges.forEach(badge => badge.remove());
+    });
+</script>
+
 </body>
 </html>
