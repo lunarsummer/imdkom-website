@@ -56,9 +56,11 @@ window.openWhatsAppService = openWhatsAppService;
 window.openWhatsAppGeneric = openWhatsAppGeneric;
 
 // Inisialisasi
+// Di assets/js/whatsapp.js
 document.addEventListener('DOMContentLoaded', async () => {
     await getWhatsAppNumber();
 
+    // Hero WhatsApp - Desktop
     const heroWA = document.getElementById('heroWhatsApp');
     if (heroWA) {
         heroWA.addEventListener('click', (e) => {
@@ -67,6 +69,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Hero WhatsApp - Mobile
+    const heroWAMobile = document.getElementById('heroWhatsAppMobile');
+    if (heroWAMobile) {
+        heroWAMobile.addEventListener('click', (e) => {
+            e.preventDefault();
+            openWhatsAppGeneric();
+        });
+    }
+
+    // Floating WhatsApp
     const floatingWA = document.getElementById('floatingWhatsApp');
     if (floatingWA) {
         floatingWA.addEventListener('click', (e) => {

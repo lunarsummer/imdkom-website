@@ -244,44 +244,77 @@ export async function loadLandingPageContent() {
         
         const data = docSnap.data();
         
+        // ============================================================
+        // HERO — Update kedua versi (mobile + desktop)
+        // ============================================================
         if (data.hero) {
             const hero = data.hero;
-            if (hero.heading) document.getElementById('heroHeading').textContent = hero.heading;
-            if (hero.subheading) document.getElementById('heroSubheading').textContent = hero.subheading;
-            if (hero.deskripsi) document.getElementById('heroDescription').textContent = hero.deskripsi;
-            if (hero.subtext) document.getElementById('heroSubtext').textContent = hero.subtext;
+            
+            // ----- Mobile Version -----
+            const heroHeading = document.getElementById('heroHeading');
+            const heroSubheading = document.getElementById('heroSubheading');
+            const heroDescription = document.getElementById('heroDescription');
+            const heroSubtext = document.getElementById('heroSubtext');
+            const heroCtaPrimaryMobile = document.getElementById('heroCtaPrimaryMobile');
+            
+            if (heroHeading && hero.heading) heroHeading.textContent = hero.heading;
+            if (heroSubheading && hero.subheading) heroSubheading.textContent = hero.subheading;
+            if (heroDescription && hero.deskripsi) heroDescription.textContent = hero.deskripsi;
+            if (heroSubtext && hero.subtext) heroSubtext.textContent = hero.subtext;
+            if (heroCtaPrimaryMobile && hero.ctaText) heroCtaPrimaryMobile.textContent = hero.ctaText;
+            
+            // ----- Desktop Version -----
+            const heroHeadingDesktop = document.getElementById('heroHeadingDesktop');
+            const heroSubheadingDesktop = document.getElementById('heroSubheadingDesktop');
+            const heroDescriptionDesktop = document.getElementById('heroDescriptionDesktop');
+            const heroSubtextDesktop = document.getElementById('heroSubtextDesktop');
+            const heroCtaPrimary = document.getElementById('heroCtaPrimary');
+            
+            if (heroHeadingDesktop && hero.heading) heroHeadingDesktop.textContent = hero.heading;
+            if (heroSubheadingDesktop && hero.subheading) heroSubheadingDesktop.textContent = hero.subheading;
+            if (heroDescriptionDesktop && hero.deskripsi) heroDescriptionDesktop.textContent = hero.deskripsi;
+            if (heroSubtextDesktop && hero.subtext) heroSubtextDesktop.textContent = hero.subtext;
+            if (heroCtaPrimary && hero.ctaText) heroCtaPrimary.textContent = hero.ctaText;
+            
+            // ----- Image (mobile + desktop) -----
             if (hero.gambar) {
-                const img = document.getElementById('heroImage');
-                if (img) img.src = getImageUrl(hero.gambar, 'assets/images/hero/hero-default.jpg');
-            }
-            if (hero.ctaText) {
-                const cta = document.getElementById('heroCtaPrimary');
-                if (cta) cta.textContent = hero.ctaText;
+                const mobileImg = document.querySelector('#heroSection img[alt*="IMDKOM"]');
+                if (mobileImg) mobileImg.src = getImageUrl(hero.gambar, 'assets/images/hero/hero-default.jpg');
+                
+                const heroImage = document.getElementById('heroImage');
+                if (heroImage) heroImage.src = getImageUrl(hero.gambar, 'assets/images/hero/hero-default.jpg');
             }
         }
         
+        // About (tetap sama)
         if (data.about) {
             const about = data.about;
-            if (about.judul) document.getElementById('aboutTitle').textContent = about.judul;
-            if (about.deskripsi) document.getElementById('aboutDescription').textContent = about.deskripsi;
+            const aboutTitle = document.getElementById('aboutTitle');
+            const aboutDescription = document.getElementById('aboutDescription');
+            if (aboutTitle && about.judul) aboutTitle.textContent = about.judul;
+            if (aboutDescription && about.deskripsi) aboutDescription.textContent = about.deskripsi;
             if (about.gambar) {
                 const img = document.getElementById('aboutImage');
                 if (img) img.src = getImageUrl(about.gambar, 'assets/images/about/about-imdkom.jpg');
             }
         }
         
+        // Contact & Footer (tetap sama)
         if (data.contact) {
             const contact = data.contact;
             if (contact.whatsapp) {
-                document.getElementById('footerWhatsApp').textContent = `WhatsApp: ${contact.whatsapp}`;
+                const footerWA = document.getElementById('footerWhatsApp');
+                if (footerWA) footerWA.textContent = `WhatsApp: ${contact.whatsapp}`;
             }
             if (contact.instagram) {
-                document.getElementById('footerInstagram').textContent = `Instagram: ${contact.instagram}`;
+                const footerIG = document.getElementById('footerInstagram');
+                if (footerIG) footerIG.textContent = `Instagram: ${contact.instagram}`;
             }
         }
         
         if (data.footer && data.footer.copyright) {
-            document.getElementById('footerCopyright').textContent = data.footer.copyright;
+            const footerCopy = document.getElementById('footerCopyright');
+            if (footerCopy) footerCopy.textContent = data.footer.copyright;
         }
         
     } catch (error) {

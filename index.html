@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IMDKOM - Kursus & Pelatihan • Computer Service</title>
-    <meta name="description" content="IMDKOM menyediakan kursus komputer, pelatihan, dan layanan computer service. Belajar keterampilan digital dan solusi perangkat komputer." />
+    <title>IMDKOM Yogyakarta - Kursus & Pelatihan • Computer Service</title>
+    <meta name="description" content="IMDKOM Yogyakarta menyediakan kursus komputer, pelatihan, dan layanan computer service. Belajar keterampilan digital dan solusi perangkat komputer." />
     
     <!-- Open Graph -->
-    <meta property="og:title" content="IMDKOM - Kursus & Pelatihan • Computer Service" />
+    <meta property="og:title" content="IMDKOM Yogyakarta - Kursus & Pelatihan • Computer Service" />
     <meta property="og:description" content="Belajar keterampilan komputer dan dapatkan solusi untuk perangkat Anda." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://imdkom.com" />
@@ -48,14 +48,14 @@
     <!-- ============================================================
     NAVIGATION
     ============================================================ -->
-    <nav class="bg-white border-b border-gray-200 py-3">
+    <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-2">
                 <span class="text-2xl font-bold text-brand">IMDKOM</span>
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
             </a>
             
-            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none" aria-label="Toggle menu">
+            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -74,68 +74,145 @@
         <!-- Mobile Menu -->
         <div id="mobileNav" class="hidden md:hidden bg-white border-t border-gray-200 mt-3 py-3">
             <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-brand font-semibold py-1">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-gray-600 hover:text-brand py-1">Computer Service</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1">Kontak</a>
-                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1">Login</a>
+                <a href="index.html" class="text-brand font-semibold py-1.5">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="text-gray-600 hover:text-brand py-1.5">Computer Service</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
             </div>
         </div>
     </nav>
 
     <!-- ============================================================
     HERO SECTION
+    Mobile: Overlay di atas gambar
+    Desktop: 2 kolom (text + gambar)
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16 lg:py-20" id="heroSection">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12">
-                <div class="lg:w-1/2 w-full">
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-brand leading-tight" id="heroHeading">
-                        IMDKOM
-                    </h1>
-                    <p class="text-base sm:text-lg md:text-xl text-gray-500 mt-1" id="heroSubheading">
-                        Kursus &amp; Pelatihan • Computer Service
-                    </p>
-                    <p class="text-lg sm:text-xl md:text-2xl font-medium text-gray-800 mt-3 sm:mt-4" id="heroDescription">
-                        Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
-                    </p>
-                    <p class="text-sm sm:text-base text-gray-500 max-w-md mt-2" id="heroSubtext">
-                        IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
-                    </p>
-                    <div class="flex flex-wrap gap-2 sm:gap-3 mt-5 sm:mt-6">
-                        <a href="kursus.html" class="bg-brand hover:bg-brand-light text-white font-medium px-5 py-2.5 sm:px-6 sm:py-3 rounded transition-colors text-sm sm:text-base" id="heroCtaPrimary">
-                            Lihat Program
-                        </a>
-                        <a href="#" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-5 py-2.5 sm:px-6 sm:py-3 rounded transition-colors text-sm sm:text-base" id="heroWhatsApp">
-                            Konsultasi WhatsApp
-                        </a>
-                    </div>
-                </div>
-                <div class="lg:w-1/2 w-full">
-                    <img src="assets/images/hero/hero-default.jpg" alt="IMDKOM - Kursus dan Computer Service" 
-                         class="w-full rounded-lg shadow-sm hero-image" id="heroImage" loading="lazy" />
+    <section class="relative" id="heroSection">
+
+        <!-- ========================================================
+             MOBILE VERSION (Overlay di atas gambar)
+             ======================================================== -->
+        <div class="relative md:hidden">
+            <!-- Background Image -->
+            <img src="assets/images/hero/hero-default.jpg" 
+                 alt="IMDKOM - Kursus dan Computer Service" 
+                 class="w-full object-cover" 
+                 style="height: 90vh; min-height: 550px;"
+                 loading="lazy" />
+            
+            <!-- Overlay Gradient -->
+            <div class="absolute inset-0" 
+                 style="background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 40%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.15) 100%);"></div>
+            
+            <!-- Text Overlay -->
+            <div class="absolute inset-0 flex flex-col justify-end p-6 pb-10 text-white">
+                <h1 class="text-3xl font-extrabold leading-tight" id="heroHeading">
+                    IMDKOM YOGYAKARTA
+                </h1>
+                <p class="text-sm text-gray-200 mt-2" id="heroSubheading">
+                    Kursus &amp; Pelatihan • Computer Service
+                </p>
+                <p class="text-base font-medium mt-4 leading-snug" id="heroDescription">
+                    Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
+                </p>
+                <p class="text-xs text-gray-300 mt-3 leading-relaxed" id="heroSubtext">
+                    IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
+                </p>
+                
+                <!-- CTA Buttons Mobile -->
+                <div class="flex flex-wrap gap-2 mt-5">
+                    <a href="kursus.html" 
+                       class="bg-brand hover:bg-brand-light text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" 
+                       id="heroCtaPrimaryMobile">
+                        Lihat Program
+                    </a>
+                    <a href="service.html" 
+                       class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" 
+                       id="heroCtaServiceMobile">
+                        Lihat Service
+                    </a>
+                    <a href="#" 
+                       class="border border-white/60 hover:border-white text-white font-medium px-5 py-2.5 rounded transition-colors text-sm backdrop-blur-sm bg-white/10" 
+                       id="heroWhatsAppMobile">
+                        Konsultasi WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
+
+        <!-- ========================================================
+             DESKTOP VERSION (2 kolom)
+             ======================================================== -->
+        <div class="hidden md:block py-16 lg:py-24">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-row items-center gap-12 lg:gap-16">
+                    <!-- Text Content -->
+                    <div class="w-1/2">
+                        <h1 class="text-5xl lg:text-6xl font-extrabold text-brand leading-tight" id="heroHeadingDesktop">
+                            IMDKOM YOGYAKARTA
+                        </h1>
+                        <p class="text-xl text-gray-500 mt-3" id="heroSubheadingDesktop">
+                            Kursus &amp; Pelatihan • Computer Service
+                        </p>
+                        <p class="text-2xl font-medium text-gray-800 mt-6 leading-snug" id="heroDescriptionDesktop">
+                            Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
+                        </p>
+                        <p class="text-base text-gray-500 max-w-md mt-4 leading-relaxed" id="heroSubtextDesktop">
+                            IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
+                        </p>
+                        
+                        <!-- CTA Buttons Desktop -->
+                        <div class="flex flex-wrap gap-3 mt-8">
+                            <a href="kursus.html" 
+                               class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3.5 rounded transition-colors text-base" 
+                               id="heroCtaPrimary">
+                                Lihat Program
+                            </a>
+                            <a href="service.html" 
+                               class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-7 py-3.5 rounded transition-colors text-base" 
+                               id="heroCtaService">
+                                Lihat Service
+                            </a>
+                            <a href="#" 
+                               class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-7 py-3.5 rounded transition-colors text-base" 
+                               id="heroWhatsApp">
+                                Konsultasi WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Image -->
+                    <div class="w-1/2">
+                        <img src="assets/images/hero/hero-default.jpg" 
+                             alt="IMDKOM - Kursus dan Computer Service" 
+                             class="w-full rounded-lg shadow-sm hero-image" 
+                             id="heroImage" 
+                             loading="lazy" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <!-- ============================================================
     TENTANG SINGKAT
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16 bg-gray-50" id="aboutSection">
+    <section class="py-12 sm:py-16 md:py-20 bg-gray-50" id="aboutSection">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12">
+            <div class="flex flex-col md:flex-row items-center gap-8 sm:gap-10 md:gap-14">
                 <div class="md:w-1/2 w-full">
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand" id="aboutTitle">Tentang IMDKOM</h2>
-                    <p class="text-sm sm:text-base text-gray-600 mt-3" id="aboutDescription">
+                    <p class="text-sm sm:text-base text-gray-600 mt-4 leading-relaxed" id="aboutDescription">
                         IMDKOM adalah lembaga kursus dan pelatihan komputer yang telah berpengalaman dalam membantu masyarakat mengembangkan keterampilan digital. Kami juga menyediakan layanan computer service untuk perbaikan laptop, PC, dan printer.
                     </p>
-                    <p class="text-sm sm:text-base text-gray-600 mt-2">
+                    <p class="text-sm sm:text-base text-gray-600 mt-3">
                         <strong>Izin Dinas Pendidikan:</strong> 098/Kpts/2021<br />
                         <strong>NPSN:</strong> K0560748
                     </p>
-                    <a href="tentang.html" class="inline-block mt-4 text-brand hover:text-brand-light font-medium border-b-2 border-brand hover:border-brand-light transition-colors text-sm sm:text-base">
+                    <a href="tentang.html" class="inline-block mt-5 text-brand hover:text-brand-light font-medium border-b-2 border-brand hover:border-brand-light transition-colors text-sm sm:text-base">
                         Selengkapnya →
                     </a>
                 </div>
@@ -150,12 +227,12 @@
     <!-- ============================================================
     KURSUS & PELATIHAN — PREVIEW
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16">
+    <section class="py-12 sm:py-16 md:py-20">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand">Kursus &amp; Pelatihan</h2>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-2 mb-6 sm:mb-8">Program pelatihan komputer untuk berbagai kebutuhan.</p>
+            <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10">Program pelatihan komputer untuk berbagai kebutuhan.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" id="coursePreviewContainer">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8" id="coursePreviewContainer">
                 <!-- Akan dimuat dari JavaScript -->
                 <div class="col-span-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
@@ -163,8 +240,8 @@
                 </div>
             </div>
             
-            <div class="text-center mt-6 sm:mt-8">
-                <a href="kursus.html" class="bg-brand hover:bg-brand-light text-white font-medium px-6 py-2.5 sm:px-8 sm:py-3 rounded transition-colors text-sm sm:text-base">
+            <div class="text-center mt-8 sm:mt-10">
+                <a href="kursus.html" class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3 sm:px-8 sm:py-3.5 rounded transition-colors text-sm sm:text-base">
                     Lihat Semua Program
                 </a>
             </div>
@@ -174,12 +251,12 @@
     <!-- ============================================================
     COMPUTER SERVICE — PREVIEW
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16 bg-gray-50">
+    <section class="py-12 sm:py-16 md:py-20 bg-gray-50">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand">Computer Service</h2>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-2 mb-6 sm:mb-8">Layanan perbaikan dan kebutuhan perangkat komputer.</p>
+            <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10">Layanan perbaikan dan kebutuhan perangkat komputer.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" id="servicePreviewContainer">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8" id="servicePreviewContainer">
                 <!-- Akan dimuat dari JavaScript -->
                 <div class="col-span-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
@@ -187,8 +264,8 @@
                 </div>
             </div>
             
-            <div class="text-center mt-6 sm:mt-8">
-                <a href="service.html" class="bg-brand hover:bg-brand-light text-white font-medium px-6 py-2.5 sm:px-8 sm:py-3 rounded transition-colors text-sm sm:text-base">
+            <div class="text-center mt-8 sm:mt-10">
+                <a href="service.html" class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3 sm:px-8 sm:py-3.5 rounded transition-colors text-sm sm:text-base">
                     Lihat Semua Layanan
                 </a>
             </div>
@@ -198,11 +275,11 @@
     <!-- ============================================================
     TESTIMONI
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16" id="testimonialsSection" style="display:none;">
+    <section class="py-12 sm:py-16 md:py-20" id="testimonialsSection" style="display:none;">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand">Testimoni</h2>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-2 mb-6 sm:mb-8">Apa kata mereka tentang IMDKOM.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" id="testimonialsContainer">
+            <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10">Apa kata mereka tentang IMDKOM.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8" id="testimonialsContainer">
                 <!-- Akan dimuat dari JavaScript -->
             </div>
         </div>
@@ -211,11 +288,11 @@
     <!-- ============================================================
     FAQ
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16 bg-gray-50" id="faqSection" style="display:none;">
+    <section class="py-12 sm:py-16 md:py-20 bg-gray-50" id="faqSection" style="display:none;">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand">Pertanyaan Umum</h2>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-2 mb-6 sm:mb-8">Informasi yang sering ditanyakan.</p>
-            <div class="max-w-3xl mx-auto space-y-2 sm:space-y-3" id="faqContainer">
+            <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10">Informasi yang sering ditanyakan.</p>
+            <div class="max-w-3xl mx-auto space-y-3" id="faqContainer">
                 <!-- Akan dimuat dari JavaScript -->
             </div>
         </div>
@@ -224,21 +301,20 @@
     <!-- ============================================================
     FOOTER
     ============================================================ -->
-    <footer class="py-6 sm:py-8 border-t border-gray-200">
+    <footer class="py-8 sm:py-10 border-t border-gray-200">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
-                    <h5 class="text-lg sm:text-xl font-bold text-brand">IMDKOM</h5>
-                    <p class="text-gray-500 text-xs sm:text-sm">Kursus &amp; Pelatihan • Computer Service</p>
+                    <h5 class="text-xl font-bold text-brand">IMDKOM</h5>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Kursus &amp; Pelatihan • Computer Service</p>
                 </div>
                 <div>
-                    <h6 class="font-medium text-gray-700 text-sm">Kontak</h6>
+                    <h6 class="font-medium text-gray-700 text-sm mb-2">Kontak</h6>
                     <p class="text-gray-500 text-xs sm:text-sm" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
                     <p class="text-gray-500 text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
                 </div>
-                <div class="text-center md:text-right">
+                <div class="md:text-right">
                     <p class="text-gray-400 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
-                    <a href="admin/login.html" class="text-xs text-gray-300 hover:text-gray-500 transition-colors">Login</a>
                 </div>
             </div>
         </div>
@@ -247,7 +323,7 @@
     <!-- ============================================================
     FLOATING WHATSAPP BUTTON
     ============================================================ -->
-    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
@@ -265,8 +341,7 @@
     <!-- Mobile Menu Toggle -->
     <script>
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            const nav = document.getElementById('mobileNav');
-            nav.classList.toggle('hidden');
+            document.getElementById('mobileNav').classList.toggle('hidden');
         });
     </script>
 </body>
