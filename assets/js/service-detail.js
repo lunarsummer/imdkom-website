@@ -12,16 +12,68 @@ import { openWhatsApp } from './whatsapp.js';
 // GET SERVICE SLUG FROM URL
 // ============================================================
 function getServiceSlugFromUrl() {
-    // Cek dari URL param ?slug=laptop
+    // 1. PRIORITAS: data attribute di container
+    const container = document.getElementById('serviceHeroContainer');
+    const dataSlug = container?.dataset?.serviceSlug;
+    if (dataSlug) {
+        console.log('✅ Slug:', dataSlug, '(dari data attribute)');
+        return dataSlug;
+    }
+    
+    // 2. URL param ?slug=xxx
     const urlParams = new URLSearchParams(window.location.search);
     const slugFromParam = urlParams.get('slug');
-    if (slugFromParam) return slugFromParam;
+    if (slugFromParam) {
+        console.log('✅ Slug:', slugFromParam, '(dari URL param)');
+        return slugFromParam;
+    }
     
-    // Fallback: cek dari filename (service-laptop.html → laptop)
+    // 3. Mapping filename → slug (support .html dan tanpa .html)
     const path = window.location.pathname;
-    const match = path.match(/service-([a-z]+)\.html/);
-    if (match) return match[1];
+    const filename = path.substring(path.lastIndexOf('/') + 1);
     
+    // Mapping lengkap
+    const slugMap = {
+        'service-laptop': 'laptop',
+        'service-laptop.html': 'laptop',
+        'service-pc': 'pc',
+        'service-pc.html': 'pc',
+        'service-printer': 'printer',
+        'service-printer.html': 'printer',
+        'service-panggil': 'panggil',
+        'service-panggil.html': 'panggil',
+        'sparepart': 'sparepart',
+        'sparepart.html': 'sparepart',
+        'upgrade': 'upgrade',
+        'upgrade.html': 'upgrade',
+        'instalasi': 'instalasi',
+        'instalasi.html': 'instalasi'
+    };
+    
+    if (slugMap[filename]) {
+        console.log('✅ Slug:', slugMap[filename], '(dari mapping)');
+        return slugMap[filename];
+    }
+    
+    // 4. Fallback: regex tanpa .html (untuk Netlify pretty URLs)
+    const match = path.match(/service-([a-z-]+)(?:\.html)?$/i);
+    if (match) {
+        console.log('✅ Slug:', match[1], '(dari regex)');
+        return match[1];
+    }
+    
+    // 5. Fallback 2: cek path terakhir
+    const lastPart = path.split('/').filter(Boolean).pop();
+    if (lastPart) {
+        // Hapus prefix 'service-' kalau ada
+        const cleaned = lastPart.replace(/^service-/, '').replace(/\.html$/, '');
+        if (cleaned && cleaned !== lastPart || cleaned) {
+            console.log('✅ Slug:', cleaned, '(dari path terakhir)');
+            return cleaned;
+        }
+    }
+    
+    console.error('❌ Slug tidak ditemukan:', path);
     return null;
 }
 
