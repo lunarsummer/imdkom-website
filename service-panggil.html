@@ -686,14 +686,33 @@
                                     <i data-lucide="map-pin" class="w-4 h-4 text-brand flex-shrink-0 mt-0.5"></i>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-gray-600 mb-1">
-                                            <strong>Koordinat:</strong> <span id="locationCoords">-</span>
+                                            <strong>Koordinat Anda:</strong> <span id="locationCoords">-</span>
                                         </p>
-                                        <p class="text-gray-600 break-all">
+                                        <p class="text-gray-600 break-all mb-3">
                                             <strong>Google Maps:</strong> 
                                             <a id="locationMapsLink" href="#" target="_blank" class="text-brand hover:underline"></a>
                                         </p>
+
+                                        <!-- ⭐ ESTIMASI BIAYA KUNJUNGAN -->
+                                        <div id="distanceInfo" class="p-3 rounded-lg" style="background: rgba(5, 150, 105, 0.08); border: 1px solid rgba(5, 150, 105, 0.2);">
+                                            <div class="flex items-start gap-2">
+                                                <i data-lucide="route" class="w-4 h-4 text-success flex-shrink-0 mt-0.5"></i>
+                                                <div class="flex-1">
+                                                    <p class="text-xs text-gray-600">
+                                                        <strong>Jarak dari IMDKOM:</strong> 
+                                                        <span id="distanceValue" class="text-success font-bold">-</span>
+                                                    </p>
+                                                    <p class="text-xs text-gray-600 mt-1">
+                                                        <strong>Estimasi Biaya Kunjungan:</strong> 
+                                                        <span id="distanceCost" class="text-success font-bold">-</span>
+                                                    </p>
+                                                    <p id="distanceNote" class="text-xs text-gray-500 mt-1 italic"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <button type="button" id="removeLocation" 
-                                                class="mt-2 text-red-600 hover:text-red-800 text-xs font-medium inline-flex items-center gap-1">
+                                                class="mt-3 text-red-600 hover:text-red-800 text-xs font-medium inline-flex items-center gap-1">
                                             <i data-lucide="x" class="w-3 h-3"></i>
                                             Hapus Lokasi
                                         </button>
@@ -841,12 +860,134 @@
         });
 
         // ============================================================
+        // ⭐ KALKULASI JARAK & BIAYA KUNJUNGAN
+        // ============================================================
+
+        // Koordinat lokasi IMDKOM (fix)
+        const IMDKOM_LOCATION = {
+            lat: -7.743922,
+            lng: 110.389871,
+            name: 'IMDKOM - Jl. Kaliurang Km 7,3 No 38, Yogyakarta'
+        };
+
+        /**
+         * Hitung jarak antara 2 koordinat menggunakan Haversine Formula
+         * @returns {number} Jarak dalam kilometer
+         */
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius bumi dalam km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            
+            const a = 
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c;
+            
+            return distance;
+        }
+
+        /**
+         * Hitung estimasi biaya kunjungan berdasarkan jarak
+         * @param {number} distanceKm - Jarak dalam km
+         * @returns {object} { cost, costFormatted, note, isFree }
+         */
+        function calculateVisitCost(distanceKm) {
+            const FREE_RADIUS_KM = 7;
+            const BASE_COST = 20000;
+            const COST_PER_KM = 2000;
+            
+            if (distanceKm <= FREE_RADIUS_KM) {
+                return {
+                    cost: 0,
+                    costFormatted: 'GRATIS',
+                    note: `Jarak Anda ≤ ${FREE_RADIUS_KM} km, biaya kunjungan GRATIS 🎉`,
+                    isFree: true,
+                    distance: distanceKm
+                };
+            }
+            
+            // Kelebihan jarak dari free radius
+            const extraKm = Math.ceil(distanceKm - FREE_RADIUS_KM);
+            const extraCost = extraKm * COST_PER_KM;
+            const totalCost = BASE_COST + extraCost;
+            
+            return {
+                cost: totalCost,
+                costFormatted: `Rp ${totalCost.toLocaleString('id-ID')}`,
+                note: `Biaya dasar Rp ${BASE_COST.toLocaleString('id-ID')} + ${extraKm} km × Rp ${COST_PER_KM.toLocaleString('id-ID')}`,
+                isFree: false,
+                distance: distanceKm,
+                extraKm: extraKm,
+                baseCost: BASE_COST,
+                extraCost: extraCost
+            };
+        }
+
+        /**
+         * Update UI dengan info jarak & biaya
+         */
+        function updateDistanceInfo() {
+            const distanceValue = document.getElementById('distanceValue');
+            const distanceCost = document.getElementById('distanceCost');
+            const distanceNote = document.getElementById('distanceNote');
+            const distanceInfo = document.getElementById('distanceInfo');
+            
+            if (!currentLocation.lat || !currentLocation.lng) {
+                if (distanceInfo) distanceInfo.classList.add('hidden');
+                return;
+            }
+            
+            // Hitung jarak
+            const distanceKm = calculateDistance(
+                IMDKOM_LOCATION.lat, IMDKOM_LOCATION.lng,
+                currentLocation.lat, currentLocation.lng
+            );
+            
+            // Hitung biaya
+            const costInfo = calculateVisitCost(distanceKm);
+            
+            // Simpan ke state
+            currentLocation.distance = distanceKm;
+            currentLocation.visitCost = costInfo.cost;
+            currentLocation.visitCostFormatted = costInfo.costFormatted;
+            
+            // Update UI
+            if (distanceValue) distanceValue.textContent = `${distanceKm.toFixed(2)} km`;
+            if (distanceCost) distanceCost.textContent = costInfo.costFormatted;
+            if (distanceNote) distanceNote.textContent = costInfo.note;
+            
+            // Warna berbeda kalau gratis
+            if (distanceInfo) {
+                if (costInfo.isFree) {
+                    distanceInfo.style.background = 'rgba(5, 150, 105, 0.08)';
+                    distanceInfo.style.border = '1px solid rgba(5, 150, 105, 0.2)';
+                } else {
+                    distanceInfo.style.background = 'rgba(194, 65, 12, 0.06)';
+                    distanceInfo.style.border = '1px solid rgba(194, 65, 12, 0.15)';
+                }
+            }
+            
+            console.log('📏 Distance Info:', {
+                distance: distanceKm.toFixed(2) + ' km',
+                cost: costInfo.costFormatted,
+                note: costInfo.note
+            });
+        }
+
+        // ============================================================
         // ⭐ GEOLOCATION
         // ============================================================
         let currentLocation = {
             lat: null,
             lng: null,
-            mapsLink: ''
+            mapsLink: '',
+            distance: null,
+            visitCost: 0,
+            visitCostFormatted: ''
         };
 
         const useCurrentLocationCheckbox = document.getElementById('useCurrentLocation');
@@ -889,6 +1030,9 @@
                         locationMapsLink.href = currentLocation.mapsLink;
                         locationMapsLink.textContent = currentLocation.mapsLink;
                         locationInfo.classList.remove('hidden');
+                        
+                        // ⭐ HITUNG JARAK & BIAYA
+                        updateDistanceInfo();
                         
                         const alamatTextarea = document.getElementById('bookingAlamat');
                         if (alamatTextarea && !alamatTextarea.value.trim()) {
@@ -934,7 +1078,10 @@
             currentLocation = {
                 lat: null,
                 lng: null,
-                mapsLink: ''
+                mapsLink: '',
+                distance: null,
+                visitCost: 0,
+                visitCostFormatted: ''
             };
             
             if (locationInfo) locationInfo.classList.add('hidden');
@@ -990,10 +1137,15 @@
             if (tipeService === 'Service Panggil' && alamat) {
                 message += `> Alamat: ${alamat}\n`;
                 
-                // ⭐ Tambah koordinat & maps link jika ada
+                // ⭐ Info koordinat & jarak
                 if (currentLocation.lat && currentLocation.lng) {
                     message += `> Koordinat: ${currentLocation.lat.toFixed(6)}, ${currentLocation.lng.toFixed(6)}\n`;
                     message += `> Google Maps: ${currentLocation.mapsLink}\n`;
+                    
+                    if (currentLocation.distance) {
+                        message += `> Jarak dari IMDKOM: ${currentLocation.distance.toFixed(2)} km\n`;
+                        message += `> Biaya Kunjungan: ${currentLocation.visitCostFormatted}\n`;
+                    }
                 }
             }
             
