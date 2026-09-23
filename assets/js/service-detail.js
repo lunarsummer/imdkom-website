@@ -215,19 +215,16 @@ export async function loadPricelist() {
             grouped[kat].push({ id: doc.id, ...data });
         });
         
-        // Render semua kategori sebagai tabel
         let html = '';
         
         Object.keys(grouped).forEach((kategori) => {
             html += `
                 <div class="glass rounded-2xl overflow-hidden mb-4">
-                    <!-- Header Kategori -->
                     <div class="bg-brand text-white px-4 py-3 flex items-center gap-2">
                         <i data-lucide="tag" class="w-4 h-4"></i>
                         <h3 class="font-bold text-sm uppercase tracking-wide">${escapeHtml(kategori)}</h3>
                     </div>
                     
-                    <!-- Tabel -->
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
@@ -249,11 +246,13 @@ export async function loadPricelist() {
                         <td class="px-4 py-3" data-label="Layanan">
                             <div class="flex items-center gap-2 flex-wrap">
                                 <span class="font-medium text-gray-800">${escapeHtml(item.nama)}</span>
-                                ${hasPromo ? `<span class="bg-brand-dark text-white text-[10px] font-bold px-2 py-0.5 rounded-full">PROMO</span>` : ''}
+                                ${hasPromo ? `
+                                 <span class="promo-shine">PROMO</span>
+                                 ` : ''}
                             </div>
                             ${item.deskripsi ? `<p class="text-xs text-gray-500 mt-0.5">${escapeHtml(item.deskripsi)}</p>` : ''}
                             
-                            <!-- Info mobile (muncul di bawah nama) -->
+                            <!-- Info mobile -->
                             <div class="flex items-center gap-3 mt-1 text-[11px] text-gray-400 sm:hidden">
                                 ${item.estimasi ? `<span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${escapeHtml(item.estimasi)}</span>` : ''}
                                 ${item.garansi && item.garansi !== '-' ? `<span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i>${escapeHtml(item.garansi)}</span>` : ''}
@@ -287,7 +286,9 @@ export async function loadPricelist() {
         
         container.innerHTML = html;
         
-        if (typeof lucide !== 'undefined') lucide.createIcons();
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
         
     } catch (error) {
         console.error('Error loading pricelist:', error);
