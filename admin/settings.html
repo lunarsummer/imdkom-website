@@ -78,14 +78,6 @@
             margin-top: 0.375rem;
         }
         
-        .info-card {
-            background: linear-gradient(135deg, rgba(26, 60, 94, 0.05) 0%, rgba(42, 90, 122, 0.05) 100%);
-            border: 1px solid rgba(26, 60, 94, 0.15);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-        }
-        
         .admin-info-item {
             display: flex;
             align-items: center;
@@ -268,7 +260,66 @@
             </div>
 
             <!-- ============================================================
-                 SECTION 3: INFO ADMIN
+                 SECTION 3: TARIF SERVICE PANGGIL ⭐ BARU
+                 ============================================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(194, 65, 12, 0.1); color: #c2410c;">
+                        <i data-lucide="route" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Tarif Service Panggil</div>
+                        <div class="form-section-desc">Pengaturan biaya kunjungan berdasarkan jarak</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="form-label">Radius Gratis (km) *</label>
+                        <input type="number" id="radiusGratis" class="form-input" 
+                               placeholder="7" min="0" step="0.5" value="7" />
+                        <p class="form-hint">Jarak ≤ nilai ini = GRATIS</p>
+                    </div>
+                    <div>
+                        <label class="form-label">Biaya Dasar (Rp) *</label>
+                        <input type="number" id="biayaDasar" class="form-input" 
+                               placeholder="20000" min="0" step="1000" value="20000" />
+                        <p class="form-hint">Biaya dasar jika lebih dari radius</p>
+                    </div>
+                    <div>
+                        <label class="form-label">Biaya per km (Rp) *</label>
+                        <input type="number" id="biayaPerKm" class="form-input" 
+                               placeholder="2000" min="0" step="500" value="2000" />
+                        <p class="form-hint">Tambahan setiap 1 km</p>
+                    </div>
+                </div>
+
+                <!-- Preview Perhitungan -->
+                <div class="mt-4 p-4 rounded-lg" style="background: rgba(26, 60, 94, 0.05); border: 1px solid rgba(26, 60, 94, 0.15);">
+                    <p class="text-xs font-bold text-brand mb-2">📊 Preview Perhitungan:</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                        <div>
+                            <span class="text-gray-500">5 km:</span>
+                            <span class="font-bold text-success ml-1">GRATIS</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">10 km:</span>
+                            <span class="font-bold text-brand-dark ml-1" id="preview10">Rp 26.000</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">15 km:</span>
+                            <span class="font-bold text-brand-dark ml-1" id="preview15">Rp 36.000</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">20 km:</span>
+                            <span class="font-bold text-brand-dark ml-1" id="preview20">Rp 46.000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SECTION 4: INFO ADMIN
                  ============================================================ -->
             <div class="form-section">
                 <div class="form-section-header">
@@ -366,7 +417,6 @@
             if (!user) {
                 window.location.href = 'login.html';
             } else {
-                // Tampilkan info admin
                 document.getElementById('adminEmail').textContent = user.email || '-';
                 document.getElementById('adminUid').textContent = user.uid || '-';
                 
@@ -381,6 +431,34 @@
         });
 
         // ============================================================
+        // LIVE PREVIEW TARIF
+        // ============================================================
+        function updateTarifPreview() {
+            const radius = parseFloat(document.getElementById('radiusGratis').value) || 7;
+            const dasar = parseInt(document.getElementById('biayaDasar').value) || 20000;
+            const perKm = parseInt(document.getElementById('biayaPerKm').value) || 2000;
+            
+            function calc(km) {
+                if (km <= radius) return 'GRATIS';
+                const extra = Math.ceil(km - radius);
+                const cost = dasar + (extra * perKm);
+                return 'Rp ' + cost.toLocaleString('id-ID');
+            }
+            
+            const p10 = document.getElementById('preview10');
+            const p15 = document.getElementById('preview15');
+            const p20 = document.getElementById('preview20');
+            
+            if (p10) p10.textContent = calc(10);
+            if (p15) p15.textContent = calc(15);
+            if (p20) p20.textContent = calc(20);
+        }
+
+        document.getElementById('radiusGratis')?.addEventListener('input', updateTarifPreview);
+        document.getElementById('biayaDasar')?.addEventListener('input', updateTarifPreview);
+        document.getElementById('biayaPerKm')?.addEventListener('input', updateTarifPreview);
+
+        // ============================================================
         // LOAD SETTINGS
         // ============================================================
         async function loadSettings() {
@@ -389,17 +467,34 @@
                 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+                    
+                    // Kontak
                     document.getElementById('whatsapp').value = data.whatsapp || '';
                     document.getElementById('instagram').value = data.instagram || '';
                     document.getElementById('alamat').value = data.alamat || '';
                     document.getElementById('jamOperasional').value = data.jamOperasional || '';
                     document.getElementById('googleMaps').value = data.googleMaps || '';
+                    
+                    // Legalitas
                     document.getElementById('izinDiknas').value = data.izinDiknas || '098/Kpts/2021';
                     document.getElementById('npsn').value = data.npsn || 'K0560748';
+                    
+                    // Tarif Service Panggil
+                    document.getElementById('radiusGratis').value = data.radiusGratis !== undefined ? data.radiusGratis : 7;
+                    document.getElementById('biayaDasar').value = data.biayaDasar !== undefined ? data.biayaDasar : 20000;
+                    document.getElementById('biayaPerKm').value = data.biayaPerKm !== undefined ? data.biayaPerKm : 2000;
+                    
+                    // Update preview
+                    updateTarifPreview();
                 } else {
-                    // Default values jika belum ada
+                    // Default values
                     document.getElementById('izinDiknas').value = '098/Kpts/2021';
                     document.getElementById('npsn').value = 'K0560748';
+                    document.getElementById('radiusGratis').value = 7;
+                    document.getElementById('biayaDasar').value = 20000;
+                    document.getElementById('biayaPerKm').value = 2000;
+                    
+                    updateTarifPreview();
                 }
                 
             } catch (error) {
@@ -429,24 +524,71 @@
                 return;
             }
             
+            // Validasi tarif
+            const radiusGratis = parseFloat(document.getElementById('radiusGratis').value);
+            const biayaDasar = parseInt(document.getElementById('biayaDasar').value);
+            const biayaPerKm = parseInt(document.getElementById('biayaPerKm').value);
+            
+            if (isNaN(radiusGratis) || radiusGratis < 0) {
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 font-medium">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Radius gratis tidak valid!
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            if (isNaN(biayaDasar) || biayaDasar < 0) {
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 font-medium">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Biaya dasar tidak valid!
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            if (isNaN(biayaPerKm) || biayaPerKm < 0) {
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 font-medium">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Biaya per km tidak valid!
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
             lucide.createIcons();
             messageEl.innerHTML = '';
 
             const data = {
+                // Kontak
                 whatsapp: whatsapp,
                 instagram: document.getElementById('instagram').value.trim(),
                 alamat: document.getElementById('alamat').value.trim(),
                 jamOperasional: document.getElementById('jamOperasional').value.trim(),
                 googleMaps: document.getElementById('googleMaps').value.trim(),
+                
+                // Legalitas
                 izinDiknas: document.getElementById('izinDiknas').value.trim(),
                 npsn: document.getElementById('npsn').value.trim(),
+                
+                // Tarif Service Panggil
+                radiusGratis: radiusGratis,
+                biayaDasar: biayaDasar,
+                biayaPerKm: biayaPerKm,
+                
                 updatedAt: new Date().toISOString()
             };
 
             try {
-                await setDoc(doc(db, 'settings', 'general'), data);
+                await setDoc(doc(db, 'settings', 'general'), data, { merge: true });
                 messageEl.innerHTML = `
                     <div class="flex items-center gap-2 text-green-600 font-medium">
                         <i data-lucide="check-circle" class="w-4 h-4"></i>

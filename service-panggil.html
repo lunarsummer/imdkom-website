@@ -299,9 +299,7 @@
         .icon-brand .menu-icon { background: rgba(26, 60, 94, 0.1); color: #1a3c5e; }
         .icon-brand:hover .menu-icon { background: #1a3c5e; color: white; }
 
-        /* ============================================================
-           PROMO BADGE — Shine Effect
-           ============================================================ */
+        /* PROMO BADGE */
         .promo-shine {
             position: relative;
             display: inline-flex;
@@ -355,6 +353,171 @@
             position: relative;
             z-index: 2;
         }
+
+                       /* ============================================================
+   MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
+   ============================================================ */
+.mobile-menu-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
+    color: white !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 10px;
+    margin: 0.25rem 0;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.2);
+    transition: all 0.2s ease;
+}
+
+.mobile-menu-highlight:hover,
+.mobile-menu-highlight:active {
+    transform: translateX(4px);
+    box-shadow: 0 6px 16px rgba(26, 60, 94, 0.3);
+}
+
+.mobile-menu-highlight .menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-menu-highlight .menu-arrow {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.7;
+}
+
+/* ============================================================
+   MOBILE MENU — GLASSMORPHISM HIGHLIGHT + SHINE
+   ============================================================ */
+.mobile-menu-highlight {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    margin: 0.35rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    font-weight: 600;
+    
+    /* Glassmorphism */
+    background: linear-gradient(
+        135deg,
+        rgba(26, 60, 94, 0.12) 0%,
+        rgba(26, 60, 94, 0.06) 50%,
+        rgba(26, 60, 94, 0.12) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(26, 60, 94, 0.25);
+    box-shadow: 
+        0 4px 20px rgba(26, 60, 94, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    
+    color: #1a3c5e !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shine Sweep — Kilau bergerak */
+.mobile-menu-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.7) 50%,
+        transparent 70%
+    );
+    animation: mobile-shine 3.5s infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@keyframes mobile-shine {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+/* Content di atas shine */
+.mobile-menu-highlight > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Icon wrap */
+.mobile-menu-highlight .menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+/* Icon dengan glow */
+.mobile-menu-highlight .menu-icon-wrap i {
+    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
+    transition: filter 0.3s ease;
+}
+
+/* Arrow */
+.mobile-menu-highlight .menu-arrow {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+/* Hover / Tap state */
+.mobile-menu-highlight:hover,
+.mobile-menu-highlight:active {
+    transform: translateX(4px) scale(1.01);
+    background: linear-gradient(
+        135deg,
+        rgba(26, 60, 94, 0.18) 0%,
+        rgba(26, 60, 94, 0.1) 50%,
+        rgba(26, 60, 94, 0.18) 100%
+    );
+    border-color: rgba(26, 60, 94, 0.4);
+    box-shadow: 
+        0 6px 24px rgba(26, 60, 94, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.mobile-menu-highlight:hover .menu-arrow,
+.mobile-menu-highlight:active .menu-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+}
+
+.mobile-menu-highlight:hover .menu-icon-wrap i {
+    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
+}
+
+/* ⭐ Animasi glow berkala untuk menarik perhatian */
+@keyframes highlight-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 4px 20px rgba(26, 60, 94, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 
+            0 4px 24px rgba(26, 60, 94, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            0 0 20px rgba(26, 60, 94, 0.15);
+    }
+}
+
+.mobile-menu-highlight {
+    animation: highlight-pulse 3s ease-in-out infinite;
+}
+
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -383,16 +546,26 @@
             </div>
         </div>
         
-        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-            <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-brand font-semibold py-1.5">Computer Service</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
-                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
-            </div>
-        </div>
+        <!-- Mobile Menu -->
+<div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+    <div class="container mx-auto px-4 flex flex-col gap-2">
+        <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+        <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+        
+        <!-- ⭐ COMPUTER SERVICE — Glass + Shine -->
+        <a href="service.html" class="mobile-menu-highlight">
+            <span class="menu-icon-wrap">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </span>
+            <i data-lucide="arrow-right" class="menu-arrow"></i>
+        </a>
+        
+        <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+        <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+        <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
+    </div>
+</div>
     </nav>
 
     <!-- ============================================================
@@ -425,9 +598,7 @@
                 </p>
             </div>
 
-            <!-- Tombol CTA -->
             <div class="grid grid-cols-2 gap-4 mt-6 max-w-md mx-auto sm:mx-0">
-
                 <button onclick="openConsultationModal('panggil', 'Service Panggil')" 
                         class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left w-full">
                     <div class="flex items-start justify-between mb-5">
@@ -443,7 +614,6 @@
                 <button onclick="openBookingModal('panggil', 'Service Panggil')" 
                         class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 border border-white/40 text-left w-full relative overflow-hidden">
                     <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full">POPULER</span>
-                    
                     <div class="flex items-start justify-between mb-5">
                         <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="calendar-check" class="w-7 h-7"></i>
@@ -453,7 +623,6 @@
                     <h3 class="font-bold text-white text-base sm:text-lg">Booking</h3>
                     <p class="text-xs sm:text-sm text-white/80 mt-1">Panggil teknisi</p>
                 </button>
-
             </div>
         </div>
     </section>
@@ -467,7 +636,6 @@
                 <h2 class="text-2xl sm:text-3xl font-bold text-brand">Pricelist</h2>
                 <p class="text-sm text-gray-500 mt-1">Daftar harga layanan kami</p>
             </div>
-            
             <div id="pricelistContainer">
                 <div class="text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
@@ -486,7 +654,6 @@
                 <h2 class="text-2xl sm:text-3xl font-bold text-brand">Dokumentasi</h2>
                 <p class="text-sm text-gray-500 mt-1">Galeri foto kegiatan service kami</p>
             </div>
-            
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="documentationContainer">
                 <div class="col-span-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
@@ -527,7 +694,6 @@
     ============================================================ -->
     <div id="consultationModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeConsultationModal()"></div>
-        
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
@@ -539,62 +705,43 @@
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
-                
                 <form id="consultationForm" class="p-5 space-y-4">
                     <input type="hidden" id="consultationService" />
-                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
                         <div class="relative">
                             <i data-lucide="user" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="consultationNama" required
-                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
-                                   placeholder="Contoh: Budi Santoso" />
+                            <input type="text" id="consultationNama" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="Contoh: Budi Santoso" />
                         </div>
                     </div>
-                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
                         <div class="relative">
                             <i data-lucide="phone" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="tel" id="consultationWa" required
-                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
-                                   placeholder="08xxxxxxxxxx" />
+                            <input type="tel" id="consultationWa" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="08xxxxxxxxxx" />
                         </div>
                     </div>
-                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Device / Perangkat *</label>
                         <div class="relative">
                             <i data-lucide="home" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="consultationDevice" required
-                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
-                                   placeholder="Contoh: Laptop Asus di rumah" />
+                            <input type="text" id="consultationDevice" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="Contoh: Laptop Asus di rumah" />
                         </div>
                     </div>
-                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
                         <div class="relative">
                             <i data-lucide="file-text" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
-                            <textarea id="consultationMasalah" required rows="3"
-                                      class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
-                                      placeholder="Ceritakan masalah perangkat Anda..."></textarea>
+                            <textarea id="consultationMasalah" required rows="3" class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm resize-none" placeholder="Ceritakan masalah perangkat Anda..."></textarea>
                         </div>
                     </div>
-                    
                     <div class="flex gap-3 pt-2">
-                        <button type="button" onclick="closeConsultationModal()" 
-                                class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
-                            Batal
-                        </button>
-                        <button type="submit" 
-                                class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand hover:bg-brand-light text-white rounded-xl transition-colors text-sm font-medium">
+                        <button type="button" onclick="closeConsultationModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 text-sm font-medium">Batal</button>
+                        <button type="submit" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand hover:bg-brand-light text-white rounded-xl text-sm font-medium">
                             <i data-lucide="send" class="w-4 h-4"></i>
                             Kirim Konsultasi
                         </button>
                     </div>
-                    
                     <div id="consultationMessage" class="text-center"></div>
                 </form>
             </div>
@@ -606,7 +753,6 @@
     ============================================================ -->
     <div id="bookingModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeBookingModal()"></div>
-        
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
@@ -647,77 +793,61 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
-                        <input type="text" id="bookingNama" required
-                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
-                               placeholder="Contoh: Budi Santoso" />
+                        <input type="text" id="bookingNama" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="Contoh: Budi Santoso" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
-                        <input type="tel" id="bookingWa" required
-                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
-                               placeholder="08xxxxxxxxxx" />
+                        <input type="tel" id="bookingWa" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="08xxxxxxxxxx" />
                     </div>
 
-                    <!-- Alamat (muncul jika Panggil) -->
+                    <!-- Alamat -->
                     <div id="bookingAlamatField">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lokasi *</label>
-                        <textarea id="bookingAlamat" rows="2" required
-                                  class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
-                                  placeholder="Alamat lengkap untuk teknisi datang..."></textarea>
+                        <textarea id="bookingAlamat" rows="2" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm resize-none" placeholder="Alamat lengkap untuk teknisi datang..."></textarea>
                         <p class="text-xs text-gray-500 mt-1">Biaya transportasi akan diinfokan via WhatsApp</p>
 
-                        <!-- ⭐ CHECKBOX: Gunakan Lokasi Saat Ini -->
+                        <!-- Checkbox Lokasi -->
                         <div class="mt-3 p-3 bg-brand/5 border border-brand/15 rounded-xl">
                             <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" id="useCurrentLocation" 
-                                       class="w-4 h-4 mt-0.5 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <input type="checkbox" id="useCurrentLocation" class="w-4 h-4 mt-0.5 text-brand focus:ring-brand border-gray-300 rounded" />
                                 <div class="flex-1">
                                     <span class="text-sm font-medium text-gray-800">Gunakan lokasi saat ini</span>
-                                    <p class="text-xs text-gray-500 mt-0.5">
-                                        Dapatkan link Google Maps otomatis dari lokasi Anda
-                                    </p>
+                                    <p class="text-xs text-gray-500 mt-0.5">Dapatkan link Google Maps otomatis dari lokasi Anda</p>
                                 </div>
                             </label>
                             
-                            <!-- Info lokasi (muncul setelah dapat koordinat) -->
-                            <div id="locationInfo" class="hidden mt-3 pt-3 border-t border-brand/15">
-                                <div class="flex items-start gap-2 text-xs">
-                                    <i data-lucide="map-pin" class="w-4 h-4 text-brand flex-shrink-0 mt-0.5"></i>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-gray-600 mb-1">
-                                            <strong>Koordinat Anda:</strong> <span id="locationCoords">-</span>
-                                        </p>
-                                        <p class="text-gray-600 break-all mb-3">
-                                            <strong>Google Maps:</strong> 
-                                            <a id="locationMapsLink" href="#" target="_blank" class="text-brand hover:underline"></a>
-                                        </p>
-
-                                        <!-- ⭐ ESTIMASI BIAYA KUNJUNGAN -->
-                                        <div id="distanceInfo" class="p-3 rounded-lg" style="background: rgba(5, 150, 105, 0.08); border: 1px solid rgba(5, 150, 105, 0.2);">
-                                            <div class="flex items-start gap-2">
-                                                <i data-lucide="route" class="w-4 h-4 text-success flex-shrink-0 mt-0.5"></i>
-                                                <div class="flex-1">
-                                                    <p class="text-xs text-gray-600">
-                                                        <strong>Jarak dari IMDKOM:</strong> 
-                                                        <span id="distanceValue" class="text-success font-bold">-</span>
-                                                    </p>
-                                                    <p class="text-xs text-gray-600 mt-1">
-                                                        <strong>Estimasi Biaya Kunjungan:</strong> 
-                                                        <span id="distanceCost" class="text-success font-bold">-</span>
-                                                    </p>
-                                                    <p id="distanceNote" class="text-xs text-gray-500 mt-1 italic"></p>
-                                                </div>
-                                            </div>
+                            <!-- ✅ SUKSES — Ceklis Hijau Saja -->
+                            <div id="locationSuccess" class="hidden mt-3 pt-3 border-t border-brand/15">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 bg-success rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                                    </div>
+                                    <span class="text-sm font-semibold text-success">Lokasi berhasil didapatkan</span>
+                                </div>
+                                
+                                <!-- Estimasi Biaya -->
+                                <div id="distanceInfo" class="mt-3 p-3 rounded-lg" style="background: rgba(5, 150, 105, 0.08); border: 1px solid rgba(5, 150, 105, 0.2);">
+                                    <div class="flex items-start gap-2">
+                                        <i data-lucide="route" class="w-4 h-4 text-success flex-shrink-0 mt-0.5"></i>
+                                        <div class="flex-1">
+                                            <p class="text-xs text-gray-600">
+                                                <strong>Jarak dari IMDKOM:</strong> 
+                                                <span id="distanceValue" class="text-success font-bold">-</span>
+                                            </p>
+                                            <p class="text-xs text-gray-600 mt-1">
+                                                <strong>Biaya Kunjungan:</strong> 
+                                                <span id="distanceCost" class="text-success font-bold">-</span>
+                                            </p>
+                                            <p id="distanceNote" class="text-xs text-gray-500 mt-1 italic"></p>
                                         </div>
-
-                                        <button type="button" id="removeLocation" 
-                                                class="mt-3 text-red-600 hover:text-red-800 text-xs font-medium inline-flex items-center gap-1">
-                                            <i data-lucide="x" class="w-3 h-3"></i>
-                                            Hapus Lokasi
-                                        </button>
                                     </div>
                                 </div>
+                                
+                                <button type="button" id="removeLocation" class="mt-3 text-red-600 hover:text-red-800 text-xs font-medium inline-flex items-center gap-1">
+                                    <i data-lucide="x" class="w-3 h-3"></i>
+                                    Hapus Lokasi
+                                </button>
                             </div>
                             
                             <!-- Loading -->
@@ -740,28 +870,32 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Device / Perangkat *</label>
-                        <input type="text" id="bookingDevice" required
-                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
-                               placeholder="Contoh: Laptop Asus di rumah" />
+                        <input type="text" id="bookingDevice" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="Contoh: Laptop Asus di rumah" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
-                        <textarea id="bookingMasalah" required rows="3"
-                                  class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
-                                  placeholder="Ceritakan masalah perangkat Anda..."></textarea>
+                        <textarea id="bookingMasalah" required rows="3" class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm resize-none" placeholder="Ceritakan masalah perangkat Anda..."></textarea>
                     </div>
 
+                    <!-- ============================================================
+                         JADWAL KUNJUNGAN — TANGGAL & WAKTU CUSTOM
+                         ============================================================ -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jadwal Kunjungan</label>
-                        <select id="bookingJadwal"
-                                class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
-                            <option value="Hari ini">Hari ini</option>
-                            <option value="Besok">Besok</option>
-                            <option value="2-3 hari lagi">2-3 hari lagi</option>
-                            <option value="Minggu depan">Minggu depan</option>
-                            <option value="Fleksibel">Fleksibel</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jadwal Kunjungan</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
+                                <input type="date" id="bookingTanggal"
+                                       class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Waktu</label>
+                                <input type="time" id="bookingWaktu"
+                                       class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin dijadwalkan oleh teknisi</p>
                     </div>
 
                     <div class="bg-success/10 border border-success/30 rounded-xl p-3 flex items-start gap-3">
@@ -773,12 +907,8 @@
                     </div>
 
                     <div class="flex gap-3 pt-2">
-                        <button type="button" onclick="closeBookingModal()" 
-                                class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
-                            Batal
-                        </button>
-                        <button type="submit" 
-                                class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-dark hover:bg-[#a0350a] text-white rounded-xl transition-colors text-sm font-medium">
+                        <button type="button" onclick="closeBookingModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 text-sm font-medium">Batal</button>
+                        <button type="submit" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-dark hover:bg-[#a0350a] text-white rounded-xl text-sm font-medium">
                             <i data-lucide="send" class="w-4 h-4"></i>
                             Kirim Booking
                         </button>
@@ -795,7 +925,6 @@
     ============================================================ -->
     <div id="imageModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeImageModal()"></div>
-        
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="max-w-4xl w-full relative">
                 <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 w-10 h-10 rounded-full flex items-center justify-center z-10">
@@ -813,11 +942,45 @@
     <script type="module">
         import { openWhatsAppGeneric, openWhatsApp } from './assets/js/whatsapp.js';
         import { initDatabase } from './assets/js/init-db.js';
+        import { db, doc, getDoc } from './assets/js/firebase.js';
         import './assets/js/service-detail.js';
         import './assets/js/consultation.js';
         
         // ============================================================
-        // BOOKING MODAL
+        // KONFIGURASI DEFAULT (fallback jika admin belum set)
+        // ============================================================
+        const IMDKOM_LOCATION = {
+            lat: -7.743922,
+            lng: 110.389871,
+            name: 'IMDKOM - Jl. Kaliurang Km 7,3 No 38, Yogyakarta'
+        };
+
+        let visitRate = {
+            radiusGratis: 7,
+            biayaDasar: 20000,
+            biayaPerKm: 2000
+        };
+
+        // ============================================================
+        // LOAD TARIF DARI FIRESTORE
+        // ============================================================
+        async function loadVisitRate() {
+            try {
+                const docSnap = await getDoc(doc(db, 'settings', 'general'));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.radiusGratis !== undefined) visitRate.radiusGratis = data.radiusGratis;
+                    if (data.biayaDasar !== undefined) visitRate.biayaDasar = data.biayaDasar;
+                    if (data.biayaPerKm !== undefined) visitRate.biayaPerKm = data.biayaPerKm;
+                    console.log('✅ Tarif loaded dari Firestore:', visitRate);
+                }
+            } catch (error) {
+                console.warn('⚠️ Gagal load tarif, pakai default:', error.message);
+            }
+        }
+
+        // ============================================================
+        // MODAL KONTROL
         // ============================================================
         window.openBookingModal = function(slug, serviceName) {
             const modal = document.getElementById('bookingModal');
@@ -850,7 +1013,6 @@
                         alamatField.classList.add('hidden');
                         alamatInput.required = false;
                         alamatInput.value = '';
-                        // Reset lokasi
                         resetLocation();
                         const cb = document.getElementById('useCurrentLocation');
                         if (cb) cb.checked = false;
@@ -860,76 +1022,44 @@
         });
 
         // ============================================================
-        // ⭐ KALKULASI JARAK & BIAYA KUNJUNGAN
+        // KALKULASI JARAK & BIAYA
         // ============================================================
-
-        // Koordinat lokasi IMDKOM (fix)
-        const IMDKOM_LOCATION = {
-            lat: -7.743922,
-            lng: 110.389871,
-            name: 'IMDKOM - Jl. Kaliurang Km 7,3 No 38, Yogyakarta'
-        };
-
-        /**
-         * Hitung jarak antara 2 koordinat menggunakan Haversine Formula
-         * @returns {number} Jarak dalam kilometer
-         */
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radius bumi dalam km
+            const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
-            
             const a = 
                 Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                 Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            const distance = R * c;
-            
-            return distance;
+            return R * c;
         }
 
-        /**
-         * Hitung estimasi biaya kunjungan berdasarkan jarak
-         * @param {number} distanceKm - Jarak dalam km
-         * @returns {object} { cost, costFormatted, note, isFree }
-         */
         function calculateVisitCost(distanceKm) {
-            const FREE_RADIUS_KM = 7;
-            const BASE_COST = 20000;
-            const COST_PER_KM = 2000;
+            const { radiusGratis, biayaDasar, biayaPerKm } = visitRate;
             
-            if (distanceKm <= FREE_RADIUS_KM) {
+            if (distanceKm <= radiusGratis) {
                 return {
                     cost: 0,
                     costFormatted: 'GRATIS',
-                    note: `Jarak Anda ≤ ${FREE_RADIUS_KM} km, biaya kunjungan GRATIS 🎉`,
-                    isFree: true,
-                    distance: distanceKm
+                    note: `Jarak Anda ≤ ${radiusGratis} km, biaya kunjungan GRATIS 🎉`,
+                    isFree: true
                 };
             }
             
-            // Kelebihan jarak dari free radius
-            const extraKm = Math.ceil(distanceKm - FREE_RADIUS_KM);
-            const extraCost = extraKm * COST_PER_KM;
-            const totalCost = BASE_COST + extraCost;
+            const extraKm = Math.ceil(distanceKm - radiusGratis);
+            const extraCost = extraKm * biayaPerKm;
+            const totalCost = biayaDasar + extraCost;
             
             return {
                 cost: totalCost,
                 costFormatted: `Rp ${totalCost.toLocaleString('id-ID')}`,
-                note: `Biaya dasar Rp ${BASE_COST.toLocaleString('id-ID')} + ${extraKm} km × Rp ${COST_PER_KM.toLocaleString('id-ID')}`,
-                isFree: false,
-                distance: distanceKm,
-                extraKm: extraKm,
-                baseCost: BASE_COST,
-                extraCost: extraCost
+                note: `Biaya dasar Rp ${biayaDasar.toLocaleString('id-ID')} + ${extraKm} km × Rp ${biayaPerKm.toLocaleString('id-ID')}`,
+                isFree: false
             };
         }
 
-        /**
-         * Update UI dengan info jarak & biaya
-         */
         function updateDistanceInfo() {
             const distanceValue = document.getElementById('distanceValue');
             const distanceCost = document.getElementById('distanceCost');
@@ -941,26 +1071,22 @@
                 return;
             }
             
-            // Hitung jarak
             const distanceKm = calculateDistance(
                 IMDKOM_LOCATION.lat, IMDKOM_LOCATION.lng,
                 currentLocation.lat, currentLocation.lng
             );
             
-            // Hitung biaya
             const costInfo = calculateVisitCost(distanceKm);
             
-            // Simpan ke state
             currentLocation.distance = distanceKm;
             currentLocation.visitCost = costInfo.cost;
             currentLocation.visitCostFormatted = costInfo.costFormatted;
             
-            // Update UI
             if (distanceValue) distanceValue.textContent = `${distanceKm.toFixed(2)} km`;
             if (distanceCost) distanceCost.textContent = costInfo.costFormatted;
             if (distanceNote) distanceNote.textContent = costInfo.note;
             
-            // Warna berbeda kalau gratis
+            // Warna sesuai status
             if (distanceInfo) {
                 if (costInfo.isFree) {
                     distanceInfo.style.background = 'rgba(5, 150, 105, 0.08)';
@@ -971,15 +1097,11 @@
                 }
             }
             
-            console.log('📏 Distance Info:', {
-                distance: distanceKm.toFixed(2) + ' km',
-                cost: costInfo.costFormatted,
-                note: costInfo.note
-            });
+            console.log('📏 Distance:', distanceKm.toFixed(2), 'km →', costInfo.costFormatted);
         }
 
         // ============================================================
-        // ⭐ GEOLOCATION
+        // GEOLOCATION
         // ============================================================
         let currentLocation = {
             lat: null,
@@ -991,17 +1113,15 @@
         };
 
         const useCurrentLocationCheckbox = document.getElementById('useCurrentLocation');
-        const locationInfo = document.getElementById('locationInfo');
+        const locationSuccess = document.getElementById('locationSuccess');
         const locationLoading = document.getElementById('locationLoading');
         const locationError = document.getElementById('locationError');
         const locationErrorText = document.getElementById('locationErrorText');
-        const locationCoords = document.getElementById('locationCoords');
-        const locationMapsLink = document.getElementById('locationMapsLink');
         const removeLocationBtn = document.getElementById('removeLocation');
 
         useCurrentLocationCheckbox?.addEventListener('change', function() {
             if (this.checked) {
-                locationInfo.classList.add('hidden');
+                locationSuccess.classList.add('hidden');
                 locationError.classList.add('hidden');
                 
                 if (!navigator.geolocation) {
@@ -1026,20 +1146,19 @@
                         currentLocation.lng = lng;
                         currentLocation.mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
                         
-                        locationCoords.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-                        locationMapsLink.href = currentLocation.mapsLink;
-                        locationMapsLink.textContent = currentLocation.mapsLink;
-                        locationInfo.classList.remove('hidden');
+                        // ✅ Tampilkan ceklis sukses saja (tanpa koordinat/maps di UI)
+                        locationSuccess.classList.remove('hidden');
                         
-                        // ⭐ HITUNG JARAK & BIAYA
+                        // Hitung jarak & biaya
                         updateDistanceInfo();
                         
+                        // Auto-fill alamat
                         const alamatTextarea = document.getElementById('bookingAlamat');
                         if (alamatTextarea && !alamatTextarea.value.trim()) {
-                            alamatTextarea.value = `Koordinat: ${lat.toFixed(6)}, ${lng.toFixed(6)}\nLihat: ${currentLocation.mapsLink}`;
+                            alamatTextarea.value = `Lokasi via Google Maps: ${currentLocation.mapsLink}`;
                         }
                         
-                        console.log('✅ Lokasi didapat:', currentLocation);
+                        console.log('✅ Lokasi didapat');
                         if (typeof lucide !== 'undefined') lucide.createIcons();
                     },
                     function(error) {
@@ -1084,7 +1203,7 @@
                 visitCostFormatted: ''
             };
             
-            if (locationInfo) locationInfo.classList.add('hidden');
+            if (locationSuccess) locationSuccess.classList.add('hidden');
             if (locationError) locationError.classList.add('hidden');
             if (locationLoading) locationLoading.classList.add('hidden');
             
@@ -1113,10 +1232,10 @@
             const alamat = document.getElementById('bookingAlamat').value.trim();
             const device = document.getElementById('bookingDevice').value.trim();
             const masalah = document.getElementById('bookingMasalah').value.trim();
-            const jadwal = document.getElementById('bookingJadwal').value;
+            const tanggal = document.getElementById('bookingTanggal').value;
+            const waktu = document.getElementById('bookingWaktu').value;
             const serviceName = document.getElementById('bookingServiceLabel').textContent;
             
-            // Validasi
             if (!nama || !wa || !device || !masalah) {
                 alert('Mohon lengkapi semua field yang wajib diisi.');
                 return;
@@ -1127,7 +1246,25 @@
                 return;
             }
             
-            // Format pesan WhatsApp
+            // Format jadwal
+            let jadwalText = 'Fleksibel (dijadwalkan teknisi)';
+            if (tanggal || waktu) {
+                const parts = [];
+                if (tanggal) {
+                    const dateObj = new Date(tanggal);
+                    const formattedDate = dateObj.toLocaleDateString('id-ID', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
+                    parts.push(formattedDate);
+                }
+                if (waktu) parts.push(`pukul ${waktu}`);
+                jadwalText = parts.join(', ');
+            }
+            
+            // Format pesan WhatsApp (SIMPLE — tanpa koordinat)
             let message = `*BOOKING SERVICE - IMDKOM*\n\n`;
             message += `> Layanan: ${serviceName}\n`;
             message += `> Tipe: ${tipeService}\n`;
@@ -1137,32 +1274,28 @@
             if (tipeService === 'Service Panggil' && alamat) {
                 message += `> Alamat: ${alamat}\n`;
                 
-                // ⭐ Info koordinat & jarak
-                if (currentLocation.lat && currentLocation.lng) {
-                    message += `> Koordinat: ${currentLocation.lat.toFixed(6)}, ${currentLocation.lng.toFixed(6)}\n`;
+                if (currentLocation.mapsLink) {
                     message += `> Google Maps: ${currentLocation.mapsLink}\n`;
-                    
-                    if (currentLocation.distance) {
-                        message += `> Jarak dari IMDKOM: ${currentLocation.distance.toFixed(2)} km\n`;
-                        message += `> Biaya Kunjungan: ${currentLocation.visitCostFormatted}\n`;
-                    }
+                }
+                
+                if (currentLocation.distance) {
+                    message += `> Jarak dari IMDKOM: ${currentLocation.distance.toFixed(2)} km\n`;
+                    message += `> Biaya Kunjungan: ${currentLocation.visitCostFormatted}\n`;
                 }
             }
             
             message += `> Device: ${device}\n`;
             message += `> Masalah: ${masalah}\n`;
-            message += `> Jadwal: ${jadwal}\n\n`;
+            message += `> Jadwal: ${jadwalText}\n\n`;
             message += `Mohon konfirmasi booking saya. Terima kasih!`;
             
             openWhatsApp(message);
             closeBookingModal();
             this.reset();
             
-            // Reset lokasi
             resetLocation();
             if (useCurrentLocationCheckbox) useCurrentLocationCheckbox.checked = false;
             
-            // Reset tipe service default ke "Service Panggil"
             document.querySelector('input[name="tipeService"][value="Service Panggil"]').checked = true;
             document.getElementById('bookingAlamatField').classList.remove('hidden');
             document.getElementById('bookingAlamat').required = true;
@@ -1175,6 +1308,9 @@
             try {
                 const result = await initDatabase();
                 console.log('✅ Init result:', result);
+                
+                // Load tarif dari Firestore
+                await loadVisitRate();
             } catch (error) {
                 console.error('❌ Init error:', error);
             }
@@ -1184,13 +1320,11 @@
             }
         });
         
-        // Floating WhatsApp
         document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
             e.preventDefault();
             openWhatsAppGeneric();
         });
         
-        // Mobile Menu Toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mobileNav').classList.toggle('hidden');
         });
