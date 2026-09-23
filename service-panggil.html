@@ -115,32 +115,39 @@
             -webkit-backdrop-filter: blur(4px);
         }
 
-        /* SERVICE MENU CARD */
-        .service-menu-card {
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        /* Tipe Service Radio Card */
+        .tipe-service-option {
+            display: block;
+            position: relative;
+        }
+
+        .tipe-service-option input:checked + .tipe-service-card {
+            border-color: #1a3c5e !important;
+            background-color: rgba(26, 60, 94, 0.08) !important;
+            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tipe-service-option input:checked + .tipe-service-card i {
+            color: #1a3c5e !important;
+        }
+
+        .tipe-service-option input:checked + .tipe-service-card p:first-of-type {
+            color: #1a3c5e;
+        }
+
+        .tipe-service-card {
+            transition: all 0.25s ease;
+            border: 2px solid transparent;
             cursor: pointer;
         }
 
-        .service-menu-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(26, 60, 94, 0.12);
-            border-color: rgba(26, 60, 94, 0.2);
+        .tipe-service-card:hover {
+            border-color: rgba(26, 60, 94, 0.3);
+            background-color: rgba(26, 60, 94, 0.04);
         }
 
-        .service-menu-card .menu-icon {
-            transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
-        }
-
-        .service-menu-card:hover .menu-icon {
-            transform: scale(1.05);
-            background-color: #1a3c5e;
-            color: white;
-        }
-
-        .icon-brand .menu-icon { background: rgba(26, 60, 94, 0.1); color: #1a3c5e; }
-        .icon-brand:hover .menu-icon { background: #1a3c5e; color: white; }
-
-        /* PRICELIST ACCORDION */
+        /* Pricelist accordion */
         .price-group {
             background: white;
             border-radius: 12px;
@@ -267,276 +274,94 @@
             }
         }
 
-/* ============================================================
-   TIPE SERVICE — Radio Card Highlight
-   ============================================================ */
-.tipe-service-option {
-    display: block;
-    position: relative;
-}
+        /* SERVICE MENU CARD */
+        .service-menu-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            cursor: pointer;
+        }
 
-.tipe-service-option input:checked + .tipe-service-card {
-    border-color: #1a3c5e !important;
-    background-color: rgba(26, 60, 94, 0.08) !important;
-    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
-    transform: translateY(-2px);
-}
+        .service-menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(26, 60, 94, 0.12);
+            border-color: rgba(26, 60, 94, 0.2);
+        }
 
-.tipe-service-option input:checked + .tipe-service-card i {
-    color: #1a3c5e !important;
-}
+        .service-menu-card .menu-icon {
+            transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        }
 
-.tipe-service-option input:checked + .tipe-service-card p:first-of-type {
-    color: #1a3c5e;
-}
+        .service-menu-card:hover .menu-icon {
+            transform: scale(1.05);
+            background-color: #1a3c5e;
+            color: white;
+        }
 
-.tipe-service-card {
-    transition: all 0.25s ease;
-    border: 2px solid transparent;
-    cursor: pointer;
-}
+        .icon-brand .menu-icon { background: rgba(26, 60, 94, 0.1); color: #1a3c5e; }
+        .icon-brand:hover .menu-icon { background: #1a3c5e; color: white; }
 
-.tipe-service-card:hover {
-    border-color: rgba(26, 60, 94, 0.3);
-    background-color: rgba(26, 60, 94, 0.04);
-}
+        /* ============================================================
+           PROMO BADGE — Shine Effect
+           ============================================================ */
+        .promo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 0.625rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            letter-spacing: 0.02em;
+            box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
+            animation: promo-pulse 2.5s ease-in-out infinite;
+        }
 
-       /* ============================================================
-   MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
-   ============================================================ */
-.mobile-menu-highlight {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
-    color: white !important;
-    padding: 0.75rem 1rem !important;
-    border-radius: 10px;
-    margin: 0.25rem 0;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.2);
-    transition: all 0.2s ease;
-}
+        .promo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.8) 50%,
+                transparent 70%
+            );
+            animation: promo-shine-sweep 2.5s infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px);
-    box-shadow: 0 6px 16px rgba(26, 60, 94, 0.3);
-}
+        @keyframes promo-shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
 
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        @keyframes promo-pulse {
+            0%, 100% {
+                box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
+            }
+            50% {
+                box-shadow: 0 2px 12px rgba(194, 65, 12, 0.5),
+                            0 0 16px rgba(234, 88, 12, 0.3);
+            }
+        }
 
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.7;
-}
-
-/* ============================================================
-   MOBILE MENU — GLASSMORPHISM HIGHLIGHT + SHINE
-   ============================================================ */
-.mobile-menu-highlight {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-    margin: 0.35rem 0;
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    font-weight: 600;
-    
-    /* Glassmorphism */
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.12) 0%,
-        rgba(26, 60, 94, 0.06) 50%,
-        rgba(26, 60, 94, 0.12) 100%
-    );
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(26, 60, 94, 0.25);
-    box-shadow: 
-        0 4px 20px rgba(26, 60, 94, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    
-    color: #1a3c5e !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Shine Sweep — Kilau bergerak */
-.mobile-menu-highlight::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.7) 50%,
-        transparent 70%
-    );
-    animation: mobile-shine 3.5s infinite;
-    z-index: 1;
-    pointer-events: none;
-}
-
-@keyframes mobile-shine {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
-}
-
-/* Content di atas shine */
-.mobile-menu-highlight > * {
-    position: relative;
-    z-index: 2;
-}
-
-/* Icon wrap */
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
-
-/* Icon dengan glow */
-.mobile-menu-highlight .menu-icon-wrap i {
-    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
-    transition: filter 0.3s ease;
-}
-
-/* Arrow */
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-}
-
-/* Hover / Tap state */
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px) scale(1.01);
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.18) 0%,
-        rgba(26, 60, 94, 0.1) 50%,
-        rgba(26, 60, 94, 0.18) 100%
-    );
-    border-color: rgba(26, 60, 94, 0.4);
-    box-shadow: 
-        0 6px 24px rgba(26, 60, 94, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.mobile-menu-highlight:hover .menu-arrow,
-.mobile-menu-highlight:active .menu-arrow {
-    opacity: 1;
-    transform: translateX(4px);
-}
-
-.mobile-menu-highlight:hover .menu-icon-wrap i {
-    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
-}
-
-/* ⭐ Animasi glow berkala untuk menarik perhatian */
-@keyframes highlight-pulse {
-    0%, 100% {
-        box-shadow: 
-            0 4px 20px rgba(26, 60, 94, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    }
-    50% {
-        box-shadow: 
-            0 4px 24px rgba(26, 60, 94, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 0 20px rgba(26, 60, 94, 0.15);
-    }
-}
-
-.mobile-menu-highlight {
-    animation: highlight-pulse 3s ease-in-out infinite;
-}
-
-/* ============================================================
-   PROMO BADGE — Shine Effect
-   ============================================================ */
-.promo-shine {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    overflow: hidden;
-    background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
-    color: white;
-    font-weight: 700;
-    font-size: 0.625rem;
-    padding: 0.15rem 0.5rem;
-    border-radius: 999px;
-    letter-spacing: 0.02em;
-    box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
-}
-
-.promo-shine::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.8) 50%,
-        transparent 70%
-    );
-    animation: promo-shine-sweep 2.5s infinite;
-    z-index: 1;
-    pointer-events: none;
-}
-
-@keyframes promo-shine-sweep {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
-}
-
-.promo-shine > * {
-    position: relative;
-    z-index: 2;
-}
-
-/* Icon fire/sparkle di badge */
-.promo-shine i {
-    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
-}
-
-/* Pulse glow (efek denyut) */
-@keyframes promo-pulse {
-    0%, 100% {
-        box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
-    }
-    50% {
-        box-shadow: 0 2px 12px rgba(194, 65, 12, 0.5),
-                    0 0 16px rgba(234, 88, 12, 0.3);
-    }
-}
-
-.promo-shine {
-    animation: promo-pulse 2.5s ease-in-out infinite;
-}
-
+        .promo-shine > * {
+            position: relative;
+            z-index: 2;
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
 
-    <!-- NAVIGATION -->
+    <!-- ============================================================
+    NAVIGATION
+    ============================================================ -->
     <nav class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 logo-shine">
@@ -558,29 +383,21 @@
             </div>
         </div>
         
-        <!-- Mobile Menu -->
-<div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-    <div class="container mx-auto px-4 flex flex-col gap-2">
-        <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-        <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-        
-        <!-- ⭐ COMPUTER SERVICE — Glass + Shine -->
-        <a href="service.html" class="mobile-menu-highlight">
-            <span class="menu-icon-wrap">
-                <i data-lucide="wrench" class="w-4 h-4"></i>
-                Computer Service
-            </span>
-            <i data-lucide="arrow-right" class="menu-arrow"></i>
-        </a>
-        
-        <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-        <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
-        <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
-    </div>
-</div>
+        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="text-brand font-semibold py-1.5">Computer Service</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
+            </div>
+        </div>
     </nav>
 
-    <!-- BREADCRUMB -->
+    <!-- ============================================================
+    BREADCRUMB
+    ============================================================ -->
     <div class="bg-white/40 backdrop-blur-sm border-b border-white/40 py-3">
         <div class="container mx-auto px-4">
             <div class="flex items-center gap-2 text-xs text-gray-500">
@@ -593,7 +410,9 @@
         </div>
     </div>
 
-    <!-- JUDUL + CTA CARD -->
+    <!-- ============================================================
+    JUDUL + CTA
+    ============================================================ -->
     <section class="py-8 sm:py-10">
         <div class="container mx-auto px-4 max-w-4xl">
             <div class="text-center sm:text-left">
@@ -606,7 +425,7 @@
                 </p>
             </div>
 
-            <!-- Tombol CTA — Card Menu Style -->
+            <!-- Tombol CTA -->
             <div class="grid grid-cols-2 gap-4 mt-6 max-w-md mx-auto sm:mx-0">
 
                 <button onclick="openConsultationModal('panggil', 'Service Panggil')" 
@@ -639,7 +458,9 @@
         </div>
     </section>
 
-    <!-- PRICELIST -->
+    <!-- ============================================================
+    PRICELIST
+    ============================================================ -->
     <section class="py-8 sm:py-10" id="pricelistSection">
         <div class="container mx-auto px-4 max-w-4xl">
             <div class="mb-6">
@@ -656,7 +477,9 @@
         </div>
     </section>
 
-    <!-- DOKUMENTASI -->
+    <!-- ============================================================
+    DOKUMENTASI
+    ============================================================ -->
     <section class="py-8 sm:py-12 bg-white/40 backdrop-blur-sm" id="documentationSection">
         <div class="container mx-auto px-4 max-w-4xl">
             <div class="mb-6">
@@ -673,7 +496,9 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
     <footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -688,14 +513,18 @@
         </div>
     </footer>
 
-    <!-- FLOATING WHATSAPP -->
+    <!-- ============================================================
+    FLOATING WHATSAPP
+    ============================================================ -->
     <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-50" aria-label="Hubungi via WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
     </a>
 
-    <!-- MODAL KONSULTASI -->
+    <!-- ============================================================
+    MODAL KONSULTASI
+    ============================================================ -->
     <div id="consultationModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeConsultationModal()"></div>
         
@@ -772,7 +601,9 @@
         </div>
     </div>
 
-    <!-- MODAL BOOKING -->
+    <!-- ============================================================
+    MODAL BOOKING SERVICE
+    ============================================================ -->
     <div id="bookingModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeBookingModal()"></div>
         
@@ -791,7 +622,7 @@
                 <form id="bookingForm" class="p-5 space-y-4">
                     <input type="hidden" id="bookingServiceSlug" />
                     
-                    <!-- Tipe Service (default Service Panggil) -->
+                    <!-- Tipe Service -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Service *</label>
                         <div class="grid grid-cols-2 gap-3">
@@ -828,13 +659,64 @@
                                placeholder="08xxxxxxxxxx" />
                     </div>
 
-                    <!-- Alamat (default muncul) -->
+                    <!-- Alamat (muncul jika Panggil) -->
                     <div id="bookingAlamatField">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lokasi *</label>
                         <textarea id="bookingAlamat" rows="2" required
                                   class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
                                   placeholder="Alamat lengkap untuk teknisi datang..."></textarea>
                         <p class="text-xs text-gray-500 mt-1">Biaya transportasi akan diinfokan via WhatsApp</p>
+
+                        <!-- ⭐ CHECKBOX: Gunakan Lokasi Saat Ini -->
+                        <div class="mt-3 p-3 bg-brand/5 border border-brand/15 rounded-xl">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="checkbox" id="useCurrentLocation" 
+                                       class="w-4 h-4 mt-0.5 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <div class="flex-1">
+                                    <span class="text-sm font-medium text-gray-800">Gunakan lokasi saat ini</span>
+                                    <p class="text-xs text-gray-500 mt-0.5">
+                                        Dapatkan link Google Maps otomatis dari lokasi Anda
+                                    </p>
+                                </div>
+                            </label>
+                            
+                            <!-- Info lokasi (muncul setelah dapat koordinat) -->
+                            <div id="locationInfo" class="hidden mt-3 pt-3 border-t border-brand/15">
+                                <div class="flex items-start gap-2 text-xs">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-brand flex-shrink-0 mt-0.5"></i>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-gray-600 mb-1">
+                                            <strong>Koordinat:</strong> <span id="locationCoords">-</span>
+                                        </p>
+                                        <p class="text-gray-600 break-all">
+                                            <strong>Google Maps:</strong> 
+                                            <a id="locationMapsLink" href="#" target="_blank" class="text-brand hover:underline"></a>
+                                        </p>
+                                        <button type="button" id="removeLocation" 
+                                                class="mt-2 text-red-600 hover:text-red-800 text-xs font-medium inline-flex items-center gap-1">
+                                            <i data-lucide="x" class="w-3 h-3"></i>
+                                            Hapus Lokasi
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Loading -->
+                            <div id="locationLoading" class="hidden mt-3 pt-3 border-t border-brand/15">
+                                <div class="flex items-center gap-2 text-xs text-gray-500">
+                                    <div class="inline-block animate-spin rounded-full h-3 w-3 border-2 border-brand border-t-transparent"></div>
+                                    <span>Mendapatkan lokasi...</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Error -->
+                            <div id="locationError" class="hidden mt-3 pt-3 border-t border-brand/15">
+                                <div class="flex items-start gap-2 text-xs text-red-600">
+                                    <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                                    <span id="locationErrorText">Gagal mendapatkan lokasi.</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
@@ -889,7 +771,9 @@
         </div>
     </div>
 
-    <!-- IMAGE MODAL -->
+    <!-- ============================================================
+    IMAGE MODAL
+    ============================================================ -->
     <div id="imageModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeImageModal()"></div>
         
@@ -904,13 +788,18 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
     <script type="module">
         import { openWhatsAppGeneric, openWhatsApp } from './assets/js/whatsapp.js';
         import { initDatabase } from './assets/js/init-db.js';
         import './assets/js/service-detail.js';
         import './assets/js/consultation.js';
         
+        // ============================================================
+        // BOOKING MODAL
+        // ============================================================
         window.openBookingModal = function(slug, serviceName) {
             const modal = document.getElementById('bookingModal');
             document.getElementById('bookingServiceSlug').value = slug;
@@ -925,7 +814,9 @@
             document.body.style.overflow = '';
         };
 
-        // Toggle Alamat field
+        // ============================================================
+        // TIPE SERVICE TOGGLE
+        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             const tipeRadios = document.querySelectorAll('input[name="tipeService"]');
             const alamatField = document.getElementById('bookingAlamatField');
@@ -940,15 +831,136 @@
                         alamatField.classList.add('hidden');
                         alamatInput.required = false;
                         alamatInput.value = '';
+                        // Reset lokasi
+                        resetLocation();
+                        const cb = document.getElementById('useCurrentLocation');
+                        if (cb) cb.checked = false;
                     }
                 });
             });
         });
 
+        // ============================================================
+        // ⭐ GEOLOCATION
+        // ============================================================
+        let currentLocation = {
+            lat: null,
+            lng: null,
+            mapsLink: ''
+        };
+
+        const useCurrentLocationCheckbox = document.getElementById('useCurrentLocation');
+        const locationInfo = document.getElementById('locationInfo');
+        const locationLoading = document.getElementById('locationLoading');
+        const locationError = document.getElementById('locationError');
+        const locationErrorText = document.getElementById('locationErrorText');
+        const locationCoords = document.getElementById('locationCoords');
+        const locationMapsLink = document.getElementById('locationMapsLink');
+        const removeLocationBtn = document.getElementById('removeLocation');
+
+        useCurrentLocationCheckbox?.addEventListener('change', function() {
+            if (this.checked) {
+                locationInfo.classList.add('hidden');
+                locationError.classList.add('hidden');
+                
+                if (!navigator.geolocation) {
+                    locationError.classList.remove('hidden');
+                    locationErrorText.textContent = 'Browser Anda tidak mendukung fitur lokasi.';
+                    this.checked = false;
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    return;
+                }
+                
+                locationLoading.classList.remove('hidden');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        locationLoading.classList.add('hidden');
+                        
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        currentLocation.lat = lat;
+                        currentLocation.lng = lng;
+                        currentLocation.mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+                        
+                        locationCoords.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                        locationMapsLink.href = currentLocation.mapsLink;
+                        locationMapsLink.textContent = currentLocation.mapsLink;
+                        locationInfo.classList.remove('hidden');
+                        
+                        const alamatTextarea = document.getElementById('bookingAlamat');
+                        if (alamatTextarea && !alamatTextarea.value.trim()) {
+                            alamatTextarea.value = `Koordinat: ${lat.toFixed(6)}, ${lng.toFixed(6)}\nLihat: ${currentLocation.mapsLink}`;
+                        }
+                        
+                        console.log('✅ Lokasi didapat:', currentLocation);
+                        if (typeof lucide !== 'undefined') lucide.createIcons();
+                    },
+                    function(error) {
+                        locationLoading.classList.add('hidden');
+                        locationError.classList.remove('hidden');
+                        
+                        let errorMsg = 'Gagal mendapatkan lokasi.';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMsg = 'Izin lokasi ditolak. Aktifkan di pengaturan browser Anda.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMsg = 'Informasi lokasi tidak tersedia.';
+                                break;
+                            case error.TIMEOUT:
+                                errorMsg = 'Waktu permintaan lokasi habis. Coba lagi.';
+                                break;
+                        }
+                        locationErrorText.textContent = errorMsg;
+                        useCurrentLocationCheckbox.checked = false;
+                        
+                        if (typeof lucide !== 'undefined') lucide.createIcons();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                resetLocation();
+            }
+        });
+
+        window.resetLocation = function() {
+            currentLocation = {
+                lat: null,
+                lng: null,
+                mapsLink: ''
+            };
+            
+            if (locationInfo) locationInfo.classList.add('hidden');
+            if (locationError) locationError.classList.add('hidden');
+            if (locationLoading) locationLoading.classList.add('hidden');
+            
+            const alamatTextarea = document.getElementById('bookingAlamat');
+            if (alamatTextarea) {
+                alamatTextarea.value = '';
+            }
+            
+            console.log('🔄 Lokasi di-reset');
+        };
+
+        removeLocationBtn?.addEventListener('click', function() {
+            useCurrentLocationCheckbox.checked = false;
+            resetLocation();
+        });
+
+        // ============================================================
+        // SUBMIT BOOKING
+        // ============================================================
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const tipeService = document.querySelector('input[name="tipeService"]:checked')?.value || 'Service Panggil';
+            const tipeService = document.querySelector('input[name="tipeService"]:checked')?.value || 'Datang ke Toko';
             const nama = document.getElementById('bookingNama').value.trim();
             const wa = document.getElementById('bookingWa').value.trim();
             const alamat = document.getElementById('bookingAlamat').value.trim();
@@ -957,6 +969,7 @@
             const jadwal = document.getElementById('bookingJadwal').value;
             const serviceName = document.getElementById('bookingServiceLabel').textContent;
             
+            // Validasi
             if (!nama || !wa || !device || !masalah) {
                 alert('Mohon lengkapi semua field yang wajib diisi.');
                 return;
@@ -967,14 +980,23 @@
                 return;
             }
             
+            // Format pesan WhatsApp
             let message = `*BOOKING SERVICE - IMDKOM*\n\n`;
             message += `> Layanan: ${serviceName}\n`;
             message += `> Tipe: ${tipeService}\n`;
             message += `> Nama: ${nama}\n`;
             message += `> No. WhatsApp: ${wa}\n`;
+            
             if (tipeService === 'Service Panggil' && alamat) {
                 message += `> Alamat: ${alamat}\n`;
+                
+                // ⭐ Tambah koordinat & maps link jika ada
+                if (currentLocation.lat && currentLocation.lng) {
+                    message += `> Koordinat: ${currentLocation.lat.toFixed(6)}, ${currentLocation.lng.toFixed(6)}\n`;
+                    message += `> Google Maps: ${currentLocation.mapsLink}\n`;
+                }
             }
+            
             message += `> Device: ${device}\n`;
             message += `> Masalah: ${masalah}\n`;
             message += `> Jadwal: ${jadwal}\n\n`;
@@ -983,10 +1005,20 @@
             openWhatsApp(message);
             closeBookingModal();
             this.reset();
+            
+            // Reset lokasi
+            resetLocation();
+            if (useCurrentLocationCheckbox) useCurrentLocationCheckbox.checked = false;
+            
+            // Reset tipe service default ke "Service Panggil"
             document.querySelector('input[name="tipeService"][value="Service Panggil"]').checked = true;
             document.getElementById('bookingAlamatField').classList.remove('hidden');
+            document.getElementById('bookingAlamat').required = true;
         });
         
+        // ============================================================
+        // INIT
+        // ============================================================
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const result = await initDatabase();
@@ -1000,11 +1032,13 @@
             }
         });
         
+        // Floating WhatsApp
         document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
             e.preventDefault();
             openWhatsAppGeneric();
         });
         
+        // Mobile Menu Toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mobileNav').classList.toggle('hidden');
         });
