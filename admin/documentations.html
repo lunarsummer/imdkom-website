@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dokumentasi | Admin IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+    <!-- MOBILE HEADER -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        <span class="text-white font-bold">Dokumentasi</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link"><i data-lucide="layout-dashboard" class="w-4 h-4"></i>Dashboard</a>
+            <a href="landing-page.html" class="nav-link"><i data-lucide="home" class="w-4 h-4"></i>Landing Page</a>
+            <a href="programs.html" class="nav-link"><i data-lucide="book-open" class="w-4 h-4"></i>Program Kursus</a>
+            <a href="services.html" class="nav-link"><i data-lucide="wrench" class="w-4 h-4"></i>Computer Service</a>
+            <a href="pricelists.html" class="nav-link"><i data-lucide="tag" class="w-4 h-4"></i>Pricelist</a>
+            <a href="documentations.html" class="nav-link active"><i data-lucide="image" class="w-4 h-4"></i>Dokumentasi</a>
+            <a href="testimonials.html" class="nav-link"><i data-lucide="message-square" class="w-4 h-4"></i>Testimoni</a>
+            <a href="faq.html" class="nav-link"><i data-lucide="help-circle" class="w-4 h-4"></i>FAQ</a>
+            <a href="consultations.html" class="nav-link"><i data-lucide="inbox" class="w-4 h-4"></i>Konsultasi</a>
+            <a href="settings.html" class="nav-link"><i data-lucide="settings" class="w-4 h-4"></i>Pengaturan</a>
+            <button id="logoutBtn" class="logout-btn"><i data-lucide="log-out" class="w-4 h-4"></i>Logout</button>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+        <div class="page-header">
+            <h2>Dokumentasi</h2>
+            <a href="documentation-form.html" class="btn-primary">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Tambah Dokumentasi
+            </a>
+        </div>
+
+        <!-- Filter -->
+        <div class="admin-card mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Filter Layanan</label>
+            <select id="filterService" class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
+                <option value="">Semua Layanan</option>
+                <option value="laptop">Service Laptop</option>
+                <option value="pc">Service PC</option>
+                <option value="printer">Service Printer</option>
+                <option value="panggil">Service Panggil</option>
+                <option value="sparepart">Sparepart</option>
+            </select>
+        </div>
+
+        <!-- Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="docsGrid">
+            <div class="col-span-full text-center text-gray-500 py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm">Memuat...</p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, where, deleteDoc, doc } from '../assets/js/firebase.js';
+        import { PLACEHOLDER_IMAGE } from '../assets/js/placeholder.js';
+
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+            else {
+                loadDocs();
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        document.getElementById('filterService').addEventListener('change', loadDocs);
+
+        // ============================================================
+        // LOAD DOCS
+        // ============================================================
+        async function loadDocs() {
+            const container = document.getElementById('docsGrid');
+            const serviceFilter = document.getElementById('filterService').value;
+
+            try {
+                let q = query(collection(db, 'documentations'), orderBy('serviceSlug', 'asc'), orderBy('order', 'asc'));
+
+                if (serviceFilter) {
+                    q = query(
+                        collection(db, 'documentations'),
+                        where('serviceSlug', '==', serviceFilter),
+                        orderBy('order', 'asc')
+                    );
+                }
+
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <div class="col-span-full admin-card text-center text-gray-500 py-12">
+                            <i data-lucide="image" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                            <p>Belum ada dokumentasi.</p>
+                            <a href="documentation-form.html" class="btn-primary mt-4 inline-flex">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                Tambah Dokumentasi
+                            </a>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+
+                const serviceNames = { laptop: 'Laptop', pc: 'PC', printer: 'Printer', panggil: 'Panggil', sparepart: 'Sparepart' };
+
+                let html = '';
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const imageUrl = data.gambar ? '../' + data.gambar : PLACEHOLDER_IMAGE;
+                    const serviceName = serviceNames[data.serviceSlug] || data.serviceSlug;
+
+                    html += `
+                        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="relative aspect-square bg-gray-100">
+                                <img src="${imageUrl}" alt="${data.nama || ''}" 
+                                     class="w-full h-full object-cover" 
+                                     loading="lazy"
+                                     data-fallback="${PLACEHOLDER_IMAGE}"
+                                     onerror="this.onerror=null; this.src=this.dataset.fallback;" />
+                                <span class="absolute top-2 left-2 bg-brand text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${serviceName}</span>
+                                <span class="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${data.aktif ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}">
+                                    ${data.aktif ? 'AKTIF' : 'OFF'}
+                                </span>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="font-semibold text-gray-800 text-sm truncate">${data.nama || '-'}</h3>
+                                <p class="text-xs text-gray-500 mt-1 truncate">${data.keterangan || '-'}</p>
+                                <div class="flex gap-2 mt-3">
+                                    <a href="documentation-form.html?id=${docSnap.id}" class="flex-1 text-center bg-brand hover:bg-brand-light text-white text-xs font-medium py-1.5 rounded-lg">Edit</a>
+                                    <button class="delete-btn flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1.5 rounded-lg" data-id="${docSnap.id}" data-name="${data.nama || ''}">Hapus</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                lucide.createIcons();
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        if (confirm(`Hapus dokumentasi "${btn.dataset.name}"?`)) {
+                            await deleteDoc(doc(db, 'documentations', btn.dataset.id));
+                            loadDocs();
+                        }
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error loading docs:', error);
+                container.innerHTML = `<div class="col-span-full text-center text-red-600 py-12">Gagal memuat. <br><small>${error.message}</small></div>`;
+            }
+        }
+    </script>
+
+</body>
+</html>

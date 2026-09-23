@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Konsultasi | Admin IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        <span class="text-white font-bold">Konsultasi</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link"><i data-lucide="layout-dashboard" class="w-4 h-4"></i>Dashboard</a>
+            <a href="landing-page.html" class="nav-link"><i data-lucide="home" class="w-4 h-4"></i>Landing Page</a>
+            <a href="programs.html" class="nav-link"><i data-lucide="book-open" class="w-4 h-4"></i>Program Kursus</a>
+            <a href="services.html" class="nav-link"><i data-lucide="wrench" class="w-4 h-4"></i>Computer Service</a>
+            <a href="pricelists.html" class="nav-link"><i data-lucide="tag" class="w-4 h-4"></i>Pricelist</a>
+            <a href="documentations.html" class="nav-link"><i data-lucide="image" class="w-4 h-4"></i>Dokumentasi</a>
+            <a href="testimonials.html" class="nav-link"><i data-lucide="message-square" class="w-4 h-4"></i>Testimoni</a>
+            <a href="faq.html" class="nav-link"><i data-lucide="help-circle" class="w-4 h-4"></i>FAQ</a>
+            <a href="consultations.html" class="nav-link active"><i data-lucide="inbox" class="w-4 h-4"></i>Konsultasi</a>
+            <a href="settings.html" class="nav-link"><i data-lucide="settings" class="w-4 h-4"></i>Pengaturan</a>
+            <button id="logoutBtn" class="logout-btn"><i data-lucide="log-out" class="w-4 h-4"></i>Logout</button>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <div class="page-header">
+            <h2>Konsultasi Masuk</h2>
+            <button onclick="loadConsultations()" class="btn-primary">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                Refresh
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="consultationsGrid">
+            <div class="col-span-full text-center text-gray-500 py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm">Memuat...</p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from '../assets/js/firebase.js';
+
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+            else {
+                loadConsultations();
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        window.loadConsultations = async function() {
+            const container = document.getElementById('consultationsGrid');
+
+            try {
+                const q = query(collection(db, 'consultations'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <div class="col-span-full admin-card text-center text-gray-500 py-12">
+                            <i data-lucide="inbox" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                            <p>Belum ada konsultasi masuk.</p>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+
+                const serviceNames = { laptop: 'Service Laptop', pc: 'Service PC', printer: 'Service Printer', panggil: 'Service Panggil', sparepart: 'Sparepart' };
+
+                let html = '';
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const serviceName = serviceNames[data.serviceSlug] || data.serviceSlug || '-';
+                    const date = data.createdAt ? new Date(data.createdAt).toLocaleString('id-ID') : '-';
+                    const waNumber = (data.whatsapp || '').replace(/[^0-9]/g, '').replace(/^0/, '62');
+
+                    html += `
+                        <div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="badge badge-info">${serviceName}</span>
+                                <span class="text-xs text-gray-400">${date}</span>
+                            </div>
+
+                            <h3 class="font-bold text-gray-800">${data.nama || '-'}</h3>
+                            <p class="text-sm text-gray-500 mt-1">📱 ${data.whatsapp || '-'}</p>
+
+                            <div class="mt-3 space-y-2">
+                                <p class="text-sm text-gray-700"><strong>Device:</strong> ${data.device || '-'}</p>
+                                <p class="text-sm text-gray-600"><strong>Masalah:</strong> ${data.masalah || '-'}</p>
+                            </div>
+
+                            <div class="flex gap-2 mt-4">
+                                <a href="https://wa.me/${waNumber}?text=Halo%20${encodeURIComponent(data.nama)},%20saya%20dari%20IMDKOM%20ingin%20menindaklanjuti%20konsultasi%20Anda"
+                                   target="_blank"
+                                   class="flex-1 text-center bg-green-500 hover:bg-green-600 text-white text-xs font-medium py-2 rounded-lg flex items-center justify-center gap-1">
+                                    <i data-lucide="message-circle" class="w-3 h-3"></i>
+                                    Balas
+                                </a>
+                                <button class="delete-consult text-red-600 hover:bg-red-50 text-xs font-medium py-2 px-3 rounded-lg border border-red-200" data-id="${docSnap.id}">
+                                    <i data-lucide="trash-2" class="w-3 h-3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                lucide.createIcons();
+
+                document.querySelectorAll('.delete-consult').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        if (confirm('Hapus konsultasi ini?')) {
+                            await deleteDoc(doc(db, 'consultations', btn.dataset.id));
+                            loadConsultations();
+                        }
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `<div class="col-span-full text-center text-red-600 py-12">Gagal memuat. <br><small>${error.message}</small></div>`;
+            }
+        }
+    </script>
+
+</body>
+</html>

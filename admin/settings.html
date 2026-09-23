@@ -4,113 +4,374 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pengaturan | Admin IMDKOM</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
-                    }
-                }
-            }
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        .form-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
         }
-    </script>
+        
+        .form-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .form-section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .form-section-title {
+            font-weight: 700;
+            color: #1a3c5e;
+            font-size: 1rem;
+        }
+        
+        .form-section-desc {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.15rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.375rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-input:focus {
+            border-color: #1a3c5e;
+            box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.1);
+        }
+        
+        .form-hint {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.375rem;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, rgba(26, 60, 94, 0.05) 0%, rgba(42, 90, 122, 0.05) 100%);
+            border: 1px solid rgba(26, 60, 94, 0.15);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .admin-info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .admin-info-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(26, 60, 94, 0.08);
+            color: #1a3c5e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-brand min-h-screen hidden md:block">
-            <div class="p-6 border-b border-brand-light">
-                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
-            </div>
-            <nav class="p-4 space-y-1">
-                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
-                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Landing Page</a>
-                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Program Kursus</a>
-                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
-                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
-                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
-                <a href="settings.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Pengaturan</a>
-                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
-            </nav>
-        </aside>
-
-        <!-- Mobile -->
-        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center">
-            <span class="text-white font-bold">IMDKOM Admin</span>
-            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
-        </div>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-                <h2 class="text-2xl md:text-3xl font-bold text-brand">Pengaturan</h2>
-                <a href="../index.html" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors">Lihat Website →</a>
-            </div>
-
-            <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <form id="settingsForm">
-                    <h3 class="text-lg font-semibold text-brand border-b border-gray-200 pb-2 mb-4">Kontak</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="whatsapp" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="whatsapp" placeholder="0856-0191-3435" />
-                            <p class="text-xs text-gray-400 mt-1">Nomor WhatsApp untuk tombol konsultasi.</p>
-                        </div>
-                        <div>
-                            <label for="instagram" class="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="instagram" placeholder="@imdkom" />
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                               id="alamat" placeholder="Jl. ..." />
-                    </div>
-
-                    <div class="mt-4">
-                        <label for="jamOperasional" class="block text-sm font-medium text-gray-700 mb-1">Jam Operasional</label>
-                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                               id="jamOperasional" placeholder="Senin-Jumat, 08:00 - 17:00" />
-                    </div>
-
-                    <div class="mt-4">
-                        <label for="googleMaps" class="block text-sm font-medium text-gray-700 mb-1">Google Maps URL</label>
-                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                               id="googleMaps" placeholder="https://maps.google.com/..." />
-                    </div>
-
-                    <div class="flex flex-wrap gap-3 mt-8 pt-4 border-t border-gray-200">
-                        <button type="submit" class="bg-brand hover:bg-brand-light text-white font-medium px-6 py-2 rounded-lg transition-colors">Simpan Pengaturan</button>
-                    </div>
-                    <div id="formMessage" class="mt-3"></div>
-                </form>
-
-                <!-- Informasi Admin -->
-                <div class="mt-8 pt-4 border-t border-gray-200">
-                    <h3 class="text-lg font-semibold text-brand mb-4">Informasi Admin</h3>
-                    <p class="text-sm text-gray-600" id="adminInfo">Email: <span id="adminEmail">-</span></p>
-                    <p class="text-sm text-gray-400 mt-2">Untuk mengganti password, gunakan Firebase Console.</p>
-                </div>
-            </div>
-        </main>
+    <!-- ============================================================
+    MOBILE HEADER
+    ============================================================ -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Pengaturan</span>
+        <div class="w-8"></div>
     </div>
 
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+            <a href="programs.html" class="nav-link">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Program Kursus
+            </a>
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="settings.html" class="nav-link active">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h2>Pengaturan</h2>
+                <p class="text-gray-500 text-sm mt-1">Kelola pengaturan umum website</p>
+            </div>
+            <a href="../index.html" target="_blank" class="btn-secondary">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+                Lihat Website
+            </a>
+        </div>
+
+        <form id="settingsForm" class="max-w-4xl">
+
+            <!-- ============================================================
+                 SECTION 1: KONTAK
+                 ============================================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(26, 60, 94, 0.1); color: #1a3c5e;">
+                        <i data-lucide="phone" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Kontak</div>
+                        <div class="form-section-desc">Informasi kontak yang muncul di WhatsApp & tombol konsultasi</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Nomor WhatsApp *</label>
+                        <input type="text" id="whatsapp" class="form-input" placeholder="0856-0191-3435" />
+                        <p class="form-hint">Digunakan untuk tombol WhatsApp di seluruh website</p>
+                    </div>
+                    <div>
+                        <label class="form-label">Instagram</label>
+                        <input type="text" id="instagram" class="form-input" placeholder="@imdkom_yk" />
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Alamat</label>
+                    <input type="text" id="alamat" class="form-input" placeholder="Jl. Pendidikan No. 123, Yogyakarta" />
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Jam Operasional</label>
+                    <input type="text" id="jamOperasional" class="form-input" placeholder="Senin-Jumat, 08:00 - 17:00" />
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Google Maps URL</label>
+                    <input type="text" id="googleMaps" class="form-input" placeholder="https://maps.google.com/..." />
+                    <p class="form-hint">Link ke Google Maps untuk lokasi</p>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SECTION 2: INFO LEGALITAS
+                 ============================================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Informasi Legalitas</div>
+                        <div class="form-section-desc">Data legalitas lembaga (tampil di halaman tentang)</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Izin Dinas Pendidikan</label>
+                        <input type="text" id="izinDiknas" class="form-input" placeholder="098/Kpts/2021" />
+                    </div>
+                    <div>
+                        <label class="form-label">NPSN</label>
+                        <input type="text" id="npsn" class="form-input" placeholder="K0560748" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SECTION 3: INFO ADMIN
+                 ============================================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(194, 65, 12, 0.1); color: #c2410c;">
+                        <i data-lucide="user-cog" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Informasi Admin</div>
+                        <div class="form-section-desc">Detail akun admin yang sedang login</div>
+                    </div>
+                </div>
+
+                <div class="admin-info-item">
+                    <div class="admin-info-icon">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Email Admin</div>
+                        <div class="font-medium text-gray-800 truncate" id="adminEmail">-</div>
+                    </div>
+                </div>
+
+                <div class="admin-info-item">
+                    <div class="admin-info-icon">
+                        <i data-lucide="key" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Password</div>
+                        <div class="font-medium text-gray-800">••••••••</div>
+                        <p class="text-xs text-gray-400 mt-0.5">Untuk mengubah password, gunakan Firebase Console</p>
+                    </div>
+                </div>
+
+                <div class="admin-info-item">
+                    <div class="admin-info-icon">
+                        <i data-lucide="fingerprint" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">User ID</div>
+                        <div class="font-mono text-xs text-gray-600 truncate" id="adminUid">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SUBMIT BAR
+                 ============================================================ -->
+            <div class="admin-card" style="position: sticky; bottom: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <div id="formMessage" class="text-sm flex-1"></div>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="window.location.reload()" class="btn-secondary">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            Reset
+                        </button>
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                            Simpan Pengaturan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </main>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from '../assets/js/firebase.js';
 
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = 'login.html';
             } else {
-                document.getElementById('adminEmail').textContent = user.email;
+                // Tampilkan info admin
+                document.getElementById('adminEmail').textContent = user.email || '-';
+                document.getElementById('adminUid').textContent = user.uid || '-';
+                
                 loadSettings();
+                lucide.createIcons();
             }
         });
 
@@ -118,56 +379,99 @@
             await signOut(auth);
             window.location.href = 'login.html';
         });
-        document.getElementById('mobileLogout').addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.href = 'login.html';
-        });
 
+        // ============================================================
+        // LOAD SETTINGS
+        // ============================================================
         async function loadSettings() {
             try {
                 const docSnap = await getDoc(doc(db, 'settings', 'general'));
-                if (!docSnap.exists()) return;
                 
-                const data = docSnap.data();
-                document.getElementById('whatsapp').value = data.whatsapp || '';
-                document.getElementById('instagram').value = data.instagram || '';
-                document.getElementById('alamat').value = data.alamat || '';
-                document.getElementById('jamOperasional').value = data.jamOperasional || '';
-                document.getElementById('googleMaps').value = data.googleMaps || '';
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('whatsapp').value = data.whatsapp || '';
+                    document.getElementById('instagram').value = data.instagram || '';
+                    document.getElementById('alamat').value = data.alamat || '';
+                    document.getElementById('jamOperasional').value = data.jamOperasional || '';
+                    document.getElementById('googleMaps').value = data.googleMaps || '';
+                    document.getElementById('izinDiknas').value = data.izinDiknas || '098/Kpts/2021';
+                    document.getElementById('npsn').value = data.npsn || 'K0560748';
+                } else {
+                    // Default values jika belum ada
+                    document.getElementById('izinDiknas').value = '098/Kpts/2021';
+                    document.getElementById('npsn').value = 'K0560748';
+                }
                 
             } catch (error) {
                 console.error('Error loading settings:', error);
             }
         }
 
+        // ============================================================
+        // SUBMIT SETTINGS
+        // ============================================================
         document.getElementById('settingsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const submitBtn = this.querySelector('button[type="submit"]');
+            const submitBtn = document.getElementById('submitBtn');
             const messageEl = document.getElementById('formMessage');
             
+            // Validasi WhatsApp
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            if (!whatsapp) {
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 font-medium">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Nomor WhatsApp wajib diisi!
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Menyimpan...';
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
+            lucide.createIcons();
             messageEl.innerHTML = '';
 
             const data = {
-                whatsapp: document.getElementById('whatsapp').value.trim(),
+                whatsapp: whatsapp,
                 instagram: document.getElementById('instagram').value.trim(),
                 alamat: document.getElementById('alamat').value.trim(),
                 jamOperasional: document.getElementById('jamOperasional').value.trim(),
                 googleMaps: document.getElementById('googleMaps').value.trim(),
+                izinDiknas: document.getElementById('izinDiknas').value.trim(),
+                npsn: document.getElementById('npsn').value.trim(),
                 updatedAt: new Date().toISOString()
             };
 
             try {
                 await setDoc(doc(db, 'settings', 'general'), data);
-                messageEl.innerHTML = `<p class="text-green-600">Pengaturan berhasil diupdate!</p>`;
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-green-600 font-medium">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        Pengaturan berhasil disimpan!
+                    </div>
+                `;
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    messageEl.innerHTML = '';
+                }, 3000);
+                
             } catch (error) {
-                console.error('Error saving settings:', error);
-                messageEl.innerHTML = `<p class="text-red-600">Gagal menyimpan: ${error.message}</p>`;
+                console.error('Error saving:', error);
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 font-medium">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Gagal menyimpan: ${error.message}
+                    </div>
+                `;
+                lucide.createIcons();
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Simpan Pengaturan';
+                submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Simpan Pengaturan`;
+                lucide.createIcons();
             }
         });
     </script>

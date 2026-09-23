@@ -3,176 +3,419 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CMS Landing Page | Admin IMDKOM</title>
+    <title>Landing Page | Admin IMDKOM</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
     <style>
-        .form-preview-img { max-height: 150px; border-radius: 4px; border: 1px solid #e5e7eb; }
+        .form-preview-img {
+            max-height: 200px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+        }
+        
+        .form-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .form-section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .form-section-title {
+            font-weight: 700;
+            color: #1a3c5e;
+            font-size: 1rem;
+        }
+        
+        .form-section-desc {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.15rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.375rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-input:focus {
+            border-color: #1a3c5e;
+            box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.1);
+        }
+        
+        .form-hint {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.375rem;
+        }
     </style>
 </head>
 <body>
 
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-brand min-h-screen hidden md:block">
-            <div class="p-6 border-b border-brand-light">
-                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
-            </div>
-            <nav class="p-4 space-y-1">
-                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
-                <a href="landing-page.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Landing Page</a>
-                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Program Kursus</a>
-                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
-                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
-                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
-                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Pengaturan</a>
-                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
-            </nav>
-        </aside>
-
-        <!-- Mobile -->
-        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center">
-            <span class="text-white font-bold">IMDKOM Admin</span>
-            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
-        </div>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-                <h2 class="text-2xl md:text-3xl font-bold text-brand">CMS Landing Page</h2>
-                <a href="../index.html" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors">Lihat Website →</a>
-            </div>
-
-            <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <form id="landingPageForm">
-                    <!-- Hero Section -->
-                    <h3 class="text-lg font-semibold text-brand border-b border-gray-200 pb-2 mb-4">Hero Section</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="heroHeading" class="block text-sm font-medium text-gray-700 mb-1">Heading</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="heroHeading" placeholder="IMDKOM" />
-                        </div>
-                        <div>
-                            <label for="heroSubheading" class="block text-sm font-medium text-gray-700 mb-1">Subheading</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="heroSubheading" placeholder="Kursus &amp; Pelatihan • Computer Service" />
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <label for="heroDescription" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                               id="heroDescription" placeholder="Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda." />
-                    </div>
-
-                    <div class="mt-4">
-                        <label for="heroSubtext" class="block text-sm font-medium text-gray-700 mb-1">Subtext (deskripsi tambahan)</label>
-                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                  id="heroSubtext" rows="2" placeholder="IMDKOM adalah lembaga kursus dan pelatihan komputer..."></textarea>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <label for="heroCtaText" class="block text-sm font-medium text-gray-700 mb-1">CTA Text</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="heroCtaText" placeholder="Lihat Program" />
-                        </div>
-                        <div>
-                            <label for="heroImage" class="block text-sm font-medium text-gray-700 mb-1">URL Gambar Hero</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="heroImage" placeholder="assets/images/hero/hero-default.jpg" />
-                            <div id="heroImagePreview" class="mt-2 hidden">
-                                <img src="" alt="Preview" class="form-preview-img" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- About Section -->
-                    <h3 class="text-lg font-semibold text-brand border-b border-gray-200 pb-2 mt-8 mb-4">About Section</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="aboutTitle" class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="aboutTitle" placeholder="Tentang IMDKOM" />
-                        </div>
-                        <div>
-                            <label for="aboutImage" class="block text-sm font-medium text-gray-700 mb-1">URL Gambar About</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="aboutImage" placeholder="assets/images/about/about-imdkom.jpg" />
-                            <div id="aboutImagePreview" class="mt-2 hidden">
-                                <img src="" alt="Preview" class="form-preview-img" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <label for="aboutDescription" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                  id="aboutDescription" rows="3" placeholder="Deskripsi tentang IMDKOM..."></textarea>
-                    </div>
-
-                    <!-- Contact Section -->
-                    <h3 class="text-lg font-semibold text-brand border-b border-gray-200 pb-2 mt-8 mb-4">Contact &amp; Footer</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="contactWhatsapp" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="contactWhatsapp" placeholder="0856-0191-3435" />
-                        </div>
-                        <div>
-                            <label for="contactInstagram" class="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="contactInstagram" placeholder="@imdkom" />
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <label for="footerCopyright" class="block text-sm font-medium text-gray-700 mb-1">Copyright Text</label>
-                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                               id="footerCopyright" placeholder="&copy; 2026 IMDKOM. All rights reserved." />
-                    </div>
-
-                    <div class="flex flex-wrap gap-3 mt-8 pt-4 border-t border-gray-200">
-                        <button type="submit" class="bg-brand hover:bg-brand-light text-white font-medium px-6 py-2 rounded-lg transition-colors">Simpan Perubahan</button>
-                    </div>
-                    <div id="formMessage" class="mt-3"></div>
-                </form>
-            </div>
-        </main>
+    <!-- ============================================================
+    MOBILE HEADER
+    ============================================================ -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Landing Page</span>
+        <div class="w-8"></div>
     </div>
 
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link active">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+            <a href="programs.html" class="nav-link">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Program Kursus
+            </a>
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h2>Landing Page</h2>
+                <p class="text-gray-500 text-sm mt-1">Kelola konten halaman utama website</p>
+            </div>
+            <a href="../index.html" target="_blank" class="btn-secondary">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+                Lihat Website
+            </a>
+        </div>
+
+        <form id="landingForm" class="max-w-4xl">
+
+            <!-- ============================================================
+                 SECTION 1: HERO
+                 ============================================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(26, 60, 94, 0.1); color: #1a3c5e;">
+                        <i data-lucide="layout-template" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Hero Section</div>
+                        <div class="form-section-desc">Konten utama yang muncul pertama kali</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Heading *</label>
+                        <input type="text" id="heroHeading" class="form-input" placeholder="IMDKOM YOGYAKARTA" />
+                    </div>
+                    <div>
+                        <label class="form-label">Subheading</label>
+                        <input type="text" id="heroSubheading" class="form-input" placeholder="Kursus & Pelatihan • Computer Service" />
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Deskripsi Singkat</label>
+                    <input type="text" id="heroDeskripsi" class="form-input" placeholder="Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda." />
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Subtext (Deskripsi Tambahan)</label>
+                    <textarea id="heroSubtext" rows="2" class="form-input" placeholder="IMDKOM adalah lembaga kursus dan pelatihan komputer..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="form-label">Text Tombol CTA</label>
+                        <input type="text" id="heroCtaText" class="form-input" placeholder="Lihat Program" />
+                    </div>
+                    <div>
+                        <label class="form-label">Gambar Hero</label>
+                        <input type="text" id="heroGambar" class="form-input" placeholder="assets/images/hero/hero-default.jpg" />
+                        <p class="form-hint">Path gambar lokal atau URL eksternal</p>
+                    </div>
+                </div>
+
+                <!-- Preview Hero Image -->
+                <div id="heroPreviewWrapper" class="mt-4 hidden">
+                    <img id="heroPreview" src="" alt="Preview Hero" class="form-preview-img" />
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SECTION 2: ABOUT
+                 ============================================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(194, 65, 12, 0.1); color: #c2410c;">
+                        <i data-lucide="info" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Tentang (About)</div>
+                        <div class="form-section-desc">Section tentang IMDKOM</div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">Judul About</label>
+                    <input type="text" id="aboutTitle" class="form-input" placeholder="Tentang IMDKOM" />
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Deskripsi About</label>
+                    <textarea id="aboutDeskripsi" rows="3" class="form-input" placeholder="IMDKOM adalah lembaga kursus dan pelatihan komputer..."></textarea>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Gambar About</label>
+                    <input type="text" id="aboutGambar" class="form-input" placeholder="assets/images/about/about-imdkom.jpg" />
+                </div>
+
+                <div id="aboutPreviewWrapper" class="mt-4 hidden">
+                    <img id="aboutPreview" src="" alt="Preview About" class="form-preview-img" />
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SECTION 3: KONTAK
+                 ============================================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+                        <i data-lucide="phone" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Kontak</div>
+                        <div class="form-section-desc">Informasi kontak di footer & halaman kontak</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">WhatsApp</label>
+                        <input type="text" id="contactWhatsapp" class="form-input" placeholder="0856-0191-3435" />
+                    </div>
+                    <div>
+                        <label class="form-label">Instagram</label>
+                        <input type="text" id="contactInstagram" class="form-input" placeholder="@imdkom_yk" />
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Alamat</label>
+                    <input type="text" id="contactAlamat" class="form-input" placeholder="Jl. Pendidikan No. 123, Yogyakarta" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="form-label">Jam Operasional</label>
+                        <input type="text" id="contactJam" class="form-input" placeholder="Senin-Jumat, 08:00 - 17:00" />
+                    </div>
+                    <div>
+                        <label class="form-label">Google Maps URL</label>
+                        <input type="text" id="contactMaps" class="form-input" placeholder="https://maps.google.com/..." />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SECTION 4: FOOTER
+                 ============================================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                        <i data-lucide="panel-bottom" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Footer</div>
+                        <div class="form-section-desc">Teks copyright di bagian bawah</div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">Copyright Text</label>
+                    <input type="text" id="footerCopyright" class="form-input" placeholder="© 2026 IMDKOM. All rights reserved." />
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SUBMIT
+                 ============================================================ -->
+            <div class="admin-card" style="position: sticky; bottom: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <div id="formMessage" class="text-sm flex-1"></div>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="window.location.reload()" class="btn-secondary">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            Reset
+                        </button>
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </main>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from '../assets/js/firebase.js';
-        import { getImageUrl } from '../assets/js/utils.js';
 
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
         onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = 'login.html';
-            else loadContent();
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                loadContent();
+                lucide.createIcons();
+            }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
             window.location.href = 'login.html';
         });
-        document.getElementById('mobileLogout').addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.href = 'login.html';
-        });
 
+        // ============================================================
+        // IMAGE PREVIEW
+        // ============================================================
+        function attachImagePreview(inputId, previewWrapperId, previewImgId) {
+            const input = document.getElementById(inputId);
+            const wrapper = document.getElementById(previewWrapperId);
+            const img = document.getElementById(previewImgId);
+            
+            if (!input || !wrapper || !img) return;
+            
+            input.addEventListener('input', function() {
+                const value = this.value.trim();
+                if (value) {
+                    img.src = value.startsWith('http') ? value : '../' + value;
+                    img.onerror = () => {
+                        img.src = 'https://via.placeholder.com/400x300/1a3c5e/ffffff?text=Image+Not+Found';
+                    };
+                    wrapper.classList.remove('hidden');
+                } else {
+                    wrapper.classList.add('hidden');
+                }
+            });
+        }
+
+        attachImagePreview('heroGambar', 'heroPreviewWrapper', 'heroPreview');
+        attachImagePreview('aboutGambar', 'aboutPreviewWrapper', 'aboutPreview');
+
+        // ============================================================
+        // LOAD CONTENT
+        // ============================================================
         async function loadContent() {
             try {
                 const docSnap = await getDoc(doc(db, 'landingPage', 'content'));
@@ -184,26 +427,24 @@
                 if (data.hero) {
                     document.getElementById('heroHeading').value = data.hero.heading || '';
                     document.getElementById('heroSubheading').value = data.hero.subheading || '';
-                    document.getElementById('heroDescription').value = data.hero.deskripsi || '';
+                    document.getElementById('heroDeskripsi').value = data.hero.deskripsi || '';
                     document.getElementById('heroSubtext').value = data.hero.subtext || '';
                     document.getElementById('heroCtaText').value = data.hero.ctaText || '';
-                    document.getElementById('heroImage').value = data.hero.gambar || '';
+                    document.getElementById('heroGambar').value = data.hero.gambar || '';
+                    
                     if (data.hero.gambar) {
-                        const preview = document.getElementById('heroImagePreview');
-                        preview.querySelector('img').src = getImageUrl(data.hero.gambar);
-                        preview.classList.remove('hidden');
+                        document.getElementById('heroGambar').dispatchEvent(new Event('input'));
                     }
                 }
                 
                 // About
                 if (data.about) {
                     document.getElementById('aboutTitle').value = data.about.judul || '';
-                    document.getElementById('aboutDescription').value = data.about.deskripsi || '';
-                    document.getElementById('aboutImage').value = data.about.gambar || '';
+                    document.getElementById('aboutDeskripsi').value = data.about.deskripsi || '';
+                    document.getElementById('aboutGambar').value = data.about.gambar || '';
+                    
                     if (data.about.gambar) {
-                        const preview = document.getElementById('aboutImagePreview');
-                        preview.querySelector('img').src = getImageUrl(data.about.gambar);
-                        preview.classList.remove('hidden');
+                        document.getElementById('aboutGambar').dispatchEvent(new Event('input'));
                     }
                 }
                 
@@ -211,6 +452,9 @@
                 if (data.contact) {
                     document.getElementById('contactWhatsapp').value = data.contact.whatsapp || '';
                     document.getElementById('contactInstagram').value = data.contact.instagram || '';
+                    document.getElementById('contactAlamat').value = data.contact.alamat || '';
+                    document.getElementById('contactJam').value = data.contact.jamOperasional || '';
+                    document.getElementById('contactMaps').value = data.contact.googleMaps || '';
                 }
                 
                 // Footer
@@ -223,56 +467,40 @@
             }
         }
 
-        // Preview gambar
-        document.getElementById('heroImage').addEventListener('input', function() {
-            const preview = document.getElementById('heroImagePreview');
-            const img = preview.querySelector('img');
-            if (this.value.trim()) {
-                img.src = getImageUrl(this.value.trim());
-                preview.classList.remove('hidden');
-            } else {
-                preview.classList.add('hidden');
-            }
-        });
-
-        document.getElementById('aboutImage').addEventListener('input', function() {
-            const preview = document.getElementById('aboutImagePreview');
-            const img = preview.querySelector('img');
-            if (this.value.trim()) {
-                img.src = getImageUrl(this.value.trim());
-                preview.classList.remove('hidden');
-            } else {
-                preview.classList.add('hidden');
-            }
-        });
-
-        document.getElementById('landingPageForm').addEventListener('submit', async function(e) {
+        // ============================================================
+        // SUBMIT
+        // ============================================================
+        document.getElementById('landingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const submitBtn = this.querySelector('button[type="submit"]');
+            const submitBtn = document.getElementById('submitBtn');
             const messageEl = document.getElementById('formMessage');
             
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Menyimpan...';
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
+            lucide.createIcons();
             messageEl.innerHTML = '';
 
             const data = {
                 hero: {
                     heading: document.getElementById('heroHeading').value.trim(),
                     subheading: document.getElementById('heroSubheading').value.trim(),
-                    deskripsi: document.getElementById('heroDescription').value.trim(),
+                    deskripsi: document.getElementById('heroDeskripsi').value.trim(),
                     subtext: document.getElementById('heroSubtext').value.trim(),
                     ctaText: document.getElementById('heroCtaText').value.trim(),
-                    gambar: document.getElementById('heroImage').value.trim()
+                    gambar: document.getElementById('heroGambar').value.trim()
                 },
                 about: {
                     judul: document.getElementById('aboutTitle').value.trim(),
-                    deskripsi: document.getElementById('aboutDescription').value.trim(),
-                    gambar: document.getElementById('aboutImage').value.trim()
+                    deskripsi: document.getElementById('aboutDeskripsi').value.trim(),
+                    gambar: document.getElementById('aboutGambar').value.trim()
                 },
                 contact: {
                     whatsapp: document.getElementById('contactWhatsapp').value.trim(),
-                    instagram: document.getElementById('contactInstagram').value.trim()
+                    instagram: document.getElementById('contactInstagram').value.trim(),
+                    alamat: document.getElementById('contactAlamat').value.trim(),
+                    jamOperasional: document.getElementById('contactJam').value.trim(),
+                    googleMaps: document.getElementById('contactMaps').value.trim()
                 },
                 footer: {
                     copyright: document.getElementById('footerCopyright').value.trim()
@@ -282,13 +510,32 @@
 
             try {
                 await setDoc(doc(db, 'landingPage', 'content'), data);
-                messageEl.innerHTML = `<p class="text-green-600">Konten landing page berhasil diupdate!</p>`;
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-green-600 font-medium">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        Berhasil disimpan!
+                    </div>
+                `;
+                lucide.createIcons();
+                
+                // Auto hide success message
+                setTimeout(() => {
+                    messageEl.innerHTML = '';
+                }, 3000);
+                
             } catch (error) {
-                console.error('Error saving content:', error);
-                messageEl.innerHTML = `<p class="text-red-600">Gagal menyimpan: ${error.message}</p>`;
+                console.error('Error saving:', error);
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 font-medium">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Gagal menyimpan: ${error.message}
+                    </div>
+                `;
+                lucide.createIcons();
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Simpan Perubahan';
+                submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan`;
+                lucide.createIcons();
             }
         });
     </script>

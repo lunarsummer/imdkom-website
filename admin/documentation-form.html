@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Dokumentasi | Admin IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        .preview-img {
+            max-height: 300px;
+            max-width: 100%;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        <span class="text-white font-bold">Form Dokumentasi</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link"><i data-lucide="layout-dashboard" class="w-4 h-4"></i>Dashboard</a>
+            <a href="landing-page.html" class="nav-link"><i data-lucide="home" class="w-4 h-4"></i>Landing Page</a>
+            <a href="programs.html" class="nav-link"><i data-lucide="book-open" class="w-4 h-4"></i>Program Kursus</a>
+            <a href="services.html" class="nav-link"><i data-lucide="wrench" class="w-4 h-4"></i>Computer Service</a>
+            <a href="pricelists.html" class="nav-link"><i data-lucide="tag" class="w-4 h-4"></i>Pricelist</a>
+            <a href="documentations.html" class="nav-link active"><i data-lucide="image" class="w-4 h-4"></i>Dokumentasi</a>
+            <a href="testimonials.html" class="nav-link"><i data-lucide="message-square" class="w-4 h-4"></i>Testimoni</a>
+            <a href="faq.html" class="nav-link"><i data-lucide="help-circle" class="w-4 h-4"></i>FAQ</a>
+            <a href="consultations.html" class="nav-link"><i data-lucide="inbox" class="w-4 h-4"></i>Konsultasi</a>
+            <a href="settings.html" class="nav-link"><i data-lucide="settings" class="w-4 h-4"></i>Pengaturan</a>
+            <button id="logoutBtn" class="logout-btn"><i data-lucide="log-out" class="w-4 h-4"></i>Logout</button>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <div class="page-header">
+            <h2 id="formTitle">Tambah Dokumentasi</h2>
+            <a href="documentations.html" class="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>Kembali
+            </a>
+        </div>
+
+        <div class="admin-card max-w-3xl">
+            <form id="docForm">
+                <input type="hidden" id="docId" />
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Layanan *</label>
+                        <select id="serviceSlug" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
+                            <option value="">Pilih layanan</option>
+                            <option value="laptop">Service Laptop</option>
+                            <option value="pc">Service PC</option>
+                            <option value="printer">Service Printer</option>
+                            <option value="panggil">Service Panggil</option>
+                            <option value="sparepart">Sparepart</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Dokumentasi *</label>
+                        <input type="text" id="nama" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="Contoh: Ganti LCD Laptop Asus" />
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Path Gambar *</label>
+                    <input type="text" id="gambar" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="assets/images/services/laptop/svl1.png" />
+                    <p class="text-xs text-gray-500 mt-1">Upload gambar ke <code class="bg-gray-100 px-1 rounded">assets/images/services/</code> lalu masukkan path-nya.</p>
+
+                    <div id="gambarPreview" class="mt-3 hidden">
+                        <img id="previewImg" src="" alt="Preview" class="preview-img" />
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label>
+                    <textarea id="keterangan" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="Deskripsi singkat dokumentasi"></textarea>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Urutan Tampil</label>
+                    <input type="number" id="order" value="1" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                </div>
+
+                <div class="mt-4 flex items-center gap-3">
+                    <input type="checkbox" id="aktif" checked class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                    <label for="aktif" class="text-sm text-gray-700">Aktif (Tampil di halaman publik)</label>
+                </div>
+
+                <div class="flex flex-wrap gap-3 mt-6 pt-4 border-t border-gray-200">
+                    <button type="submit" class="btn-primary"><i data-lucide="save" class="w-4 h-4"></i>Simpan</button>
+                    <a href="documentations.html" class="btn-secondary">Batal</a>
+                </div>
+
+                <div id="formMessage" class="mt-3"></div>
+            </form>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, addDoc, updateDoc, collection } from '../assets/js/firebase.js';
+        import { PLACEHOLDER_IMAGE } from '../assets/js/placeholder.js';
+
+        // Mobile sidebar
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+            else {
+                checkEditMode();
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // PREVIEW GAMBAR — Pakai SVG Placeholder (Offline)
+        // ============================================================
+        document.getElementById('gambar').addEventListener('input', function() {
+            const preview = document.getElementById('gambarPreview');
+            const img = document.getElementById('previewImg');
+            const value = this.value.trim();
+
+            if (value) {
+                // Set fallback dulu sebelum src
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = PLACEHOLDER_IMAGE;
+                };
+                
+                const finalPath = value.startsWith('http') ? value : '../' + value;
+                img.src = finalPath;
+                preview.classList.remove('hidden');
+            } else {
+                preview.classList.add('hidden');
+            }
+        });
+
+        // ============================================================
+        // CHECK EDIT MODE
+        // ============================================================
+        async function checkEditMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (id) {
+                document.getElementById('formTitle').textContent = 'Edit Dokumentasi';
+                document.getElementById('docId').value = id;
+                await loadDoc(id);
+            }
+        }
+
+        async function loadDoc(id) {
+            try {
+                const docSnap = await getDoc(doc(db, 'documentations', id));
+                if (!docSnap.exists()) {
+                    alert('Dokumentasi tidak ditemukan');
+                    window.location.href = 'documentations.html';
+                    return;
+                }
+                const data = docSnap.data();
+                document.getElementById('serviceSlug').value = data.serviceSlug || '';
+                document.getElementById('nama').value = data.nama || '';
+                document.getElementById('gambar').value = data.gambar || '';
+                document.getElementById('keterangan').value = data.keterangan || '';
+                document.getElementById('order').value = data.order || 1;
+                document.getElementById('aktif').checked = data.aktif !== false;
+
+                if (data.gambar) {
+                    document.getElementById('gambar').dispatchEvent(new Event('input'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // ============================================================
+        // SUBMIT
+        // ============================================================
+        document.getElementById('docForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('docId').value;
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const messageEl = document.getElementById('formMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
+            messageEl.innerHTML = '';
+
+            const data = {
+                serviceSlug: document.getElementById('serviceSlug').value,
+                nama: document.getElementById('nama').value.trim(),
+                gambar: document.getElementById('gambar').value.trim(),
+                keterangan: document.getElementById('keterangan').value.trim(),
+                order: parseInt(document.getElementById('order').value) || 1,
+                aktif: document.getElementById('aktif').checked,
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, 'documentations', id), data);
+                    messageEl.innerHTML = `<p class="text-green-600 text-sm">✅ Berhasil diupdate!</p>`;
+                } else {
+                    data.createdAt = new Date().toISOString();
+                    await addDoc(collection(db, 'documentations'), data);
+                    messageEl.innerHTML = `<p class="text-green-600 text-sm">✅ Berhasil ditambahkan!</p>`;
+                    this.reset();
+                    document.getElementById('gambarPreview').classList.add('hidden');
+                }
+
+                setTimeout(() => window.location.href = 'documentations.html', 1500);
+            } catch (error) {
+                console.error('Error:', error);
+                messageEl.innerHTML = `<p class="text-red-600 text-sm">❌ Gagal: ${error.message}</p>`;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Simpan';
+            }
+        });
+    </script>
+
+</body>
+</html>

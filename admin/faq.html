@@ -4,155 +4,447 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FAQ | Admin IMDKOM</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
-                    }
-                }
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        /* FAQ Accordion */
+        .faq-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .faq-item:hover {
+            border-color: rgba(26, 60, 94, 0.3);
+            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.06);
+        }
+        
+        .faq-item.expanded {
+            border-color: #1a3c5e;
+        }
+        
+        .faq-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .faq-number {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(26, 60, 94, 0.08);
+            color: #1a3c5e;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .faq-question {
+            flex: 1;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .faq-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .faq-chevron {
+            color: #9ca3af;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .faq-item.expanded .faq-chevron {
+            transform: rotate(180deg);
+        }
+        
+        .faq-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .faq-item.expanded .faq-body {
+            max-height: 500px;
+        }
+        
+        .faq-body-content {
+            padding: 0 1.25rem 1.25rem 4.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .faq-body-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: #f9fafb;
+            border-top: 1px solid #f3f4f6;
+        }
+        
+        @media (max-width: 640px) {
+            .faq-header {
+                padding: 0.875rem 1rem;
+            }
+            
+            .faq-body-content {
+                padding: 0 1rem 1rem 1rem;
+            }
+            
+            .faq-body-actions {
+                padding: 0.75rem 1rem;
             }
         }
-    </script>
+    </style>
 </head>
 <body>
 
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-brand min-h-screen hidden md:block">
-            <div class="p-6 border-b border-brand-light">
-                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
-            </div>
-            <nav class="p-4 space-y-1">
-                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
-                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Landing Page</a>
-                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Program Kursus</a>
-                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
-                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
-                <a href="faq.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">FAQ</a>
-                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Pengaturan</a>
-                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
-            </nav>
-        </aside>
-
-        <!-- Mobile -->
-        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center">
-            <span class="text-white font-bold">IMDKOM Admin</span>
-            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
-        </div>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-                <h2 class="text-2xl md:text-3xl font-bold text-brand">FAQ</h2>
-                <a href="faq-form.html" class="bg-brand hover:bg-brand-light text-white font-medium px-4 py-2 rounded-lg transition-colors">
-                    + Tambah FAQ
-                </a>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b border-gray-200">
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Urutan</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Pertanyaan</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Jawaban</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Status</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="faqsList">
-                        <tr>
-                            <td colspan="5" class="text-center text-gray-500 py-8">
-                                <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
-                                <p class="mt-2">Memuat FAQ...</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+    <!-- ============================================================
+    MOBILE HEADER
+    ============================================================ -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">FAQ</span>
+        <div class="w-8"></div>
     </div>
 
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+            <a href="programs.html" class="nav-link">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Program Kursus
+            </a>
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link active">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h2>FAQ</h2>
+                <p class="text-gray-500 text-sm mt-1">Kelola pertanyaan yang sering ditanyakan</p>
+            </div>
+            <a href="faq-form.html" class="btn-primary">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Tambah FAQ
+            </a>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="admin-card mb-4" style="background: linear-gradient(135deg, rgba(26, 60, 94, 0.05) 0%, rgba(42, 90, 122, 0.05) 100%); border-color: rgba(26, 60, 94, 0.15);">
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center text-brand">
+                        <i data-lucide="help-circle" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-brand" id="totalFaqs">-</div>
+                        <div class="text-xs text-gray-500">Total FAQ</div>
+                    </div>
+                </div>
+                <div class="h-12 w-px bg-gray-200 hidden sm:block"></div>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600">
+                        <i data-lucide="check-circle" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-green-600" id="activeFaqs">-</div>
+                        <div class="text-xs text-gray-500">Aktif</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="admin-card mb-4">
+            <div class="relative">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input type="text" 
+                       id="searchInput"
+                       placeholder="Cari pertanyaan..." 
+                       class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+            </div>
+        </div>
+
+        <!-- FAQ Accordion List -->
+        <div id="faqList">
+            <div class="text-center text-gray-500 py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm">Memuat FAQ...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from '../assets/js/firebase.js';
-        import { escapeHtml, truncateText } from '../assets/js/utils.js';
 
+        let allFaqs = [];
+
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
         onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = 'login.html';
-            else loadFaqs();
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                loadFaqs();
+                lucide.createIcons();
+            }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
             window.location.href = 'login.html';
         });
-        document.getElementById('mobileLogout').addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.href = 'login.html';
+
+        // ============================================================
+        // SEARCH
+        // ============================================================
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const keyword = this.value.toLowerCase().trim();
+            const filtered = keyword 
+                ? allFaqs.filter(f => 
+                    (f.pertanyaan || '').toLowerCase().includes(keyword) ||
+                    (f.jawaban || '').toLowerCase().includes(keyword)
+                  )
+                : allFaqs;
+            renderFaqs(filtered);
         });
 
+        // ============================================================
+        // LOAD FAQS
+        // ============================================================
         async function loadFaqs() {
-            const container = document.getElementById('faqsList');
+            const container = document.getElementById('faqList');
+            
             try {
                 const q = query(collection(db, 'faqs'), orderBy('order', 'asc'));
                 const snapshot = await getDocs(q);
                 
-                if (snapshot.empty) {
+                allFaqs = [];
+                let activeCount = 0;
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    allFaqs.push({ id: docSnap.id, ...data });
+                    if (data.aktif) activeCount++;
+                });
+                
+                // Update stats
+                document.getElementById('totalFaqs').textContent = allFaqs.length;
+                document.getElementById('activeFaqs').textContent = activeCount;
+                
+                if (allFaqs.length === 0) {
                     container.innerHTML = `
-                        <tr><td colspan="5" class="text-center text-gray-500 py-8">
-                            Belum ada FAQ. <a href="faq-form.html" class="text-brand hover:underline">Tambah FAQ</a>
-                        </td></tr>
+                        <div class="admin-card text-center py-12">
+                            <i data-lucide="help-circle" class="w-16 h-16 mx-auto text-gray-300 mb-4"></i>
+                            <h3 class="font-bold text-gray-700 mb-2">Belum Ada FAQ</h3>
+                            <p class="text-gray-500 text-sm mb-5">Tambahkan FAQ untuk membantu pengunjung mendapatkan informasi.</p>
+                            <a href="faq-form.html" class="btn-primary inline-flex">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                Tambah FAQ Pertama
+                            </a>
+                        </div>
                     `;
+                    lucide.createIcons();
                     return;
                 }
 
-                let html = '';
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    
-                    html += `
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                            <td class="py-3 px-2">${data.order || '-'}</td>
-                            <td class="py-3 px-2 font-medium">${escapeHtml(truncateText(data.pertanyaan || '', 50))}</td>
-                            <td class="py-3 px-2 text-gray-600">${escapeHtml(truncateText(data.jawaban || '', 80))}</td>
-                            <td class="py-3 px-2">
-                                <span class="px-2 py-1 rounded-full text-xs ${data.aktif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
-                                    ${data.aktif ? 'Aktif' : 'Nonaktif'}
-                                </span>
-                            </td>
-                            <td class="py-3 px-2">
-                                <a href="faq-form.html?id=${doc.id}" class="text-brand hover:text-brand-light text-sm border-b border-brand hover:border-brand-light transition-colors">Edit</a>
-                                <button class="delete-btn text-red-600 hover:text-red-800 text-sm border-b border-red-600 hover:border-red-800 transition-colors ml-3" 
-                                        data-id="${doc.id}" data-question="${escapeHtml(data.pertanyaan || '')}">Hapus</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                container.innerHTML = html;
-
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', async () => {
-                        const id = btn.dataset.id;
-                        const question = btn.dataset.question;
-                        if (confirm(`Hapus FAQ "${question}"?`)) {
-                            await deleteDoc(doc(db, 'faqs', id));
-                            loadFaqs();
-                        }
-                    });
-                });
+                renderFaqs(allFaqs);
 
             } catch (error) {
                 console.error('Error loading FAQs:', error);
                 container.innerHTML = `
-                    <tr><td colspan="5" class="text-center text-red-600 py-8">
-                        Gagal memuat FAQ. Silakan refresh halaman.
-                    </td></tr>
+                    <div class="admin-card text-center py-12">
+                        <i data-lucide="alert-circle" class="w-16 h-16 mx-auto text-red-300 mb-4"></i>
+                        <h3 class="font-bold text-red-600 mb-2">Gagal Memuat FAQ</h3>
+                        <p class="text-gray-500 text-xs">${error.message}</p>
+                    </div>
                 `;
+                lucide.createIcons();
             }
         }
+
+        // ============================================================
+        // RENDER FAQS (Accordion)
+        // ============================================================
+        function renderFaqs(faqs) {
+            const container = document.getElementById('faqList');
+            
+            if (faqs.length === 0) {
+                container.innerHTML = `
+                    <div class="admin-card text-center py-8">
+                        <i data-lucide="search" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                        <p class="text-gray-500 text-sm">Tidak ada FAQ yang cocok dengan pencarian.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            let html = '';
+            faqs.forEach((faq, index) => {
+                html += `
+                    <div class="faq-item" data-id="${faq.id}">
+                        <div class="faq-header" onclick="toggleFaq(this)">
+                            <div class="faq-number">${String(index + 1).padStart(2, '0')}</div>
+                            <div class="faq-question">${faq.pertanyaan || '-'}</div>
+                            <div class="faq-meta">
+                                <span class="badge ${faq.aktif ? 'badge-success' : 'badge-gray'}">
+                                    ${faq.aktif ? 'Aktif' : 'Off'}
+                                </span>
+                                <i data-lucide="chevron-down" class="faq-chevron w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div class="faq-body">
+                            <div class="faq-body-content">
+                                ${faq.jawaban || 'Belum ada jawaban.'}
+                            </div>
+                            <div class="faq-body-actions">
+                                <a href="faq-form.html?id=${faq.id}" 
+                                   class="flex-1 inline-flex items-center justify-center gap-1.5 bg-white border border-gray-200 hover:border-brand hover:text-brand text-gray-700 text-xs font-medium py-2 rounded-lg transition-colors">
+                                    <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                    Edit
+                                </a>
+                                <button class="delete-btn flex-1 inline-flex items-center justify-center gap-1.5 bg-white border border-gray-200 hover:border-red-300 hover:text-red-600 text-gray-700 text-xs font-medium py-2 rounded-lg transition-colors" 
+                                        data-id="${faq.id}" 
+                                        data-name="${(faq.pertanyaan || '').substring(0, 50)}">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            lucide.createIcons();
+
+            // Delete handler
+            container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const id = btn.dataset.id;
+                    const name = btn.dataset.name;
+                    
+                    if (confirm(`Hapus FAQ "${name}..."?\n\nTindakan ini tidak dapat dibatalkan.`)) {
+                        try {
+                            btn.disabled = true;
+                            btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>`;
+                            lucide.createIcons();
+                            
+                            await deleteDoc(doc(db, 'faqs', id));
+                            loadFaqs();
+                        } catch (error) {
+                            console.error('Error deleting:', error);
+                            alert('Gagal menghapus FAQ: ' + error.message);
+                            btn.disabled = false;
+                        }
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        // TOGGLE FAQ (Global function)
+        // ============================================================
+        window.toggleFaq = function(header) {
+            const item = header.closest('.faq-item');
+            item.classList.toggle('expanded');
+        };
     </script>
 
 </body>

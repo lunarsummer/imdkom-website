@@ -75,13 +75,8 @@
             animation: pulse-wa 2s infinite;
         }
         
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        [data-lucide] {
-            stroke-width: 2;
-        }
+        html { scroll-behavior: smooth; }
+        [data-lucide] { stroke-width: 2; }
 
         /* ============================================================
            LOGO SHINE EFFECT
@@ -131,61 +126,208 @@
         }
 
         /* ============================================================
-           SERVICE MENU CARD
+           SERVICE MENU CARD — SIMPLE & ELEGANT
            ============================================================ */
         .service-menu-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .service-menu-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #1a3c5e, #c2410c);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s;
-        }
-        
-        .service-menu-card:hover::before {
-            transform: scaleX(1);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
         
         .service-menu-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 24px 48px rgba(26, 60, 94, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(26, 60, 94, 0.12);
+            border-color: rgba(26, 60, 94, 0.2);
+        }
+        
+        .service-menu-card .menu-icon {
+            transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
         }
         
         .service-menu-card:hover .menu-icon {
-            transform: scale(1.1) rotate(5deg);
-            background: linear-gradient(135deg, #1a3c5e, #2a5a7a);
+            transform: scale(1.05);
+            background-color: #1a3c5e;
             color: white;
         }
         
-        .service-menu-card:hover .menu-arrow {
-            transform: translateX(4px);
-            opacity: 1;
-        }
+        /* Icon warna berbeda untuk tiap card */
+        .icon-brand .menu-icon { background: rgba(26, 60, 94, 0.1); color: #1a3c5e; }
+        .icon-brand:hover .menu-icon { background: #1a3c5e; color: white; }
         
-        .menu-icon {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .icon-success .menu-icon { background: rgba(5, 150, 105, 0.1); color: #059669; }
+        .icon-success:hover .menu-icon { background: #059669; color: white; }
         
-        .menu-arrow {
-            transition: all 0.3s ease;
-            opacity: 0.3;
-        }
+        .icon-orange .menu-icon { background: rgba(194, 65, 12, 0.1); color: #c2410c; }
+        .icon-orange:hover .menu-icon { background: #c2410c; color: white; }
+
+               /* ============================================================
+   MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
+   ============================================================ */
+.mobile-menu-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
+    color: white !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 10px;
+    margin: 0.25rem 0;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.2);
+    transition: all 0.2s ease;
+}
+
+.mobile-menu-highlight:hover,
+.mobile-menu-highlight:active {
+    transform: translateX(4px);
+    box-shadow: 0 6px 16px rgba(26, 60, 94, 0.3);
+}
+
+.mobile-menu-highlight .menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-menu-highlight .menu-arrow {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.7;
+}
+
+/* ============================================================
+   MOBILE MENU — GLASSMORPHISM HIGHLIGHT + SHINE
+   ============================================================ */
+.mobile-menu-highlight {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    margin: 0.35rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    font-weight: 600;
+    
+    /* Glassmorphism */
+    background: linear-gradient(
+        135deg,
+        rgba(26, 60, 94, 0.12) 0%,
+        rgba(26, 60, 94, 0.06) 50%,
+        rgba(26, 60, 94, 0.12) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(26, 60, 94, 0.25);
+    box-shadow: 
+        0 4px 20px rgba(26, 60, 94, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    
+    color: #1a3c5e !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shine Sweep — Kilau bergerak */
+.mobile-menu-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.7) 50%,
+        transparent 70%
+    );
+    animation: mobile-shine 3.5s infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@keyframes mobile-shine {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+/* Content di atas shine */
+.mobile-menu-highlight > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Icon wrap */
+.mobile-menu-highlight .menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+/* Icon dengan glow */
+.mobile-menu-highlight .menu-icon-wrap i {
+    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
+    transition: filter 0.3s ease;
+}
+
+/* Arrow */
+.mobile-menu-highlight .menu-arrow {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+/* Hover / Tap state */
+.mobile-menu-highlight:hover,
+.mobile-menu-highlight:active {
+    transform: translateX(4px) scale(1.01);
+    background: linear-gradient(
+        135deg,
+        rgba(26, 60, 94, 0.18) 0%,
+        rgba(26, 60, 94, 0.1) 50%,
+        rgba(26, 60, 94, 0.18) 100%
+    );
+    border-color: rgba(26, 60, 94, 0.4);
+    box-shadow: 
+        0 6px 24px rgba(26, 60, 94, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.mobile-menu-highlight:hover .menu-arrow,
+.mobile-menu-highlight:active .menu-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+}
+
+.mobile-menu-highlight:hover .menu-icon-wrap i {
+    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
+}
+
+/* ⭐ Animasi glow berkala untuk menarik perhatian */
+@keyframes highlight-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 4px 20px rgba(26, 60, 94, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 
+            0 4px 24px rgba(26, 60, 94, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            0 0 20px rgba(26, 60, 94, 0.15);
+    }
+}
+
+.mobile-menu-highlight {
+    animation: highlight-pulse 3s ease-in-out infinite;
+}
+
     </style>
 </head>
 <body class="font-sans page-bg">
 
     <!-- ============================================================
-    NAVIGATION — TIDAK DIUBAH
+    NAVIGATION
     ============================================================ -->
     <nav class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
@@ -211,16 +353,25 @@
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-            <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-gray-600 hover:text-brand py-1">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-brand font-semibold py-1">Computer Service</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1">Kontak</a>
-                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1">Login</a>
-            </div>
-        </div>
+<div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+    <div class="container mx-auto px-4 flex flex-col gap-2">
+        <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+        <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+        
+        <!-- ⭐ COMPUTER SERVICE — Glass + Shine -->
+        <a href="service.html" class="mobile-menu-highlight">
+            <span class="menu-icon-wrap">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </span>
+            <i data-lucide="arrow-right" class="menu-arrow"></i>
+        </a>
+        
+        <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+        <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+        <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
+    </div>
+</div>
     </nav>
 
     <!-- ============================================================
@@ -232,101 +383,77 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
                 
                 <!-- Menu 1: Service Laptop -->
-                <a href="service-laptop.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                <a href="service-laptop.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40">
                     <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="laptop" class="w-7 h-7"></i>
                         </div>
-                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
                     </div>
                     <h3 class="font-bold text-brand text-base sm:text-lg">Service Laptop</h3>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Perbaikan semua merek laptop</p>
                 </a>
                 
                 <!-- Menu 2: Service PC -->
-                <a href="service-pc.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                <a href="service-pc.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40">
                     <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="monitor" class="w-7 h-7"></i>
                         </div>
-                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
                     </div>
                     <h3 class="font-bold text-brand text-base sm:text-lg">Service PC</h3>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Desktop & komputer rakitan</p>
                 </a>
                 
                 <!-- Menu 3: Service Printer -->
-                <a href="service-printer.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                <a href="service-printer.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40">
                     <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="printer" class="w-7 h-7"></i>
                         </div>
-                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
                     </div>
                     <h3 class="font-bold text-brand text-base sm:text-lg">Service Printer</h3>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Semua merek printer</p>
                 </a>
                 
-                <!-- Menu 4: Service Panggil -->
-                <a href="service-panggil.html" class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 group relative overflow-hidden">
+                <!-- Menu 4: Service Panggil (Highlight) -->
+                <a href="service-panggil.html" class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 relative overflow-hidden shadow-lg">
                     <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full">POPULER</span>
                     
                     <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white">
+                        <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white transition-transform">
                             <i data-lucide="home" class="w-7 h-7"></i>
                         </div>
-                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-white !opacity-100"></i>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/70"></i>
                     </div>
                     <h3 class="font-bold text-white text-base sm:text-lg">Service Panggil</h3>
                     <p class="text-xs sm:text-sm text-white/80 mt-1">Teknisi datang ke lokasi</p>
                 </a>
                 
                 <!-- Menu 5: Sparepart -->
-                <a href="sparepart.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                <a href="sparepart.html" class="service-menu-card glass icon-success rounded-2xl p-5 sm:p-6 border border-white/40">
                     <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="cpu" class="w-7 h-7"></i>
                         </div>
-                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-success/30"></i>
                     </div>
                     <h3 class="font-bold text-brand text-base sm:text-lg">Sparepart</h3>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Suku cadang berkualitas</p>
                 </a>
                 
-                <!-- Menu 6: Upgrade -->
-                <a href="upgrade.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
+                <!-- Menu 6: Konsultasi (CTA WhatsApp) -->
+                <a href="#" onclick="openWhatsAppConsultation(); return false;" class="service-menu-card glass icon-orange rounded-2xl p-5 sm:p-6 border border-white/40">
                     <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
-                            <i data-lucide="trending-up" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
-                    </div>
-                    <h3 class="font-bold text-brand text-base sm:text-lg">Upgrade</h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Tingkatkan performa</p>
-                </a>
-                
-                <!-- Menu 7: Instalasi -->
-                <a href="instalasi.html" class="service-menu-card glass rounded-2xl p-5 sm:p-6 group">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
-                            <i data-lucide="download" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-brand"></i>
-                    </div>
-                    <h3 class="font-bold text-brand text-base sm:text-lg">Instalasi</h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">OS & software</p>
-                </a>
-                
-                <!-- Menu 8: Konsultasi -->
-                <a href="#" onclick="openWhatsAppConsultation(); return false;" class="service-menu-card glass-dark rounded-2xl p-5 sm:p-6 group relative overflow-hidden">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white">
+                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="message-circle" class="w-7 h-7"></i>
                         </div>
-                        <i data-lucide="arrow-up-right" class="menu-arrow w-5 h-5 text-white !opacity-100"></i>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand-dark/30"></i>
                     </div>
-                    <h3 class="font-bold text-white text-base sm:text-lg">Konsultasi</h3>
-                    <p class="text-xs sm:text-sm text-white/70 mt-1">Chat via WhatsApp</p>
+                    <h3 class="font-bold text-brand text-base sm:text-lg">Konsultasi</h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Chat via WhatsApp</p>
                 </a>
                 
             </div>
@@ -455,7 +582,7 @@
     </section>
 
     <!-- ============================================================
-    FOOTER — TIDAK DIUBAH
+    FOOTER
     ============================================================ -->
     <footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
         <div class="container mx-auto px-4">
@@ -518,7 +645,6 @@
             if (netlifyBadge && netlifyBadge.textContent.includes('Powered by')) {
                 netlifyBadge.style.display = 'none';
             }
-            
             const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
             badges.forEach(badge => badge.remove());
         });

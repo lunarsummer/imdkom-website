@@ -4,150 +4,285 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Testimoni | Admin IMDKOM</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .table-img { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; }
-    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body>
 
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-brand min-h-screen hidden md:block">
-            <div class="p-6 border-b border-brand-light">
-                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
-            </div>
-            <nav class="p-4 space-y-1">
-                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
-                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Landing Page</a>
-                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Program Kursus</a>
-                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
-                <a href="testimonials.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Testimoni</a>
-                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
-                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Pengaturan</a>
-                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
-            </nav>
-        </aside>
-
-        <!-- Mobile -->
-        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center">
-            <span class="text-white font-bold">IMDKOM Admin</span>
-            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
-        </div>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-                <h2 class="text-2xl md:text-3xl font-bold text-brand">Testimoni</h2>
-                <a href="testimonial-form.html" class="bg-brand hover:bg-brand-light text-white font-medium px-4 py-2 rounded-lg transition-colors">
-                    + Tambah Testimoni
-                </a>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b border-gray-200">
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Urutan</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Nama</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Program</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Testimoni</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Status</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Foto</th>
-                            <th class="text-left py-3 px-2 font-semibold text-gray-600">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="testimonialsList">
-                        <tr>
-                            <td colspan="7" class="text-center text-gray-500 py-8">
-                                <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
-                                <p class="mt-2">Memuat testimoni...</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+    <!-- ============================================================
+    MOBILE HEADER
+    ============================================================ -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Testimoni</span>
+        <div class="w-8"></div>
     </div>
 
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+            <a href="programs.html" class="nav-link">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Program Kursus
+            </a>
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link active">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h2>Testimoni</h2>
+                <p class="text-gray-500 text-sm mt-1">Kelola testimoni dari pelanggan</p>
+            </div>
+            <a href="testimonial-form.html" class="btn-primary">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Tambah Testimoni
+            </a>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="admin-card mb-4" style="background: linear-gradient(135deg, rgba(26, 60, 94, 0.05) 0%, rgba(42, 90, 122, 0.05) 100%); border-color: rgba(26, 60, 94, 0.15);">
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center text-brand">
+                        <i data-lucide="message-square" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-brand" id="totalTestimonials">-</div>
+                        <div class="text-xs text-gray-500">Total Testimoni</div>
+                    </div>
+                </div>
+                <div class="h-12 w-px bg-gray-200 hidden sm:block"></div>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600">
+                        <i data-lucide="check-circle" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-green-600" id="activeTestimonials">-</div>
+                        <div class="text-xs text-gray-500">Aktif</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid Testimonials -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="testimonialsGrid">
+            <div class="col-span-full text-center text-gray-500 py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm">Memuat testimoni...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from '../assets/js/firebase.js';
-        import { getImageUrl, escapeHtml, truncateText } from '../assets/js/utils.js';
 
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
         onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = 'login.html';
-            else loadTestimonials();
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                loadTestimonials();
+                lucide.createIcons();
+            }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
             window.location.href = 'login.html';
         });
-        document.getElementById('mobileLogout').addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.href = 'login.html';
-        });
 
+        // ============================================================
+        // LOAD TESTIMONIALS
+        // ============================================================
         async function loadTestimonials() {
-            const container = document.getElementById('testimonialsList');
+            const container = document.getElementById('testimonialsGrid');
+            
             try {
                 const q = query(collection(db, 'testimonials'), orderBy('order', 'asc'));
                 const snapshot = await getDocs(q);
                 
+                // Update stats
+                let activeCount = 0;
+                snapshot.forEach(d => {
+                    if (d.data().aktif) activeCount++;
+                });
+                document.getElementById('totalTestimonials').textContent = snapshot.size;
+                document.getElementById('activeTestimonials').textContent = activeCount;
+                
                 if (snapshot.empty) {
                     container.innerHTML = `
-                        <tr><td colspan="7" class="text-center text-gray-500 py-8">
-                            Belum ada testimoni. <a href="testimonial-form.html" class="text-brand hover:underline">Tambah testimoni</a>
-                        </td></tr>
+                        <div class="col-span-full">
+                            <div class="admin-card text-center py-12">
+                                <i data-lucide="message-square" class="w-16 h-16 mx-auto text-gray-300 mb-4"></i>
+                                <h3 class="font-bold text-gray-700 mb-2">Belum Ada Testimoni</h3>
+                                <p class="text-gray-500 text-sm mb-5">Tambahkan testimoni dari pelanggan untuk membangun kepercayaan.</p>
+                                <a href="testimonial-form.html" class="btn-primary inline-flex">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                    Tambah Testimoni Pertama
+                                </a>
+                            </div>
+                        </div>
                     `;
+                    lucide.createIcons();
                     return;
                 }
 
                 let html = '';
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const imageUrl = getImageUrl(data.foto, 'assets/images/testimonials/default-avatar.jpg');
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const imageUrl = data.foto ? '../' + data.foto : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.nama || 'User') + '&background=1a3c5e&color=fff';
+                    
+                    // Initial untuk avatar jika tidak ada foto
+                    const initial = (data.nama || 'A').charAt(0).toUpperCase();
                     
                     html += `
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                            <td class="py-3 px-2">${data.order || '-'}</td>
-                            <td class="py-3 px-2 font-medium">${escapeHtml(data.nama || 'Anonim')}</td>
-                            <td class="py-3 px-2 text-gray-600">${escapeHtml(data.program || '-')}</td>
-                            <td class="py-3 px-2 text-gray-600">${escapeHtml(truncateText(data.teks || '', 60))}</td>
-                            <td class="py-3 px-2">
-                                <span class="px-2 py-1 rounded-full text-xs ${data.aktif ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
-                                    ${data.aktif ? 'Aktif' : 'Nonaktif'}
+                        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-200 flex flex-col">
+                            <!-- Header -->
+                            <div class="p-4 pb-3 flex items-start justify-between gap-3 border-b border-gray-100">
+                                <div class="flex items-center gap-3 flex-1 min-w-0">
+                                    <img src="${imageUrl}" 
+                                         alt="${data.nama || ''}" 
+                                         class="w-12 h-12 rounded-full object-cover border-2 border-gray-100 flex-shrink-0"
+                                         loading="lazy"
+                                         onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.nama || 'User')}&background=1a3c5e&color=fff'" />
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="font-bold text-gray-800 text-sm truncate">${data.nama || 'Anonim'}</h3>
+                                        ${data.program ? `<p class="text-xs text-gray-500 truncate">${data.program}</p>` : ''}
+                                    </div>
+                                </div>
+                                <span class="badge ${data.aktif ? 'badge-success' : 'badge-gray'} flex-shrink-0">
+                                    ${data.aktif ? 'Aktif' : 'Off'}
                                 </span>
-                            </td>
-                            <td class="py-3 px-2"><img src="${imageUrl}" alt="${escapeHtml(data.nama || '')}" class="table-img" /></td>
-                            <td class="py-3 px-2">
-                                <a href="testimonial-form.html?id=${doc.id}" class="text-brand hover:text-brand-light text-sm border-b border-brand hover:border-brand-light transition-colors">Edit</a>
-                                <button class="delete-btn text-red-600 hover:text-red-800 text-sm border-b border-red-600 hover:border-red-800 transition-colors ml-3" 
-                                        data-id="${doc.id}" data-name="${escapeHtml(data.nama || '')}">Hapus</button>
-                            </td>
-                        </tr>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div class="p-4 flex-1">
+                                <div class="flex gap-0.5 mb-2">
+                                    ${'<i data-lucide="star" class="w-3.5 h-3.5 fill-yellow-400 text-yellow-400"></i>'.repeat(5)}
+                                </div>
+                                <p class="text-sm text-gray-600 leading-relaxed line-clamp-4 italic">
+                                    "${data.teks || '-'}"
+                                </p>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="p-3 bg-gray-50 border-t border-gray-100 flex gap-2">
+                                <a href="testimonial-form.html?id=${docSnap.id}" 
+                                   class="flex-1 inline-flex items-center justify-center gap-1.5 bg-white border border-gray-200 hover:border-brand hover:text-brand text-gray-700 text-xs font-medium py-2 rounded-lg transition-colors">
+                                    <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                    Edit
+                                </a>
+                                <button class="delete-btn flex-1 inline-flex items-center justify-center gap-1.5 bg-white border border-gray-200 hover:border-red-300 hover:text-red-600 text-gray-700 text-xs font-medium py-2 rounded-lg transition-colors" 
+                                        data-id="${docSnap.id}" 
+                                        data-name="${data.nama || ''}">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
                     `;
                 });
                 container.innerHTML = html;
+                lucide.createIcons();
 
+                // Delete handler
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', async () => {
                         const id = btn.dataset.id;
                         const name = btn.dataset.name;
-                        if (confirm(`Hapus testimoni dari "${name}"?`)) {
-                            await deleteDoc(doc(db, 'testimonials', id));
-                            loadTestimonials();
+                        
+                        if (confirm(`Hapus testimoni dari "${name}"?\n\nTindakan ini tidak dapat dibatalkan.`)) {
+                            try {
+                                btn.disabled = true;
+                                btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>`;
+                                lucide.createIcons();
+                                
+                                await deleteDoc(doc(db, 'testimonials', id));
+                                loadTestimonials();
+                            } catch (error) {
+                                console.error('Error deleting:', error);
+                                alert('Gagal menghapus testimoni: ' + error.message);
+                                btn.disabled = false;
+                            }
                         }
                     });
                 });
@@ -155,13 +290,28 @@
             } catch (error) {
                 console.error('Error loading testimonials:', error);
                 container.innerHTML = `
-                    <tr><td colspan="7" class="text-center text-red-600 py-8">
-                        Gagal memuat testimoni. Silakan refresh halaman.
-                    </td></tr>
+                    <div class="col-span-full">
+                        <div class="admin-card text-center py-12">
+                            <i data-lucide="alert-circle" class="w-16 h-16 mx-auto text-red-300 mb-4"></i>
+                            <h3 class="font-bold text-red-600 mb-2">Gagal Memuat Testimoni</h3>
+                            <p class="text-gray-500 text-xs">${error.message}</p>
+                        </div>
+                    </div>
                 `;
+                lucide.createIcons();
             }
         }
     </script>
+
+    <!-- Tambahan CSS untuk line-clamp -->
+    <style>
+        .line-clamp-4 {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
 
 </body>
 </html>

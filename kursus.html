@@ -87,6 +87,172 @@
     .logo-shine:hover img {
         filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
     }
+
+     /* ============================================================
+   MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
+   ============================================================ */
+.mobile-menu-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
+    color: white !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 10px;
+    margin: 0.25rem 0;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.2);
+    transition: all 0.2s ease;
+}
+
+.mobile-menu-highlight:hover,
+.mobile-menu-highlight:active {
+    transform: translateX(4px);
+    box-shadow: 0 6px 16px rgba(26, 60, 94, 0.3);
+}
+
+.mobile-menu-highlight .menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-menu-highlight .menu-arrow {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.7;
+}
+
+/* ============================================================
+   MOBILE MENU — GLASSMORPHISM HIGHLIGHT + SHINE
+   ============================================================ */
+.mobile-menu-highlight {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    margin: 0.35rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    font-weight: 600;
+    
+    /* Glassmorphism */
+    background: linear-gradient(
+        135deg,
+        rgba(26, 60, 94, 0.12) 0%,
+        rgba(26, 60, 94, 0.06) 50%,
+        rgba(26, 60, 94, 0.12) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(26, 60, 94, 0.25);
+    box-shadow: 
+        0 4px 20px rgba(26, 60, 94, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    
+    color: #1a3c5e !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shine Sweep — Kilau bergerak */
+.mobile-menu-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.7) 50%,
+        transparent 70%
+    );
+    animation: mobile-shine 3.5s infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@keyframes mobile-shine {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+/* Content di atas shine */
+.mobile-menu-highlight > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Icon wrap */
+.mobile-menu-highlight .menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+/* Icon dengan glow */
+.mobile-menu-highlight .menu-icon-wrap i {
+    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
+    transition: filter 0.3s ease;
+}
+
+/* Arrow */
+.mobile-menu-highlight .menu-arrow {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+/* Hover / Tap state */
+.mobile-menu-highlight:hover,
+.mobile-menu-highlight:active {
+    transform: translateX(4px) scale(1.01);
+    background: linear-gradient(
+        135deg,
+        rgba(26, 60, 94, 0.18) 0%,
+        rgba(26, 60, 94, 0.1) 50%,
+        rgba(26, 60, 94, 0.18) 100%
+    );
+    border-color: rgba(26, 60, 94, 0.4);
+    box-shadow: 
+        0 6px 24px rgba(26, 60, 94, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.mobile-menu-highlight:hover .menu-arrow,
+.mobile-menu-highlight:active .menu-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+}
+
+.mobile-menu-highlight:hover .menu-icon-wrap i {
+    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
+}
+
+/* ⭐ Animasi glow berkala untuk menarik perhatian */
+@keyframes highlight-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 4px 20px rgba(26, 60, 94, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 
+            0 4px 24px rgba(26, 60, 94, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            0 0 20px rgba(26, 60, 94, 0.15);
+    }
+}
+
+.mobile-menu-highlight {
+    animation: highlight-pulse 3s ease-in-out infinite;
+}
+
+
 </style>
 
 </head>
@@ -122,16 +288,25 @@
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobileNav" class="hidden md:hidden bg-white border-t border-gray-200 mt-3 py-3">
-            <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-gray-600 hover:text-brand py-1">Beranda</a>
-                <a href="kursus.html" class="text-brand font-semibold py-1">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-gray-600 hover:text-brand py-1">Computer Service</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1">Kontak</a>
-                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1">Login</a>
-            </div>
-        </div>
+        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+    <div class="container mx-auto px-4 flex flex-col gap-2">
+        <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+        <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+        
+        <!-- ⭐ COMPUTER SERVICE — Glass + Shine -->
+        <a href="service.html" class="mobile-menu-highlight">
+            <span class="menu-icon-wrap">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </span>
+            <i data-lucide="arrow-right" class="menu-arrow"></i>
+        </a>
+        
+        <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+        <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+        <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
+    </div>
+</div>
     </nav>
 
     <!-- ============================================================
