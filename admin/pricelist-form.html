@@ -4,146 +4,258 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Form Pricelist | Admin IMDKOM</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#c2410c' },
-                        success: { DEFAULT: '#059669', light: '#10b981', dark: '#047857' },
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
-<body class="bg-gray-50">
+<body>
 
-    <div class="flex min-h-screen">
-        <!-- SIDEBAR -->
-        <aside class="w-64 bg-brand min-h-screen hidden md:block">
-            <div class="p-6 border-b border-brand-light">
-                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
-            </div>
-            <nav class="p-4 space-y-1">
-                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">Dashboard</a>
-                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">Landing Page</a>
-                <a href="programs.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">Program Kursus</a>
-                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">Computer Service</a>
-                <a href="pricelists.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Pricelist</a>
-                <a href="documentations.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">Dokumentasi</a>
-                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">Testimoni</a>
-                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">FAQ</a>
-                <a href="consultations.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">Konsultasi</a>
-                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg">Pengaturan</a>
-                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg mt-4">Logout</button>
-            </nav>
-        </aside>
-
-        <!-- MAIN -->
-        <main class="flex-1 p-6">
-            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-                <h2 class="text-2xl md:text-3xl font-bold text-brand" id="formTitle">Tambah Pricelist</h2>
-                <a href="pricelists.html" class="text-gray-500 hover:text-gray-700">← Kembali</a>
-            </div>
-
-            <div class="bg-white border border-gray-200 rounded-lg p-6 max-w-3xl">
-                <form id="pricelistForm">
-                    <input type="hidden" id="pricelistId" />
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Layanan *</label>
-                            <select id="serviceSlug" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none">
-                                <option value="">Pilih layanan</option>
-                                <option value="laptop">Service Laptop</option>
-                                <option value="pc">Service PC</option>
-                                <option value="printer">Service Printer</option>
-                                <option value="panggil">Service Panggil</option>
-                                <option value="sparepart">Sparepart</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
-                            <input type="text" id="kategori" required
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
-                                   placeholder="Contoh: Perbaikan Hardware, Software" />
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Item *</label>
-                        <input type="text" id="nama" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
-                               placeholder="Contoh: Ganti LCD Laptop" />
-                    </div>
-
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <textarea id="deskripsi" rows="2"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
-                                  placeholder="Keterangan singkat"></textarea>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga * (Angka)</label>
-                            <input type="number" id="harga" required
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
-                                   placeholder="500000" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga Promo (Opsional)</label>
-                            <input type="number" id="hargaPromo"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
-                                   placeholder="450000" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Estimasi</label>
-                            <input type="text" id="estimasi"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
-                                   placeholder="1 hari / 2 jam" />
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Garansi</label>
-                            <input type="text" id="garansi"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
-                                   placeholder="2 bulan / 1 tahun / -" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Urutan Tampil</label>
-                            <input type="number" id="order" value="1" min="1"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
-                        </div>
-                    </div>
-
-                    <div class="mt-4 flex items-center gap-3">
-                        <input type="checkbox" id="aktif" checked class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
-                        <label for="aktif" class="text-sm text-gray-700">Aktif</label>
-                    </div>
-
-                    <div class="flex flex-wrap gap-3 mt-6 pt-4 border-t border-gray-200">
-                        <button type="submit" class="bg-brand hover:bg-brand-light text-white font-medium px-6 py-2 rounded-lg">Simpan</button>
-                        <a href="pricelists.html" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg">Batal</a>
-                    </div>
-
-                    <div id="formMessage" class="mt-3"></div>
-                </form>
-            </div>
-        </main>
+    <!-- ============================================================
+    MOBILE HEADER
+    ============================================================ -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Form Pricelist</span>
+        <div class="w-8"></div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- ============================================================
+    OVERLAY
+    ============================================================ -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+            <a href="programs.html" class="nav-link">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Program Kursus
+            </a>
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pricelists.html" class="nav-link active">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2 id="formTitle">Tambah Pricelist</h2>
+            <a href="pricelists.html" id="backLink" class="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Kembali
+            </a>
+        </div>
+
+        <!-- Form Card -->
+        <div class="admin-card max-w-3xl">
+            <form id="pricelistForm">
+                <input type="hidden" id="pricelistId" />
+                
+                <!-- ============================================================
+                     BARIS 1: LAYANAN + KATEGORI
+                     ============================================================ -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Layanan *</label>
+                        <select id="serviceSlug" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
+                            <option value="">Pilih layanan</option>
+                            <option value="laptop">Service Laptop</option>
+                            <option value="pc">Service PC</option>
+                            <option value="printer">Service Printer</option>
+                            <option value="panggil">Service Panggil</option>
+                            <option value="sparepart">Sparepart</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
+                        <input type="text" id="kategori" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               placeholder="Contoh: Perbaikan Hardware, Software, Upgrade" />
+                        <p class="text-xs text-gray-500 mt-1">Kelompok item pricelist</p>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     BARIS 2: NAMA ITEM
+                     ============================================================ -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Item *</label>
+                    <input type="text" id="nama" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                           placeholder="Contoh: Ganti LCD Laptop" />
+                </div>
+
+                <!-- ============================================================
+                     BARIS 3: DESKRIPSI
+                     ============================================================ -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                    <textarea id="deskripsi" rows="2"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                              placeholder="Keterangan singkat (opsional)"></textarea>
+                </div>
+
+                <!-- ============================================================
+                     BARIS 4: HARGA + PROMO + ESTIMASI
+                     ============================================================ -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Harga * (Angka)</label>
+                        <input type="number" id="harga" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               placeholder="500000" />
+                        <p class="text-xs text-gray-500 mt-1">Harga utama (start from)</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Harga Promo (Opsional)</label>
+                        <input type="number" id="hargaPromo"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               placeholder="450000" />
+                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ada promo</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Estimasi</label>
+                        <input type="text" id="estimasi"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               placeholder="1 hari / 2 jam" />
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     BARIS 5: GARANSI + URUTAN
+                     ============================================================ -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Garansi</label>
+                        <input type="text" id="garansi"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               placeholder="2 bulan / 1 tahun / -" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Urutan Tampil</label>
+                        <input type="number" id="order" value="1" min="1"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                        <p class="text-xs text-gray-500 mt-1">Angka lebih kecil tampil lebih dulu</p>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     BARIS 6: STATUS AKTIF
+                     ============================================================ -->
+                <div class="mt-4 flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <input type="checkbox" id="aktif" checked 
+                           class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                    <label for="aktif" class="text-sm text-gray-700 cursor-pointer">
+                        <span class="font-medium">Aktif</span>
+                        <span class="text-xs text-gray-500 block">Tampilkan di halaman publik</span>
+                    </label>
+                </div>
+
+                <!-- ============================================================
+                     TOMBOL
+                     ============================================================ -->
+                <div class="flex flex-wrap gap-3 mt-6 pt-4 border-t border-gray-200">
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        Simpan
+                    </button>
+                    <a href="pricelists.html" id="cancelLink" class="btn-secondary">
+                        Batal
+                    </a>
+                </div>
+
+                <div id="formMessage" class="mt-3"></div>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, doc, getDoc, addDoc, updateDoc, collection } from '../assets/js/firebase.js';
 
+        // ============================================================
+        // VARIABEL GLOBAL
+        // ============================================================
+        let returnFilter = '';
+
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
         onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = 'login.html';
-            else checkEditMode();
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                checkEditMode();
+                lucide.createIcons();
+            }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
@@ -151,9 +263,26 @@
             window.location.href = 'login.html';
         });
 
+        // ============================================================
+        // URL PARAMS — Baca id & returnFilter
+        // ============================================================
+        const urlParams = new URLSearchParams(window.location.search);
+        returnFilter = urlParams.get('returnFilter') || '';
+
+        // Update link "Kembali" & "Batal" dengan filter
+        const backUrl = returnFilter 
+            ? `pricelists.html?filter=${returnFilter}` 
+            : 'pricelists.html';
+        
+        document.getElementById('backLink').href = backUrl;
+        document.getElementById('cancelLink').href = backUrl;
+
+        // ============================================================
+        // CHECK EDIT MODE
+        // ============================================================
         async function checkEditMode() {
-            const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
+            
             if (id) {
                 document.getElementById('formTitle').textContent = 'Edit Pricelist';
                 document.getElementById('pricelistId').value = id;
@@ -161,14 +290,19 @@
             }
         }
 
+        // ============================================================
+        // LOAD PRICELIST (untuk edit)
+        // ============================================================
         async function loadPricelist(id) {
             try {
                 const docSnap = await getDoc(doc(db, 'pricelists', id));
+                
                 if (!docSnap.exists()) {
                     alert('Pricelist tidak ditemukan');
-                    window.location.href = 'pricelists.html';
+                    window.location.href = backUrl;
                     return;
                 }
+                
                 const data = docSnap.data();
                 
                 document.getElementById('serviceSlug').value = data.serviceSlug || '';
@@ -181,29 +315,51 @@
                 document.getElementById('garansi').value = data.garansi || '';
                 document.getElementById('order').value = data.order || 1;
                 document.getElementById('aktif').checked = data.aktif !== false;
+                
             } catch (error) {
                 console.error('Error loading pricelist:', error);
                 alert('Gagal memuat pricelist');
             }
         }
 
+        // ============================================================
+        // SUBMIT FORM
+        // ============================================================
         document.getElementById('pricelistForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const id = document.getElementById('pricelistId').value;
-            const submitBtn = this.querySelector('button[type="submit"]');
+            const submitBtn = document.getElementById('submitBtn');
             const messageEl = document.getElementById('formMessage');
             
+            // Validasi
+            const serviceSlug = document.getElementById('serviceSlug').value;
+            const kategori = document.getElementById('kategori').value.trim();
+            const nama = document.getElementById('nama').value.trim();
+            const harga = parseInt(document.getElementById('harga').value) || 0;
+            
+            if (!serviceSlug || !kategori || !nama || !harga) {
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 text-sm">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Mohon lengkapi field yang wajib diisi!
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Menyimpan...';
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
+            lucide.createIcons();
             messageEl.innerHTML = '';
 
             const data = {
-                serviceSlug: document.getElementById('serviceSlug').value,
-                kategori: document.getElementById('kategori').value.trim(),
-                nama: document.getElementById('nama').value.trim(),
+                serviceSlug: serviceSlug,
+                kategori: kategori,
+                nama: nama,
                 deskripsi: document.getElementById('deskripsi').value.trim(),
-                harga: parseInt(document.getElementById('harga').value) || 0,
+                harga: harga,
                 hargaPromo: parseInt(document.getElementById('hargaPromo').value) || null,
                 estimasi: document.getElementById('estimasi').value.trim(),
                 garansi: document.getElementById('garansi').value.trim(),
@@ -215,22 +371,43 @@
             try {
                 if (id) {
                     await updateDoc(doc(db, 'pricelists', id), data);
-                    messageEl.innerHTML = `<p class="text-green-600">✅ Pricelist berhasil diupdate!</p>`;
+                    messageEl.innerHTML = `
+                        <div class="flex items-center gap-2 text-green-600 font-medium text-sm">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            Pricelist berhasil diupdate!
+                        </div>
+                    `;
                 } else {
                     data.createdAt = new Date().toISOString();
                     await addDoc(collection(db, 'pricelists'), data);
-                    messageEl.innerHTML = `<p class="text-green-600">✅ Pricelist berhasil ditambahkan!</p>`;
+                    messageEl.innerHTML = `
+                        <div class="flex items-center gap-2 text-green-600 font-medium text-sm">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            Pricelist berhasil ditambahkan!
+                        </div>
+                    `;
                     this.reset();
                 }
                 
+                lucide.createIcons();
+                
+                // ⭐ Redirect kembali dengan filter
                 setTimeout(() => {
-                    window.location.href = 'pricelists.html';
+                    window.location.href = backUrl;
                 }, 1500);
+                
             } catch (error) {
                 console.error('Error saving pricelist:', error);
-                messageEl.innerHTML = `<p class="text-red-600">❌ Gagal: ${error.message}</p>`;
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 font-medium text-sm">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Gagal: ${error.message}
+                    </div>
+                `;
+                lucide.createIcons();
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Simpan';
+                submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Simpan`;
+                lucide.createIcons();
             }
         });
     </script>

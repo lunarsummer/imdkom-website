@@ -94,17 +94,36 @@
             </a>
         </div>
 
+        <!-- Info -->
+        <div class="admin-card mb-4" style="background: rgba(26, 60, 94, 0.05); border-color: rgba(26, 60, 94, 0.15);">
+            <div class="flex items-start gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-brand flex-shrink-0 mt-0.5"></i>
+                <p class="text-sm text-gray-600">
+                    Gunakan <strong>filter</strong> untuk mencari pricelist tertentu. Filter akan tersimpan otomatis di URL, 
+                    sehingga saat kembali dari edit/simpan, filter tetap sama.
+                </p>
+            </div>
+        </div>
+
         <!-- Filter -->
         <div class="admin-card" style="margin-bottom: 1rem;">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Filter Layanan</label>
-            <select id="filterService" class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
-                <option value="">Semua Layanan</option>
-                <option value="laptop">Service Laptop</option>
-                <option value="pc">Service PC</option>
-                <option value="printer">Service Printer</option>
-                <option value="panggil">Service Panggil</option>
-                <option value="sparepart">Sparepart</option>
-            </select>
+            <div class="flex flex-wrap items-end gap-3">
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Filter Layanan</label>
+                    <select id="filterService" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
+                        <option value="">Semua Layanan</option>
+                        <option value="laptop">Service Laptop</option>
+                        <option value="pc">Service PC</option>
+                        <option value="printer">Service Printer</option>
+                        <option value="panggil">Service Panggil</option>
+                        <option value="sparepart">Sparepart</option>
+                    </select>
+                </div>
+                <button id="resetFilter" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4 inline"></i>
+                    Reset
+                </button>
+            </div>
         </div>
 
         <!-- Pricelist Accordion -->
@@ -141,11 +160,25 @@
         });
 
         // ============================================================
+        // URL PARAMS — Baca filter dari URL saat halaman load
+        // ============================================================
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterFromUrl = urlParams.get('filter') || '';
+
+        const filterSelect = document.getElementById('filterService');
+        
+        // Set filter ke dropdown kalau ada di URL
+        if (filterFromUrl) {
+            filterSelect.value = filterFromUrl;
+        }
+
+        // ============================================================
         // AUTH
         // ============================================================
         onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = 'login.html';
-            else {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
                 loadPricelists();
                 lucide.createIcons();
             }
@@ -157,21 +190,50 @@
         });
 
         // ============================================================
-        // FILTER
+        // FILTER — Update URL saat filter berubah
         // ============================================================
-        document.getElementById('filterService').addEventListener('change', loadPricelists);
+        filterSelect.addEventListener('change', function() {
+            const value = this.value;
+            
+            // Update URL tanpa reload page
+            const url = new URL(window.location);
+            if (value) {
+                url.searchParams.set('filter', value);
+            } else {
+                url.searchParams.delete('filter');
+            }
+            window.history.replaceState({}, '', url);
+            
+            // Reload data
+            loadPricelists();
+        });
+
+        // ============================================================
+        // RESET FILTER — Hapus filter & reload
+        // ============================================================
+        document.getElementById('resetFilter').addEventListener('click', function() {
+            // Hapus query param
+            const url = new URL(window.location);
+            url.searchParams.delete('filter');
+            window.history.replaceState({}, '', url);
+            
+            // Reset dropdown
+            filterSelect.value = '';
+            
+            // Reload data
+            loadPricelists();
+        });
 
         // ============================================================
         // LOAD PRICELISTS
         // ============================================================
         async function loadPricelists() {
             const container = document.getElementById('pricelistContainer');
-            const serviceFilter = document.getElementById('filterService').value;
+            const serviceFilter = filterSelect.value;
             
             try {
                 let q = query(
                     collection(db, 'pricelists'),
-                    where('aktif', '==', true),
                     orderBy('serviceSlug', 'asc'),
                     orderBy('kategori', 'asc'),
                     orderBy('order', 'asc')
@@ -192,7 +254,7 @@
                     container.innerHTML = `
                         <div class="admin-card text-center text-gray-500 py-12">
                             <i data-lucide="inbox" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
-                            <p>Belum ada pricelist.</p>
+                            <p>Belum ada pricelist${serviceFilter ? ' untuk filter ini' : ''}.</p>
                             <a href="pricelist-form.html" class="btn-primary mt-4 inline-flex">
                                 <i data-lucide="plus" class="w-4 h-4"></i>
                                 Tambah Pricelist
@@ -262,6 +324,10 @@
                     
                     group.items.forEach((item) => {
                         const hasPromo = item.hargaPromo && item.hargaPromo < item.harga;
+                        // ⭐ Kirim filter ke form untuk redirect kembali
+                        const returnFilter = filterSelect.value;
+                        const editUrl = `pricelist-form.html?id=${item.id}${returnFilter ? '&returnFilter=' + returnFilter : ''}`;
+                        
                         html += `
                             <tr>
                                 <td data-label="Nama">
@@ -286,12 +352,14 @@
                                 </td>
                                 <td data-label="Aksi">
                                     <div class="flex gap-2">
-                                        <a href="pricelist-form.html?id=${item.id}" class="text-brand hover:text-brand-light text-sm font-medium">
+                                        <a href="${editUrl}" class="text-brand hover:text-brand-light text-sm font-medium inline-flex items-center gap-1">
+                                            <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                                             Edit
                                         </a>
-                                        <button class="delete-btn text-red-600 hover:text-red-800 text-sm font-medium" 
+                                        <button class="delete-btn text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center gap-1" 
                                                 data-id="${item.id}" 
                                                 data-name="${item.nama || ''}">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                             Hapus
                                         </button>
                                     </div>
@@ -319,7 +387,6 @@
                     header.addEventListener('click', () => {
                         const targetId = header.dataset.target;
                         const body = document.getElementById(targetId);
-                        
                         header.classList.toggle('active');
                         body.classList.toggle('active');
                     });
@@ -332,9 +399,20 @@
                     btn.addEventListener('click', async () => {
                         const id = btn.dataset.id;
                         const name = btn.dataset.name;
-                        if (confirm(`Hapus pricelist "${name}"?`)) {
-                            await deleteDoc(doc(db, 'pricelists', id));
-                            loadPricelists();
+                        
+                        if (confirm(`Hapus pricelist "${name}"?\n\nTindakan ini tidak dapat dibatalkan.`)) {
+                            try {
+                                btn.disabled = true;
+                                btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>`;
+                                lucide.createIcons();
+                                
+                                await deleteDoc(doc(db, 'pricelists', id));
+                                loadPricelists();
+                            } catch (error) {
+                                console.error('Error deleting:', error);
+                                alert('Gagal menghapus pricelist: ' + error.message);
+                                btn.disabled = false;
+                            }
                         }
                     });
                 });
@@ -343,10 +421,12 @@
                 console.error('Error loading pricelists:', error);
                 container.innerHTML = `
                     <div class="admin-card text-center text-red-600 py-12">
-                        <p>Gagal memuat pricelist.</p>
+                        <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-red-300 mb-3"></i>
+                        <p class="font-medium">Gagal memuat pricelist</p>
                         <small class="text-gray-500">${error.message}</small>
                     </div>
                 `;
+                lucide.createIcons();
             }
         }
     </script>

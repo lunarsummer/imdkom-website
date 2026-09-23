@@ -235,7 +235,7 @@ export async function loadPricelist() {
                                     <th class="text-left px-4 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Layanan</th>
                                     <th class="text-center px-3 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden sm:table-cell">Estimasi</th>
                                     <th class="text-center px-3 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden sm:table-cell">Garansi</th>
-                                    <th class="text-right px-4 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Harga</th>
+                                    <th class="text-right px-4 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Start From</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -246,7 +246,7 @@ export async function loadPricelist() {
                 
                 html += `
                     <tr class="border-b border-gray-100 hover:bg-white/60 transition-colors last:border-0">
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3" data-label="Layanan">
                             <div class="flex items-center gap-2 flex-wrap">
                                 <span class="font-medium text-gray-800">${escapeHtml(item.nama)}</span>
                                 ${hasPromo ? `<span class="bg-brand-dark text-white text-[10px] font-bold px-2 py-0.5 rounded-full">PROMO</span>` : ''}
@@ -259,13 +259,13 @@ export async function loadPricelist() {
                                 ${item.garansi && item.garansi !== '-' ? `<span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i>${escapeHtml(item.garansi)}</span>` : ''}
                             </div>
                         </td>
-                        <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell">
+                        <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell" data-label="Estimasi">
                             ${item.estimasi ? escapeHtml(item.estimasi) : '-'}
                         </td>
-                        <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell">
+                        <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell" data-label="Garansi">
                             ${item.garansi && item.garansi !== '-' ? `<span class="inline-flex items-center gap-1 bg-success/10 text-success px-2 py-0.5 rounded-full text-[10px] font-semibold">${escapeHtml(item.garansi)}</span>` : '-'}
                         </td>
-                        <td class="px-4 py-3 text-right">
+                        <td class="px-4 py-3 text-right" data-label="Start From">
                             ${hasPromo ? `
                                 <div class="text-xs text-gray-400 line-through">${formatRupiah(item.harga)}</div>
                                 <div class="text-sm font-bold text-brand-dark">${formatRupiah(item.hargaPromo)}</div>
