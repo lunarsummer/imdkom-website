@@ -115,39 +115,36 @@
             -webkit-backdrop-filter: blur(4px);
         }
 
-        /* Tipe Service Radio Card */
-        .tipe-service-option {
-            display: block;
-            position: relative;
-        }
-
-        .tipe-service-option input:checked + .tipe-service-card {
-            border-color: #1a3c5e !important;
-            background-color: rgba(26, 60, 94, 0.08) !important;
-            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .tipe-service-option input:checked + .tipe-service-card i {
-            color: #1a3c5e !important;
-        }
-
-        .tipe-service-option input:checked + .tipe-service-card p:first-of-type {
-            color: #1a3c5e;
-        }
-
-        .tipe-service-card {
-            transition: all 0.25s ease;
-            border: 2px solid transparent;
+        /* ============================================================
+           SERVICE MENU CARD (untuk tombol CTA)
+           ============================================================ */
+        .service-menu-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             cursor: pointer;
         }
 
-        .tipe-service-card:hover {
-            border-color: rgba(26, 60, 94, 0.3);
-            background-color: rgba(26, 60, 94, 0.04);
+        .service-menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(26, 60, 94, 0.12);
+            border-color: rgba(26, 60, 94, 0.2);
         }
 
-        /* Pricelist accordion */
+        .service-menu-card .menu-icon {
+            transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .service-menu-card:hover .menu-icon {
+            transform: scale(1.05);
+            background-color: #1a3c5e;
+            color: white;
+        }
+
+        .icon-brand .menu-icon { background: rgba(26, 60, 94, 0.1); color: #1a3c5e; }
+        .icon-brand:hover .menu-icon { background: #1a3c5e; color: white; }
+
+        /* ============================================================
+           PRICELIST — Accordion per Kategori
+           ============================================================ */
         .price-group {
             background: white;
             border-radius: 12px;
@@ -274,36 +271,166 @@
             }
         }
 
-        /* SERVICE MENU CARD */
-        .service-menu-card {
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        /* ============================================================
+           TIPE SERVICE — Radio Card Highlight
+           ============================================================ */
+        .tipe-service-option {
+            display: block;
+            position: relative;
+        }
+
+        .tipe-service-option input:checked + .tipe-service-card {
+            border-color: #1a3c5e !important;
+            background-color: rgba(26, 60, 94, 0.08) !important;
+            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tipe-service-option input:checked + .tipe-service-card i {
+            color: #1a3c5e !important;
+        }
+
+        .tipe-service-option input:checked + .tipe-service-card p:first-of-type {
+            color: #1a3c5e;
+        }
+
+        .tipe-service-card {
+            transition: all 0.25s ease;
+            border: 2px solid transparent;
             cursor: pointer;
         }
 
-        .service-menu-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(26, 60, 94, 0.12);
-            border-color: rgba(26, 60, 94, 0.2);
+        .tipe-service-card:hover {
+            border-color: rgba(26, 60, 94, 0.3);
+            background-color: rgba(26, 60, 94, 0.04);
         }
 
-        .service-menu-card .menu-icon {
-            transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        /* ============================================================
+           MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
+           ============================================================ */
+        .mobile-menu-highlight {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            margin: 0.35rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            font-weight: 600;
+            
+            background: linear-gradient(
+                135deg,
+                rgba(26, 60, 94, 0.12) 0%,
+                rgba(26, 60, 94, 0.06) 50%,
+                rgba(26, 60, 94, 0.12) 100%
+            );
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 60, 94, 0.25);
+            box-shadow: 
+                0 4px 20px rgba(26, 60, 94, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            
+            color: #1a3c5e !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: highlight-pulse 3s ease-in-out infinite;
         }
 
-        .service-menu-card:hover .menu-icon {
-            transform: scale(1.05);
-            background-color: #1a3c5e;
-            color: white;
+        .mobile-menu-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.7) 50%,
+                transparent 70%
+            );
+            animation: mobile-shine 3.5s infinite;
+            z-index: 1;
+            pointer-events: none;
         }
 
-        .icon-brand .menu-icon { background: rgba(26, 60, 94, 0.1); color: #1a3c5e; }
-        .icon-brand:hover .menu-icon { background: #1a3c5e; color: white; }
+        @keyframes mobile-shine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
 
-        /* PROMO BADGE */
+        .mobile-menu-highlight > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .mobile-menu-highlight .menu-icon-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .mobile-menu-highlight .menu-icon-wrap i {
+            filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
+            transition: filter 0.3s ease;
+        }
+
+        .mobile-menu-highlight .menu-arrow {
+            width: 1rem;
+            height: 1rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-highlight:hover,
+        .mobile-menu-highlight:active {
+            transform: translateX(4px) scale(1.01);
+            background: linear-gradient(
+                135deg,
+                rgba(26, 60, 94, 0.18) 0%,
+                rgba(26, 60, 94, 0.1) 50%,
+                rgba(26, 60, 94, 0.18) 100%
+            );
+            border-color: rgba(26, 60, 94, 0.4);
+            box-shadow: 
+                0 6px 24px rgba(26, 60, 94, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .mobile-menu-highlight:hover .menu-arrow,
+        .mobile-menu-highlight:active .menu-arrow {
+            opacity: 1;
+            transform: translateX(4px);
+        }
+
+        .mobile-menu-highlight:hover .menu-icon-wrap i {
+            filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
+        }
+
+        @keyframes highlight-pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 4px 20px rgba(26, 60, 94, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                box-shadow: 
+                    0 4px 24px rgba(26, 60, 94, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                    0 0 20px rgba(26, 60, 94, 0.15);
+            }
+        }
+
+        /* ============================================================
+           PROMO BADGE — Shine Effect
+           ============================================================ */
         .promo-shine {
             position: relative;
             display: inline-flex;
             align-items: center;
+            gap: 0.25rem;
             overflow: hidden;
             background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
             color: white;
@@ -313,7 +440,6 @@
             border-radius: 999px;
             letter-spacing: 0.02em;
             box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
-            animation: promo-pulse 2.5s ease-in-out infinite;
         }
 
         .promo-shine::before {
@@ -339,6 +465,15 @@
             50%, 100% { left: 100%; }
         }
 
+        .promo-shine > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .promo-shine i {
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+        }
+
         @keyframes promo-pulse {
             0%, 100% {
                 box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
@@ -349,240 +484,115 @@
             }
         }
 
-        .promo-shine > * {
-            position: relative;
-            z-index: 2;
+        .promo-shine {
+            animation: promo-pulse 2.5s ease-in-out infinite;
         }
 
-                       /* ============================================================
-   MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
-   ============================================================ */
-.mobile-menu-highlight {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
-    color: white !important;
-    padding: 0.75rem 1rem !important;
-    border-radius: 10px;
-    margin: 0.25rem 0;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.2);
-    transition: all 0.2s ease;
-}
+        /* ============================================================
+           FIX: PREVENT HORIZONTAL SCROLL ON MOBILE (iOS)
+           ============================================================ */
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            width: 100%;
+        }
 
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px);
-    box-shadow: 0 6px 16px rgba(26, 60, 94, 0.3);
-}
+        /* Modal tidak boleh bisa di-scroll horizontal */
+        #bookingModal,
+        #consultationModal,
+        #imageModal {
+            overflow-x: hidden;
+        }
 
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        /* Wrapper modal */
+        #bookingModal > div,
+        #consultationModal > div {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
 
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.7;
-}
+        /* Konten modal */
+        #bookingModal .glass,
+        #consultationModal .glass {
+            max-width: calc(100vw - 1.5rem);
+            overflow-x: hidden;
+        }
 
-/* ============================================================
-   MOBILE MENU — GLASSMORPHISM HIGHLIGHT + SHINE
-   ============================================================ */
-.mobile-menu-highlight {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-    margin: 0.35rem 0;
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    font-weight: 600;
-    
-    /* Glassmorphism */
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.12) 0%,
-        rgba(26, 60, 94, 0.06) 50%,
-        rgba(26, 60, 94, 0.12) 100%
-    );
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(26, 60, 94, 0.25);
-    box-shadow: 
-        0 4px 20px rgba(26, 60, 94, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    
-    color: #1a3c5e !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+        /* ============================================================
+           FIX iOS: input date & time tidak overflow di iPhone
+           ============================================================ */
+        input[type="date"],
+        input[type="time"],
+        .date-time-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            
+            font-size: 16px;
+            
+            text-align: left;
+            color: #1a3c5e;
+            font-family: 'Poppins', system-ui, sans-serif;
+        }
 
-/* Shine Sweep — Kilau bergerak */
-.mobile-menu-highlight::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.7) 50%,
-        transparent 70%
-    );
-    animation: mobile-shine 3.5s infinite;
-    z-index: 1;
-    pointer-events: none;
-}
+        /* Khusus iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            input[type="date"],
+            input[type="time"] {
+                min-width: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0.625rem 0.75rem;
+            }
+            
+            input[type="date"]::-webkit-date-and-time-value,
+            input[type="time"]::-webkit-date-and-time-value {
+                text-align: left;
+                min-width: 0;
+            }
+            
+            input[type="date"]::-webkit-calendar-picker-indicator,
+            input[type="time"]::-webkit-calendar-picker-indicator {
+                opacity: 1;
+                cursor: pointer;
+                margin-left: 0;
+            }
+        }
 
-@keyframes mobile-shine {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
-}
+        /* ============================================================
+           FIX GRID JADWAL — hanya targetkan grid tanggal & waktu
+           TIDAK bocor ke card tipe service
+           ============================================================ */
+        #bookingForm .jadwal-grid > div {
+            min-width: 0;
+            overflow: hidden;
+        }
 
-/* Content di atas shine */
-.mobile-menu-highlight > * {
-    position: relative;
-    z-index: 2;
-}
+        #bookingForm .jadwal-grid label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-/* Icon wrap */
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
+        /* Fix semua input di dalam form booking */
+        #bookingForm input,
+        #bookingForm textarea,
+        #consultationForm input,
+        #consultationForm textarea {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
 
-/* Icon dengan glow */
-.mobile-menu-highlight .menu-icon-wrap i {
-    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
-    transition: filter 0.3s ease;
-}
-
-/* Arrow */
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-}
-
-/* Hover / Tap state */
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px) scale(1.01);
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.18) 0%,
-        rgba(26, 60, 94, 0.1) 50%,
-        rgba(26, 60, 94, 0.18) 100%
-    );
-    border-color: rgba(26, 60, 94, 0.4);
-    box-shadow: 
-        0 6px 24px rgba(26, 60, 94, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.mobile-menu-highlight:hover .menu-arrow,
-.mobile-menu-highlight:active .menu-arrow {
-    opacity: 1;
-    transform: translateX(4px);
-}
-
-.mobile-menu-highlight:hover .menu-icon-wrap i {
-    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
-}
-
-/* ⭐ Animasi glow berkala untuk menarik perhatian */
-@keyframes highlight-pulse {
-    0%, 100% {
-        box-shadow: 
-            0 4px 20px rgba(26, 60, 94, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    }
-    50% {
-        box-shadow: 
-            0 4px 24px rgba(26, 60, 94, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 0 20px rgba(26, 60, 94, 0.15);
-    }
-}
-
-.mobile-menu-highlight {
-    animation: highlight-pulse 3s ease-in-out infinite;
-}
-
-/* ============================================================
-   FIX iOS: input date & time tidak overflow di iPhone
-   ============================================================ */
-input[type="date"],
-input[type="time"],
-.date-time-input {
-    /* Hilangkan styling bawaan iOS */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    
-    /* Lebar aman */
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    
-    /* Font 16px untuk cegah auto-zoom iOS */
-    font-size: 16px;
-    
-    /* Tampilkan teks tanggal */
-    text-align: left;
-    color: #1a3c5e;
-    font-family: 'Poppins', system-ui, sans-serif;
-}
-
-/* Khusus iOS Safari — kalau masih ada padding bawaan */
-@supports (-webkit-touch-callout: none) {
-    input[type="date"],
-    input[type="time"] {
-        min-width: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0.625rem 0.75rem;
-    }
-    
-    /* Hilangkan tampilan default yang bikin lebar */
-    input[type="date"]::-webkit-date-and-time-value,
-    input[type="time"]::-webkit-date-and-time-value {
-        text-align: left;
-        min-width: 0;
-    }
-    
-    input[type="date"]::-webkit-calendar-picker-indicator,
-    input[type="time"]::-webkit-calendar-picker-indicator {
-        opacity: 1;
-        cursor: pointer;
-        margin-left: 0;
-    }
-}
-
-/* Fix grid tanggal & waktu */
-#bookingForm .grid-cols-1 > div,
-#bookingForm .sm\:grid-cols-2 > div {
-    min-width: 0;
-    overflow: hidden;
-}
-
-/* Fix label tanggal & waktu */
-#bookingForm .grid label {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
+        /* Fix flex di dalam form */
+        #bookingForm .flex,
+        #consultationForm .flex {
+            min-width: 0;
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -612,25 +622,24 @@ input[type="time"],
         </div>
         
         <!-- Mobile Menu -->
-<div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-    <div class="container mx-auto px-4 flex flex-col gap-2">
-        <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-        <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-        
-        <!-- ⭐ COMPUTER SERVICE — Glass + Shine -->
-        <a href="service.html" class="mobile-menu-highlight">
-            <span class="menu-icon-wrap">
-                <i data-lucide="wrench" class="w-4 h-4"></i>
-                Computer Service
-            </span>
-            <i data-lucide="arrow-right" class="menu-arrow"></i>
-        </a>
-        
-        <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-        <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
-        <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
-    </div>
-</div>
+        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+                
+                <a href="service.html" class="mobile-menu-highlight">
+                    <span class="menu-icon-wrap">
+                        <i data-lucide="wrench" class="w-4 h-4"></i>
+                        Computer Service
+                    </span>
+                    <i data-lucide="arrow-right" class="menu-arrow"></i>
+                </a>
+                
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
+            </div>
+        </div>
     </nav>
 
     <!-- ============================================================
@@ -759,8 +768,8 @@ input[type="time"],
     ============================================================ -->
     <div id="consultationModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeConsultationModal()"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
+        <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
                     <div>
                         <h3 class="text-lg font-bold text-brand">Konsultasi Service</h3>
@@ -776,28 +785,28 @@ input[type="time"],
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
                         <div class="relative">
                             <i data-lucide="user" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="consultationNama" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="Contoh: Budi Santoso" />
+                            <input type="text" id="consultationNama" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="Contoh: Budi Santoso" />
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
                         <div class="relative">
                             <i data-lucide="phone" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="tel" id="consultationWa" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="08xxxxxxxxxx" />
+                            <input type="tel" id="consultationWa" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="08xxxxxxxxxx" />
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Device / Perangkat *</label>
                         <div class="relative">
                             <i data-lucide="home" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="consultationDevice" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="Contoh: Laptop Asus di rumah" />
+                            <input type="text" id="consultationDevice" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="Contoh: Laptop Asus di rumah" />
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
                         <div class="relative">
                             <i data-lucide="file-text" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
-                            <textarea id="consultationMasalah" required rows="3" class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm resize-none" placeholder="Ceritakan masalah perangkat Anda..."></textarea>
+                            <textarea id="consultationMasalah" required rows="3" class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base resize-none" placeholder="Ceritakan masalah perangkat Anda..."></textarea>
                         </div>
                     </div>
                     <div class="flex gap-3 pt-2">
@@ -819,7 +828,7 @@ input[type="time"],
     <div id="bookingModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeBookingModal()"></div>
         <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
-    <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden relative">
+            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
                     <div>
                         <h3 class="text-lg font-bold text-brand">Booking Service</h3>
@@ -842,7 +851,7 @@ input[type="time"],
                                 <div class="tipe-service-card glass rounded-xl p-4 text-center border-2 border-transparent h-full">
                                     <i data-lucide="store" class="w-6 h-6 text-gray-400 mx-auto mb-2"></i>
                                     <p class="font-semibold text-sm text-gray-800">Datang ke Toko</p>
-                                    <p class="text-xs text-gray-500 mt-1">Bawa unit ke IMDKOM</p>
+                                    <p class="text-xs text-gray-500 mt-1">Bawa perangkat ke IMDKOM</p>
                                 </div>
                             </label>
                             <label class="tipe-service-option cursor-pointer">
@@ -858,21 +867,20 @@ input[type="time"],
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
-                        <input type="text" id="bookingNama" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="Contoh: Budi Santoso" />
+                        <input type="text" id="bookingNama" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="Contoh: Budi Santoso" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
-                        <input type="tel" id="bookingWa" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="08xxxxxxxxxx" />
+                        <input type="tel" id="bookingWa" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="08xxxxxxxxxx" />
                     </div>
 
                     <!-- Alamat -->
                     <div id="bookingAlamatField">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lokasi *</label>
-                        <textarea id="bookingAlamat" rows="2" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm resize-none" placeholder="Alamat lengkap untuk teknisi datang..."></textarea>
+                        <textarea id="bookingAlamat" rows="2" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base resize-none" placeholder="Alamat lengkap untuk teknisi datang..."></textarea>
                         <p class="text-xs text-gray-500 mt-1">Biaya transportasi akan diinfokan via WhatsApp</p>
 
-                        <!-- Checkbox Lokasi -->
                         <div class="mt-3 p-3 bg-brand/5 border border-brand/15 rounded-xl">
                             <label class="flex items-start gap-3 cursor-pointer">
                                 <input type="checkbox" id="useCurrentLocation" class="w-4 h-4 mt-0.5 text-brand focus:ring-brand border-gray-300 rounded" />
@@ -882,7 +890,6 @@ input[type="time"],
                                 </div>
                             </label>
                             
-                            <!-- ✅ SUKSES — Ceklis Hijau Saja -->
                             <div id="locationSuccess" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-center gap-2">
                                     <div class="w-6 h-6 bg-success rounded-full flex items-center justify-center flex-shrink-0">
@@ -891,7 +898,6 @@ input[type="time"],
                                     <span class="text-sm font-semibold text-success">Lokasi berhasil didapatkan</span>
                                 </div>
                                 
-                                <!-- Estimasi Biaya -->
                                 <div id="distanceInfo" class="mt-3 p-3 rounded-lg" style="background: rgba(5, 150, 105, 0.08); border: 1px solid rgba(5, 150, 105, 0.2);">
                                     <div class="flex items-start gap-2">
                                         <i data-lucide="route" class="w-4 h-4 text-success flex-shrink-0 mt-0.5"></i>
@@ -915,7 +921,6 @@ input[type="time"],
                                 </button>
                             </div>
                             
-                            <!-- Loading -->
                             <div id="locationLoading" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-center gap-2 text-xs text-gray-500">
                                     <div class="inline-block animate-spin rounded-full h-3 w-3 border-2 border-brand border-t-transparent"></div>
@@ -923,7 +928,6 @@ input[type="time"],
                                 </div>
                             </div>
                             
-                            <!-- Error -->
                             <div id="locationError" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-start gap-2 text-xs text-red-600">
                                     <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
@@ -935,31 +939,27 @@ input[type="time"],
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Device / Perangkat *</label>
-                        <input type="text" id="bookingDevice" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm" placeholder="Contoh: Laptop Asus di rumah" />
+                        <input type="text" id="bookingDevice" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="Contoh: Laptop Asus di rumah" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
-                        <textarea id="bookingMasalah" required rows="3" class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-sm resize-none" placeholder="Ceritakan masalah perangkat Anda..."></textarea>
+                        <textarea id="bookingMasalah" required rows="3" class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base resize-none" placeholder="Ceritakan masalah perangkat Anda..."></textarea>
                     </div>
 
-                    <!-- ============================================================
-                         JADWAL KUNJUNGAN — TANGGAL & WAKTU CUSTOM
-                         ============================================================ -->
+                    <!-- ⭐ JADWAL KUNJUNGAN — TANGGAL & WAKTU -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jadwal Kunjungan</label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <div class="min-w-0">
-                          <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
-                          <input type="date" id="bookingTanggal"
-                           class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base" />
+                        <div class="jadwal-grid grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="min-w-0">
+                                <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
+                                <input type="date" id="bookingTanggal" class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
+                            </div>
+                            <div class="min-w-0">
+                                <label class="block text-xs text-gray-500 mb-1">Waktu</label>
+                                <input type="time" id="bookingWaktu" class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
+                            </div>
                         </div>
-                       <div class="min-w-0">
-                          <label class="block text-xs text-gray-500 mb-1">Waktu</label>
-                          <input type="time" id="bookingWaktu"
-                           class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base" />
-                        </div>
-                      </div>
                         <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin dijadwalkan oleh teknisi</p>
                     </div>
 
@@ -990,7 +990,7 @@ input[type="time"],
     ============================================================ -->
     <div id="imageModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeImageModal()"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="absolute inset-0 flex items-center justify-center p-4 overflow-hidden">
             <div class="max-w-4xl w-full relative">
                 <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 w-10 h-10 rounded-full flex items-center justify-center z-10">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -1012,7 +1012,7 @@ input[type="time"],
         import './assets/js/consultation.js';
         
         // ============================================================
-        // KONFIGURASI DEFAULT (fallback jika admin belum set)
+        // KONFIGURASI DEFAULT
         // ============================================================
         const IMDKOM_LOCATION = {
             lat: -7.743922,
@@ -1053,12 +1053,16 @@ input[type="time"],
             document.getElementById('bookingServiceLabel').textContent = serviceName;
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            document.body.style.overflowX = 'hidden';
+            document.documentElement.style.overflowX = 'hidden';
             if (typeof lucide !== 'undefined') lucide.createIcons();
         };
 
         window.closeBookingModal = function() {
             document.getElementById('bookingModal').classList.add('hidden');
             document.body.style.overflow = '';
+            document.body.style.overflowX = '';
+            document.documentElement.style.overflowX = '';
         };
 
         // ============================================================
@@ -1151,7 +1155,6 @@ input[type="time"],
             if (distanceCost) distanceCost.textContent = costInfo.costFormatted;
             if (distanceNote) distanceNote.textContent = costInfo.note;
             
-            // Warna sesuai status
             if (distanceInfo) {
                 if (costInfo.isFree) {
                     distanceInfo.style.background = 'rgba(5, 150, 105, 0.08)';
@@ -1211,13 +1214,9 @@ input[type="time"],
                         currentLocation.lng = lng;
                         currentLocation.mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
                         
-                        // ✅ Tampilkan ceklis sukses saja (tanpa koordinat/maps di UI)
                         locationSuccess.classList.remove('hidden');
-                        
-                        // Hitung jarak & biaya
                         updateDistanceInfo();
                         
-                        // Auto-fill alamat
                         const alamatTextarea = document.getElementById('bookingAlamat');
                         if (alamatTextarea && !alamatTextarea.value.trim()) {
                             alamatTextarea.value = `Lokasi via Google Maps: ${currentLocation.mapsLink}`;
@@ -1329,7 +1328,7 @@ input[type="time"],
                 jadwalText = parts.join(', ');
             }
             
-            // Format pesan WhatsApp (SIMPLE — tanpa koordinat)
+            // Format pesan WhatsApp
             let message = `*BOOKING SERVICE - IMDKOM*\n\n`;
             message += `> Layanan: ${serviceName}\n`;
             message += `> Tipe: ${tipeService}\n`;
@@ -1361,6 +1360,7 @@ input[type="time"],
             resetLocation();
             if (useCurrentLocationCheckbox) useCurrentLocationCheckbox.checked = false;
             
+            // Reset ke default "Service Panggil" (karena halaman ini fokus service panggil)
             document.querySelector('input[name="tipeService"][value="Service Panggil"]').checked = true;
             document.getElementById('bookingAlamatField').classList.remove('hidden');
             document.getElementById('bookingAlamat').required = true;
@@ -1373,8 +1373,6 @@ input[type="time"],
             try {
                 const result = await initDatabase();
                 console.log('✅ Init result:', result);
-                
-                // Load tarif dari Firestore
                 await loadVisitRate();
             } catch (error) {
                 console.error('❌ Init error:', error);
@@ -1385,11 +1383,13 @@ input[type="time"],
             }
         });
         
+        // Floating WhatsApp
         document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
             e.preventDefault();
             openWhatsAppGeneric();
         });
         
+        // Mobile Menu Toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mobileNav').classList.toggle('hidden');
         });

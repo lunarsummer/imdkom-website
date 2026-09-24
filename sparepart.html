@@ -8,13 +8,18 @@
     
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     
+    <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- 🎨 THEME CSS -->
     <link rel="stylesheet" href="assets/css/theme.css">
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <script>
@@ -110,6 +115,9 @@
             -webkit-backdrop-filter: blur(4px);
         }
 
+        /* ============================================================
+           SERVICE MENU CARD (untuk tombol CTA)
+           ============================================================ */
         .service-menu-card {
             transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             cursor: pointer;
@@ -137,6 +145,9 @@
         .icon-success .menu-icon { background: rgba(5, 150, 105, 0.1); color: #059669; }
         .icon-success:hover .menu-icon { background: #059669; color: white; }
 
+        /* ============================================================
+           PRICELIST — Accordion per Kategori
+           ============================================================ */
         .price-group {
             background: white;
             border-radius: 12px;
@@ -231,7 +242,9 @@
         }
 
         @media (max-width: 640px) {
-            .price-table thead { display: none; }
+            .price-table thead {
+                display: none;
+            }
             .price-table, .price-table tbody, .price-table tr, .price-table td {
                 display: block;
                 width: 100%;
@@ -240,7 +253,9 @@
                 padding: 0.75rem;
                 border-bottom: 1px solid #f3f4f6;
             }
-            .price-table tr:last-child { border-bottom: none; }
+            .price-table tr:last-child {
+                border-bottom: none;
+            }
             .price-table td {
                 padding: 0.25rem 0;
                 border: none;
@@ -259,152 +274,328 @@
             }
         }
 
-.tipe-service-option {
-    display: block;
-    position: relative;
-}
+        /* ============================================================
+           TIPE SERVICE — Radio Card Highlight
+           ============================================================ */
+        .tipe-service-option {
+            display: block;
+            position: relative;
+        }
 
-.tipe-service-option input:checked + .tipe-service-card {
-    border-color: #1a3c5e !important;
-    background-color: rgba(26, 60, 94, 0.08) !important;
-    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
-    transform: translateY(-2px);
-}
+        .tipe-service-option input:checked + .tipe-service-card {
+            border-color: #1a3c5e !important;
+            background-color: rgba(26, 60, 94, 0.08) !important;
+            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
+            transform: translateY(-2px);
+        }
 
-.tipe-service-option input:checked + .tipe-service-card i {
-    color: #1a3c5e !important;
-}
+        .tipe-service-option input:checked + .tipe-service-card i {
+            color: #1a3c5e !important;
+        }
 
-.tipe-service-option input:checked + .tipe-service-card p:first-of-type {
-    color: #1a3c5e;
-}
+        .tipe-service-option input:checked + .tipe-service-card p:first-of-type {
+            color: #1a3c5e;
+        }
 
-.tipe-service-card {
-    transition: all 0.25s ease;
-    border: 2px solid transparent;
-    cursor: pointer;
-}
+        .tipe-service-card {
+            transition: all 0.25s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
 
-.tipe-service-card:hover {
-    border-color: rgba(26, 60, 94, 0.3);
-    background-color: rgba(26, 60, 94, 0.04);
-}
+        .tipe-service-card:hover {
+            border-color: rgba(26, 60, 94, 0.3);
+            background-color: rgba(26, 60, 94, 0.04);
+        }
 
-.mobile-menu-highlight {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-    margin: 0.35rem 0;
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    font-weight: 600;
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.12) 0%,
-        rgba(26, 60, 94, 0.06) 50%,
-        rgba(26, 60, 94, 0.12) 100%
-    );
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(26, 60, 94, 0.25);
-    box-shadow: 
-        0 4px 20px rgba(26, 60, 94, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    color: #1a3c5e !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+        /* ============================================================
+           MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
+           ============================================================ */
+        .mobile-menu-highlight {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            margin: 0.35rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            font-weight: 600;
+            
+            background: linear-gradient(
+                135deg,
+                rgba(26, 60, 94, 0.12) 0%,
+                rgba(26, 60, 94, 0.06) 50%,
+                rgba(26, 60, 94, 0.12) 100%
+            );
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 60, 94, 0.25);
+            box-shadow: 
+                0 4px 20px rgba(26, 60, 94, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            
+            color: #1a3c5e !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: highlight-pulse 3s ease-in-out infinite;
+        }
 
-.mobile-menu-highlight::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.7) 50%,
-        transparent 70%
-    );
-    animation: mobile-shine 3.5s infinite;
-    z-index: 1;
-    pointer-events: none;
-}
+        .mobile-menu-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.7) 50%,
+                transparent 70%
+            );
+            animation: mobile-shine 3.5s infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-@keyframes mobile-shine {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
-}
+        @keyframes mobile-shine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
 
-.mobile-menu-highlight > * {
-    position: relative;
-    z-index: 2;
-}
+        .mobile-menu-highlight > * {
+            position: relative;
+            z-index: 2;
+        }
 
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
+        .mobile-menu-highlight .menu-icon-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
 
-.mobile-menu-highlight .menu-icon-wrap i {
-    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
-    transition: filter 0.3s ease;
-}
+        .mobile-menu-highlight .menu-icon-wrap i {
+            filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
+            transition: filter 0.3s ease;
+        }
 
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-}
+        .mobile-menu-highlight .menu-arrow {
+            width: 1rem;
+            height: 1rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
 
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px) scale(1.01);
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.18) 0%,
-        rgba(26, 60, 94, 0.1) 50%,
-        rgba(26, 60, 94, 0.18) 100%
-    );
-    border-color: rgba(26, 60, 94, 0.4);
-    box-shadow: 
-        0 6px 24px rgba(26, 60, 94, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
+        .mobile-menu-highlight:hover,
+        .mobile-menu-highlight:active {
+            transform: translateX(4px) scale(1.01);
+            background: linear-gradient(
+                135deg,
+                rgba(26, 60, 94, 0.18) 0%,
+                rgba(26, 60, 94, 0.1) 50%,
+                rgba(26, 60, 94, 0.18) 100%
+            );
+            border-color: rgba(26, 60, 94, 0.4);
+            box-shadow: 
+                0 6px 24px rgba(26, 60, 94, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
 
-.mobile-menu-highlight:hover .menu-arrow,
-.mobile-menu-highlight:active .menu-arrow {
-    opacity: 1;
-    transform: translateX(4px);
-}
+        .mobile-menu-highlight:hover .menu-arrow,
+        .mobile-menu-highlight:active .menu-arrow {
+            opacity: 1;
+            transform: translateX(4px);
+        }
 
-.mobile-menu-highlight:hover .menu-icon-wrap i {
-    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
-}
+        .mobile-menu-highlight:hover .menu-icon-wrap i {
+            filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
+        }
 
-@keyframes highlight-pulse {
-    0%, 100% {
-        box-shadow: 
-            0 4px 20px rgba(26, 60, 94, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    }
-    50% {
-        box-shadow: 
-            0 4px 24px rgba(26, 60, 94, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 0 20px rgba(26, 60, 94, 0.15);
-    }
-}
+        @keyframes highlight-pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 4px 20px rgba(26, 60, 94, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                box-shadow: 
+                    0 4px 24px rgba(26, 60, 94, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                    0 0 20px rgba(26, 60, 94, 0.15);
+            }
+        }
 
-.mobile-menu-highlight {
-    animation: highlight-pulse 3s ease-in-out infinite;
-}
+        /* ============================================================
+           PROMO BADGE — Shine Effect
+           ============================================================ */
+        .promo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            overflow: hidden;
+            background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 0.625rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            letter-spacing: 0.02em;
+            box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
+        }
+
+        .promo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.8) 50%,
+                transparent 70%
+            );
+            animation: promo-shine-sweep 2.5s infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes promo-shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .promo-shine > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .promo-shine i {
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+        }
+
+        @keyframes promo-pulse {
+            0%, 100% {
+                box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
+            }
+            50% {
+                box-shadow: 0 2px 12px rgba(194, 65, 12, 0.5),
+                            0 0 16px rgba(234, 88, 12, 0.3);
+            }
+        }
+
+        .promo-shine {
+            animation: promo-pulse 2.5s ease-in-out infinite;
+        }
+
+        /* ============================================================
+           FIX: PREVENT HORIZONTAL SCROLL ON MOBILE (iOS)
+           ============================================================ */
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            width: 100%;
+        }
+
+        /* Modal tidak boleh bisa di-scroll horizontal */
+        #bookingModal,
+        #consultationModal,
+        #imageModal {
+            overflow-x: hidden;
+        }
+
+        /* Wrapper modal */
+        #bookingModal > div,
+        #consultationModal > div {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        /* Konten modal */
+        #bookingModal .glass,
+        #consultationModal .glass {
+            max-width: calc(100vw - 1.5rem);
+            overflow-x: hidden;
+        }
+
+        /* ============================================================
+           FIX iOS: input date & time tidak overflow di iPhone
+           ============================================================ */
+        input[type="date"],
+        input[type="time"],
+        .date-time-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            
+            font-size: 16px;
+            
+            text-align: left;
+            color: #1a3c5e;
+            font-family: 'Poppins', system-ui, sans-serif;
+        }
+
+        /* Khusus iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            input[type="date"],
+            input[type="time"] {
+                min-width: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0.625rem 0.75rem;
+            }
+            
+            input[type="date"]::-webkit-date-and-time-value,
+            input[type="time"]::-webkit-date-and-time-value {
+                text-align: left;
+                min-width: 0;
+            }
+            
+            input[type="date"]::-webkit-calendar-picker-indicator,
+            input[type="time"]::-webkit-calendar-picker-indicator {
+                opacity: 1;
+                cursor: pointer;
+                margin-left: 0;
+            }
+        }
+
+        /* ============================================================
+           FIX GRID JADWAL — hanya targetkan grid tanggal & waktu
+           TIDAK bocor ke card tipe service
+           ============================================================ */
+        #bookingForm .jadwal-grid > div {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        #bookingForm .jadwal-grid label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Fix semua input di dalam form booking */
+        #bookingForm input,
+        #bookingForm textarea,
+        #consultationForm input,
+        #consultationForm textarea {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Fix flex di dalam form */
+        #bookingForm .flex,
+        #consultationForm .flex {
+            min-width: 0;
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -431,6 +622,7 @@
             </div>
         </div>
         
+        <!-- Mobile Menu -->
         <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
             <div class="container mx-auto px-4 flex flex-col gap-2">
                 <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
@@ -566,12 +758,12 @@
     <div id="consultationModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeConsultationModal()"></div>
         
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
+        <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
                     <div>
-                        <h3 class="text-lg font-bold text-brand">Konsultasi Service</h3>
-                        <p class="text-xs text-gray-500 mt-0.5" id="consultationServiceLabel">Konsultasi Service</p>
+                        <h3 class="text-lg font-bold text-brand">Konsultasi Sparepart</h3>
+                        <p class="text-xs text-gray-500 mt-0.5" id="consultationServiceLabel">Konsultasi Sparepart</p>
                     </div>
                     <button onclick="closeConsultationModal()" class="text-gray-400 hover:text-gray-600 p-1">
                         <i data-lucide="x" class="w-5 h-5"></i>
@@ -586,7 +778,7 @@
                         <div class="relative">
                             <i data-lucide="user" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
                             <input type="text" id="consultationNama" required
-                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                    placeholder="Contoh: Budi Santoso" />
                         </div>
                     </div>
@@ -596,7 +788,7 @@
                         <div class="relative">
                             <i data-lucide="phone" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
                             <input type="tel" id="consultationWa" required
-                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                    placeholder="08xxxxxxxxxx" />
                         </div>
                     </div>
@@ -606,7 +798,7 @@
                         <div class="relative">
                             <i data-lucide="cpu" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
                             <input type="text" id="consultationDevice" required
-                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                    placeholder="Contoh: RAM DDR4 8GB" />
                         </div>
                     </div>
@@ -616,7 +808,7 @@
                         <div class="relative">
                             <i data-lucide="file-text" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
                             <textarea id="consultationMasalah" required rows="3"
-                                      class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
+                                      class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base resize-none"
                                       placeholder="Ceritakan kebutuhan sparepart Anda..."></textarea>
                         </div>
                     </div>
@@ -639,16 +831,16 @@
         </div>
     </div>
 
-    <!-- MODAL BOOKING -->
+    <!-- MODAL BOOKING SPAREPART -->
     <div id="bookingModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeBookingModal()"></div>
         
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
+        <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
                     <div>
-                        <h3 class="text-lg font-bold text-brand">Booking Service</h3>
-                        <p class="text-xs text-gray-500 mt-0.5" id="bookingServiceLabel">Booking Service</p>
+                        <h3 class="text-lg font-bold text-brand">Booking Sparepart</h3>
+                        <p class="text-xs text-gray-500 mt-0.5" id="bookingServiceLabel">Booking Sparepart</p>
                     </div>
                     <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600 p-1">
                         <i data-lucide="x" class="w-5 h-5"></i>
@@ -658,8 +850,9 @@
                 <form id="bookingForm" class="p-5 space-y-4">
                     <input type="hidden" id="bookingServiceSlug" />
                     
+                    <!-- Tipe Pengambilan -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Service *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Pengambilan *</label>
                         <div class="grid grid-cols-2 gap-3">
                             <label class="tipe-service-option cursor-pointer">
                                 <input type="radio" name="tipeService" value="Datang ke Toko" class="sr-only" checked />
@@ -683,14 +876,14 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
                         <input type="text" id="bookingNama" required
-                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                placeholder="Contoh: Budi Santoso" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
                         <input type="tel" id="bookingWa" required
-                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                placeholder="08xxxxxxxxxx" />
                     </div>
 
@@ -698,10 +891,11 @@
                     <div id="bookingAlamatField" class="hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Pengiriman *</label>
                         <textarea id="bookingAlamat" rows="2"
-                                  class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
+                                  class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base resize-none"
                                   placeholder="Alamat lengkap pengiriman..."></textarea>
                         <p class="text-xs text-gray-500 mt-1">Biaya pengiriman akan diinfokan via WhatsApp</p>
 
+                        <!-- ⭐ CHECKBOX: Gunakan Lokasi Saat Ini -->
                         <div class="mt-3 p-3 bg-brand/5 border border-brand/15 rounded-xl">
                             <label class="flex items-start gap-3 cursor-pointer">
                                 <input type="checkbox" id="useCurrentLocation" 
@@ -714,6 +908,7 @@
                                 </div>
                             </label>
                             
+                            <!-- Info lokasi (muncul setelah dapat koordinat) -->
                             <div id="locationSuccess" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-center gap-2">
                                     <div class="w-6 h-6 bg-success rounded-full flex items-center justify-center flex-shrink-0">
@@ -722,6 +917,7 @@
                                     <span class="text-sm font-semibold text-success">Lokasi berhasil didapatkan</span>
                                 </div>
                                 
+                                <!-- Estimasi Biaya -->
                                 <div id="distanceInfo" class="mt-3 p-3 rounded-lg" style="background: rgba(5, 150, 105, 0.08); border: 1px solid rgba(5, 150, 105, 0.2);">
                                     <div class="flex items-start gap-2">
                                         <i data-lucide="route" class="w-4 h-4 text-success flex-shrink-0 mt-0.5"></i>
@@ -731,7 +927,7 @@
                                                 <span id="distanceValue" class="text-success font-bold">-</span>
                                             </p>
                                             <p class="text-xs text-gray-600 mt-1">
-                                                <strong>Biaya Kunjungan:</strong> 
+                                                <strong>Biaya Pengiriman:</strong> 
                                                 <span id="distanceCost" class="text-success font-bold">-</span>
                                             </p>
                                             <p id="distanceNote" class="text-xs text-gray-500 mt-1 italic"></p>
@@ -746,6 +942,7 @@
                                 </button>
                             </div>
                             
+                            <!-- Loading -->
                             <div id="locationLoading" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-center gap-2 text-xs text-gray-500">
                                     <div class="inline-block animate-spin rounded-full h-3 w-3 border-2 border-brand border-t-transparent"></div>
@@ -753,6 +950,7 @@
                                 </div>
                             </div>
                             
+                            <!-- Error -->
                             <div id="locationError" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-start gap-2 text-xs text-red-600">
                                     <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
@@ -765,33 +963,33 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Sparepart yang Dipesan *</label>
                         <input type="text" id="bookingDevice" required
-                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                placeholder="Contoh: RAM DDR4 8GB" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Catatan Tambahan</label>
-                        <textarea id="bookingMasalah" required rows="3"
-                                  class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
+                        <textarea id="bookingMasalah" rows="3"
+                                  class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base resize-none"
                                   placeholder="Catatan atau detail tambahan..."></textarea>
                     </div>
 
                     <!-- ⭐ JADWAL — TANGGAL & WAKTU -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Jadwal</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jadwal Pengambilan / Pengiriman</label>
+                        <div class="jadwal-grid grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="min-w-0">
                                 <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
                                 <input type="date" id="bookingTanggal"
-                                       class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                                       class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
                             </div>
-                            <div>
+                            <div class="min-w-0">
                                 <label class="block text-xs text-gray-500 mb-1">Waktu</label>
                                 <input type="time" id="bookingWaktu"
-                                       class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                                       class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin dijadwalkan oleh teknisi</p>
+                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin dijadwalkan oleh admin</p>
                     </div>
 
                     <div class="bg-success/10 border border-success/30 rounded-xl p-3 flex items-start gap-3">
@@ -824,7 +1022,7 @@
     <div id="imageModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeImageModal()"></div>
         
-        <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="absolute inset-0 flex items-center justify-center p-4 overflow-hidden">
             <div class="max-w-4xl w-full relative">
                 <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 w-10 h-10 rounded-full flex items-center justify-center z-10">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -843,6 +1041,9 @@
         import './assets/js/service-detail.js';
         import './assets/js/consultation.js';
         
+        // ============================================================
+        // KONFIGURASI DEFAULT
+        // ============================================================
         const IMDKOM_LOCATION = {
             lat: -7.743922,
             lng: 110.389871,
@@ -855,6 +1056,9 @@
             biayaPerKm: 2000
         };
 
+        // ============================================================
+        // LOAD TARIF DARI FIRESTORE
+        // ============================================================
         async function loadVisitRate() {
             try {
                 const docSnap = await getDoc(doc(db, 'settings', 'general'));
@@ -870,20 +1074,30 @@
             }
         }
 
+        // ============================================================
+        // MODAL KONTROL
+        // ============================================================
         window.openBookingModal = function(slug, serviceName) {
             const modal = document.getElementById('bookingModal');
             document.getElementById('bookingServiceSlug').value = slug;
             document.getElementById('bookingServiceLabel').textContent = serviceName;
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            document.body.style.overflowX = 'hidden';
+            document.documentElement.style.overflowX = 'hidden';
             if (typeof lucide !== 'undefined') lucide.createIcons();
         };
 
         window.closeBookingModal = function() {
             document.getElementById('bookingModal').classList.add('hidden');
             document.body.style.overflow = '';
+            document.body.style.overflowX = '';
+            document.documentElement.style.overflowX = '';
         };
 
+        // ============================================================
+        // TIPE SERVICE TOGGLE
+        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             const tipeRadios = document.querySelectorAll('input[name="tipeService"]');
             const alamatField = document.getElementById('bookingAlamatField');
@@ -906,6 +1120,9 @@
             });
         });
 
+        // ============================================================
+        // KALKULASI JARAK & BIAYA
+        // ============================================================
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -925,7 +1142,7 @@
                 return {
                     cost: 0,
                     costFormatted: 'GRATIS',
-                    note: `Jarak Anda ≤ ${radiusGratis} km, biaya kunjungan GRATIS 🎉`,
+                    note: `Jarak Anda ≤ ${radiusGratis} km, biaya pengiriman GRATIS 🎉`,
                     isFree: true
                 };
             }
@@ -981,6 +1198,9 @@
             console.log('📏 Distance:', distanceKm.toFixed(2), 'km →', costInfo.costFormatted);
         }
 
+        // ============================================================
+        // GEOLOCATION
+        // ============================================================
         let currentLocation = {
             lat: null,
             lng: null,
@@ -1094,6 +1314,9 @@
             resetLocation();
         });
 
+        // ============================================================
+        // SUBMIT BOOKING
+        // ============================================================
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -1117,7 +1340,8 @@
                 return;
             }
             
-            let jadwalText = 'Fleksibel (dijadwalkan teknisi)';
+            // Format jadwal
+            let jadwalText = 'Fleksibel (dijadwalkan admin)';
             if (tanggal || waktu) {
                 const parts = [];
                 if (tanggal) {
@@ -1134,7 +1358,8 @@
                 jadwalText = parts.join(', ');
             }
             
-            let message = `*BOOKING SERVICE - IMDKOM*\n\n`;
+            // Format pesan WhatsApp
+            let message = `*BOOKING SPAREPART - IMDKOM*\n\n`;
             message += `> Layanan: ${serviceName}\n`;
             message += `> Tipe: ${tipeService}\n`;
             message += `> Nama: ${nama}\n`;
@@ -1149,7 +1374,7 @@
                 
                 if (currentLocation.distance) {
                     message += `> Jarak dari IMDKOM: ${currentLocation.distance.toFixed(2)} km\n`;
-                    message += `> Biaya Kunjungan: ${currentLocation.visitCostFormatted}\n`;
+                    message += `> Biaya Pengiriman: ${currentLocation.visitCostFormatted}\n`;
                 }
             }
             
@@ -1169,6 +1394,9 @@
             document.querySelector('input[name="tipeService"][value="Datang ke Toko"]').checked = true;
         });
         
+        // ============================================================
+        // INIT
+        // ============================================================
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const result = await initDatabase();
@@ -1183,16 +1411,19 @@
             }
         });
         
+        // Floating WhatsApp
         document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
             e.preventDefault();
             openWhatsAppGeneric();
         });
         
+        // Mobile Menu Toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mobileNav').classList.toggle('hidden');
         });
     </script>
     
+    <!-- Hide Netlify Badge -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const netlifyBadge = document.querySelector('a[href*="netlify.com"]');
