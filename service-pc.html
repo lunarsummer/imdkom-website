@@ -534,6 +534,71 @@
     animation: promo-pulse 2.5s ease-in-out infinite;
 }
 
+/* ============================================================
+   FIX iOS: input date & time tidak overflow di iPhone
+   ============================================================ */
+input[type="date"],
+input[type="time"],
+.date-time-input {
+    /* Hilangkan styling bawaan iOS */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    /* Lebar aman */
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    
+    /* Font 16px untuk cegah auto-zoom iOS */
+    font-size: 16px;
+    
+    /* Tampilkan teks tanggal */
+    text-align: left;
+    color: #1a3c5e;
+    font-family: 'Poppins', system-ui, sans-serif;
+}
+
+/* Khusus iOS Safari — kalau masih ada padding bawaan */
+@supports (-webkit-touch-callout: none) {
+    input[type="date"],
+    input[type="time"] {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0.625rem 0.75rem;
+    }
+    
+    /* Hilangkan tampilan default yang bikin lebar */
+    input[type="date"]::-webkit-date-and-time-value,
+    input[type="time"]::-webkit-date-and-time-value {
+        text-align: left;
+        min-width: 0;
+    }
+    
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+        opacity: 1;
+        cursor: pointer;
+        margin-left: 0;
+    }
+}
+
+/* Fix grid tanggal & waktu */
+#bookingForm .grid-cols-1 > div,
+#bookingForm .sm\:grid-cols-2 > div {
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Fix label tanggal & waktu */
+#bookingForm .grid label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
     </style>
 </head>
 <body class="font-sans page-bg">
