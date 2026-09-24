@@ -593,6 +593,30 @@
         #consultationForm .flex {
             min-width: 0;
         }
+
+        /* ============================================================
+   LOAD MORE BUTTON — Pricelist
+   ============================================================ */
+.load-more-btn {
+    transition: all 0.25s ease;
+}
+
+.load-more-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
+}
+
+.load-more-btn:active {
+    transform: translateY(0);
+}
+
+.load-more-btn i {
+    transition: transform 0.25s ease;
+}
+
+.load-more-btn:hover i {
+    transform: rotate(90deg);
+}
     </style>
 </head>
 <body class="font-sans page-bg">

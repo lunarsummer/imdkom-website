@@ -9,6 +9,13 @@ import { getImageUrl, escapeHtml, formatRupiah } from './utils.js';
 import { openWhatsApp } from './whatsapp.js';
 
 // ============================================================
+// KONFIGURASI PRICELIST
+// ============================================================
+const PRICELIST_LIMIT = 5;     // jumlah item yang ditampilkan per kategori
+const pricelistState = {};     // menyimpan berapa item yang sudah ditampilkan per kategori
+let pricelistGroupedData = {}; // simpan data lengkap untuk akses saat "load more"
+
+// ============================================================
 // GET SERVICE SLUG FROM URL
 // ============================================================
 function getServiceSlugFromUrl() {
@@ -178,7 +185,7 @@ export async function loadServiceDetail() {
 }
 
 // ============================================================
-// LOAD PRICELIST — Versi Tabel (Compact)
+// LOAD PRICELIST — Versi Tabel dengan "Muat Lebih Banyak"
 // ============================================================
 export async function loadPricelist() {
     const container = document.getElementById('pricelistContainer');
@@ -215,14 +222,31 @@ export async function loadPricelist() {
             grouped[kat].push({ id: doc.id, ...data });
         });
         
+        // Simpan ke global untuk akses "load more"
+        pricelistGroupedData = grouped;
+        
+        // Reset state — setiap kategori mulai dengan PRICELIST_LIMIT
+        Object.keys(grouped).forEach(kat => {
+            pricelistState[kat] = PRICELIST_LIMIT;
+        });
+        
+        // Render
         let html = '';
+        let kategoriIndex = 0;
         
         Object.keys(grouped).forEach((kategori) => {
+            const items = grouped[kategori];
+            const totalItems = items.length;
+            const visibleItems = items.slice(0, PRICELIST_LIMIT);
+            const hasMore = totalItems > PRICELIST_LIMIT;
+            const remaining = totalItems - PRICELIST_LIMIT;
+            
             html += `
-                <div class="glass rounded-2xl overflow-hidden mb-4">
+                <div class="glass rounded-2xl overflow-hidden mb-4" data-kategori-group="${escapeHtml(kategori)}">
                     <div class="bg-brand text-white px-4 py-3 flex items-center gap-2">
                         <i data-lucide="tag" class="w-4 h-4"></i>
                         <h3 class="font-bold text-sm uppercase tracking-wide">${escapeHtml(kategori)}</h3>
+                        <span class="ml-auto bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${totalItems} item</span>
                     </div>
                     
                     <div class="overflow-x-auto">
@@ -235,53 +259,29 @@ export async function loadPricelist() {
                                     <th class="text-right px-4 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Start From</th>
                                 </tr>
                             </thead>
-                            <tbody>
-            `;
-            
-            grouped[kategori].forEach((item) => {
-                const hasPromo = item.hargaPromo && item.hargaPromo < item.harga;
-                
-                html += `
-                    <tr class="border-b border-gray-100 hover:bg-white/60 transition-colors last:border-0">
-                        <td class="px-4 py-3" data-label="Layanan">
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <span class="font-medium text-gray-800">${escapeHtml(item.nama)}</span>
-                                ${hasPromo ? `
-                                 <span class="promo-shine">PROMO</span>
-                                 ` : ''}
-                            </div>
-                            ${item.deskripsi ? `<p class="text-xs text-gray-500 mt-0.5">${escapeHtml(item.deskripsi)}</p>` : ''}
-                            
-                            <!-- Info mobile -->
-                            <div class="flex items-center gap-3 mt-1 text-[11px] text-gray-400 sm:hidden">
-                                ${item.estimasi ? `<span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${escapeHtml(item.estimasi)}</span>` : ''}
-                                ${item.garansi && item.garansi !== '-' ? `<span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i>${escapeHtml(item.garansi)}</span>` : ''}
-                            </div>
-                        </td>
-                        <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell" data-label="Estimasi">
-                            ${item.estimasi ? escapeHtml(item.estimasi) : '-'}
-                        </td>
-                        <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell" data-label="Garansi">
-                            ${item.garansi && item.garansi !== '-' ? `<span class="inline-flex items-center gap-1 bg-success/10 text-success px-2 py-0.5 rounded-full text-[10px] font-semibold">${escapeHtml(item.garansi)}</span>` : '-'}
-                        </td>
-                        <td class="px-4 py-3 text-right" data-label="Start From">
-                            ${hasPromo ? `
-                                <div class="text-xs text-gray-400 line-through">${formatRupiah(item.harga)}</div>
-                                <div class="text-sm font-bold text-brand-dark">${formatRupiah(item.hargaPromo)}</div>
-                            ` : `
-                                <div class="text-sm font-bold text-brand">${formatRupiah(item.harga)}</div>
-                            `}
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            html += `
+                            <tbody id="pricelist-body-${kategoriIndex}">
+                                ${renderPricelistRows(visibleItems)}
                             </tbody>
                         </table>
                     </div>
+                    
+                    ${hasMore ? `
+                        <div class="px-4 py-3 bg-white/40 border-t border-gray-200 text-center">
+                            <button type="button"
+                                    class="load-more-btn inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-brand hover:text-white border-2 border-brand/20 hover:border-brand text-brand font-semibold text-xs rounded-xl transition-all"
+                                    data-kategori="${escapeHtml(kategori)}"
+                                    data-index="${kategoriIndex}"
+                                    data-total="${totalItems}"
+                                    onclick="loadMorePricelist(this)">
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                <span class="load-more-text">Muat Lebih Banyak (${remaining} tersisa)</span>
+                            </button>
+                        </div>
+                    ` : ''}
                 </div>
             `;
+            
+            kategoriIndex++;
         });
         
         container.innerHTML = html;
@@ -295,6 +295,93 @@ export async function loadPricelist() {
         container.innerHTML = `<p class="text-center text-red-500 text-sm py-8">Gagal memuat pricelist.</p>`;
     }
 }
+
+// ============================================================
+// RENDER BARIS TABEL PRICELIST
+// ============================================================
+function renderPricelistRows(items) {
+    let html = '';
+    
+    items.forEach((item) => {
+        const hasPromo = item.hargaPromo && item.hargaPromo < item.harga;
+        
+        html += `
+            <tr class="border-b border-gray-100 hover:bg-white/60 transition-colors last:border-0">
+                <td class="px-4 py-3" data-label="Layanan">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="font-medium text-gray-800">${escapeHtml(item.nama)}</span>
+                        ${hasPromo ? `<span class="promo-shine">PROMO</span>` : ''}
+                    </div>
+                    ${item.deskripsi ? `<p class="text-xs text-gray-500 mt-0.5">${escapeHtml(item.deskripsi)}</p>` : ''}
+                    
+                    <!-- Info mobile -->
+                    <div class="flex items-center gap-3 mt-1 text-[11px] text-gray-400 sm:hidden">
+                        ${item.estimasi ? `<span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${escapeHtml(item.estimasi)}</span>` : ''}
+                        ${item.garansi && item.garansi !== '-' ? `<span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i>${escapeHtml(item.garansi)}</span>` : ''}
+                    </div>
+                </td>
+                <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell" data-label="Estimasi">
+                    ${item.estimasi ? escapeHtml(item.estimasi) : '-'}
+                </td>
+                <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell" data-label="Garansi">
+                    ${item.garansi && item.garansi !== '-' ? `<span class="inline-flex items-center gap-1 bg-success/10 text-success px-2 py-0.5 rounded-full text-[10px] font-semibold">${escapeHtml(item.garansi)}</span>` : '-'}
+                </td>
+                <td class="px-4 py-3 text-right" data-label="Start From">
+                    ${hasPromo ? `
+                        <div class="text-xs text-gray-400 line-through">${formatRupiah(item.harga)}</div>
+                        <div class="text-sm font-bold text-brand-dark">${formatRupiah(item.hargaPromo)}</div>
+                    ` : `
+                        <div class="text-sm font-bold text-brand">${formatRupiah(item.harga)}</div>
+                    `}
+                </td>
+            </tr>
+        `;
+    });
+    
+    return html;
+}
+
+// ============================================================
+// LOAD MORE PRICELIST
+// ============================================================
+window.loadMorePricelist = function(button) {
+    const kategori = button.dataset.kategori;
+    const index = parseInt(button.dataset.index);
+    const total = parseInt(button.dataset.total);
+    const tbody = document.getElementById(`pricelist-body-${index}`);
+    
+    if (!tbody) return;
+    
+    const items = pricelistGroupedData[kategori];
+    if (!items) return;
+    
+    const currentCount = pricelistState[kategori] || PRICELIST_LIMIT;
+    const newCount = Math.min(currentCount + PRICELIST_LIMIT, total);
+    const newItems = items.slice(currentCount, newCount);
+    
+    // Tambahkan baris baru
+    tbody.insertAdjacentHTML('beforeend', renderPricelistRows(newItems));
+    
+    // Update state
+    pricelistState[kategori] = newCount;
+    
+    // Update tombol
+    const remaining = total - newCount;
+    if (remaining <= 0) {
+        // Semua sudah tampil — hapus tombol
+        button.parentElement.remove();
+    } else {
+        // Update teks
+        const textEl = button.querySelector('.load-more-text');
+        if (textEl) {
+            textEl.textContent = `Muat Lebih Banyak (${remaining} tersisa)`;
+        }
+    }
+    
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+};
 
 // ============================================================
 // LOAD DOCUMENTATIONS
