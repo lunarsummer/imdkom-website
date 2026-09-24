@@ -518,6 +518,71 @@
     animation: highlight-pulse 3s ease-in-out infinite;
 }
 
+/* ============================================================
+   FIX iOS: input date & time tidak overflow di iPhone
+   ============================================================ */
+input[type="date"],
+input[type="time"],
+.date-time-input {
+    /* Hilangkan styling bawaan iOS */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    /* Lebar aman */
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    
+    /* Font 16px untuk cegah auto-zoom iOS */
+    font-size: 16px;
+    
+    /* Tampilkan teks tanggal */
+    text-align: left;
+    color: #1a3c5e;
+    font-family: 'Poppins', system-ui, sans-serif;
+}
+
+/* Khusus iOS Safari — kalau masih ada padding bawaan */
+@supports (-webkit-touch-callout: none) {
+    input[type="date"],
+    input[type="time"] {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0.625rem 0.75rem;
+    }
+    
+    /* Hilangkan tampilan default yang bikin lebar */
+    input[type="date"]::-webkit-date-and-time-value,
+    input[type="time"]::-webkit-date-and-time-value {
+        text-align: left;
+        min-width: 0;
+    }
+    
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+        opacity: 1;
+        cursor: pointer;
+        margin-left: 0;
+    }
+}
+
+/* Fix grid tanggal & waktu */
+#bookingForm .grid-cols-1 > div,
+#bookingForm .sm\:grid-cols-2 > div {
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Fix label tanggal & waktu */
+#bookingForm .grid label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -753,8 +818,8 @@
     ============================================================ -->
     <div id="bookingModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeBookingModal()"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
+        <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+    <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
                     <div>
                         <h3 class="text-lg font-bold text-brand">Booking Service</h3>
@@ -883,18 +948,18 @@
                          ============================================================ -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jadwal Kunjungan</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
-                                <input type="date" id="bookingTanggal"
-                                       class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-500 mb-1">Waktu</label>
-                                <input type="time" id="bookingWaktu"
-                                       class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
-                            </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div class="min-w-0">
+                          <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
+                          <input type="date" id="bookingTanggal"
+                           class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base" />
                         </div>
+                       <div class="min-w-0">
+                          <label class="block text-xs text-gray-500 mb-1">Waktu</label>
+                          <input type="time" id="bookingWaktu"
+                           class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base" />
+                        </div>
+                      </div>
                         <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin dijadwalkan oleh teknisi</p>
                     </div>
 
