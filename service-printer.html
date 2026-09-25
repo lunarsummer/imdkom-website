@@ -617,6 +617,184 @@
 .load-more-btn:hover i {
     transform: rotate(90deg);
 }
+
+/* ============================================================
+   FIX STICKY NAVBAR
+   ============================================================ */
+#mainNavbar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    width: 100%;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+/* Beri shadow saat scroll (opsional) */
+#mainNavbar.scrolled {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Beri ruang untuk navbar fixed */
+body {
+    padding-top: 60px !important;
+}
+
+@media (min-width: 640px) {
+    body {
+        padding-top: 64px !important;
+    }
+}
+
+/* ============================================================
+   SERVICE CARDS — Swipe tersembunyi (clean, tanpa indikator)
+   ============================================================ */
+
+/* Wrapper — batasi lebar seperti sekarang */
+.service-cards-wrapper {
+    width: 100%;
+    max-width: 28rem;   /* sama dengan max-w-md */
+}
+
+/* Track — flex + scroll, tanpa scrollbar terlihat */
+.service-cards-track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    
+    /* Sembunyikan scrollbar — semua browser */
+    scrollbar-width: none;          /* Firefox */
+    -ms-overflow-style: none;       /* IE/Edge */
+}
+
+.service-cards-track::-webkit-scrollbar {
+    display: none;                  /* Chrome, Safari, Opera */
+    width: 0;
+    height: 0;
+}
+
+/* Setiap card — 50% lebar wrapper, biar 2 card pas */
+.service-cards-track > * {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    width: calc(50% - 0.5rem);      /* 50% dikurangi setengah gap */
+    min-width: calc(50% - 0.5rem);
+}
+
+/* Tablet & desktop — kembali ke grid 2 kolom */
+@media (min-width: 640px) {
+    .service-cards-wrapper {
+        max-width: 28rem;           /* tetap max-w-md */
+    }
+    
+    .service-cards-track {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        overflow: visible;
+        gap: 1rem;
+    }
+    
+    .service-cards-track > * {
+        width: auto;
+        min-width: 0;
+    }
+}
+
+/* ============================================================
+   SERVICE CARDS — Paged swipe (2 card per halaman)
+   ============================================================ */
+
+.service-cards-wrapper {
+    width: 100%;
+    max-width: 28rem;   /* sama max-w-md */
+    overflow: hidden;    /* sembunyikan card di luar */
+}
+
+/* Track — scroll dengan snap per GROUP (page) */
+.service-cards-track {
+    display: flex;
+    gap: 0;                    /* gap antar page = 0, karena page sudah w-full */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    
+    /* Sembunyikan scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.service-cards-track::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* Setiap page (group 2 card) — full width, snap ke sini */
+.service-cards-page {
+    width: 100%;
+    min-width: 100%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;   /* penting: berhenti di setiap page */
+}
+
+/* Desktop: kembali ke grid biasa (semua card tampil) */
+@media (min-width: 640px) {
+    .service-cards-wrapper {
+        max-width: 28rem;
+        overflow: visible;
+    }
+    
+    .service-cards-track {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        overflow: visible;
+    }
+    
+    .service-cards-page {
+        display: contents;   /* "bongkar" group, card jadi grid biasa */
+    }
+    
+    .service-cards-page > * {
+        width: auto;
+    }
+    
+    /* Grid 2 kolom untuk semua card */
+    .service-cards-track {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .service-cards-page {
+        display: contents;
+    }
+}
+/* Animasi subtle saat scroll */
+.service-cards-track {
+    scroll-behavior: smooth;
+}
+
+/* Card animasi masuk saat muncul */
+@keyframes card-enter {
+    from {
+        opacity: 0.6;
+        transform: scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.service-cards-page:target .service-menu-card {
+    animation: card-enter 0.3s ease-out;
+}
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -624,7 +802,7 @@
     <!-- ============================================================
     NAVIGATION
     ============================================================ -->
-    <nav class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 sticky top-0 z-40">
+    <nav id="mainNavbar" class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 fixed top-0 left-0 right-0 z-50">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 logo-shine">
                 <img src="assets/images/logo/imd.svg" alt="Logo IMDKOM" class="h-7 w-auto" />
@@ -695,33 +873,86 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mt-6 max-w-md mx-auto sm:mx-0">
-                <button onclick="openConsultationModal('printer', 'Service Printer')" 
-                        class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left w-full">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="message-circle" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
+            <!-- DUA CARD UTAMA + CARD TERSEMBUNYI DI KANAN -->
+<div class="service-cards-wrapper mt-6 max-w-md mx-auto sm:mx-0">
+    <div class="service-cards-track flex gap-4 overflow-x-auto pb-1" id="serviceCardsTrack">
+        
+        <!-- GROUP 1: Konsultasi + Booking (default) -->
+        <div class="service-cards-page flex gap-4 flex-shrink-0 w-full">
+            <button onclick="openConsultationModal('laptop', 'Service Laptop')" 
+                    class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
+                <div class="flex items-start justify-between mb-5">
+                    <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="message-circle" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="font-bold text-brand text-base sm:text-lg">Konsultasi</h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Tanya masalah perangkat</p>
-                </button>
+                    <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
+                </div>
+                <h3 class="font-bold text-brand text-base sm:text-lg">Konsultasi</h3>
+                <p class="text-xs sm:text-sm text-gray-500 mt-1">Tanya masalah perangkat</p>
+            </button>
 
-                <button onclick="openBookingModal('printer', 'Service Printer')" 
-                        class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 border border-white/40 text-left w-full relative overflow-hidden">
-                    <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full">POPULER</span>
-                    
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white">
-                            <i data-lucide="calendar-check" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/70"></i>
+            <button onclick="openBookingModal('laptop', 'Service Laptop')" 
+                    class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 border border-white/40 text-left relative overflow-hidden flex-1 min-w-0">
+                <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full">POPULER</span>
+                <div class="flex items-start justify-between mb-5">
+                    <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white">
+                        <i data-lucide="calendar-check" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="font-bold text-white text-base sm:text-lg">Booking</h3>
-                    <p class="text-xs sm:text-sm text-white/80 mt-1">Jadwalkan service</p>
-                </button>
+                    <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/70"></i>
+                </div>
+                <h3 class="font-bold text-white text-base sm:text-lg">Booking</h3>
+                <p class="text-xs sm:text-sm text-white/80 mt-1">Jadwalkan service</p>
+            </button>
+        </div>
+        <!-- PAGE 2 -->
+<div class="service-cards-page flex gap-4 flex-shrink-0 w-full">
+    <a href="service-laptop.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
+        <div class="flex items-start justify-between mb-5">
+            <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                <i data-lucide="laptop" class="w-7 h-7"></i>
             </div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
+        </div>
+        <h3 class="font-bold text-brand text-base sm:text-lg">Service Laptop</h3>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1">Semua merek laptop</p>
+    </a>
+
+    <a href="service-pc.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
+        <div class="flex items-start justify-between mb-5">
+            <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                <i data-lucide="monitor" class="w-7 h-7"></i>
+            </div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
+        </div>
+        <h3 class="font-bold text-brand text-base sm:text-lg">Service PC</h3>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1">Desktop & komputer rakitan</p>
+    </a>
+</div>
+
+<!-- PAGE 3 -->
+<div class="service-cards-page flex gap-4 flex-shrink-0 w-full">
+    <a href="service-panggil.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
+        <div class="flex items-start justify-between mb-5">
+            <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                <i data-lucide="home" class="w-7 h-7"></i>
+            </div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
+        </div>
+        <h3 class="font-bold text-brand text-base sm:text-lg">Service Panggil</h3>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1">Teknisi ke lokasi</p>
+    </a>
+
+    <a href="sparepart.html" class="service-menu-card glass icon-success rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
+        <div class="flex items-start justify-between mb-5">
+            <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
+                <i data-lucide="cpu" class="w-7 h-7"></i>
+            </div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-success/30"></i>
+        </div>
+        <h3 class="font-bold text-success text-base sm:text-lg">Sparepart</h3>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1">Suku cadang berkualitas</p>
+    </a>
+</div>
         </div>
     </section>
 
