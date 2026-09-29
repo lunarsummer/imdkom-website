@@ -795,6 +795,74 @@ body {
 .service-cards-page:target .service-menu-card {
     animation: card-enter 0.3s ease-out;
 }
+
+/* ============================================================
+   BOUNCE HINT — Animasi bounce horizontal untuk hint swipe
+   ============================================================ */
+@keyframes bounceHint {
+    0% {
+        transform: translateX(0);
+    }
+    20% {
+        transform: translateX(-60px);
+    }
+    40% {
+        transform: translateX(0);
+    }
+    55% {
+        transform: translateX(-30px);
+    }
+    70% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Class untuk trigger animasi */
+.service-cards-track.bounce-hint {
+    animation: bounceHint 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ⭐ Fade-in hint kecil (opsional) */
+.bounce-hint-indicator {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: rgba(26, 60, 94, 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a3c5e;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.bounce-hint-indicator.show {
+    opacity: 1;
+    animation: bounceHintIndicator 2s ease-in-out;
+}
+
+@keyframes bounceHintIndicator {
+    0%, 100% { opacity: 0.5; }
+    50%      { opacity: 1; }
+}
+
+/* Sembunyikan hint indicator di desktop (karena grid) */
+@media (min-width: 640px) {
+    .bounce-hint-indicator {
+        display: none;
+    }
+}
+
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -874,7 +942,12 @@ body {
             </div>
 
             <!-- DUA CARD UTAMA + CARD TERSEMBUNYI DI KANAN -->
-<div class="service-cards-wrapper mt-6 max-w-md mx-auto sm:mx-0">
+<div class="service-cards-wrapper mt-6 max-w-md mx-auto sm:mx-0 relative">
+    <!-- Hint indicator (chevron kanan) -->
+    <div class="bounce-hint-indicator" id="bounceHintIndicator">
+        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </div>
+    
     <div class="service-cards-track flex gap-4 overflow-x-auto pb-1" id="serviceCardsTrack">
         
         <!-- GROUP 1: Konsultasi + Booking (default) -->
@@ -1709,6 +1782,67 @@ body {
             const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
             badges.forEach(badge => badge.remove());
         });
+
+// ============================================================
+// BOUNCE HINT — Animasi bounce horizontal saat pertama buka
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Tunggu sampai semua card siap
+    setTimeout(initBounceHint, 800);
+});
+
+function initBounceHint() {
+    const track = document.getElementById('serviceCardsTrack');
+    const indicator = document.getElementById('bounceHintIndicator');
+    
+    if (!track) return;
+    
+    // Cek apakah user sudah pernah lihat hint (dalam 1 jam terakhir)
+    const hintShown = localStorage.getItem('bounce_hint_shown');
+    const hintTime = localStorage.getItem('bounce_hint_time');
+    const ONE_HOUR = 60 * 60 * 1000;
+    
+    if (hintShown && hintTime && (Date.now() - parseInt(hintTime)) < ONE_HOUR) {
+        console.log('⏭️ Hint sudah pernah ditampilkan, skip');
+        return;
+    }
+    
+    // Cek apakah track benar-benar bisa di-scroll (ada card tersembunyi)
+    const canScroll = track.scrollWidth > track.clientWidth + 10;
+    
+    if (!canScroll) {
+        console.log('⏭️ Tidak ada card tersembunyi, skip bounce');
+        return;
+    }
+    
+    console.log('✨ Menampilkan bounce hint');
+    
+    // Trigger bounce animation
+    setTimeout(() => {
+        // Mulai animasi bounce
+        track.classList.add('bounce-hint');
+        
+        // Tampilkan indicator chevron
+        if (indicator) {
+            indicator.classList.add('show');
+        }
+        
+        // Hapus class setelah animasi selesai
+        setTimeout(() => {
+            track.classList.remove('bounce-hint');
+            
+            if (indicator) {
+                indicator.classList.remove('show');
+            }
+        }, 1900);  // durasi animasi + sedikit buffer
+        
+        // Simpan ke localStorage
+        localStorage.setItem('bounce_hint_shown', 'true');
+        localStorage.setItem('bounce_hint_time', Date.now().toString());
+        
+    }, 300);  // delay 300ms sebelum mulai (biar user sempat lihat halaman)
+}
+
     </script>
 
 </body>

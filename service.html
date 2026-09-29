@@ -42,7 +42,6 @@
         /* ============================================================
            GLASSMORPHISM STYLES
            ============================================================ */
-        
         .glass {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
@@ -129,7 +128,10 @@
            SERVICE MENU CARD — SIMPLE & ELEGANT
            ============================================================ */
         .service-menu-card {
+            position: relative;
+            overflow: hidden;
             transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            cursor: pointer;
         }
         
         .service-menu-card:hover {
@@ -158,170 +160,215 @@
         .icon-orange .menu-icon { background: rgba(194, 65, 12, 0.1); color: #c2410c; }
         .icon-orange:hover .menu-icon { background: #c2410c; color: white; }
 
-               /* ============================================================
-   MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
-   ============================================================ */
-.mobile-menu-highlight {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
-    color: white !important;
-    padding: 0.75rem 1rem !important;
-    border-radius: 10px;
-    margin: 0.25rem 0;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.2);
-    transition: all 0.2s ease;
-}
+        /* ============================================================
+           MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
+           ============================================================ */
+        .mobile-menu-highlight {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            margin: 0.35rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            font-weight: 600;
+            
+            background: linear-gradient(
+                135deg,
+                rgba(26, 60, 94, 0.12) 0%,
+                rgba(26, 60, 94, 0.06) 50%,
+                rgba(26, 60, 94, 0.12) 100%
+            );
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 60, 94, 0.25);
+            box-shadow: 
+                0 4px 20px rgba(26, 60, 94, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            
+            color: #1a3c5e !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: highlight-pulse 3s ease-in-out infinite;
+        }
 
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px);
-    box-shadow: 0 6px 16px rgba(26, 60, 94, 0.3);
-}
+        .mobile-menu-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.7) 50%,
+                transparent 70%
+            );
+            animation: mobile-shine 3.5s infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        @keyframes mobile-shine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
 
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.7;
-}
+        .mobile-menu-highlight > * {
+            position: relative;
+            z-index: 2;
+        }
 
-/* ============================================================
-   MOBILE MENU — GLASSMORPHISM HIGHLIGHT + SHINE
-   ============================================================ */
-.mobile-menu-highlight {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-    margin: 0.35rem 0;
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    font-weight: 600;
-    
-    /* Glassmorphism */
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.12) 0%,
-        rgba(26, 60, 94, 0.06) 50%,
-        rgba(26, 60, 94, 0.12) 100%
-    );
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(26, 60, 94, 0.25);
-    box-shadow: 
-        0 4px 20px rgba(26, 60, 94, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    
-    color: #1a3c5e !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+        .mobile-menu-highlight .menu-icon-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
 
-/* Shine Sweep — Kilau bergerak */
-.mobile-menu-highlight::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.7) 50%,
-        transparent 70%
-    );
-    animation: mobile-shine 3.5s infinite;
-    z-index: 1;
-    pointer-events: none;
-}
+        .mobile-menu-highlight .menu-icon-wrap i {
+            filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
+            transition: filter 0.3s ease;
+        }
 
-@keyframes mobile-shine {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
-}
+        .mobile-menu-highlight .menu-arrow {
+            width: 1rem;
+            height: 1rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
 
-/* Content di atas shine */
-.mobile-menu-highlight > * {
-    position: relative;
-    z-index: 2;
-}
+        .mobile-menu-highlight:hover,
+        .mobile-menu-highlight:active {
+            transform: translateX(4px) scale(1.01);
+            background: linear-gradient(
+                135deg,
+                rgba(26, 60, 94, 0.18) 0%,
+                rgba(26, 60, 94, 0.1) 50%,
+                rgba(26, 60, 94, 0.18) 100%
+            );
+            border-color: rgba(26, 60, 94, 0.4);
+            box-shadow: 
+                0 6px 24px rgba(26, 60, 94, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
 
-/* Icon wrap */
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
+        .mobile-menu-highlight:hover .menu-arrow,
+        .mobile-menu-highlight:active .menu-arrow {
+            opacity: 1;
+            transform: translateX(4px);
+        }
 
-/* Icon dengan glow */
-.mobile-menu-highlight .menu-icon-wrap i {
-    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
-    transition: filter 0.3s ease;
-}
+        .mobile-menu-highlight:hover .menu-icon-wrap i {
+            filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
+        }
 
-/* Arrow */
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-}
+        @keyframes highlight-pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 4px 20px rgba(26, 60, 94, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                box-shadow: 
+                    0 4px 24px rgba(26, 60, 94, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                    0 0 20px rgba(26, 60, 94, 0.15);
+            }
+        }
 
-/* Hover / Tap state */
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px) scale(1.01);
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.18) 0%,
-        rgba(26, 60, 94, 0.1) 50%,
-        rgba(26, 60, 94, 0.18) 100%
-    );
-    border-color: rgba(26, 60, 94, 0.4);
-    box-shadow: 
-        0 6px 24px rgba(26, 60, 94, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
+        /* ============================================================
+           REVEAL ANIMATION — Card muncul saat halaman dibuka
+           ============================================================ */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
 
-.mobile-menu-highlight:hover .menu-arrow,
-.mobile-menu-highlight:active .menu-arrow {
-    opacity: 1;
-    transform: translateX(4px);
-}
+        .reveal-item.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.mobile-menu-highlight:hover .menu-icon-wrap i {
-    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
-}
+        /* Stagger delay per card */
+        #servicesSection .service-menu-card:nth-child(1) { transition-delay: 0s; }
+        #servicesSection .service-menu-card:nth-child(2) { transition-delay: 0.08s; }
+        #servicesSection .service-menu-card:nth-child(3) { transition-delay: 0.16s; }
+        #servicesSection .service-menu-card:nth-child(4) { transition-delay: 0.24s; }
+        #servicesSection .service-menu-card:nth-child(5) { transition-delay: 0.32s; }
+        #servicesSection .service-menu-card:nth-child(6) { transition-delay: 0.40s; }
 
-/* ⭐ Animasi glow berkala untuk menarik perhatian */
-@keyframes highlight-pulse {
-    0%, 100% {
-        box-shadow: 
-            0 4px 20px rgba(26, 60, 94, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    }
-    50% {
-        box-shadow: 
-            0 4px 24px rgba(26, 60, 94, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 0 20px rgba(26, 60, 94, 0.15);
-    }
-}
+        /* ============================================================
+           PROGRESS BAR — Muncul saat card diklik
+           ============================================================ */
+        .card-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(26, 60, 94, 0.08);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            border-radius: 0 0 16px 16px;
+            overflow: hidden;
+        }
 
-.mobile-menu-highlight {
-    animation: highlight-pulse 3s ease-in-out infinite;
-}
+        /* Tampilkan saat loading */
+        .service-menu-card.loading .card-progress {
+            opacity: 1;
+        }
 
+        /* Progress bar fill */
+        .card-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #1a3c5e 0%, #2a5a7a 100%);
+            border-radius: 999px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Progress bar untuk card dengan bg dark (Service Panggil) */
+        .service-menu-card.bg-brand-dark .card-progress {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .service-menu-card.bg-brand-dark .card-progress-bar {
+            background: linear-gradient(90deg, #ffffff 0%, #fbbf24 100%);
+        }
+
+        /* Card saat loading — efek "dimmed" */
+        .service-menu-card.loading {
+            pointer-events: none;
+            transform: scale(0.98);
+        }
+
+        .service-menu-card.loading .menu-icon {
+            opacity: 0.6;
+        }
+
+        /* Efek fade-out halaman saat pindah */
+        body.page-transition {
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Prefers reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal-item {
+                transition: none;
+                opacity: 1;
+                transform: none;
+            }
+            .card-progress-bar {
+                transition: none;
+            }
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -353,25 +400,24 @@
         </div>
         
         <!-- Mobile Menu -->
-<div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-    <div class="container mx-auto px-4 flex flex-col gap-2">
-        <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-        <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-        
-        <!-- ⭐ COMPUTER SERVICE — Glass + Shine -->
-        <a href="service.html" class="mobile-menu-highlight">
-            <span class="menu-icon-wrap">
-                <i data-lucide="wrench" class="w-4 h-4"></i>
-                Computer Service
-            </span>
-            <i data-lucide="arrow-right" class="menu-arrow"></i>
-        </a>
-        
-        <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-        <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
-        <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
-    </div>
-</div>
+        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+                
+                <a href="service.html" class="mobile-menu-highlight">
+                    <span class="menu-icon-wrap">
+                        <i data-lucide="wrench" class="w-4 h-4"></i>
+                        Computer Service
+                    </span>
+                    <i data-lucide="arrow-right" class="menu-arrow"></i>
+                </a>
+                
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
+            </div>
+        </div>
     </nav>
 
     <!-- ============================================================
@@ -383,7 +429,9 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
                 
                 <!-- Menu 1: Service Laptop -->
-                <a href="service-laptop.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40">
+                <a href="service-laptop.html" 
+                   class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item"
+                   data-loading="true">
                     <div class="flex items-start justify-between mb-5">
                         <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="laptop" class="w-7 h-7"></i>
@@ -392,10 +440,16 @@
                     </div>
                     <h3 class="font-bold text-brand text-base sm:text-lg">Service Laptop</h3>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Perbaikan semua merek laptop</p>
+                    
+                    <div class="card-progress">
+                        <div class="card-progress-bar"></div>
+                    </div>
                 </a>
                 
                 <!-- Menu 2: Service PC -->
-                <a href="service-pc.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40">
+                <a href="service-pc.html" 
+                   class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item"
+                   data-loading="true">
                     <div class="flex items-start justify-between mb-5">
                         <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="monitor" class="w-7 h-7"></i>
@@ -404,10 +458,16 @@
                     </div>
                     <h3 class="font-bold text-brand text-base sm:text-lg">Service PC</h3>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Desktop & komputer rakitan</p>
+                    
+                    <div class="card-progress">
+                        <div class="card-progress-bar"></div>
+                    </div>
                 </a>
                 
                 <!-- Menu 3: Service Printer -->
-                <a href="service-printer.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40">
+                <a href="service-printer.html" 
+                   class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item"
+                   data-loading="true">
                     <div class="flex items-start justify-between mb-5">
                         <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="printer" class="w-7 h-7"></i>
@@ -416,11 +476,17 @@
                     </div>
                     <h3 class="font-bold text-brand text-base sm:text-lg">Service Printer</h3>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Semua merek printer</p>
+                    
+                    <div class="card-progress">
+                        <div class="card-progress-bar"></div>
+                    </div>
                 </a>
                 
                 <!-- Menu 4: Service Panggil (Highlight) -->
-                <a href="service-panggil.html" class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 relative overflow-hidden shadow-lg">
-                    <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full">POPULER</span>
+                <a href="service-panggil.html" 
+                   class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 relative overflow-hidden shadow-lg reveal-item"
+                   data-loading="true">
+                    <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full z-10">POPULER</span>
                     
                     <div class="flex items-start justify-between mb-5">
                         <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white transition-transform">
@@ -430,10 +496,16 @@
                     </div>
                     <h3 class="font-bold text-white text-base sm:text-lg">Service Panggil</h3>
                     <p class="text-xs sm:text-sm text-white/80 mt-1">Teknisi datang ke lokasi</p>
+                    
+                    <div class="card-progress">
+                        <div class="card-progress-bar"></div>
+                    </div>
                 </a>
                 
                 <!-- Menu 5: Sparepart -->
-                <a href="sparepart.html" class="service-menu-card glass icon-success rounded-2xl p-5 sm:p-6 border border-white/40">
+                <a href="sparepart.html" 
+                   class="service-menu-card glass icon-success rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item"
+                   data-loading="true">
                     <div class="flex items-start justify-between mb-5">
                         <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="cpu" class="w-7 h-7"></i>
@@ -442,10 +514,16 @@
                     </div>
                     <h3 class="font-bold text-brand text-base sm:text-lg">Sparepart</h3>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Suku cadang berkualitas</p>
+                    
+                    <div class="card-progress">
+                        <div class="card-progress-bar"></div>
+                    </div>
                 </a>
                 
-                <!-- Menu 6: Konsultasi (CTA WhatsApp) -->
-                <a href="#" onclick="openWhatsAppConsultation(); return false;" class="service-menu-card glass icon-orange rounded-2xl p-5 sm:p-6 border border-white/40">
+                <!-- Menu 6: Konsultasi (CTA WhatsApp — TANPA progress bar) -->
+                <a href="#" 
+                   onclick="openWhatsAppConsultation(); return false;" 
+                   class="service-menu-card glass icon-orange rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item">
                     <div class="flex items-start justify-between mb-5">
                         <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
                             <i data-lucide="message-circle" class="w-7 h-7"></i>
@@ -628,7 +706,77 @@
                 e.preventDefault();
                 openWhatsAppGeneric();
             });
+
+            // ✅ Init reveal animation untuk cards
+            initCardReveal();
+            
+            // ✅ Init click progress
+            initCardClickProgress();
         });
+
+        // ============================================================
+        // 1. REVEAL ANIMATION — Card muncul saat halaman dibuka
+        // ============================================================
+        function initCardReveal() {
+            const cards = document.querySelectorAll('.service-menu-card.reveal-item');
+            if (cards.length === 0) return;
+            
+            // Trigger reveal setelah 100ms
+            setTimeout(() => {
+                cards.forEach(card => card.classList.add('revealed'));
+            }, 100);
+        }
+
+        // ============================================================
+        // 2. CLICK PROGRESS — Progress bar saat card diklik
+        // ============================================================
+        function initCardClickProgress() {
+            const cards = document.querySelectorAll('.service-menu-card[data-loading="true"]');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    const href = card.getAttribute('href');
+                    
+                    // Skip kalau bukan link internal
+                    if (!href || href === '#' || card.hasAttribute('onclick')) return;
+                    
+                    // Skip kalau sudah loading
+                    if (card.classList.contains('loading')) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    e.preventDefault();
+                    
+                    // Mulai loading state
+                    card.classList.add('loading');
+                    
+                    const progressBar = card.querySelector('.card-progress-bar');
+                    
+                    // Animasi progress: 0% → 40% → 75% → 100%
+                    setTimeout(() => {
+                        if (progressBar) progressBar.style.width = '40%';
+                    }, 50);
+                    
+                    setTimeout(() => {
+                        if (progressBar) progressBar.style.width = '75%';
+                    }, 250);
+                    
+                    setTimeout(() => {
+                        if (progressBar) progressBar.style.width = '100%';
+                    }, 450);
+                    
+                    // Setelah selesai → fade-out + pindah halaman
+                    setTimeout(() => {
+                        document.body.classList.add('page-transition');
+                        
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 300);
+                    }, 700);
+                });
+            });
+        }
     </script>
     
     <!-- Mobile Menu Toggle -->
