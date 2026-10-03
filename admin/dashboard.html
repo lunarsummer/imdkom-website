@@ -67,6 +67,10 @@
             <a href="landing-page.html" class="nav-link"><i data-lucide="home" class="w-4 h-4"></i>Landing Page</a>
             <a href="programs.html" class="nav-link"><i data-lucide="book-open" class="w-4 h-4"></i>Program Kursus</a>
             <a href="services.html" class="nav-link"><i data-lucide="wrench" class="w-4 h-4"></i>Computer Service</a>
+            <a href="pc-components.html" class="nav-link active">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                PC Components
+            </a>
             <a href="pricelists.html" class="nav-link"><i data-lucide="tag" class="w-4 h-4"></i>Pricelist</a>
             <a href="documentations.html" class="nav-link"><i data-lucide="image" class="w-4 h-4"></i>Dokumentasi</a>
             <a href="testimonials.html" class="nav-link"><i data-lucide="message-square" class="w-4 h-4"></i>Testimoni</a>
@@ -90,48 +94,58 @@
             <p class="text-sm opacity-90">Kelola konten website IMDKOM dari dashboard ini.</p>
         </div>
 
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stats-card">
-                <div class="stats-icon" style="background: rgba(26, 60, 94, 0.1); color: #1a3c5e;">
-                    <i data-lucide="book-open" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <div class="stats-number" id="totalPrograms">0</div>
-                    <div class="stats-label">Program Aktif</div>
-                </div>
-            </div>
-            
-            <div class="stats-card">
-                <div class="stats-icon" style="background: rgba(194, 65, 12, 0.1); color: #c2410c;">
-                    <i data-lucide="wrench" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <div class="stats-number" id="totalServices">0</div>
-                    <div class="stats-label">Layanan Aktif</div>
-                </div>
-            </div>
-            
-            <div class="stats-card">
-                <div class="stats-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
-                    <i data-lucide="tag" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <div class="stats-number" id="totalPricelists">0</div>
-                    <div class="stats-label">Pricelist</div>
-                </div>
-            </div>
-            
-            <div class="stats-card">
-                <div class="stats-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
-                    <i data-lucide="inbox" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <div class="stats-number" id="totalConsultations">0</div>
-                    <div class="stats-label">Konsultasi</div>
-                </div>
-            </div>
+    <!-- Existing stats -->
+    <div class="stats-card">
+        <div class="stats-icon" style="background: rgba(26, 60, 94, 0.1); color: #1a3c5e;">
+            <i data-lucide="book-open" class="w-6 h-6"></i>
         </div>
+        <div>
+            <div class="stats-number" id="totalPrograms">0</div>
+            <div class="stats-label">Program Aktif</div>
+        </div>
+    </div>
+    
+    <div class="stats-card">
+        <div class="stats-icon" style="background: rgba(194, 65, 12, 0.1); color: #c2410c;">
+            <i data-lucide="wrench" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <div class="stats-number" id="totalServices">0</div>
+            <div class="stats-label">Layanan Aktif</div>
+        </div>
+    </div>
+    
+    <div class="stats-card">
+        <div class="stats-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+            <i data-lucide="tag" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <div class="stats-number" id="totalPricelists">0</div>
+            <div class="stats-label">Pricelist</div>
+        </div>
+    </div>
+    
+    <div class="stats-card">
+        <div class="stats-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+            <i data-lucide="inbox" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <div class="stats-number" id="totalConsultations">0</div>
+            <div class="stats-label">Konsultasi</div>
+        </div>
+    </div>
+    
+    <!-- ⭐ BARU: PC Components -->
+    <div class="stats-card">
+        <div class="stats-icon" style="background: rgba(124, 58, 237, 0.1); color: #7c3aed;">
+            <i data-lucide="cpu" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <div class="stats-number" id="totalPcComponents">0</div>
+            <div class="stats-label">PC Components</div>
+        </div>
+    </div>
+</div>
     </main>
 
     <script type="module">
@@ -163,20 +177,23 @@
             window.location.href = 'login.html';
         });
 
-        async function loadStats() {
-            try {
-                const progQuery = query(collection(db, 'programs'), where('aktif', '==', true));
-                document.getElementById('totalPrograms').textContent = (await getDocs(progQuery)).size;
+async function loadStats() {
+    try {
+        const progQuery = query(collection(db, 'programs'), where('aktif', '==', true));
+        document.getElementById('totalPrograms').textContent = (await getDocs(progQuery)).size;
 
-                const servQuery = query(collection(db, 'services'), where('aktif', '==', true));
-                document.getElementById('totalServices').textContent = (await getDocs(servQuery)).size;
+        const servQuery = query(collection(db, 'services'), where('aktif', '==', true));
+        document.getElementById('totalServices').textContent = (await getDocs(servQuery)).size;
 
-                document.getElementById('totalPricelists').textContent = (await getDocs(collection(db, 'pricelists'))).size;
-                document.getElementById('totalConsultations').textContent = (await getDocs(collection(db, 'consultations'))).size;
-            } catch (error) {
-                console.error('Error loading stats:', error);
-            }
-        }
+        document.getElementById('totalPricelists').textContent = (await getDocs(collection(db, 'pricelists'))).size;
+        document.getElementById('totalConsultations').textContent = (await getDocs(collection(db, 'consultations'))).size;
+        
+        // ⭐ BARU
+        document.getElementById('totalPcComponents').textContent = (await getDocs(collection(db, 'pc_components'))).size;
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+}
     </script>
 
 </body>

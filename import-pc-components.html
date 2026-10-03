@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Import PC Components | IMDKOM Admin</title>
+    
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#c2410c' },
+                        success: { DEFAULT: '#059669', light: '#10b981', dark: '#047857' },
+                    },
+                    fontFamily: { sans: ['Poppins', 'system-ui', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+        .log-line {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            padding: 2px 0;
+        }
+        .log-success { color: #059669; }
+        .log-error { color: #dc2626; }
+        .log-info { color: #1a3c5e; }
+        .log-warn { color: #d97706; }
+    </style>
+</head>
+<body class="p-6">
+
+    <div class="max-w-3xl mx-auto">
+        
+        <!-- HEADER -->
+        <div class="glass rounded-2xl p-8 mb-6">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-brand">Import PC Components</h1>
+                    <p class="text-sm text-gray-500">Upload komponen ke Firestore</p>
+                </div>
+            </div>
+            
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+                <p class="font-semibold mb-1">⚠️ Perhatian:</p>
+                <ul class="list-disc list-inside space-y-1 text-xs">
+                    <li>Script ini akan <strong>menimpa</strong> data di collection <code class="bg-white px-1 rounded">pc_components</code></li>
+                    <li>Setelah berhasil, <strong>hapus file ini</strong> dari server</li>
+                    <li>Pastikan Firestore rules mengizinkan write</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ACTION -->
+        <div class="glass rounded-2xl p-8 mb-6">
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="bg-white/60 rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold text-brand" id="totalSeed">0</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Seed Utama</div>
+                </div>
+                <div class="bg-white/60 rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold text-purple-600" id="totalAddon">0</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Addon (Lama)</div>
+                </div>
+                <div class="bg-white/60 rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold text-success" id="totalComponents">0</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Total</div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-white/60 rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold text-blue-600" id="uploadedCount">0</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Berhasil Upload</div>
+                </div>
+                <div class="bg-white/60 rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold text-brand" id="existingCount">-</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Existing di DB</div>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap gap-3">
+                <button id="btnImport" 
+                        onclick="startImport()"
+                        class="flex-1 min-w-[180px] inline-flex items-center justify-center gap-2 px-6 py-4 bg-brand hover:bg-brand-light text-white rounded-xl transition-colors font-semibold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                    Mulai Import
+                </button>
+                
+                <button id="btnVerify" 
+                        onclick="verifyData()"
+                        class="inline-flex items-center justify-center gap-2 px-6 py-4 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-xl transition-colors font-semibold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Verifikasi
+                </button>
+                
+                <button id="btnClear" 
+                        onclick="clearAll()"
+                        class="inline-flex items-center justify-center gap-2 px-6 py-4 bg-white hover:bg-red-50 border border-red-200 text-red-600 rounded-xl transition-colors font-semibold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    Hapus Semua
+                </button>
+            </div>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div id="progressContainer" class="glass rounded-2xl p-6 mb-6 hidden">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm font-semibold text-gray-700">Progress</span>
+                <span class="text-sm font-semibold text-brand" id="progressText">0%</span>
+            </div>
+            <div class="bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div id="progressBar" 
+                     class="bg-gradient-to-r from-brand to-brand-light h-full transition-all duration-300"
+                     style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- LOG -->
+        <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-gray-700 text-sm">Log</h3>
+                <button onclick="clearLog()" class="text-xs text-gray-400 hover:text-gray-600">Clear</button>
+            </div>
+            <div id="logContainer" 
+                 class="bg-gray-900 rounded-xl p-4 h-64 overflow-y-auto text-gray-300">
+                <div class="log-line log-info">// Log akan muncul di sini setelah import dimulai</div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script type="module">
+        // Ambil db & modul Firestore dari firebase.js
+        import { db, collection, doc, setDoc, getDocs, writeBatch } from './assets/js/firebase.js';
+        
+        // Import kedua file seed
+        import { pcComponents } from './assets/js/pc-components-seed.js';
+        import { pcComponentsAddon } from './assets/js/pc-components-seed-addon.js';
+        
+        // ============================================================
+        // GABUNGKAN DATA
+        // ============================================================
+        const allComponents = [...pcComponents, ...pcComponentsAddon];
+        
+        // Update total
+        document.getElementById('totalSeed').textContent = pcComponents.length;
+        document.getElementById('totalAddon').textContent = pcComponentsAddon.length;
+        document.getElementById('totalComponents').textContent = allComponents.length;
+        
+        const COLLECTION_NAME = 'pc_components';
+        let uploadedCount = 0;
+        
+        // ============================================================
+        // LOG HELPER
+        // ============================================================
+        window.clearLog = function() {
+            document.getElementById('logContainer').innerHTML = '';
+        };
+        
+        function log(message, type = 'info') {
+            const container = document.getElementById('logContainer');
+            const time = new Date().toLocaleTimeString('id-ID');
+            const line = document.createElement('div');
+            line.className = `log-line log-${type}`;
+            line.textContent = `[${time}] ${message}`;
+            container.appendChild(line);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function setProgress(current, total) {
+            const percent = Math.round((current / total) * 100);
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+            document.getElementById('uploadedCount').textContent = current;
+        }
+        
+        function setButtonDisabled(disabled) {
+            ['btnImport', 'btnVerify', 'btnClear'].forEach(id => {
+                const btn = document.getElementById(id);
+                btn.disabled = disabled;
+                btn.style.opacity = disabled ? '0.5' : '1';
+                btn.style.cursor = disabled ? 'not-allowed' : 'pointer';
+            });
+        }
+        
+        // ============================================================
+        // START IMPORT
+        // ============================================================
+        window.startImport = async function() {
+            if (!confirm(`Yakin ingin meng-import ${allComponents.length} komponen ke Firestore?\n\n(${pcComponents.length} seed utama + ${pcComponentsAddon.length} addon)\n\nData lama dengan ID yang sama akan DITIMPA.`)) {
+                return;
+            }
+            
+            setButtonDisabled(true);
+            document.getElementById('progressContainer').classList.remove('hidden');
+            clearLog();
+            
+            log('═══════════════════════════════════', 'info');
+            log(`🚀 Memulai import ${allComponents.length} komponen...`, 'info');
+            log(`📦 Seed utama: ${pcComponents.length}`, 'info');
+            log(`📦 Addon: ${pcComponentsAddon.length}`, 'info');
+            log('═══════════════════════════════════', 'info');
+            
+            uploadedCount = 0;
+            setProgress(0, allComponents.length);
+            
+            // Cek duplikat ID
+            const ids = allComponents.map(c => c.id);
+            const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+            if (duplicates.length > 0) {
+                log('', 'info');
+                log(`⚠️  Ditemukan ${duplicates.length} ID duplikat:`, 'warn');
+                [...new Set(duplicates)].forEach(id => {
+                    log(`   • ${id}`, 'warn');
+                });
+                log('   → Duplikat terakhir akan menimpa yang pertama', 'warn');
+            }
+            
+            // Kelompokkan per kategori untuk log
+            const grouped = {};
+            allComponents.forEach(c => {
+                if (!grouped[c.kategori]) grouped[c.kategori] = 0;
+                grouped[c.kategori]++;
+            });
+            
+            log('', 'info');
+            log('📦 Komponen per kategori:', 'info');
+            Object.entries(grouped).forEach(([kat, count]) => {
+                log(`   • ${kat}: ${count}`, 'info');
+            });
+            log('', 'info');
+            
+            // Batch write — Firestore limit 500 operasi per batch
+            const BATCH_SIZE = 500;
+            const totalBatches = Math.ceil(allComponents.length / BATCH_SIZE);
+            
+            try {
+                for (let i = 0; i < totalBatches; i++) {
+                    const start = i * BATCH_SIZE;
+                    const end = Math.min(start + BATCH_SIZE, allComponents.length);
+                    const batchItems = allComponents.slice(start, end);
+                    
+                    log(`📤 Batch ${i + 1}/${totalBatches} — ${batchItems.length} item...`, 'info');
+                    
+                    const batch = writeBatch(db);
+                    
+                    batchItems.forEach(comp => {
+                        const docRef = doc(db, COLLECTION_NAME, comp.id);
+                        const { id, ...data } = comp;
+                        batch.set(docRef, data);
+                    });
+                    
+                    await batch.commit();
+                    
+                    uploadedCount = end;
+                    setProgress(uploadedCount, allComponents.length);
+                    
+                    log(`   ✅ Batch ${i + 1} berhasil`, 'success');
+                    log(`   📊 Progress: ${uploadedCount}/${allComponents.length}`, 'success');
+                }
+                
+                log('', 'info');
+                log('═══════════════════════════════════', 'success');
+                log(`✅ IMPORT SELESAI!`, 'success');
+                log(`📦 Total: ${uploadedCount} komponen berhasil di-upload`, 'success');
+                log('═══════════════════════════════════', 'success');
+                log('', 'info');
+                log('⚠️  JANGAN LUPA: Hapus file import-pc-components.html dari server!', 'error');
+                
+                // Update existing count
+                await updateExistingCount();
+                
+            } catch (error) {
+                log('', 'info');
+                log('═══════════════════════════════════', 'error');
+                log(`❌ ERROR: ${error.message}`, 'error');
+                log('═══════════════════════════════════', 'error');
+                console.error('Import error:', error);
+            } finally {
+                setButtonDisabled(false);
+            }
+        };
+        
+        // ============================================================
+        // VERIFY DATA
+        // ============================================================
+        window.verifyData = async function() {
+            setButtonDisabled(true);
+            document.getElementById('progressContainer').classList.remove('hidden');
+            clearLog();
+            
+            log('🔍 Memverifikasi data di Firestore...', 'info');
+            
+            try {
+                const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+                const count = snapshot.size;
+                
+                log('', 'info');
+                log('═══════════════════════════════════', 'info');
+                log(`📊 Total dokumen di Firestore: ${count}`, 'success');
+                log('═══════════════════════════════════', 'info');
+                
+                // Group by kategori
+                const byCategory = {};
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const kat = data.kategori || 'unknown';
+                    if (!byCategory[kat]) byCategory[kat] = 0;
+                    byCategory[kat]++;
+                });
+                
+                log('', 'info');
+                log('📦 Breakdown per kategori:', 'info');
+                Object.entries(byCategory).sort().forEach(([kat, cnt]) => {
+                    log(`   • ${kat}: ${cnt}`, 'info');
+                });
+                
+                log('', 'info');
+                if (count === allComponents.length) {
+                    log('✅ Data LENGKAP dan sesuai!', 'success');
+                } else if (count === 0) {
+                    log('⚠️  Collection KOSONG. Jalankan import terlebih dahulu.', 'error');
+                } else {
+                    log(`⚠️  Jumlah tidak sesuai (expected: ${allComponents.length}, actual: ${count})`, 'warn');
+                }
+                
+                setProgress(count, Math.max(allComponents.length, count));
+                document.getElementById('existingCount').textContent = count;
+                
+            } catch (error) {
+                log(`❌ ERROR: ${error.message}`, 'error');
+                console.error('Verify error:', error);
+            } finally {
+                setButtonDisabled(false);
+            }
+        };
+        
+        // ============================================================
+        // CLEAR ALL
+        // ============================================================
+        window.clearAll = async function() {
+            if (!confirm('⚠️ HAPUS SEMUA komponen dari Firestore?\n\nTindakan ini tidak bisa dibatalkan!')) {
+                return;
+            }
+            if (!confirm('Yakin? Klik OK untuk konfirmasi terakhir.')) {
+                return;
+            }
+            
+            setButtonDisabled(true);
+            document.getElementById('progressContainer').classList.remove('hidden');
+            clearLog();
+            
+            log('🗑️  Menghapus semua komponen...', 'error');
+            
+            try {
+                const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+                const total = snapshot.size;
+                
+                if (total === 0) {
+                    log('ℹ️  Collection sudah kosong.', 'info');
+                    setButtonDisabled(false);
+                    return;
+                }
+                
+                log(`📦 Total: ${total} dokumen akan dihapus`, 'info');
+                
+                const docs = snapshot.docs;
+                const BATCH_SIZE = 500;
+                let deleted = 0;
+                
+                for (let i = 0; i < docs.length; i += BATCH_SIZE) {
+                    const batch = writeBatch(db);
+                    const batchDocs = docs.slice(i, i + BATCH_SIZE);
+                    
+                    batchDocs.forEach(d => batch.delete(d.ref));
+                    await batch.commit();
+                    
+                    deleted += batchDocs.length;
+                    setProgress(deleted, total);
+                    
+                    log(`   ✅ ${deleted}/${total} dihapus`, 'success');
+                }
+                
+                log('', 'info');
+                log(`✅ SELESAI! ${deleted} dokumen terhapus.`, 'success');
+                
+                document.getElementById('existingCount').textContent = '0';
+                document.getElementById('uploadedCount').textContent = '0';
+                
+            } catch (error) {
+                log(`❌ ERROR: ${error.message}`, 'error');
+                console.error('Clear error:', error);
+            } finally {
+                setButtonDisabled(false);
+            }
+        };
+        
+        // ============================================================
+        // UPDATE EXISTING COUNT
+        // ============================================================
+        async function updateExistingCount() {
+            try {
+                const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+                document.getElementById('existingCount').textContent = snapshot.size;
+            } catch (e) {
+                console.warn('Failed to update existing count:', e);
+            }
+        }
+        
+        // ============================================================
+        // INIT — Log awal + cek existing
+        // ============================================================
+        (async function init() {
+            log('═══════════════════════════════════', 'info');
+            log('📋 Import Script Ready', 'success');
+            log('═══════════════════════════════════', 'info');
+            log('', 'info');
+            log('📦 Data yang akan di-import:', 'info');
+            log(`   • Seed utama: ${pcComponents.length} komponen`, 'info');
+            log(`   • Addon (lama): ${pcComponentsAddon.length} komponen`, 'info');
+            log(`   • TOTAL: ${allComponents.length} komponen`, 'success');
+            log('', 'info');
+            
+            // Breakdown per kategori
+            const grouped = {};
+            allComponents.forEach(c => {
+                if (!grouped[c.kategori]) grouped[c.kategori] = 0;
+                grouped[c.kategori]++;
+            });
+            log('📊 Breakdown per kategori:', 'info');
+            Object.entries(grouped).sort().forEach(([kat, count]) => {
+                log(`   • ${kat}: ${count}`, 'info');
+            });
+            log('', 'info');
+            
+            log('💡 Langkah:', 'info');
+            log('   1. Klik "Mulai Import"', 'info');
+            log('   2. Tunggu proses selesai', 'info');
+            log('   3. Klik "Verifikasi" untuk cek', 'info');
+            log('   4. Hapus file ini dari server', 'info');
+            log('', 'info');
+            
+            // Cek existing count
+            try {
+                const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+                document.getElementById('existingCount').textContent = snapshot.size;
+                log(`📊 Existing di Firestore: ${snapshot.size} komponen`, 'info');
+            } catch (e) {
+                document.getElementById('existingCount').textContent = 'Error';
+                log(`⚠️  Gagal cek existing: ${e.message}`, 'warn');
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Migrate Tiers Ryzen 9000 | Admin IMDKOM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        <span class="text-white font-bold">Migrate Ryzen 9000</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link"><i data-lucide="layout-dashboard" class="w-4 h-4"></i>Dashboard</a>
+            <a href="pc-components.html" class="nav-link"><i data-lucide="cpu" class="w-4 h-4"></i>PC Components</a>
+            <a href="migrate-tiers.html" class="nav-link"><i data-lucide="git-merge" class="w-4 h-4"></i>Migrate Tiers</a>
+            <a href="migrate-tiers-ryzen9000.html" class="nav-link active"><i data-lucide="zap" class="w-4 h-4"></i>Migrate Ryzen 9000</a>
+            <button id="logoutBtn" class="logout-btn"><i data-lucide="log-out" class="w-4 h-4"></i>Logout</button>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <div class="page-header">
+            <h2>Migrasi Tier — Ryzen 9000 Series</h2>
+            <a href="pc-components.html" class="btn-secondary">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>Kembali
+            </a>
+        </div>
+
+        <div class="admin-card mb-4" style="background: rgba(26, 60, 94, 0.05);">
+            <div class="flex items-start gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-brand flex-shrink-0 mt-0.5"></i>
+                <div class="text-sm text-gray-700">
+                    <p class="font-medium mb-1">Tentang Migrasi Ini</p>
+                    <p class="text-xs">Menambahkan field <code>tier</code>, <code>tahun</code>, <code>segment</code> ke CPU AMD Ryzen 9000 Series.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mb-4">
+            <div class="admin-card text-center py-3">
+                <div class="text-2xl font-bold text-brand" id="totalItems">0</div>
+                <div class="text-[10px] font-bold uppercase tracking-wider text-gray-500 mt-0.5">Total Item</div>
+            </div>
+            <div class="admin-card text-center py-3">
+                <div class="text-2xl font-bold text-success" id="totalMigrated">0</div>
+                <div class="text-[10px] font-bold uppercase tracking-wider text-gray-500 mt-0.5">Sudah Migrasi</div>
+            </div>
+            <div class="admin-card text-center py-3">
+                <div class="text-2xl font-bold text-orange-500" id="totalRemaining">0</div>
+                <div class="text-[10px] font-bold uppercase tracking-wider text-gray-500 mt-0.5">Sisa</div>
+            </div>
+        </div>
+
+        <div class="admin-card mb-4">
+            <div class="flex flex-wrap gap-3">
+                <button id="btnCheck" onclick="checkStatus()" class="btn-secondary">
+                    <i data-lucide="search" class="w-4 h-4"></i>Cek Status
+                </button>
+                <button id="btnMigrate" onclick="runMigration()" class="btn-primary">
+                    <i data-lucide="play-circle" class="w-4 h-4"></i>Jalankan Migrasi
+                </button>
+                <button id="btnRollback" onclick="rollbackMigration()" class="btn-secondary" style="border-color: #fca5a5; color: #dc2626;">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>Rollback
+                </button>
+            </div>
+        </div>
+
+        <div id="progressContainer" class="admin-card mb-4 hidden">
+            <div class="flex justify-between mb-3">
+                <span class="text-sm font-semibold text-gray-700">Progress</span>
+                <span class="text-sm font-bold text-brand" id="progressText">0/0</span>
+            </div>
+            <div class="bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div id="progressBar" class="bg-gradient-to-r from-brand to-brand-light h-full transition-all" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-gray-700 text-sm">Log</h3>
+                <button onclick="clearLog()" class="text-xs text-gray-400 hover:text-gray-600">Clear</button>
+            </div>
+            <div id="logContainer" class="bg-gray-900 rounded-xl p-4 h-80 overflow-y-auto text-xs font-mono" style="color: #93c5fd;">
+                <div style="color: #6b7280;">// Log akan muncul di sini</div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, where, doc, updateDoc, writeBatch } from '../assets/js/firebase.js';
+
+        // ============================================================
+        // MAPPING DATA — id → { tier, tahun, segment }
+        // ============================================================
+        const MIGRATION_DATA = {
+            'cpu-ryzen5-9600x':      { tier: 5, tahun: 2024, segment: 'upper-mainstream' },
+            'cpu-ryzen5-9600':       { tier: 5, tahun: 2024, segment: 'upper-mainstream' },
+            'cpu-ryzen5-9500f':      { tier: 5, tahun: 2025, segment: 'upper-mainstream' },
+            'cpu-ryzen7-9700x':      { tier: 6, tahun: 2024, segment: 'performance' },
+            'cpu-ryzen7-9800x3d':    { tier: 7, tahun: 2024, segment: 'enthusiast' },
+            'cpu-ryzen7-9850x3d':    { tier: 7, tahun: 2025, segment: 'enthusiast' },
+            'cpu-ryzen9-9900x':      { tier: 6, tahun: 2024, segment: 'performance' },
+            'cpu-ryzen9-9900x3d':    { tier: 7, tahun: 2025, segment: 'enthusiast' },
+            'cpu-ryzen9-9950x':      { tier: 7, tahun: 2024, segment: 'enthusiast' },
+            'cpu-ryzen9-9950x3d':    { tier: 7, tahun: 2025, segment: 'enthusiast' },
+            'cpu-ryzen9-9950x3d2-dual': { tier: 7, tahun: 2025, segment: 'enthusiast' }
+        };
+
+        document.getElementById('totalItems').textContent = Object.keys(MIGRATION_DATA).length;
+
+        // ============================================================
+        // SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+            else {
+                lucide.createIcons();
+                setTimeout(checkStatus, 500);
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // LOG
+        // ============================================================
+        window.clearLog = function() {
+            document.getElementById('logContainer').innerHTML = '';
+        };
+
+        function log(message, type = 'info') {
+            const container = document.getElementById('logContainer');
+            const colors = { info: '#93c5fd', success: '#86efac', error: '#fca5a5', warn: '#fcd34d', muted: '#6b7280' };
+            const time = new Date().toLocaleTimeString('id-ID');
+            container.innerHTML += `<div style="color: ${colors[type]}">[${time}] ${message}</div>`;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function setProgress(current, total) {
+            const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+            document.getElementById('progressBar').style.width = pct + '%';
+            document.getElementById('progressText').textContent = `${current}/${total}`;
+        }
+
+        function setButtonDisabled(disabled) {
+            ['btnCheck', 'btnMigrate', 'btnRollback'].forEach(id => {
+                const btn = document.getElementById(id);
+                btn.disabled = disabled;
+                btn.style.opacity = disabled ? '0.5' : '1';
+                btn.style.cursor = disabled ? 'not-allowed' : 'pointer';
+            });
+        }
+
+        // ============================================================
+        // CHECK STATUS
+        // ============================================================
+        window.checkStatus = async function() {
+            setButtonDisabled(true);
+            clearLog();
+            
+            log('═══════════════════════════════════', 'muted');
+            log('🔍 Memeriksa status migrasi Ryzen 9000...', 'info');
+            log('═══════════════════════════════════', 'muted');
+
+            try {
+                const q = query(collection(db, 'pc_components'), where('kategori', '==', 'cpu'));
+                const snapshot = await getDocs(q);
+
+                let migrated = 0;
+                let total = 0;
+                const notFound = [];
+
+                snapshot.forEach(d => {
+                    if (!MIGRATION_DATA[d.id]) return;
+                    total++;
+                    const data = d.data();
+                    if (data.spesifikasi?.tier !== undefined) {
+                        migrated++;
+                        log(`✅ ${d.id} — sudah ada tier ${data.spesifikasi.tier}`, 'success');
+                    } else {
+                        log(`⏳ ${d.id} — BELUM migrasi`, 'warn');
+                    }
+                });
+
+                // Cek yang belum ada di database
+                Object.keys(MIGRATION_DATA).forEach(id => {
+                    const exists = snapshot.docs.some(d => d.id === id);
+                    if (!exists) notFound.push(id);
+                });
+
+                document.getElementById('totalMigrated').textContent = migrated;
+                document.getElementById('totalRemaining').textContent = total - migrated;
+
+                log('', 'muted');
+                log(`📊 Total di database: ${total}`, 'info');
+                log(`✅ Sudah migrasi: ${migrated}`, 'success');
+                log(`⏳ Belum migrasi: ${total - migrated}`, 'warn');
+
+                if (notFound.length > 0) {
+                    log('', 'muted');
+                    log(`⚠️  ${notFound.length} item di mapping tidak ada di database:`, 'error');
+                    notFound.forEach(id => log(`   • ${id}`, 'error'));
+                }
+
+                setProgress(migrated, total);
+
+            } catch (error) {
+                log(`❌ Gagal: ${error.message}`, 'error');
+            } finally {
+                setButtonDisabled(false);
+            }
+        };
+
+        // ============================================================
+        // RUN MIGRATION
+        // ============================================================
+        window.runMigration = async function() {
+            const totalItems = Object.keys(MIGRATION_DATA).length;
+
+            if (!confirm(`Update ${totalItems} dokumen Ryzen 9000 di Firestore?\n\nField: tier, tahun, segment`)) return;
+
+            setButtonDisabled(true);
+            document.getElementById('progressContainer').classList.remove('hidden');
+            clearLog();
+
+            log('═══════════════════════════════════', 'muted');
+            log(`🚀 Migrasi ${totalItems} Ryzen 9000...`, 'info');
+            log('═══════════════════════════════════', 'muted');
+
+            const entries = Object.entries(MIGRATION_DATA);
+            let success = 0;
+            let failed = 0;
+            let notFound = 0;
+
+            setProgress(0, totalItems);
+
+            try {
+                const batch = writeBatch(db);
+
+                for (const [id, data] of entries) {
+                    const docRef = doc(db, 'pc_components', id);
+                    batch.update(docRef, {
+                        'spesifikasi.tier': data.tier,
+                        'spesifikasi.tahun': data.tahun,
+                        'spesifikasi.segment': data.segment
+                    });
+                }
+
+                try {
+                    await batch.commit();
+                    success = entries.length;
+                    setProgress(success, totalItems);
+                    log(`✅ Batch berhasil — ${success} dokumen`, 'success');
+                } catch (batchError) {
+                    log('⚠️ Batch gagal, coba satu per satu...', 'warn');
+
+                    for (const [id, data] of entries) {
+                        try {
+                            await updateDoc(doc(db, 'pc_components', id), {
+                                'spesifikasi.tier': data.tier,
+                                'spesifikasi.tahun': data.tahun,
+                                'spesifikasi.segment': data.segment
+                            });
+                            success++;
+                            log(`✅ ${id}`, 'success');
+                        } catch (err) {
+                            failed++;
+                            if (err.code === 'not-found') {
+                                notFound++;
+                                log(`⚠️  Not found: ${id}`, 'warn');
+                            } else {
+                                log(`❌ ${id}: ${err.message}`, 'error');
+                            }
+                        }
+                        setProgress(success + failed, totalItems);
+                    }
+                }
+
+                log('', 'muted');
+                log('═══════════════════════════════════', 'success');
+                log('🎉 MIGRASI SELESAI!', 'success');
+                log('═══════════════════════════════════', 'success');
+                log(`✅ Berhasil: ${success}`, 'success');
+                if (failed > 0) log(`❌ Gagal: ${failed}`, 'error');
+                if (notFound > 0) log(`⚠️  Not found: ${notFound}`, 'warn');
+
+                document.getElementById('totalMigrated').textContent = success;
+                document.getElementById('totalRemaining').textContent = totalItems - success;
+
+                log('', 'muted');
+                log('💡 Langkah selanjutnya:', 'info');
+                log('   1. Hard refresh rakit-komputer.html', 'info');
+                log('   2. Clear cache: localStorage.clear()', 'info');
+                log('   3. Cek filter tier — Ryzen 9000 harus muncul', 'info');
+
+            } catch (error) {
+                log(`❌ ERROR: ${error.message}`, 'error');
+            } finally {
+                setButtonDisabled(false);
+            }
+        };
+
+        // ============================================================
+        // ROLLBACK
+        // ============================================================
+        window.rollbackMigration = async function() {
+            if (!confirm('⚠️ Hapus field tier, tahun, segment dari Ryzen 9000?')) return;
+            if (!confirm('Yakin? Klik OK untuk konfirmasi terakhir.')) return;
+
+            setButtonDisabled(true);
+            clearLog();
+            log('🔄 Rollback...', 'warn');
+
+            try {
+                let success = 0;
+                const ids = Object.keys(MIGRATION_DATA);
+
+                for (const id of ids) {
+                    try {
+                        await updateDoc(doc(db, 'pc_components', id), {
+                            'spesifikasi.tier': null,
+                            'spesifikasi.tahun': null,
+                            'spesifikasi.segment': null
+                        });
+                        success++;
+                        log(`✅ ${id}`, 'success');
+                    } catch (err) {
+                        log(`❌ ${id}: ${err.message}`, 'error');
+                    }
+                }
+
+                log(`✅ Rollback selesai. ${success} dokumen di-reset.`, 'success');
+                document.getElementById('totalMigrated').textContent = '0';
+                document.getElementById('totalRemaining').textContent = ids.length;
+
+            } catch (error) {
+                log(`❌ ${error.message}`, 'error');
+            } finally {
+                setButtonDisabled(false);
+            }
+        };
+    </script>
+
+</body>
+</html>

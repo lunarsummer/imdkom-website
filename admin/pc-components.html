@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PC Components | Admin IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        /* Kategori badge warna */
+        .cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .cat-cpu       { background: rgba(26, 60, 94, 0.1);   color: #1a3c5e; }
+        .cat-mainboard { background: rgba(124, 58, 237, 0.1); color: #7c3aed; }
+        .cat-ram       { background: rgba(5, 150, 105, 0.1);  color: #059669; }
+        .cat-storage   { background: rgba(194, 65, 12, 0.1);  color: #c2410c; }
+        .cat-vga       { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+        .cat-psu       { background: rgba(220, 38, 38, 0.1);   color: #dc2626; }
+        .cat-casing    { background: rgba(107, 114, 128, 0.1); color: #4b5563; }
+    </style>
+</head>
+<body>
+
+    <!-- MOBILE HEADER -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">PC Components</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+            <a href="programs.html" class="nav-link">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Program Kursus
+            </a>
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pc-components.html" class="nav-link active">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                PC Components
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+        
+        <div class="page-header">
+            <h2>PC Components</h2>
+            <div class="flex gap-2">
+                <button id="importBtn" class="btn-secondary">
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                    Import JSON
+                </button>
+                <a href="pc-component-form.html" class="btn-primary">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    Tambah Komponen
+                </a>
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="admin-card mb-4" style="background: rgba(26, 60, 94, 0.05); border-color: rgba(26, 60, 94, 0.15);">
+            <div class="flex items-start gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-brand flex-shrink-0 mt-0.5"></i>
+                <div class="text-sm text-gray-600">
+                    <p class="font-medium text-gray-700 mb-1">Tentang PC Components</p>
+                    <p class="text-xs">
+                        Komponen ini digunakan untuk halaman <strong>Rakit Komputer</strong> di website publik. 
+                        Setiap komponen memiliki kategori (CPU, Mainboard, RAM, dll) dengan spesifikasi yang berbeda-beda.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats per Kategori -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 mb-4" id="statsGrid">
+            <!-- Akan di-render via JS -->
+        </div>
+
+        <!-- Filter -->
+        <div class="admin-card" style="margin-bottom: 1rem;">
+            <div class="flex flex-wrap items-end gap-3">
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Filter Kategori</label>
+                    <select id="filterKategori" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
+                        <option value="">Semua Kategori</option>
+                        <option value="cpu">CPU</option>
+                        <option value="mainboard">Mainboard</option>
+                        <option value="ram">RAM</option>
+                        <option value="storage">Storage</option>
+                        <option value="vga">VGA</option>
+                        <option value="psu">PSU</option>
+                        <option value="casing">Casing</option>
+                    </select>
+                </div>
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Cari Nama</label>
+                    <input type="text" id="searchInput" placeholder="Cari komponen..." 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                </div>
+                <button id="resetFilter" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4 inline"></i>
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- List Komponen -->
+        <div id="componentsContainer">
+            <div class="text-center text-gray-500 py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm">Memuat...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    MODAL IMPORT JSON
+    ============================================================ -->
+    <div id="importModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeImportModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-lg w-full p-6 relative">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-brand">Import JSON</h3>
+                    <button onclick="closeImportModal()" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <p class="text-sm text-gray-600 mb-4">
+                    Paste JSON array komponen. Format: <code class="bg-gray-100 px-1 rounded text-xs">[{ id, kategori, nama, brand, aktif, order, spesifikasi: {...} }]</code>
+                </p>
+                
+                <textarea id="importJson" rows="10" 
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none text-xs font-mono"
+                          placeholder='[{"id":"cpu-test","kategori":"cpu","nama":"Test CPU",...}]'></textarea>
+                
+                <div id="importLog" class="mt-3 text-xs max-h-40 overflow-y-auto hidden"></div>
+                
+                <div class="flex gap-3 mt-4">
+                    <button onclick="closeImportModal()" class="flex-1 btn-secondary">Batal</button>
+                    <button onclick="doImport()" class="flex-1 btn-primary" id="importSubmitBtn">
+                        <i data-lucide="upload" class="w-4 h-4"></i>
+                        Import
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            auth, onAuthStateChanged, signOut, 
+            db, collection, getDocs, query, orderBy, where, deleteDoc, doc, updateDoc, setDoc, writeBatch 
+        } from '../assets/js/firebase.js';
+
+        // ============================================================
+        // SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let allComponents = [];
+
+        const CATEGORIES = {
+            cpu:       { label: 'CPU',        color: '#1a3c5e' },
+            mainboard: { label: 'Mainboard',  color: '#7c3aed' },
+            ram:       { label: 'RAM',        color: '#059669' },
+            storage:   { label: 'Storage',    color: '#c2410c' },
+            vga:       { label: 'VGA',        color: '#d97706' },
+            psu:       { label: 'PSU',        color: '#dc2626' },
+            casing:    { label: 'Casing',     color: '#4b5563' }
+        };
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+            else {
+                loadComponents();
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // FILTER
+        // ============================================================
+        document.getElementById('filterKategori').addEventListener('change', renderComponents);
+        document.getElementById('searchInput').addEventListener('input', renderComponents);
+        
+        document.getElementById('resetFilter').addEventListener('click', () => {
+            document.getElementById('filterKategori').value = '';
+            document.getElementById('searchInput').value = '';
+            renderComponents();
+        });
+
+        // ============================================================
+        // LOAD COMPONENTS
+        // ============================================================
+        async function loadComponents() {
+            const container = document.getElementById('componentsContainer');
+            
+            try {
+                const q = query(
+                    collection(db, 'pc_components'),
+                    orderBy('kategori', 'asc'),
+                    orderBy('order', 'asc')
+                );
+                const snapshot = await getDocs(q);
+                
+                allComponents = snapshot.docs.map(d => ({
+                    id: d.id,
+                    ...d.data()
+                }));
+                
+                renderStats();
+                renderComponents();
+                
+            } catch (error) {
+                console.error('Error loading components:', error);
+                container.innerHTML = `
+                    <div class="admin-card text-center text-red-600 py-12">
+                        <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-red-300 mb-3"></i>
+                        <p class="font-medium">Gagal memuat komponen</p>
+                        <small class="text-gray-500">${error.message}</small>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        // ============================================================
+        // RENDER STATS
+        // ============================================================
+        function renderStats() {
+            const container = document.getElementById('statsGrid');
+            const counts = {};
+            Object.keys(CATEGORIES).forEach(k => counts[k] = 0);
+            allComponents.forEach(c => {
+                if (counts[c.kategori] !== undefined) counts[c.kategori]++;
+            });
+            
+            let html = '';
+            Object.entries(CATEGORIES).forEach(([key, info]) => {
+                html += `
+                    <div class="admin-card text-center py-3">
+                        <div class="text-2xl font-bold" style="color: ${info.color}">${counts[key]}</div>
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-gray-500 mt-0.5">${info.label}</div>
+                    </div>
+                `;
+            });
+            
+            // Total
+            html += `
+                <div class="admin-card text-center py-3">
+                    <div class="text-2xl font-bold text-brand">${allComponents.length}</div>
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-gray-500 mt-0.5">TOTAL</div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // RENDER COMPONENTS (with filter)
+        // ============================================================
+        function renderComponents() {
+            const container = document.getElementById('componentsContainer');
+            const filterKat = document.getElementById('filterKategori').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            let filtered = allComponents;
+            if (filterKat) {
+                filtered = filtered.filter(c => c.kategori === filterKat);
+            }
+            if (searchTerm) {
+                filtered = filtered.filter(c => 
+                    (c.nama || '').toLowerCase().includes(searchTerm) ||
+                    (c.brand || '').toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="admin-card text-center text-gray-500 py-12">
+                        <i data-lucide="inbox" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                        <p>Tidak ada komponen${searchTerm ? ' yang cocok dengan pencarian' : ''}.</p>
+                        <a href="pc-component-form.html" class="btn-primary mt-4 inline-flex">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            Tambah Komponen
+                        </a>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            // Group by kategori
+            const grouped = {};
+            filtered.forEach(c => {
+                if (!grouped[c.kategori]) grouped[c.kategori] = [];
+                grouped[c.kategori].push(c);
+            });
+            
+            let html = '';
+            let index = 0;
+            
+            Object.entries(grouped).forEach(([kategori, items]) => {
+                const info = CATEGORIES[kategori] || { label: kategori, color: '#666' };
+                const isOpen = index === 0 ? 'active' : '';
+                index++;
+                
+                html += `
+                    <div class="pricelist-group">
+                        <div class="pricelist-group-header ${isOpen}" data-target="pcgroup-${index}">
+                            <div class="pricelist-group-title">
+                                <i data-lucide="package" class="w-4 h-4" style="color: ${info.color}"></i>
+                                <span>${info.label}</span>
+                                <span class="pricelist-group-count">${items.length}</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="pricelist-chevron w-5 h-5"></i>
+                        </div>
+                        <div class="pricelist-group-body ${isOpen}" id="pcgroup-${index}">
+                            <div class="overflow-x-auto">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order</th>
+                                            <th>Nama Komponen</th>
+                                            <th>Spesifikasi</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                `;
+                
+                items.forEach(item => {
+                    html += `
+                        <tr>
+                            <td data-label="Order">
+                                <span class="font-mono text-xs text-gray-500">#${item.order || '-'}</span>
+                            </td>
+                            <td data-label="Nama">
+                                <div class="font-medium text-gray-800">${item.nama || '-'}</div>
+                                <div class="text-xs text-gray-500">${item.brand || '-'}</div>
+                            </td>
+                            <td data-label="Spesifikasi">
+                                <div class="text-xs text-gray-600">${renderSpecSummary(item)}</div>
+                            </td>
+                            <td data-label="Status">
+                                <span class="badge ${item.aktif ? 'badge-success' : 'badge-gray'}">
+                                    ${item.aktif ? 'Aktif' : 'Nonaktif'}
+                                </span>
+                            </td>
+                            <td data-label="Aksi">
+                                <div class="flex gap-2">
+                                    <a href="pc-component-form.html?id=${item.id}" class="text-brand hover:text-brand-light text-sm font-medium inline-flex items-center gap-1">
+                                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                        Edit
+                                    </a>
+                                    <button class="delete-btn text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center gap-1" 
+                                            data-id="${item.id}" 
+                                            data-name="${item.nama || ''}">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            lucide.createIcons();
+            
+            // Accordion toggle
+            document.querySelectorAll('.pricelist-group-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const targetId = header.dataset.target;
+                    const body = document.getElementById(targetId);
+                    header.classList.toggle('active');
+                    body.classList.toggle('active');
+                });
+            });
+            
+            // Delete handler
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    const name = btn.dataset.name;
+                    
+                    if (confirm(`Hapus komponen "${name}"?\n\nTindakan ini tidak dapat dibatalkan.`)) {
+                        try {
+                            btn.disabled = true;
+                            btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>`;
+                            lucide.createIcons();
+                            
+                            await deleteDoc(doc(db, 'pc_components', id));
+                            loadComponents();
+                        } catch (error) {
+                            console.error('Error deleting:', error);
+                            alert('Gagal menghapus: ' + error.message);
+                            btn.disabled = false;
+                        }
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        // RENDER SPEC SUMMARY (per kategori)
+        // ============================================================
+        function renderSpecSummary(item) {
+            const s = item.spesifikasi || {};
+            switch (item.kategori) {
+                case 'cpu':
+                    return `${s.socket || '-'} · ${s.core || '-'}C/${s.thread || '-'}T · ${s.tdp || '-'}W`;
+                case 'mainboard':
+                    return `${s.socket || '-'} · ${s.chipset || '-'} · ${s.ramType || '-'} · ${s.formFactor || '-'}`;
+                case 'ram':
+                    return `${s.type || '-'} · ${s.capacity || '-'}GB · ${s.speed || '-'}`;
+                case 'storage':
+                    return `${s.type || '-'} · ${s.interface || '-'} · ${s.capacity || '-'}GB`;
+                case 'vga':
+                    return `${s.vram || '-'} · ${s.tdp || '-'}W · ${s.length || '-'}mm`;
+                case 'psu':
+                    return `${s.wattage || '-'}W · ${s.efficiency || '-'}`;
+                case 'casing':
+                    return `${(s.formFactor || []).join('/') || '-'} · Max VGA ${s.maxGpuLength || '-'}mm`;
+                default:
+                    return '-';
+            }
+        }
+
+        // ============================================================
+        // IMPORT MODAL
+        // ============================================================
+        window.openImportModal = function() {
+            document.getElementById('importModal').classList.remove('hidden');
+        };
+        window.closeImportModal = function() {
+            document.getElementById('importModal').classList.add('hidden');
+            document.getElementById('importJson').value = '';
+            document.getElementById('importLog').innerHTML = '';
+            document.getElementById('importLog').classList.add('hidden');
+        };
+
+        document.getElementById('importBtn').addEventListener('click', openImportModal);
+
+        window.doImport = async function() {
+            const jsonText = document.getElementById('importJson').value.trim();
+            const log = document.getElementById('importLog');
+            const btn = document.getElementById('importSubmitBtn');
+            
+            log.classList.remove('hidden');
+            
+            if (!jsonText) {
+                log.innerHTML = `<p class="text-red-600">❌ JSON kosong</p>`;
+                return;
+            }
+            
+            let data;
+            try {
+                data = JSON.parse(jsonText);
+            } catch (e) {
+                log.innerHTML = `<p class="text-red-600">❌ JSON tidak valid: ${e.message}</p>`;
+                return;
+            }
+            
+            if (!Array.isArray(data)) {
+                log.innerHTML = `<p class="text-red-600">❌ Format harus array [ ... ]</p>`;
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Importing...`;
+            lucide.createIcons();
+            log.innerHTML = `<p class="text-gray-600">📦 Total: ${data.length} komponen</p>`;
+            
+            try {
+                const BATCH_SIZE = 500;
+                let uploaded = 0;
+                
+                for (let i = 0; i < data.length; i += BATCH_SIZE) {
+                    const batch = writeBatch(db);
+                    const batchItems = data.slice(i, i + BATCH_SIZE);
+                    
+                    batchItems.forEach(comp => {
+                        if (!comp.id) {
+                            throw new Error('Komponen ke-' + (i+1) + ' tidak punya "id"');
+                        }
+                        const docRef = doc(db, 'pc_components', comp.id);
+                        const { id, ...rest } = comp;
+                        batch.set(docRef, rest);
+                    });
+                    
+                    await batch.commit();
+                    uploaded += batchItems.length;
+                    log.innerHTML += `<p class="text-green-600">✅ ${uploaded}/${data.length} berhasil</p>`;
+                }
+                
+                log.innerHTML += `<p class="text-green-700 font-bold mt-2">🎉 SELESAI! ${uploaded} komponen di-import.</p>`;
+                
+                setTimeout(() => {
+                    closeImportModal();
+                    loadComponents();
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Import error:', error);
+                log.innerHTML += `<p class="text-red-600 mt-2">❌ Gagal: ${error.message}</p>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="upload" class="w-4 h-4"></i> Import`;
+                lucide.createIcons();
+            }
+        };
+    </script>
+
+</body>
+</html>

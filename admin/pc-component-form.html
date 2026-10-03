@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form PC Component | Admin IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        .form-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .form-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .form-section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .form-section-title {
+            font-weight: 700;
+            color: #1a3c5e;
+            font-size: 1rem;
+        }
+        .form-section-desc {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.15rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.375rem;
+        }
+        .form-label .req {
+            color: #dc2626;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus {
+            border-color: #1a3c5e;
+            box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.1);
+        }
+        .form-hint {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.375rem;
+        }
+        .dynamic-spec {
+            display: none;
+        }
+        .dynamic-spec.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Form PC Component</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+            <a href="programs.html" class="nav-link">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Program Kursus
+            </a>
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="pc-components.html" class="nav-link active">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                PC Components
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <div class="page-header">
+            <h2 id="formTitle">Tambah Komponen</h2>
+            <a href="pc-components.html" class="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Kembali
+            </a>
+        </div>
+
+        <form id="componentForm" class="max-w-3xl">
+            <input type="hidden" id="componentId" />
+
+            <!-- ============================================ -->
+            <!-- SECTION 1: INFO DASAR -->
+            <!-- ============================================ -->
+            <div class="form-section">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(26, 60, 94, 0.1); color: #1a3c5e;">
+                        <i data-lucide="info" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Info Dasar</div>
+                        <div class="form-section-desc">Informasi umum komponen</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Kategori <span class="req">*</span></label>
+                        <select id="kategori" required 
+                                class="form-input">
+                            <option value="">Pilih kategori</option>
+                            <option value="cpu">CPU</option>
+                            <option value="mainboard">Mainboard</option>
+                            <option value="ram">RAM</option>
+                            <option value="storage">Storage</option>
+                            <option value="vga">VGA</option>
+                            <option value="psu">PSU</option>
+                            <option value="casing">Casing</option>
+                        </select>
+                        <p class="form-hint">Menentukan field spesifikasi di bawah</p>
+                    </div>
+
+                    <div>
+                        <label class="form-label">ID Dokumen <span class="req">*</span></label>
+                        <input type="text" id="docId" required 
+                               class="form-input" 
+                               placeholder="cpu-i5-13400" />
+                        <p class="form-hint">Unik, format: <code>kategori-nama</code>. Tidak bisa diubah saat edit.</p>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label">Nama Komponen <span class="req">*</span></label>
+                    <input type="text" id="nama" required 
+                           class="form-input" 
+                           placeholder="Intel Core i5-13400" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div>
+                        <label class="form-label">Brand</label>
+                        <input type="text" id="brand" 
+                               class="form-input" 
+                               placeholder="Intel" />
+                    </div>
+                    <div>
+                        <label class="form-label">Urutan</label>
+                        <input type="number" id="order" value="1" min="1" 
+                               class="form-input" />
+                    </div>
+                    <div class="flex items-end">
+                        <label class="flex items-center gap-2 cursor-pointer pb-2">
+                            <input type="checkbox" id="aktif" checked 
+                                   class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                            <span class="text-sm font-medium text-gray-700">Aktif</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SECTION 2: SPESIFIKASI DINAMIS -->
+            <!-- ============================================ -->
+            <div class="form-section" id="specSection" style="display: none;">
+                <div class="form-section-header">
+                    <div class="form-section-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+                        <i data-lucide="settings-2" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="form-section-title">Spesifikasi</div>
+                        <div class="form-section-desc" id="specDesc">Field menyesuaikan kategori</div>
+                    </div>
+                </div>
+
+                <!-- CPU -->
+                <div class="dynamic-spec" data-kategori="cpu">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Socket <span class="req">*</span></label>
+                            <input type="text" data-spec="socket" class="form-input" placeholder="LGA1700" />
+                        </div>
+                        <div>
+                            <label class="form-label">Generasi</label>
+                            <input type="text" data-spec="generasi" class="form-input" placeholder="13th Gen" />
+                        </div>
+                        <div>
+                            <label class="form-label">Core <span class="req">*</span></label>
+                            <input type="number" data-spec="core" class="form-input" placeholder="10" />
+                        </div>
+                        <div>
+                            <label class="form-label">Thread <span class="req">*</span></label>
+                            <input type="number" data-spec="thread" class="form-input" placeholder="16" />
+                        </div>
+                        <div>
+                            <label class="form-label">Base Clock</label>
+                            <input type="text" data-spec="baseClock" class="form-input" placeholder="2.5 GHz" />
+                        </div>
+                        <div>
+                            <label class="form-label">Boost Clock</label>
+                            <input type="text" data-spec="boostClock" class="form-input" placeholder="4.6 GHz" />
+                        </div>
+                        <div>
+                            <label class="form-label">TDP (Watt) <span class="req">*</span></label>
+                            <input type="number" data-spec="tdp" class="form-input" placeholder="65" />
+                        </div>
+                        <div class="flex items-end">
+                            <label class="flex items-center gap-2 cursor-pointer pb-2">
+                                <input type="checkbox" data-spec="igpu" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm font-medium text-gray-700">Ada iGPU</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="form-label">RAM Support <span class="req">*</span></label>
+                        <div class="flex gap-4 mt-2">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="ramSupport" value="DDR3" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">DDR3</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="ramSupport" value="DDR4" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">DDR4</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="ramSupport" value="DDR5" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">DDR5</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAINBOARD -->
+                <div class="dynamic-spec" data-kategori="mainboard">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Socket <span class="req">*</span></label>
+                            <input type="text" data-spec="socket" class="form-input" placeholder="LGA1700" />
+                        </div>
+                        <div>
+                            <label class="form-label">Chipset <span class="req">*</span></label>
+                            <input type="text" data-spec="chipset" class="form-input" placeholder="B660" />
+                        </div>
+                        <div>
+                            <label class="form-label">RAM Type <span class="req">*</span></label>
+                            <select data-spec="ramType" class="form-input">
+                                <option value="">Pilih</option>
+                                <option value="DDR3">DDR3</option>
+                                <option value="DDR4">DDR4</option>
+                                <option value="DDR5">DDR5</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">RAM Slot</label>
+                            <input type="number" data-spec="ramSlot" class="form-input" placeholder="4" />
+                        </div>
+                        <div>
+                            <label class="form-label">Max RAM (GB)</label>
+                            <input type="number" data-spec="maxRam" class="form-input" placeholder="128" />
+                        </div>
+                        <div>
+                            <label class="form-label">Form Factor <span class="req">*</span></label>
+                            <select data-spec="formFactor" class="form-input">
+                                <option value="">Pilih</option>
+                                <option value="ITX">ITX</option>
+                                <option value="mATX">mATX</option>
+                                <option value="ATX">ATX</option>
+                                <option value="E-ATX">E-ATX</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="form-label">Storage Support <span class="req">*</span></label>
+                        <div class="flex flex-wrap gap-4 mt-2">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="storageSupport" value="SATA" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">SATA</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="storageSupport" value="M.2 NVMe" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">M.2 NVMe</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="storageSupport" value="M.2 SATA" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">M.2 SATA</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RAM -->
+                <div class="dynamic-spec" data-kategori="ram">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Type <span class="req">*</span></label>
+                            <select data-spec="type" class="form-input">
+                                <option value="">Pilih</option>
+                                <option value="DDR3">DDR3</option>
+                                <option value="DDR4">DDR4</option>
+                                <option value="DDR5">DDR5</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Capacity (GB) <span class="req">*</span></label>
+                            <input type="number" data-spec="capacity" class="form-input" placeholder="16" />
+                        </div>
+                        <div>
+                            <label class="form-label">Speed</label>
+                            <input type="text" data-spec="speed" class="form-input" placeholder="3200 MHz" />
+                        </div>
+                        <div>
+                            <label class="form-label">Kit</label>
+                            <input type="text" data-spec="kit" class="form-input" placeholder="2x8GB" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STORAGE -->
+                <div class="dynamic-spec" data-kategori="storage">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Type <span class="req">*</span></label>
+                            <select data-spec="type" class="form-input">
+                                <option value="">Pilih</option>
+                                <option value="SSD">SSD</option>
+                                <option value="HDD">HDD</option>
+                                <option value="SSHD">SSHD</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Interface <span class="req">*</span></label>
+                            <select data-spec="interface" class="form-input">
+                                <option value="">Pilih</option>
+                                <option value="SATA">SATA</option>
+                                <option value="M.2 NVMe">M.2 NVMe</option>
+                                <option value="M.2 SATA">M.2 SATA</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Capacity (GB) <span class="req">*</span></label>
+                            <input type="number" data-spec="capacity" class="form-input" placeholder="500" />
+                        </div>
+                        <div>
+                            <label class="form-label">Speed</label>
+                            <input type="text" data-spec="speed" class="form-input" placeholder="3500 MB/s atau 7200 RPM" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VGA -->
+                <div class="dynamic-spec" data-kategori="vga">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Chipset</label>
+                            <input type="text" data-spec="chipset" class="form-input" placeholder="RTX 3060" />
+                        </div>
+                        <div>
+                            <label class="form-label">VRAM</label>
+                            <input type="text" data-spec="vram" class="form-input" placeholder="12GB GDDR6" />
+                        </div>
+                        <div>
+                            <label class="form-label">TDP (Watt) <span class="req">*</span></label>
+                            <input type="number" data-spec="tdp" class="form-input" placeholder="170" />
+                        </div>
+                        <div>
+                            <label class="form-label">Length (mm)</label>
+                            <input type="number" data-spec="length" class="form-input" placeholder="242" />
+                        </div>
+                        <div>
+                            <label class="form-label">Power Connector</label>
+                            <input type="text" data-spec="powerConnector" class="form-input" placeholder="1x 8-pin" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PSU -->
+                <div class="dynamic-spec" data-kategori="psu">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Wattage <span class="req">*</span></label>
+                            <input type="number" data-spec="wattage" class="form-input" placeholder="550" />
+                        </div>
+                        <div>
+                            <label class="form-label">Efficiency</label>
+                            <input type="text" data-spec="efficiency" class="form-input" placeholder="80+ Bronze" />
+                        </div>
+                        <div>
+                            <label class="form-label">Modular</label>
+                            <select data-spec="modular" class="form-input">
+                                <option value="">Pilih</option>
+                                <option value="Non-Modular">Non-Modular</option>
+                                <option value="Semi-Modular">Semi-Modular</option>
+                                <option value="Full Modular">Full Modular</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CASING -->
+                <div class="dynamic-spec" data-kategori="casing">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Max GPU Length (mm)</label>
+                            <input type="number" data-spec="maxGpuLength" class="form-input" placeholder="381" />
+                        </div>
+                        <div>
+                            <label class="form-label">Max Cooler Height (mm)</label>
+                            <input type="number" data-spec="maxCoolerHeight" class="form-input" placeholder="165" />
+                        </div>
+                        <div>
+                            <label class="form-label">PSU Support</label>
+                            <input type="text" data-spec="psuSupport" class="form-input" placeholder="ATX" />
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="form-label">Form Factor Support <span class="req">*</span></label>
+                        <div class="flex flex-wrap gap-4 mt-2">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="formFactor" value="ITX" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">ITX</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="formFactor" value="mATX" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">mATX</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="formFactor" value="ATX" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">ATX</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" data-spec-multi="formFactor" value="E-ATX" 
+                                       class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span class="text-sm">E-ATX</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ============================================ -->
+            <!-- SUBMIT -->
+            <!-- ============================================ -->
+            <div class="admin-card" style="position: sticky; bottom: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <div id="formMessage" class="text-sm flex-1"></div>
+                    <div class="flex gap-3">
+                        <a href="pc-components.html" class="btn-secondary">Batal</a>
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                            Simpan Komponen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <script type="module">
+        import { 
+            auth, onAuthStateChanged, signOut, 
+            db, doc, getDoc, setDoc, updateDoc 
+        } from '../assets/js/firebase.js';
+
+        // ============================================================
+        // SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // VARIABEL
+        // ============================================================
+        let editMode = false;
+        let currentId = null;
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+            else {
+                checkEditMode();
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // KATEGORI CHANGE — Show/hide dynamic specs
+        // ============================================================
+        document.getElementById('kategori').addEventListener('change', function() {
+            const kategori = this.value;
+            const specSection = document.getElementById('specSection');
+            const specDesc = document.getElementById('specDesc');
+            
+            // Hide all
+            document.querySelectorAll('.dynamic-spec').forEach(el => el.classList.remove('active'));
+            
+            if (kategori) {
+                specSection.style.display = 'block';
+                specDesc.textContent = `Field khusus untuk ${kategori}`;
+                
+                const target = document.querySelector(`.dynamic-spec[data-kategori="${kategori}"]`);
+                if (target) target.classList.add('active');
+            } else {
+                specSection.style.display = 'none';
+            }
+            
+            lucide.createIcons();
+        });
+
+        // ============================================================
+        // CHECK EDIT MODE
+        // ============================================================
+        async function checkEditMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            
+            if (id) {
+                editMode = true;
+                currentId = id;
+                document.getElementById('formTitle').textContent = 'Edit Komponen';
+                document.getElementById('docId').value = id;
+                document.getElementById('docId').disabled = true;
+                document.getElementById('docId').style.background = '#f3f4f6';
+                await loadComponent(id);
+            }
+        }
+
+        // ============================================================
+        // LOAD COMPONENT
+        // ============================================================
+        async function loadComponent(id) {
+            try {
+                const docSnap = await getDoc(doc(db, 'pc_components', id));
+                if (!docSnap.exists()) {
+                    alert('Komponen tidak ditemukan');
+                    window.location.href = 'pc-components.html';
+                    return;
+                }
+                
+                const data = docSnap.data();
+                
+                // Set kategori dulu (trigger show dynamic field)
+                document.getElementById('kategori').value = data.kategori || '';
+                document.getElementById('kategori').dispatchEvent(new Event('change'));
+                
+                // Set field dasar
+                document.getElementById('nama').value = data.nama || '';
+                document.getElementById('brand').value = data.brand || '';
+                document.getElementById('order').value = data.order || 1;
+                document.getElementById('aktif').checked = data.aktif !== false;
+                
+                // Set spesifikasi
+                const s = data.spesifikasi || {};
+                Object.entries(s).forEach(([key, value]) => {
+                    // Single field
+                    const input = document.querySelector(`[data-spec="${key}"]`);
+                    if (input) {
+                        if (input.type === 'checkbox') {
+                            input.checked = !!value;
+                        } else {
+                            input.value = value;
+                        }
+                    }
+                    
+                    // Multi checkbox (array)
+                    if (Array.isArray(value)) {
+                        const checkboxes = document.querySelectorAll(`[data-spec-multi="${key}"]`);
+                        checkboxes.forEach(cb => {
+                            cb.checked = value.includes(cb.value);
+                        });
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error loading:', error);
+                alert('Gagal memuat komponen');
+            }
+        }
+
+        // ============================================================
+        // SUBMIT
+        // ============================================================
+        document.getElementById('componentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const messageEl = document.getElementById('formMessage');
+            
+            const kategori = document.getElementById('kategori').value;
+            const docId = document.getElementById('docId').value.trim();
+            const nama = document.getElementById('nama').value.trim();
+            
+            // Validasi
+            if (!kategori || !docId || !nama) {
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 text-sm">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Lengkapi Kategori, ID, dan Nama!
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            // Kumpulkan spesifikasi
+            const spesifikasi = {};
+            
+            // Single fields
+            document.querySelectorAll('.dynamic-spec.active [data-spec]').forEach(input => {
+                const key = input.dataset.spec;
+                if (!key) return;
+                
+                if (input.type === 'checkbox') {
+                    spesifikasi[key] = input.checked;
+                } else if (input.type === 'number') {
+                    const val = input.value.trim();
+                    if (val) spesifikasi[key] = parseFloat(val);
+                } else {
+                    const val = input.value.trim();
+                    if (val) spesifikasi[key] = val;
+                }
+            });
+            
+            // Multi checkbox fields
+            document.querySelectorAll('.dynamic-spec.active [data-spec-multi]').forEach(input => {
+                const key = input.dataset.specMulti;
+                if (!key) return;
+                
+                if (!spesifikasi[key]) spesifikasi[key] = [];
+                if (input.checked) {
+                    spesifikasi[key].push(input.value);
+                }
+            });
+            
+            const data = {
+                kategori,
+                nama,
+                brand: document.getElementById('brand').value.trim(),
+                order: parseInt(document.getElementById('order').value) || 1,
+                aktif: document.getElementById('aktif').checked,
+                spesifikasi,
+                updatedAt: new Date().toISOString()
+            };
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
+            lucide.createIcons();
+            messageEl.innerHTML = '';
+            
+            try {
+                if (editMode) {
+                    await updateDoc(doc(db, 'pc_components', currentId), data);
+                    messageEl.innerHTML = `
+                        <div class="flex items-center gap-2 text-green-600 font-medium text-sm">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            Berhasil diupdate!
+                        </div>
+                    `;
+                } else {
+                    data.createdAt = new Date().toISOString();
+                    await setDoc(doc(db, 'pc_components', docId), data);
+                    messageEl.innerHTML = `
+                        <div class="flex items-center gap-2 text-green-600 font-medium text-sm">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            Berhasil ditambahkan!
+                        </div>
+                    `;
+                }
+                
+                lucide.createIcons();
+                setTimeout(() => {
+                    window.location.href = 'pc-components.html';
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error saving:', error);
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600 font-medium text-sm">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Gagal: ${error.message}
+                    </div>
+                `;
+                lucide.createIcons();
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Simpan Komponen`;
+                lucide.createIcons();
+            }
+        });
+    </script>
+
+</body>
+</html>

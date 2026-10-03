@@ -6,7 +6,8 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebas
 import { 
     getFirestore, 
     collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, 
-    query, where, orderBy, setDoc, limit 
+    query, where, orderBy, setDoc, limit,
+    writeBatch
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 import { 
     getAuth, 
@@ -36,5 +37,6 @@ export {
     app, db, auth,
     collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, setDoc,
     query, where, orderBy, limit,
+    writeBatch,
     signInWithEmailAndPassword, onAuthStateChanged, signOut
 };
