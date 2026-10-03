@@ -153,15 +153,15 @@
         }
         
         .step-nav-item.done {
-            background: rgba(5, 150, 105, 0.1);
-            color: #059669;
-            border-color: rgba(5, 150, 105, 0.3);
-        }
-        
-        .step-nav-item.done .step-nav-icon {
-            background: #059669;
-            color: white;
-        }
+    background: transparent;
+    box-shadow: none;
+}
+
+.step-nav-item.done .step-nav-icon {
+    background: #059669;
+    color: white;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+}
         
         .step-nav-icon {
             display: flex;
@@ -241,14 +241,14 @@
         }
         
         .step-progress-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background: linear-gradient(90deg, #1a3c5e, #2a5a7a);
-            border-radius: 999px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #059669, #10b981);
+    border-radius: 999px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
         
         .step-progress-info {
             display: flex;
@@ -744,6 +744,94 @@
             gap: 0.375rem;
             flex-shrink: 0;
         }
+
+        /* ============================================================
+   CPU USE CASE GUIDE
+   ============================================================ */
+.use-case-guide {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1.5px solid rgba(26, 60, 94, 0.1);
+    border-radius: 14px;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.use-case-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 0.5rem;
+    border-radius: 12px;
+    background: white;
+    border: 1.5px solid rgba(26, 60, 94, 0.1);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+    min-height: 95px;
+    position: relative;
+    overflow: hidden;
+}
+
+.use-case-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--uc-color);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.use-case-card:hover {
+    border-color: var(--uc-color);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(26, 60, 94, 0.12);
+    background: rgba(26, 60, 94, 0.03);
+}
+
+.use-case-card:hover::before {
+    opacity: 1;
+}
+
+.use-case-card:active {
+    transform: translateY(-1px);
+}
+
+.use-case-card i {
+    transition: transform 0.25s ease;
+}
+
+.use-case-card:hover i {
+    transform: scale(1.15);
+}
+
+@media (max-width: 640px) {
+    .use-case-guide {
+        padding: 0.75rem;
+    }
+    
+    .use-case-card {
+        min-height: 85px;
+        padding: 0.625rem 0.375rem;
+    }
+    
+    .use-case-card .font-bold {
+        font-size: 11px;
+    }
+    
+    .use-case-card .text-\[10px\] {
+        font-size: 9px;
+        line-height: 1.2;
+    }
+    
+    .use-case-card i {
+        width: 1rem;
+        height: 1rem;
+    }
+}
     </style>
 </head>
 <body class="font-sans page-bg">

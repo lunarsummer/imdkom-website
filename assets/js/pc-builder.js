@@ -1,5 +1,5 @@
 // ============================================================
-// PC BUILDER — Lazy Fetch + Pagination + Sticky Nav + Search
+// PC BUILDER — Lazy Fetch + Pagination + Sticky Nav + Search + Use Case Guide
 // IMDKOM Yogyakarta
 // ============================================================
 
@@ -43,6 +43,49 @@ const TIER_LABELS = {
     5: 'Mid-High', 6: 'Performance', 7: 'Enthusiast'
 };
 
+const CPU_USE_CASES = [
+    {
+        id: 'office',
+        icon: 'file-text',
+        label: 'Office & Web',
+        desc: 'Surat, Excel, browsing, video call',
+        tiers: [1, 2, 3],
+        color: '#059669'
+    },
+    {
+        id: 'study',
+        icon: 'graduation-cap',
+        label: 'Belajar & Multimedia',
+        desc: 'Zoom, coding ringan, nonton',
+        tiers: [3, 4],
+        color: '#0891b2'
+    },
+    {
+        id: 'gaming',
+        icon: 'gamepad-2',
+        label: 'Gaming',
+        desc: 'Game e-sports hingga AAA',
+        tiers: [4, 5, 6],
+        color: '#7c3aed'
+    },
+    {
+        id: 'editing',
+        icon: 'film',
+        label: 'Editing & Desain',
+        desc: 'Premiere, Photoshop, 3D',
+        tiers: [5, 6, 7],
+        color: '#c2410c'
+    },
+    {
+        id: 'custom',
+        icon: 'settings-2',
+        label: 'Custom',
+        desc: 'Saya tahu spesifikasi',
+        tiers: 'all',
+        color: '#6b7280'
+    }
+];
+
 // ============================================================
 // STATE
 // ============================================================
@@ -67,6 +110,7 @@ let visibleCount = {
 };
 
 let cpuBrandFilter = 'all';
+let cpuUseCase = null; // 'office' | 'study' | 'gaming' | 'editing' | 'custom' | null
 let tierFilters = { cpu: 'all', vga: 'all' };
 let psuWattFilter = 'all';
 let casingFFFilter = 'all';
@@ -221,15 +265,13 @@ function renderStickyNav() {
         else if (!unlocked) cls += ' locked';
 
         html += `
-            <div class="${cls}" data-cat="${cat.id}" title="${cat.label}">
-                <span class="step-nav-icon">
-                    ${isDone
-                        ? '<i data-lucide="check" class="w-2.5 h-2.5"></i>'
-                        : `<i data-lucide="${cat.icon}" class="w-3 h-3"></i>`}
-                </span>
-                <span class="step-label">${cat.short}</span>
-            </div>
-        `;
+    <div class="${cls}" data-cat="${cat.id}" title="${cat.label}">
+        <span class="step-nav-icon">
+            <i data-lucide="${cat.icon}" class="w-3 h-3"></i>
+        </span>
+        <span class="step-label">${cat.short}</span>
+    </div>
+`;
     });
     container.innerHTML = html;
 
@@ -326,9 +368,11 @@ function renderSteps() {
                         ${renderComponentInfo(selected)}
                     </div>
                 ` : `
+                    ${cat.id === 'cpu' ? renderCpuUseCaseGuide() : ''}
                     ${renderSearchForm(cat.id)}
-                    ${cat.id === 'cpu' ? renderCpuTabs() : ''}
-                    ${renderTierFilter(cat.id)}
+                    ${cat.id === 'cpu' && cpuUseCase ? renderCpuTabs() : ''}
+                    ${cat.id === 'cpu' && cpuUseCase ? renderTierFilter(cat.id) : ''}
+                    ${cat.id !== 'cpu' ? renderTierFilter(cat.id) : ''}
                     ${cat.id === 'psu' ? renderPsuFilter() : ''}
                     ${cat.id === 'casing' ? renderCasingFilter() : ''}
                     ${renderWarningBox(cat.id)}
@@ -341,6 +385,80 @@ function renderSteps() {
     container.innerHTML = html;
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
+
+// ============================================================
+// CPU USE CASE GUIDE
+// ============================================================
+function renderCpuUseCaseGuide() {
+    // Kalau sudah pilih use case, tampilkan badge + tombol ganti
+    if (cpuUseCase) {
+        const uc = CPU_USE_CASES.find(u => u.id === cpuUseCase);
+        if (!uc) return '';
+        const tierText = uc.tiers === 'all' ? 'semua tier' : `Tier ${uc.tiers.join(', ')}`;
+        return `
+            <div class="warning-box mb-3" style="background: ${uc.color}12; border-color: ${uc.color}40; color: ${uc.color};">
+                <i data-lucide="${uc.icon}" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                <div class="flex-1">
+                    <span class="text-xs">Menampilkan CPU untuk <strong>${uc.label}</strong> (${tierText})</span>
+                </div>
+                <button onclick="resetCpuUseCase()" class="text-xs underline font-semibold flex-shrink-0">Ganti</button>
+            </div>
+        `;
+    }
+
+    // Kalau belum pilih, tampilkan kartu panduan
+    return `
+        <div class="use-case-guide mb-4">
+            <div class="flex items-center gap-2 mb-3">
+                <i data-lucide="help-circle" class="w-4 h-4 text-brand"></i>
+                <span class="text-sm font-bold text-brand">Komputer ini akan digunakan untuk apa?</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                ${CPU_USE_CASES.map(uc => `
+                    <button onclick="selectCpuUseCase('${uc.id}')"
+                            class="use-case-card"
+                            style="--uc-color: ${uc.color};">
+                        <i data-lucide="${uc.icon}" class="w-5 h-5" style="color: ${uc.color};"></i>
+                        <div class="font-bold text-xs text-gray-800 mt-1">${uc.label}</div>
+                        <div class="text-[10px] text-gray-500 mt-0.5 leading-tight">${uc.desc}</div>
+                    </button>
+                `).join('')}
+            </div>
+            <div class="text-center mt-3">
+                <button onclick="skipCpuUseCase()" class="text-xs text-brand hover:underline font-medium inline-flex items-center gap-1">
+                    <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                    Lihat semua CPU tanpa panduan
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+window.selectCpuUseCase = function(useCaseId) {
+    cpuUseCase = useCaseId;
+    tierFilters.cpu = 'all';
+    visibleCount.cpu = VISIBLE_DEFAULT;
+    renderSteps();
+    renderStickyNav();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+};
+
+window.resetCpuUseCase = function() {
+    cpuUseCase = null;
+    tierFilters.cpu = 'all';
+    visibleCount.cpu = VISIBLE_DEFAULT;
+    renderSteps();
+    renderStickyNav();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+};
+
+window.skipCpuUseCase = function() {
+    cpuUseCase = 'custom';
+    visibleCount.cpu = VISIBLE_DEFAULT;
+    renderSteps();
+    renderStickyNav();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+};
 
 // ============================================================
 // SEARCH FORM PER KATEGORI
@@ -469,7 +587,6 @@ window.onSearchInput = function(catId, value) {
 };
 
 function rerenderSearchResults(catId) {
-    // Update info hasil
     const wrapper = document.getElementById(`search-wrapper-${catId}`);
     if (wrapper) {
         const oldInfo = wrapper.querySelector('.search-result-info');
@@ -485,7 +602,6 @@ function rerenderSearchResults(catId) {
         }
     }
 
-    // Update grid
     const stepSection = document.getElementById(`step-${catId}`);
     if (!stepSection) return;
 
@@ -562,6 +678,11 @@ function renderCategoryGrid(catId, status, tierFilterActive) {
                 </button>
             </div>
         `;
+    }
+
+    // Kalau CPU belum pilih use case, jangan tampilkan grid
+    if (catId === 'cpu' && !cpuUseCase) {
+        return '';
     }
 
     const allFiltered = getFilteredComponents(catId);
@@ -1050,6 +1171,14 @@ function getFilteredComponents(categoryId) {
     switch (categoryId) {
         case 'cpu':
             if (cpuBrandFilter !== 'all') list = list.filter(c => c.brand === cpuBrandFilter);
+
+            // Filter by use case
+            if (cpuUseCase && cpuUseCase !== 'custom') {
+                const uc = CPU_USE_CASES.find(u => u.id === cpuUseCase);
+                if (uc && uc.tiers !== 'all') {
+                    list = list.filter(c => uc.tiers.includes(c.spesifikasi?.tier));
+                }
+            }
             break;
         case 'mainboard':
             if (buildState.cpu) list = list.filter(c => c.spesifikasi.socket === buildState.cpu.spesifikasi.socket);
@@ -1201,7 +1330,6 @@ window.selectComponent = async function(categoryId, componentId) {
     resetDependents(categoryId);
     saveBuildToStorage();
 
-    // Reset search state untuk kategori ini
     searchQueries[categoryId] = '';
     searchOpen[categoryId] = false;
     visibleCount[categoryId] = VISIBLE_DEFAULT;
@@ -1263,6 +1391,13 @@ window.clearStep = function(categoryId) {
     searchQueries[categoryId] = '';
     searchOpen[categoryId] = false;
     visibleCount[categoryId] = VISIBLE_DEFAULT;
+
+    // Reset use case kalau CPU di-clear
+    if (categoryId === 'cpu') {
+        cpuUseCase = null;
+        cpuBrandFilter = 'all';
+        tierFilters.cpu = 'all';
+    }
 
     saveBuildToStorage();
     renderProgress();
@@ -1620,6 +1755,7 @@ window.resetBuild = function() {
     if (!confirm('Yakin ingin mereset semua komponen?')) return;
     buildState = { cpu: null, mainboard: null, ram: null, storage: null, vga: null, psu: null, casing: null };
     cpuBrandFilter = 'all';
+    cpuUseCase = null;
     tierFilters = { cpu: 'all', vga: 'all' };
     psuWattFilter = 'all';
     casingFFFilter = 'all';
