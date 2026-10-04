@@ -240,6 +240,83 @@
             margin-top: 0.25rem;
         }
         
+/* ============================================================
+   BOTTLENECK STATE DI STICKY NAV — 2 level (warning + danger)
+   ============================================================ */
+
+/* Level DANGER (merah, pulse kuat) */
+.step-nav-item.bottleneck-danger .step-nav-icon {
+    background: #dc2626 !important;
+    color: white !important;
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+    animation: nav-danger-pulse 1.4s ease-in-out infinite;
+}
+
+.step-nav-item.bottleneck-danger {
+    background: rgba(220, 38, 38, 0.1) !important;
+    border-color: rgba(220, 38, 38, 0.4) !important;
+    color: #dc2626 !important;
+}
+
+@keyframes nav-danger-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+        transform: scale(1.08);
+    }
+}
+
+/* Level WARNING (kuning/orange, pulse halus) */
+.step-nav-item.bottleneck-warning .step-nav-icon {
+    background: #f59e0b !important;
+    color: white !important;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+    animation: nav-warning-pulse 2s ease-in-out infinite;
+}
+
+.step-nav-item.bottleneck-warning {
+    background: rgba(245, 158, 11, 0.1) !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+    color: #d97706 !important;
+}
+
+@keyframes nav-warning-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+        transform: scale(1.05);
+    }
+}
+
+/* Mobile override */
+@media (max-width: 767px) {
+    .step-nav-item.bottleneck-danger .step-nav-icon {
+        background: #dc2626 !important;
+    }
+    .step-nav-item.bottleneck-warning .step-nav-icon {
+        background: #f59e0b !important;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .step-nav-item.bottleneck-danger .step-nav-icon,
+    .step-nav-item.bottleneck-warning .step-nav-icon {
+        animation: none !important;
+    }
+    .step-nav-item.bottleneck-danger .step-nav-icon {
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3);
+    }
+    .step-nav-item.bottleneck-warning .step-nav-icon {
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3);
+    }
+}
         .step-progress-fill {
     position: absolute;
     top: 0;
@@ -832,6 +909,35 @@
         height: 1rem;
     }
 }
+
+/* ============================================================
+   USE CASE BADGE (untuk step selain CPU)
+   ============================================================ */
+.use-case-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: 10px;
+    font-weight: 500;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* ============================================================
+   VGA DISABLED STATE (untuk Office)
+   ============================================================ */
+.vga-disabled-box {
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1.5px dashed rgba(26, 60, 94, 0.15);
+    border-radius: 14px;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.vga-disabled-box button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.1);
+}
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -883,7 +989,7 @@
                     PC BUILDER INTERAKTIF
                 </div>
                 <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-brand leading-tight">
-                    Rakit <span class="text-brand-dark">Komputer</span> Impian Anda
+                    Computer <span class="text-brand-dark">Spesification</span> Maker
                 </h1>
                 <p class="text-xs sm:text-sm text-gray-500 mt-2 max-w-2xl mx-auto">
                     Pilih komponen satu per satu — sistem otomatis menyaring yang kompatibel.

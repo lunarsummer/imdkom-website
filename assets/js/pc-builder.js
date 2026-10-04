@@ -1,5 +1,5 @@
 // ============================================================
-// PC BUILDER — Lazy Fetch + Pagination + Sticky Nav + Search + Use Case Guide
+// PC BUILDER — Lazy Fetch + Pagination + Sticky Nav + Search + Use Case Filter
 // IMDKOM Yogyakarta
 // ============================================================
 
@@ -43,6 +43,9 @@ const TIER_LABELS = {
     5: 'Mid-High', 6: 'Performance', 7: 'Enthusiast'
 };
 
+// ============================================================
+// USE CASE GUIDE (untuk CPU)
+// ============================================================
 const CPU_USE_CASES = [
     {
         id: 'office',
@@ -57,7 +60,7 @@ const CPU_USE_CASES = [
         icon: 'graduation-cap',
         label: 'Belajar & Multimedia',
         desc: 'Zoom, coding ringan, nonton',
-        tiers: [3, 4],
+        tiers: [2, 3, 4],
         color: '#0891b2'
     },
     {
@@ -87,6 +90,97 @@ const CPU_USE_CASES = [
 ];
 
 // ============================================================
+// USE CASE FILTER CONFIG (untuk semua kategori)
+// ============================================================
+const USE_CASE_FILTERS = {
+    office: {
+        label: 'Office & Web',
+        icon: 'file-text',
+        color: '#059669',
+        cpu:       { tiers: [1, 2, 3], requireIgpu: true },
+        mainboard: { chipsetTiers: [1, 2, 3] },
+        ram:       { maxCapacity: 16 },
+        storage:   { allowedTypes: ['SSD', 'HDD'] },
+        vga:       { skip: true },
+        psu:       { maxWatt: 500 },
+        casing:    { formFactors: ['mATX', 'ITX'] }
+    },
+    study: {
+        label: 'Belajar & Multimedia',
+        icon: 'graduation-cap',
+        color: '#0891b2',
+        cpu:       { tiers: [2, 3, 4] },
+        mainboard: { chipsetTiers: [2, 3, 4] },
+        ram:       { maxCapacity: 16 },
+        storage:   { allowedTypes: ['SSD', 'HDD', 'NVMe'] },
+        vga:       { optional: true },
+        psu:       { maxWatt: 600 },
+        casing:    { formFactors: ['mATX', 'ATX'] }
+    },
+    gaming: {
+        label: 'Gaming',
+        icon: 'gamepad-2',
+        color: '#7c3aed',
+        cpu:       { tiers: [4, 5, 6] },
+        mainboard: { chipsetTiers: [4, 5, 6] },
+        ram:       { minCapacity: 16, maxCapacity: 32 },
+        storage:   { allowedTypes: ['SSD', 'NVMe'] },
+        vga:       { tiers: [4, 5, 6] },
+        psu:       { minWatt: 550, maxWatt: 750 },
+        casing:    { formFactors: ['ATX', 'mATX'] }
+    },
+    editing: {
+        label: 'Editing & Desain',
+        icon: 'film',
+        color: '#c2410c',
+        cpu:       { tiers: [5, 6, 7] },
+        mainboard: { chipsetTiers: [5, 6, 7] },
+        ram:       { minCapacity: 32 },
+        storage:   { allowedTypes: ['NVMe'] },
+        vga:       { tiers: [5, 6, 7] },
+        psu:       { minWatt: 650 },
+        casing:    { formFactors: ['ATX', 'E-ATX'] }
+    },
+    custom: {
+        label: 'Custom',
+        icon: 'settings-2',
+        color: '#6b7280',
+        cpu:       { tiers: 'all' },
+        mainboard: { chipsetTiers: 'all' },
+        ram:       {},
+        storage:   {},
+        vga:       {},
+        psu:       {},
+        casing:    {}
+    }
+};
+
+// ============================================================
+// CHIPSET → TIER MAPPING (untuk mainboard)
+// ============================================================
+const CHIPSET_TIER_MAP = {
+    // Intel LGA1155 (jadul)
+    'H61': 1, 'B75': 2, 'H67': 3, 'H77': 3, 'P67': 4, 'Z68': 4, 'Z75': 4, 'Z77': 5,
+    // Intel LGA1150
+    'H81': 1, 'B85': 2, 'H87': 3, 'H97': 3, 'Z87': 4, 'Z97': 5,
+    // Intel LGA1151
+    'H110': 1, 'B150': 2, 'B250': 3, 'H170': 3, 'H270': 3, 'Z170': 5, 'Z270': 5,
+    'H310': 1, 'B360': 3, 'B365': 3, 'H370': 3, 'Z370': 5, 'Z390': 5,
+    // Intel LGA1200
+    'H410': 1, 'H510': 1, 'B460': 3, 'B560': 4, 'H470': 4, 'H570': 4, 'Z490': 6, 'Z590': 6,
+    // Intel LGA1700
+    'H610': 2, 'B660': 4, 'B760': 4, 'H670': 5, 'H770': 5, 'Z690': 6, 'Z790': 7,
+    // Intel LGA1851
+    'H810': 2, 'B860': 4, 'Z890': 7,
+    // AMD AM4
+    'A320': 1, 'A520': 1, 'B350': 2, 'B450': 3, 'B550': 4, 'X370': 4, 'X470': 5, 'X570': 6,
+    // AMD AM5
+    'A620': 2, 'B650': 4, 'B650E': 5, 'X670': 6, 'X670E': 7,
+    // AMD FM2/AM3
+    'A68H': 1, 'A78': 2, 'A88X': 3
+};
+
+// ============================================================
 // STATE
 // ============================================================
 let buildState = {
@@ -110,7 +204,8 @@ let visibleCount = {
 };
 
 let cpuBrandFilter = 'all';
-let cpuUseCase = null; // 'office' | 'study' | 'gaming' | 'editing' | 'custom' | null
+let cpuUseCase = null;          // 'office' | 'study' | 'gaming' | 'editing' | 'custom' | null
+let vgaEnabled = false;         // khusus office — user bisa aktifkan VGA manual
 let tierFilters = { cpu: 'all', vga: 'all' };
 let psuWattFilter = 'all';
 let casingFFFilter = 'all';
@@ -127,6 +222,131 @@ let searchOpen = {
 };
 
 let searchDebounceTimers = {};
+
+// ============================================================
+// TIER MAPPING HELPERS
+// ============================================================
+function getMainboardTier(mb) {
+    const chipset = (mb.spesifikasi?.chipset || '').toUpperCase().trim();
+    if (CHIPSET_TIER_MAP[chipset]) return CHIPSET_TIER_MAP[chipset];
+    for (const [key, tier] of Object.entries(CHIPSET_TIER_MAP)) {
+        if (chipset.startsWith(key)) return tier;
+    }
+    const socket = (mb.spesifikasi?.socket || '').toUpperCase();
+    if (socket.includes('1155') || socket.includes('1150') || socket.includes('FM2') || socket.includes('AM3')) return 1;
+    if (socket.includes('1151')) return 2;
+    const ff = (mb.spesifikasi?.formFactor || '').toLowerCase();
+    if (ff.includes('eatx')) return 7;
+    if (ff.includes('atx')) return 4;
+    if (ff.includes('matx')) return 3;
+    if (ff.includes('itx')) return 3;
+    return 3;
+}
+
+function getRamTier(ram) {
+    const type = (ram.spesifikasi?.type || '').toUpperCase();
+    const capacity = ram.spesifikasi?.capacity || 8;
+    const speed = parseInt((ram.spesifikasi?.speed || '0').replace(/[^0-9]/g, '')) || 0;
+
+    let genScore = 3;
+    if (type.includes('DDR3')) genScore = 1;
+    else if (type.includes('DDR4')) genScore = 3;
+    else if (type.includes('DDR5')) genScore = 5;
+
+    let capBonus = 0;
+    if (capacity >= 64) capBonus = 2;
+    else if (capacity >= 32) capBonus = 1;
+    else if (capacity <= 4) capBonus = -1;
+
+    let speedBonus = 0;
+    if (type.includes('DDR5') && speed >= 6000) speedBonus = 1;
+    if (type.includes('DDR4') && speed >= 3600) speedBonus = 1;
+
+    return Math.min(7, Math.max(1, genScore + capBonus + speedBonus));
+}
+
+function getStorageTier(storage) {
+    const type = (storage.spesifikasi?.type || '').toUpperCase();
+    const iface = (storage.spesifikasi?.interface || '').toUpperCase();
+    const capacity = storage.spesifikasi?.capacity || 256;
+    const speedMatch = (storage.spesifikasi?.speed || '').match(/(\d+)/);
+    const speed = speedMatch ? parseInt(speedMatch[1]) : 0;
+
+    let baseTier = 2;
+    if (type.includes('HDD')) {
+        baseTier = 1;
+    } else if (type.includes('SSD')) {
+        if (iface.includes('NVME') || iface.includes('M.2')) {
+            if (speed >= 7000) baseTier = 7;
+            else if (speed >= 5000) baseTier = 6;
+            else if (speed >= 3000) baseTier = 5;
+            else if (speed >= 1500) baseTier = 4;
+            else baseTier = 3;
+        } else if (iface.includes('SATA')) {
+            baseTier = 3;
+        }
+    }
+    let capBonus = 0;
+    if (capacity >= 2000) capBonus = 1;
+    else if (capacity < 256) capBonus = -1;
+    return Math.min(7, Math.max(1, baseTier + capBonus));
+}
+
+function getPsuTier(psu) {
+    const watt = psu.spesifikasi?.wattage || 500;
+    const eff = (psu.spesifikasi?.efficiency || '').toUpperCase();
+
+    let baseTier;
+    if (watt < 400) baseTier = 1;
+    else if (watt < 500) baseTier = 2;
+    else if (watt < 600) baseTier = 3;
+    else if (watt < 700) baseTier = 4;
+    else if (watt < 800) baseTier = 5;
+    else if (watt < 1000) baseTier = 6;
+    else baseTier = 7;
+
+    let effBonus = 0;
+    if (eff.includes('TITANIUM')) effBonus = 2;
+    else if (eff.includes('PLATINUM')) effBonus = 1.5;
+    else if (eff.includes('GOLD')) effBonus = 1;
+    else if (eff.includes('SILVER')) effBonus = 0.5;
+
+    return Math.min(7, Math.round(baseTier + effBonus));
+}
+
+function getCasingTier(casing) {
+    const ff = (casing.spesifikasi?.formFactor || []).map(f => f.toUpperCase());
+    const maxGpu = casing.spesifikasi?.maxGpuLength || 0;
+
+    if (ff.includes('E-ATX') || ff.includes('EATX')) return 7;
+    if (ff.includes('ATX')) {
+        if (maxGpu >= 400) return 6;
+        if (maxGpu >= 350) return 5;
+        return 4;
+    }
+    if (ff.includes('MATX')) {
+        if (maxGpu >= 350) return 4;
+        return 3;
+    }
+    if (ff.includes('ITX')) {
+        if (maxGpu >= 330) return 6;
+        if (maxGpu >= 300) return 5;
+        return 4;
+    }
+    return 3;
+}
+
+function getComponentTier(comp) {
+    if (comp.spesifikasi?.tier) return comp.spesifikasi.tier;
+    switch (comp.kategori) {
+        case 'mainboard': return getMainboardTier(comp);
+        case 'ram':       return getRamTier(comp);
+        case 'storage':   return getStorageTier(comp);
+        case 'psu':       return getPsuTier(comp);
+        case 'casing':    return getCasingTier(comp);
+        default:          return 3;
+    }
+}
 
 // ============================================================
 // INIT
@@ -254,25 +474,47 @@ function renderStickyNav() {
 
     let html = '';
     CATEGORIES.forEach((cat) => {
-        const value = buildState[cat.id];
-        const isDone = value !== null;
-        const unlocked = isStepUnlocked(cat.id);
-        const isActive = !isDone && unlocked;
+    const value = buildState[cat.id];
+    const isDone = value !== null;
+    const unlocked = isStepUnlocked(cat.id);
+    const isActive = !isDone && unlocked;
 
-        let cls = 'step-nav-item';
-        if (isDone) cls += ' done';
-        else if (isActive) cls += ' active';
-        else if (!unlocked) cls += ' locked';
+// Deteksi bottleneck khusus untuk step VGA
+let bottleneckLevel = null;
+if (cat.id === 'vga' && isDone) {
+    const bn = checkBottleneck();
+    if (bn) {
+        // danger → merah, warning/info → kuning
+        if (bn.level === 'danger') bottleneckLevel = 'danger';
+        else if (bn.level === 'warning' || bn.level === 'info') bottleneckLevel = 'warning';
+    }
+}
 
-        html += `
-    <div class="${cls}" data-cat="${cat.id}" title="${cat.label}">
-        <span class="step-nav-icon">
-            <i data-lucide="${cat.icon}" class="w-3 h-3"></i>
-        </span>
-        <span class="step-label">${cat.short}</span>
-    </div>
-`;
-    });
+let cls = 'step-nav-item';
+if (bottleneckLevel === 'danger') cls += ' bottleneck-danger';
+else if (bottleneckLevel === 'warning') cls += ' bottleneck-warning';
+else if (isDone) cls += ' done';
+else if (isActive) cls += ' active';
+else if (!unlocked) cls += ' locked';
+
+let title = cat.label;
+if (bottleneckLevel === 'danger') title = '🚨 Bottleneck parah terdeteksi';
+else if (bottleneckLevel === 'warning') {
+    // Bedakan pesan warning vs info
+    const bn = checkBottleneck();
+    if (bn && bn.level === 'info') title = 'ℹ️ Kurang seimbang';
+    else title = '⚠️ Bottleneck ringan terdeteksi';
+}
+
+    html += `
+        <div class="${cls}" data-cat="${cat.id}" title="${title}">
+            <span class="step-nav-icon">
+                <i data-lucide="${cat.icon}" class="w-3 h-3"></i>
+            </span>
+            <span class="step-label">${cat.short}</span>
+        </div>
+    `;
+});
     container.innerHTML = html;
 
     const requiredCount = CATEGORIES.filter(c => c.required).length;
@@ -309,6 +551,70 @@ function renderProgress() {
 }
 
 // ============================================================
+// USE CASE BADGE (untuk semua step selain CPU)
+// ============================================================
+function renderUseCaseBadge(catId) {
+    if (!cpuUseCase || cpuUseCase === 'custom') return '';
+    const uc = USE_CASE_FILTERS[cpuUseCase];
+    if (!uc) return '';
+
+    // Hint spesifik per kategori
+    let hint = '';
+    if (catId === 'mainboard') hint = '— chipset hemat daya';
+    if (catId === 'ram') hint = '— kapasitas wajar';
+    if (catId === 'storage') hint = '— penyimpanan cukup';
+    if (catId === 'vga' && uc.vga?.skip) hint = '— tidak diperlukan (CPU sudah iGPU)';
+    if (catId === 'psu') hint = '— watt sesuai kebutuhan';
+    if (catId === 'casing') hint = '— ukuran sesuai';
+
+    return `
+        <div class="use-case-badge mb-3"
+             style="background: ${uc.color}12; border: 1px solid ${uc.color}40; color: ${uc.color};">
+            <i data-lucide="${uc.icon}" class="w-3.5 h-3.5 flex-shrink-0"></i>
+            <span class="text-xs">Tersortir untuk <strong>${uc.label}</strong> ${hint}</span>
+        </div>
+    `;
+}
+
+// ============================================================
+// VGA DISABLED STATE (untuk Office)
+// ============================================================
+function renderVgaDisabledState() {
+    const uc = USE_CASE_FILTERS[cpuUseCase];
+    return `
+        <div class="vga-disabled-box">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                     style="background: ${uc.color}15;">
+                    <i data-lucide="check-circle" class="w-5 h-5" style="color: ${uc.color};"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="font-semibold text-sm" style="color: ${uc.color};">
+                        Tidak diperlukan untuk ${uc.label}
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        CPU yang Anda pilih sudah punya <strong>iGPU</strong> — grafis terintegrasi sudah cukup untuk kebutuhan office.
+                    </p>
+                    <button onclick="enableVgaForOffice()"
+                            class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all"
+                            style="border-color: ${uc.color}40; color: ${uc.color}; background: white;">
+                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                        Tetap tambahkan VGA
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+window.enableVgaForOffice = function() {
+    vgaEnabled = true;
+    renderSteps();
+    renderStickyNav();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+};
+
+// ============================================================
 // RENDER STEPS
 // ============================================================
 function renderSteps() {
@@ -326,6 +632,9 @@ function renderSteps() {
         if (!unlocked) sectionCls += ' locked';
         else if (!selected) sectionCls += ' active';
 
+        // VGA skip logic (Office)
+        const isVgaSkipped = cat.id === 'vga' && cpuUseCase === 'office' && !vgaEnabled && !selected;
+
         html += `
             <div class="${sectionCls}" id="step-${cat.id}">
                 <div class="flex items-center justify-between mb-4 gap-3">
@@ -342,7 +651,7 @@ function renderSteps() {
                         </div>
                     </div>
                     <div class="step-header-actions">
-                        ${!selected && unlocked ? `
+                        ${!selected && unlocked && !isVgaSkipped ? `
                             <button class="search-toggle-btn ${searchOpen[cat.id] ? 'active' : ''}"
                                     onclick="toggleSearch('${cat.id}')"
                                     title="Cari ${cat.label}"
@@ -367,8 +676,11 @@ function renderSteps() {
                     <div class="component-card selected" style="cursor: default;">
                         ${renderComponentInfo(selected)}
                     </div>
+                ` : isVgaSkipped ? `
+                    ${renderUseCaseBadge(cat.id)}
+                    ${renderVgaDisabledState()}
                 ` : `
-                    ${cat.id === 'cpu' ? renderCpuUseCaseGuide() : ''}
+                    ${cat.id === 'cpu' ? renderCpuUseCaseGuide() : renderUseCaseBadge(cat.id)}
                     ${renderSearchForm(cat.id)}
                     ${cat.id === 'cpu' && cpuUseCase ? renderCpuTabs() : ''}
                     ${cat.id === 'cpu' && cpuUseCase ? renderTierFilter(cat.id) : ''}
@@ -390,23 +702,22 @@ function renderSteps() {
 // CPU USE CASE GUIDE
 // ============================================================
 function renderCpuUseCaseGuide() {
-    // Kalau sudah pilih use case, tampilkan badge + tombol ganti
     if (cpuUseCase) {
         const uc = CPU_USE_CASES.find(u => u.id === cpuUseCase);
         if (!uc) return '';
         const tierText = uc.tiers === 'all' ? 'semua tier' : `Tier ${uc.tiers.join(', ')}`;
+        const igpuNote = (cpuUseCase === 'office') ? ' — wajib punya iGPU' : '';
         return `
             <div class="warning-box mb-3" style="background: ${uc.color}12; border-color: ${uc.color}40; color: ${uc.color};">
                 <i data-lucide="${uc.icon}" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
                 <div class="flex-1">
-                    <span class="text-xs">Menampilkan CPU untuk <strong>${uc.label}</strong> (${tierText})</span>
+                    <span class="text-xs">Menampilkan CPU untuk <strong>${uc.label}</strong> (${tierText}${igpuNote})</span>
                 </div>
                 <button onclick="resetCpuUseCase()" class="text-xs underline font-semibold flex-shrink-0">Ganti</button>
             </div>
         `;
     }
 
-    // Kalau belum pilih, tampilkan kartu panduan
     return `
         <div class="use-case-guide mb-4">
             <div class="flex items-center gap-2 mb-3">
@@ -434,29 +745,67 @@ function renderCpuUseCaseGuide() {
     `;
 }
 
+// ============================================================
+// RESET BUILD HELPER
+// ============================================================
+function resetBuildState() {
+    buildState = { cpu: null, mainboard: null, ram: null, storage: null, vga: null, psu: null, casing: null };
+    cpuBrandFilter = 'all';
+    vgaEnabled = false;
+    tierFilters = { cpu: 'all', vga: 'all' };
+    psuWattFilter = 'all';
+    casingFFFilter = 'all';
+    Object.keys(searchQueries).forEach(k => searchQueries[k] = '');
+    Object.keys(searchOpen).forEach(k => searchOpen[k] = false);
+    Object.keys(visibleCount).forEach(k => visibleCount[k] = VISIBLE_DEFAULT);
+    saveBuildToStorage();
+}
+
 window.selectCpuUseCase = function(useCaseId) {
+    // Kalau ganti use case setelah pilih CPU → reset build
+    if (cpuUseCase && cpuUseCase !== useCaseId && buildState.cpu) {
+        if (!confirm('Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?')) {
+            return;
+        }
+        resetBuildState();
+    }
     cpuUseCase = useCaseId;
     tierFilters.cpu = 'all';
     visibleCount.cpu = VISIBLE_DEFAULT;
     renderSteps();
     renderStickyNav();
+    renderSummary();
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
 window.resetCpuUseCase = function() {
+    if (buildState.cpu) {
+        if (!confirm('Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?')) {
+            return;
+        }
+        resetBuildState();
+    }
     cpuUseCase = null;
     tierFilters.cpu = 'all';
     visibleCount.cpu = VISIBLE_DEFAULT;
     renderSteps();
     renderStickyNav();
+    renderSummary();
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
 window.skipCpuUseCase = function() {
+    if (buildState.cpu && cpuUseCase !== 'custom') {
+        if (!confirm('Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?')) {
+            return;
+        }
+        resetBuildState();
+    }
     cpuUseCase = 'custom';
     visibleCount.cpu = VISIBLE_DEFAULT;
     renderSteps();
     renderStickyNav();
+    renderSummary();
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
@@ -680,10 +1029,8 @@ function renderCategoryGrid(catId, status, tierFilterActive) {
         `;
     }
 
-    // Kalau CPU belum pilih use case, jangan tampilkan grid
-    if (catId === 'cpu' && !cpuUseCase) {
-        return '';
-    }
+    // CPU belum pilih use case → jangan render
+    if (catId === 'cpu' && !cpuUseCase) return '';
 
     const allFiltered = getFilteredComponents(catId);
     const visible = allFiltered.slice(0, visibleCount[catId]);
@@ -768,7 +1115,7 @@ function renderCpuTabs() {
 }
 
 // ============================================================
-// TIER FILTER
+// TIER FILTER (khusus CPU & VGA)
 // ============================================================
 function renderTierFilter(categoryId) {
     const tierEnabledCategories = ['cpu', 'vga'];
@@ -1153,7 +1500,7 @@ function renderWarningBox(categoryId) {
 }
 
 // ============================================================
-// GET FILTERED COMPONENTS
+// GET FILTERED COMPONENTS (dengan Use Case Filter)
 // ============================================================
 function getFilteredComponents(categoryId) {
     let list = pcComponents[categoryId].filter(c => c.aktif);
@@ -1168,17 +1515,75 @@ function getFilteredComponents(categoryId) {
         });
     }
 
+    // ============================================
+    // USE CASE FILTER (semua kategori)
+    // ============================================
+    if (cpuUseCase && cpuUseCase !== 'custom') {
+        const uc = USE_CASE_FILTERS[cpuUseCase];
+
+        if (categoryId === 'cpu' && uc.cpu) {
+            // Filter tier
+            if (uc.cpu.tiers && uc.cpu.tiers !== 'all') {
+                list = list.filter(c => uc.cpu.tiers.includes(c.spesifikasi?.tier));
+            }
+            // Filter wajib iGPU (untuk Office)
+            if (uc.cpu.requireIgpu) {
+                list = list.filter(c => c.spesifikasi?.igpu === true);
+            }
+        }
+
+        if (categoryId === 'mainboard' && uc.mainboard) {
+            if (uc.mainboard.chipsetTiers && uc.mainboard.chipsetTiers !== 'all') {
+                list = list.filter(c => uc.mainboard.chipsetTiers.includes(getMainboardTier(c)));
+            }
+        }
+
+        if (categoryId === 'ram' && uc.ram) {
+            if (uc.ram.maxCapacity) list = list.filter(c => (c.spesifikasi?.capacity || 0) <= uc.ram.maxCapacity);
+            if (uc.ram.minCapacity) list = list.filter(c => (c.spesifikasi?.capacity || 0) >= uc.ram.minCapacity);
+        }
+
+        if (categoryId === 'storage' && uc.storage) {
+            if (uc.storage.allowedTypes) {
+                list = list.filter(c => {
+                    const type = (c.spesifikasi?.type || '').toUpperCase();
+                    const iface = (c.spesifikasi?.interface || '').toUpperCase();
+                    return uc.storage.allowedTypes.some(t => {
+                        if (t === 'NVMe') return iface.includes('NVME') || iface.includes('M.2');
+                        return type.includes(t.toUpperCase());
+                    });
+                });
+            }
+        }
+
+        if (categoryId === 'vga' && uc.vga) {
+            if (uc.vga.skip && !vgaEnabled) return [];
+            if (uc.vga.tiers && uc.vga.tiers !== 'all') {
+                list = list.filter(c => uc.vga.tiers.includes(c.spesifikasi?.tier));
+            }
+        }
+
+        if (categoryId === 'psu' && uc.psu) {
+            if (uc.psu.maxWatt) list = list.filter(c => (c.spesifikasi?.wattage || 0) <= uc.psu.maxWatt);
+            if (uc.psu.minWatt) list = list.filter(c => (c.spesifikasi?.wattage || 0) >= uc.psu.minWatt);
+        }
+
+        if (categoryId === 'casing' && uc.casing) {
+            if (uc.casing.formFactors) {
+                list = list.filter(c => {
+                    const ff = c.spesifikasi?.formFactor || [];
+                    return ff.some(f => uc.casing.formFactors.includes(f));
+                });
+            }
+        }
+    }
+
+    // ============================================
+    // KOMPATIBILITAS FILTER (existing)
+    // ============================================
     switch (categoryId) {
         case 'cpu':
             if (cpuBrandFilter !== 'all') list = list.filter(c => c.brand === cpuBrandFilter);
-
-            // Filter by use case
-            if (cpuUseCase && cpuUseCase !== 'custom') {
-                const uc = CPU_USE_CASES.find(u => u.id === cpuUseCase);
-                if (uc && uc.tiers !== 'all') {
-                    list = list.filter(c => uc.tiers.includes(c.spesifikasi?.tier));
-                }
-            }
             break;
         case 'mainboard':
             if (buildState.cpu) list = list.filter(c => c.spesifikasi.socket === buildState.cpu.spesifikasi.socket);
@@ -1220,6 +1625,9 @@ function getFilteredComponents(categoryId) {
             break;
     }
 
+    // ============================================
+    // MANUAL TIER FILTER (CPU & VGA only)
+    // ============================================
     const tierFilter = tierFilters[categoryId];
     if (tierFilter && tierFilter !== 'all') {
         list = list.filter(c => c.spesifikasi?.tier === parseInt(tierFilter));
@@ -1311,6 +1719,17 @@ function renderEmptyState(categoryId, tierFilterActive) {
         `;
     }
 
+    // Empty karena use case filter
+    if (cpuUseCase && cpuUseCase !== 'custom') {
+        const uc = USE_CASE_FILTERS[cpuUseCase];
+        return `
+            <div class="col-span-full text-center py-6 text-gray-400 text-sm mt-3">
+                <i data-lucide="inbox" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
+                Tidak ada komponen yang cocok untuk <strong>${uc.label}</strong>.
+            </div>
+        `;
+    }
+
     return `
         <div class="col-span-full text-center py-6 text-gray-400 text-sm mt-3">
             <i data-lucide="inbox" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
@@ -1378,6 +1797,7 @@ function resetDependents(categoryId) {
         psuWattFilter = 'all';
         casingFFFilter = 'all';
         tierFilters.vga = 'all';
+        vgaEnabled = false;
     }
     if (categoryId === 'mainboard') {
         casingFFFilter = 'all';
@@ -1392,7 +1812,6 @@ window.clearStep = function(categoryId) {
     searchOpen[categoryId] = false;
     visibleCount[categoryId] = VISIBLE_DEFAULT;
 
-    // Reset use case kalau CPU di-clear
     if (categoryId === 'cpu') {
         cpuUseCase = null;
         cpuBrandFilter = 'all';
@@ -1496,6 +1915,12 @@ function renderSummary() {
 
     CATEGORIES.forEach(cat => {
         const val = buildState[cat.id];
+        const isVgaSkipped = cat.id === 'vga' && cpuUseCase === 'office' && !vgaEnabled && !val;
+        let displayVal;
+        if (val) displayVal = val.nama;
+        else if (isVgaSkipped) displayVal = '— Dilewati (iGPU cukup)';
+        else displayVal = cat.required ? 'Belum dipilih' : 'Opsional';
+
         html += `
             <div class="flex items-start gap-2 text-xs py-2 border-b border-gray-100 last:border-0">
                 <div class="w-5 h-5 rounded flex items-center justify-center bg-brand/5 flex-shrink-0 mt-0.5">
@@ -1504,7 +1929,7 @@ function renderSummary() {
                 <div class="flex-1 min-w-0">
                     <div class="font-semibold text-gray-500 text-[10px] uppercase tracking-wide">${cat.label}</div>
                     <div class="text-gray-800 font-medium text-xs ${val ? '' : 'text-gray-400 italic'} truncate">
-                        ${val ? val.nama : (cat.required ? 'Belum dipilih' : 'Opsional')}
+                        ${displayVal}
                     </div>
                 </div>
             </div>
@@ -1753,18 +2178,8 @@ window.printBuild = function() {
 // ============================================================
 window.resetBuild = function() {
     if (!confirm('Yakin ingin mereset semua komponen?')) return;
-    buildState = { cpu: null, mainboard: null, ram: null, storage: null, vga: null, psu: null, casing: null };
-    cpuBrandFilter = 'all';
+    resetBuildState();
     cpuUseCase = null;
-    tierFilters = { cpu: 'all', vga: 'all' };
-    psuWattFilter = 'all';
-    casingFFFilter = 'all';
-
-    Object.keys(searchQueries).forEach(k => searchQueries[k] = '');
-    Object.keys(searchOpen).forEach(k => searchOpen[k] = false);
-
-    Object.keys(visibleCount).forEach(k => visibleCount[k] = VISIBLE_DEFAULT);
-    saveBuildToStorage();
     renderProgress();
     renderSteps();
     renderSummary();
