@@ -104,7 +104,7 @@ export async function openCloudinaryUpload(options = {}) {
             uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
             folder: fullFolder,
             sources: ['local', 'url', 'camera'],
-            multiple: false,
+            multiple: options.multiple || false,
             maxFileSize: 5000000,                     // 5MB
             clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'],
             cropping: false,

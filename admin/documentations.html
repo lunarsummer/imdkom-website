@@ -28,7 +28,7 @@
             <a href="landing-page.html" class="nav-link"><i data-lucide="home" class="w-4 h-4"></i>Landing Page</a>
             <a href="programs.html" class="nav-link"><i data-lucide="book-open" class="w-4 h-4"></i>Program Kursus</a>
             <a href="services.html" class="nav-link"><i data-lucide="wrench" class="w-4 h-4"></i>Computer Service</a>
-            <a href="pc-components.html" class="nav-link active">
+            <a href="pc-components.html" class="nav-link">
                 <i data-lucide="cpu" class="w-4 h-4"></i>
                 PC Components
             </a>
@@ -77,6 +77,7 @@
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, where, deleteDoc, doc } from '../assets/js/firebase.js';
         import { PLACEHOLDER_IMAGE } from '../assets/js/placeholder.js';
+        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
 
         // ============================================================
         // MOBILE SIDEBAR
@@ -150,18 +151,42 @@
                 let html = '';
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    const imageUrl = data.gambar ? '../' + data.gambar : PLACEHOLDER_IMAGE;
-                    const serviceName = serviceNames[data.serviceSlug] || data.serviceSlug;
+                    
+                    // Support format baru (gambarList array) & lama (gambar string)
+                    let coverUrl = PLACEHOLDER_IMAGE;
+                    let totalFoto = 0;
+                    
+                    if (data.gambarList && Array.isArray(data.gambarList) && data.gambarList.length > 0) {
+                        coverUrl = optimizeCloudinaryUrl(data.gambarList[0], { width: 400, height: 400, crop: 'fill' });
+                        totalFoto = data.gambarList.length;
+                    } else if (data.gambar) {
+                        coverUrl = optimizeCloudinaryUrl(data.gambar, { width: 400, height: 400, crop: 'fill' });
+                        totalFoto = 1;
+                    }
+                    
+                    const serviceName = serviceNames[data.serviceSlug] || data.serviceSlug || '-';
 
                     html += `
                         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden group hover:shadow-md transition-shadow">
                             <div class="relative aspect-square bg-gray-100">
-                                <img src="${imageUrl}" alt="${data.nama || ''}" 
+                                <img src="${coverUrl}" alt="${data.nama || ''}" 
                                      class="w-full h-full object-cover" 
                                      loading="lazy"
                                      data-fallback="${PLACEHOLDER_IMAGE}"
                                      onerror="this.onerror=null; this.src=this.dataset.fallback;" />
+                                
+                                <!-- Badge Layanan -->
                                 <span class="absolute top-2 left-2 bg-brand text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${serviceName}</span>
+                                
+                                <!-- Badge Jumlah Foto (jika > 1) -->
+                                ${totalFoto > 1 ? `
+                                    <span class="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                                        <i data-lucide="image" class="w-3 h-3"></i>
+                                        ${totalFoto}
+                                    </span>
+                                ` : ''}
+                                
+                                <!-- Badge Status Aktif -->
                                 <span class="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${data.aktif ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}">
                                     ${data.aktif ? 'AKTIF' : 'OFF'}
                                 </span>
@@ -170,8 +195,8 @@
                                 <h3 class="font-semibold text-gray-800 text-sm truncate">${data.nama || '-'}</h3>
                                 <p class="text-xs text-gray-500 mt-1 truncate">${data.keterangan || '-'}</p>
                                 <div class="flex gap-2 mt-3">
-                                    <a href="documentation-form.html?id=${docSnap.id}" class="flex-1 text-center bg-brand hover:bg-brand-light text-white text-xs font-medium py-1.5 rounded-lg">Edit</a>
-                                    <button class="delete-btn flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1.5 rounded-lg" data-id="${docSnap.id}" data-name="${data.nama || ''}">Hapus</button>
+                                    <a href="documentation-form.html?id=${docSnap.id}" class="flex-1 text-center bg-brand hover:bg-brand-light text-white text-xs font-medium py-1.5 rounded-lg transition-colors">Edit</a>
+                                    <button class="delete-btn flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1.5 rounded-lg transition-colors" data-id="${docSnap.id}" data-name="${data.nama || ''}">Hapus</button>
                                 </div>
                             </div>
                         </div>
@@ -180,18 +205,35 @@
                 container.innerHTML = html;
                 lucide.createIcons();
 
+                // Delete handler
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', async () => {
-                        if (confirm(`Hapus dokumentasi "${btn.dataset.name}"?`)) {
-                            await deleteDoc(doc(db, 'documentations', btn.dataset.id));
-                            loadDocs();
+                        if (confirm(`Hapus dokumentasi "${btn.dataset.name}"?\n\nSemua foto di dalamnya akan dihapus dari tampilan.`)) {
+                            try {
+                                btn.disabled = true;
+                                btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 animate-spin"></i>`;
+                                lucide.createIcons();
+                                
+                                await deleteDoc(doc(db, 'documentations', btn.dataset.id));
+                                loadDocs();
+                            } catch (error) {
+                                console.error('Error deleting:', error);
+                                alert('Gagal menghapus: ' + error.message);
+                                btn.disabled = false;
+                            }
                         }
                     });
                 });
 
             } catch (error) {
                 console.error('Error loading docs:', error);
-                container.innerHTML = `<div class="col-span-full text-center text-red-600 py-12">Gagal memuat. <br><small>${error.message}</small></div>`;
+                container.innerHTML = `
+                    <div class="col-span-full text-center text-red-600 py-12">
+                        Gagal memuat dokumentasi.
+                        <br>
+                        <small class="text-gray-500">${error.message}</small>
+                    </div>
+                `;
             }
         }
     </script>

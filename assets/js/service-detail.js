@@ -6,14 +6,15 @@ import {
     db, collection, getDocs, query, where, orderBy, limit, doc, getDoc 
 } from './firebase.js';
 import { getImageUrl, escapeHtml, formatRupiah } from './utils.js';
+import { optimizeCloudinaryUrl } from './cloudinary.js';
 import { openWhatsApp } from './whatsapp.js';
 
 // ============================================================
 // KONFIGURASI PRICELIST
 // ============================================================
-const PRICELIST_LIMIT = 5;     // jumlah item yang ditampilkan per kategori
-const pricelistState = {};     // menyimpan berapa item yang sudah ditampilkan per kategori
-let pricelistGroupedData = {}; // simpan data lengkap untuk akses saat "load more"
+const PRICELIST_LIMIT = 5;
+const pricelistState = {};
+let pricelistGroupedData = {};
 
 // ============================================================
 // GET SERVICE SLUG FROM URL
@@ -35,11 +36,10 @@ function getServiceSlugFromUrl() {
         return slugFromParam;
     }
     
-    // 3. Mapping filename → slug (support .html dan tanpa .html)
+    // 3. Mapping filename → slug
     const path = window.location.pathname;
     const filename = path.substring(path.lastIndexOf('/') + 1);
     
-    // Mapping lengkap
     const slugMap = {
         'service-laptop': 'laptop',
         'service-laptop.html': 'laptop',
@@ -62,19 +62,18 @@ function getServiceSlugFromUrl() {
         return slugMap[filename];
     }
     
-    // 4. Fallback: regex tanpa .html (untuk Netlify pretty URLs)
+    // 4. Fallback: regex
     const match = path.match(/service-([a-z-]+)(?:\.html)?$/i);
     if (match) {
         console.log('✅ Slug:', match[1], '(dari regex)');
         return match[1];
     }
     
-    // 5. Fallback 2: cek path terakhir
+    // 5. Fallback 2
     const lastPart = path.split('/').filter(Boolean).pop();
     if (lastPart) {
-        // Hapus prefix 'service-' kalau ada
         const cleaned = lastPart.replace(/^service-/, '').replace(/\.html$/, '');
-        if (cleaned && cleaned !== lastPart || cleaned) {
+        if (cleaned) {
             console.log('✅ Slug:', cleaned, '(dari path terakhir)');
             return cleaned;
         }
@@ -98,7 +97,6 @@ export async function loadServiceDetail() {
     }
     
     try {
-        // Query service by slug
         const q = query(
             collection(db, 'services'),
             where('slug', '==', slug),
@@ -120,24 +118,19 @@ export async function loadServiceDetail() {
         const serviceDoc = snapshot.docs[0];
         const data = serviceDoc.data();
         
-        // Update page title
         document.title = `${data.nama} | IMDKOM Yogyakarta`;
         
-        // Update breadcrumb
         const breadcrumbName = document.getElementById('breadcrumbName');
         if (breadcrumbName) breadcrumbName.textContent = data.nama;
         
-        // Render hero
         container.innerHTML = `
             <div class="flex flex-col md:flex-row items-start gap-6 md:gap-8">
-                <!-- Icon/Image -->
                 <div class="w-full md:w-auto">
                     <div class="w-20 h-20 md:w-24 md:h-24 bg-brand/10 rounded-3xl flex items-center justify-center">
                         <i data-lucide="${data.icon || 'wrench'}" class="w-10 h-10 md:w-12 md:h-12 text-brand"></i>
                     </div>
                 </div>
                 
-                <!-- Content -->
                 <div class="flex-1">
                     <div class="inline-flex items-center gap-2 glass px-4 py-1.5 rounded-full text-xs font-medium text-brand mb-4">
                         <i data-lucide="wrench" class="w-3.5 h-3.5"></i>
@@ -176,7 +169,6 @@ export async function loadServiceDetail() {
             </div>
         `;
         
-        // Init icons
         if (typeof lucide !== 'undefined') lucide.createIcons();
         
     } catch (error) {
@@ -185,7 +177,7 @@ export async function loadServiceDetail() {
 }
 
 // ============================================================
-// LOAD PRICELIST — Versi Tabel dengan "Muat Lebih Banyak"
+// LOAD PRICELIST
 // ============================================================
 export async function loadPricelist() {
     const container = document.getElementById('pricelistContainer');
@@ -213,24 +205,20 @@ export async function loadPricelist() {
             return;
         }
         
-        // Group by kategori
         const grouped = {};
-        snapshot.forEach((doc) => {
-            const data = doc.data();
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
             const kat = data.kategori || 'Umum';
             if (!grouped[kat]) grouped[kat] = [];
-            grouped[kat].push({ id: doc.id, ...data });
+            grouped[kat].push({ id: docSnap.id, ...data });
         });
         
-        // Simpan ke global untuk akses "load more"
         pricelistGroupedData = grouped;
         
-        // Reset state — setiap kategori mulai dengan PRICELIST_LIMIT
         Object.keys(grouped).forEach(kat => {
             pricelistState[kat] = PRICELIST_LIMIT;
         });
         
-        // Render
         let html = '';
         let kategoriIndex = 0;
         
@@ -314,7 +302,6 @@ function renderPricelistRows(items) {
                     </div>
                     ${item.deskripsi ? `<p class="text-xs text-gray-500 mt-0.5">${escapeHtml(item.deskripsi)}</p>` : ''}
                     
-                    <!-- Info mobile -->
                     <div class="flex items-center gap-3 mt-1 text-[11px] text-gray-400 sm:hidden">
                         ${item.estimasi ? `<span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${escapeHtml(item.estimasi)}</span>` : ''}
                         ${item.garansi && item.garansi !== '-' ? `<span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i>${escapeHtml(item.garansi)}</span>` : ''}
@@ -359,19 +346,14 @@ window.loadMorePricelist = function(button) {
     const newCount = Math.min(currentCount + PRICELIST_LIMIT, total);
     const newItems = items.slice(currentCount, newCount);
     
-    // Tambahkan baris baru
     tbody.insertAdjacentHTML('beforeend', renderPricelistRows(newItems));
     
-    // Update state
     pricelistState[kategori] = newCount;
     
-    // Update tombol
     const remaining = total - newCount;
     if (remaining <= 0) {
-        // Semua sudah tampil — hapus tombol
         button.parentElement.remove();
     } else {
-        // Update teks
         const textEl = button.querySelector('.load-more-text');
         if (textEl) {
             textEl.textContent = `Muat Lebih Banyak (${remaining} tersisa)`;
@@ -384,7 +366,7 @@ window.loadMorePricelist = function(button) {
 };
 
 // ============================================================
-// LOAD DOCUMENTATIONS
+// LOAD DOCUMENTATIONS — Support Multi-Foto
 // ============================================================
 export async function loadDocumentations() {
     const container = document.getElementById('documentationContainer');
@@ -403,32 +385,72 @@ export async function loadDocumentations() {
         const snapshot = await getDocs(q);
         
         if (snapshot.empty) {
-            // Hide entire section if no documentations
             const section = document.getElementById('documentationSection');
             if (section) section.style.display = 'none';
             return;
         }
         
         let html = '';
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const imageUrl = getImageUrl(data.gambar);
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
             
-            html += `
-                <div class="group cursor-pointer" onclick="openImageModal('${imageUrl}', '${escapeHtml(data.nama || '')}')">
-                    <div class="relative rounded-2xl overflow-hidden bg-gray-100 aspect-square">
-                        <img src="${imageUrl}" 
-                             alt="${escapeHtml(data.nama || 'Dokumentasi')}" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                             loading="lazy" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                            <p class="text-sm font-semibold">${escapeHtml(data.nama || '')}</p>
-                            ${data.keterangan ? `<p class="text-xs text-white/80 mt-1">${escapeHtml(data.keterangan)}</p>` : ''}
+            // ============================================================
+            // SUPPORT MULTI-FOTO: Cek gambarList (baru) atau gambar (lama)
+            // ============================================================
+            let images = [];
+            
+            if (data.gambarList && Array.isArray(data.gambarList) && data.gambarList.length > 0) {
+                images = data.gambarList;
+            } else if (data.gambar) {
+                images = [data.gambar];
+            }
+            
+            // Render SETIAP gambar dalam dokumentasi ini
+            images.forEach((imgUrl, imgIndex) => {
+                // Thumbnail untuk grid (hemat bandwidth)
+                const thumbUrl = optimizeCloudinaryUrl(imgUrl, { 
+                    width: 600, 
+                    height: 600, 
+                    crop: 'fill' 
+                });
+                
+                // URL besar untuk modal zoom
+                const fullUrl = optimizeCloudinaryUrl(imgUrl, { 
+                    width: 1600 
+                });
+                
+                // Caption: kalau lebih dari 1 foto, tambah nomor urut
+                const caption = images.length > 1 
+                    ? `${data.nama || 'Dokumentasi'} (${imgIndex + 1}/${images.length})`
+                    : (data.nama || 'Dokumentasi');
+                
+                html += `
+                    <div class="group cursor-pointer" 
+                         onclick="openImageModal('${fullUrl}', '${escapeHtml(caption)}')">
+                        <div class="relative rounded-2xl overflow-hidden bg-gray-100 aspect-square">
+                            <img src="${thumbUrl}" 
+                                 alt="${escapeHtml(data.nama || 'Dokumentasi')}" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 loading="lazy"
+                                 onerror="this.src='assets/images/placeholder.svg'" />
+                            
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            
+                            <!-- Badge nomor foto (jika lebih dari 1) -->
+                            ${images.length > 1 ? `
+                                <span class="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                    ${imgIndex + 1}/${images.length}
+                                </span>
+                            ` : ''}
+                            
+                            <div class="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <p class="text-sm font-semibold">${escapeHtml(data.nama || '')}</p>
+                                ${data.keterangan ? `<p class="text-xs text-white/80 mt-1">${escapeHtml(data.keterangan)}</p>` : ''}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+            });
         });
         
         container.innerHTML = html;
