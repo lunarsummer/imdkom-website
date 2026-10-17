@@ -1,13 +1,66 @@
 // ============================================================
 // Aplikasi Public — Load data dari Firestore
+// IMDKOM Yogyakarta
 // ============================================================
 
 import { db, collection, getDocs, query, where, orderBy, limit, getDoc, doc } from './firebase.js';
 import { getImageUrl, truncateText, formatRupiah, escapeHtml } from './utils.js';
+import { optimizeCloudinaryUrl } from './cloudinary.js';
 import { openWhatsAppProgram, openWhatsAppService, openWhatsAppGeneric } from './whatsapp.js';
 
 // ============================================================
-// LOAD PROGRAM KURSUS (Preview di Homepage)
+// HELPER: Build image URL dengan fallback
+// ============================================================
+function buildImageUrl(gambarPath, options, fallback) {
+    if (!gambarPath) return fallback;
+    return optimizeCloudinaryUrl(gambarPath, options) || fallback;
+}
+
+// ============================================================
+// HELPER: Share Program (native share + fallback WhatsApp)
+// ============================================================
+function attachShareHandler(container) {
+    container.querySelectorAll('.share-program-btn').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const programId = this.dataset.programId;
+            const programName = this.dataset.programName;
+            const programDesc = this.dataset.programDesc;
+
+            // Bangun URL detail
+            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+            const shareUrl = `${baseUrl}program-detail.html?id=${programId}`;
+
+            const shareTitle = programName;
+            const shareText = `Program Kursus IMDKOM: ${programName}`;
+
+            // ==== COBA NATIVE SHARE API DULU ====
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: shareTitle,
+                        text: shareText,
+                        url: shareUrl
+                    });
+                    return;
+                } catch (err) {
+                    if (err.name === 'AbortError') return;
+                    console.log('Native share error, fallback ke WhatsApp:', err);
+                }
+            }
+
+            // ==== FALLBACK: WHATSAPP ====
+            const waText = `*${shareTitle}*\n\n${programDesc}\n\nDetail: ${shareUrl}`;
+            const waUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+            window.open(waUrl, '_blank', 'noopener,noreferrer');
+        });
+    });
+}
+
+// ============================================================
+// LOAD PROGRAM KURSUS (Preview di Homepage) — 4:3
 // ============================================================
 export async function loadCoursePreview() {
     const container = document.getElementById('coursePreviewContainer');
@@ -32,25 +85,42 @@ export async function loadCoursePreview() {
         }
 
         let html = '';
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const imageUrl = getImageUrl(data.gambar, 'assets/images/programs/default.jpg');
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            // 4:3 landscape — compact untuk preview homepage
+            const imageUrl = buildImageUrl(
+                data.gambar,
+                { width: 800, height: 600, crop: 'fill' },
+                'assets/images/programs/default.jpg'
+            );
             
             html += `
                 <div class="course-item border-b border-gray-200 pb-4">
                     <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
-                         class="w-full h-48 object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
+                         class="w-full aspect-[4/3] object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
                     <h5 class="text-lg font-semibold text-brand">${escapeHtml(data.nama || 'Program')}</h5>
                     <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
                     <p class="text-gray-600 text-sm mt-1">${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 80))}</p>
                     <p class="font-semibold text-brand mt-1">${formatRupiah(data.harga)}</p>
-                    <a href="program-detail.html?id=${doc.id}" class="inline-block mt-2 text-brand hover:text-brand-light font-medium text-sm border-b-2 border-brand hover:border-brand-light transition-colors">
-                        Lihat Detail →
-                    </a>
+                    <div class="flex flex-wrap gap-3 mt-2">
+                        <a href="program-detail.html?id=${docSnap.id}" class="text-brand hover:text-brand-light font-medium text-sm border-b-2 border-brand hover:border-brand-light transition-colors">
+                            Lihat Detail →
+                        </a>
+                        <button class="share-program-btn text-[#25d366] hover:text-[#1da851] font-medium text-sm border-b-2 border-[#25d366] hover:border-[#1da851] transition-colors inline-flex items-center gap-1"
+                                data-program-id="${docSnap.id}"
+                                data-program-name="${escapeHtml(data.nama || 'Program')}"
+                                data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
+                            Bagikan
+                        </button>
+                    </div>
                 </div>
             `;
         });
         container.innerHTML = html;
+        attachShareHandler(container);
     } catch (error) {
         console.error('Error loading courses:', error);
         container.innerHTML = `
@@ -62,7 +132,7 @@ export async function loadCoursePreview() {
 }
 
 // ============================================================
-// LOAD COMPUTER SERVICE (Preview di Homepage)
+// LOAD COMPUTER SERVICE (Preview di Homepage) — 4:3
 // ============================================================
 export async function loadServicePreview() {
     const container = document.getElementById('servicePreviewContainer');
@@ -87,15 +157,19 @@ export async function loadServicePreview() {
         }
 
         let html = '';
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const imageUrl = getImageUrl(data.gambar, 'assets/images/services/default.jpg');
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const imageUrl = buildImageUrl(
+                data.gambar,
+                { width: 800, height: 600, crop: 'fill' },
+                'assets/images/services/default.jpg'
+            );
             const serviceName = escapeHtml(data.nama || 'Layanan');
             
             html += `
                 <div class="service-item border-b border-gray-200 pb-4">
                     <img src="${imageUrl}" alt="${serviceName}" 
-                         class="w-full h-48 object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
+                         class="w-full aspect-[4/3] object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
                     <h5 class="text-lg font-semibold text-brand">${serviceName}</h5>
                     <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
                     <p class="text-gray-600 text-sm mt-1">${escapeHtml(truncateText(data.deskripsi || '', 80))}</p>
@@ -148,9 +222,11 @@ export async function loadTestimonials() {
 
         section.style.display = 'block';
         let html = '';
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const avatarUrl = getImageUrl(data.foto, 'assets/images/testimonials/default-avatar.jpg');
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const avatarUrl = data.foto
+                ? optimizeCloudinaryUrl(data.foto, { width: 200, height: 200, crop: 'fill' })
+                : 'assets/images/testimonials/default-avatar.jpg';
             
             html += `
                 <div class="bg-white border border-gray-200 rounded-lg p-6">
@@ -196,17 +272,17 @@ export async function loadFaqs() {
 
         section.style.display = 'block';
         let html = '';
-        snapshot.forEach((doc) => {
-            const data = doc.data();
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
             html += `
                 <div class="bg-white border border-gray-200 rounded-lg p-4">
-                    <button class="faq-toggle w-full text-left flex justify-between items-center" data-target="faq-${doc.id}">
+                    <button class="faq-toggle w-full text-left flex justify-between items-center" data-target="faq-${docSnap.id}">
                         <span class="font-medium text-gray-800">${escapeHtml(data.pertanyaan || '')}</span>
                         <svg class="w-5 h-5 text-gray-400 transition-transform faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div id="faq-${doc.id}" class="faq-answer mt-2 hidden">
+                    <div id="faq-${docSnap.id}" class="faq-answer mt-2 hidden">
                         <p class="text-gray-600">${escapeHtml(data.jawaban || '')}</p>
                     </div>
                 </div>
@@ -214,7 +290,6 @@ export async function loadFaqs() {
         });
         container.innerHTML = html;
 
-        // FAQ toggle
         document.querySelectorAll('.faq-toggle').forEach(btn => {
             btn.addEventListener('click', function() {
                 const targetId = this.dataset.target;
@@ -244,13 +319,10 @@ export async function loadLandingPageContent() {
         
         const data = docSnap.data();
         
-        // ============================================================
-        // HERO — Update kedua versi (mobile + desktop)
-        // ============================================================
+        // HERO
         if (data.hero) {
             const hero = data.hero;
             
-            // ----- Mobile Version -----
             const heroHeading = document.getElementById('heroHeading');
             const heroSubheading = document.getElementById('heroSubheading');
             const heroDescription = document.getElementById('heroDescription');
@@ -263,7 +335,6 @@ export async function loadLandingPageContent() {
             if (heroSubtext && hero.subtext) heroSubtext.textContent = hero.subtext;
             if (heroCtaPrimaryMobile && hero.ctaText) heroCtaPrimaryMobile.textContent = hero.ctaText;
             
-            // ----- Desktop Version -----
             const heroHeadingDesktop = document.getElementById('heroHeadingDesktop');
             const heroSubheadingDesktop = document.getElementById('heroSubheadingDesktop');
             const heroDescriptionDesktop = document.getElementById('heroDescriptionDesktop');
@@ -276,30 +347,33 @@ export async function loadLandingPageContent() {
             if (heroSubtextDesktop && hero.subtext) heroSubtextDesktop.textContent = hero.subtext;
             if (heroCtaPrimary && hero.ctaText) heroCtaPrimary.textContent = hero.ctaText;
             
-            // ----- Image (mobile + desktop) -----
             if (hero.gambar) {
+                const heroOptimized = optimizeCloudinaryUrl(hero.gambar, { width: 1600, crop: 'limit' });
+                
                 const mobileImg = document.querySelector('#heroSection img[alt*="IMDKOM"]');
-                if (mobileImg) mobileImg.src = getImageUrl(hero.gambar, 'assets/images/hero/hero-default.jpg');
+                if (mobileImg) mobileImg.src = heroOptimized;
                 
                 const heroImage = document.getElementById('heroImage');
-                if (heroImage) heroImage.src = getImageUrl(hero.gambar, 'assets/images/hero/hero-default.jpg');
+                if (heroImage) heroImage.src = heroOptimized;
             }
         }
         
-        // About (tetap sama)
+        // ABOUT
         if (data.about) {
             const about = data.about;
             const aboutTitle = document.getElementById('aboutTitle');
             const aboutDescription = document.getElementById('aboutDescription');
+            
             if (aboutTitle && about.judul) aboutTitle.textContent = about.judul;
             if (aboutDescription && about.deskripsi) aboutDescription.textContent = about.deskripsi;
+            
             if (about.gambar) {
                 const img = document.getElementById('aboutImage');
-                if (img) img.src = getImageUrl(about.gambar, 'assets/images/about/about-imdkom.jpg');
+                if (img) img.src = optimizeCloudinaryUrl(about.gambar, { width: 800, crop: 'limit' });
             }
         }
         
-        // Contact & Footer (tetap sama)
+        // CONTACT
         if (data.contact) {
             const contact = data.contact;
             if (contact.whatsapp) {
@@ -312,6 +386,7 @@ export async function loadLandingPageContent() {
             }
         }
         
+        // FOOTER
         if (data.footer && data.footer.copyright) {
             const footerCopy = document.getElementById('footerCopyright');
             if (footerCopy) footerCopy.textContent = data.footer.copyright;
@@ -323,7 +398,7 @@ export async function loadLandingPageContent() {
 }
 
 // ============================================================
-// LOAD SINGLE PROGRAM (Detail)
+// LOAD SINGLE PROGRAM (Detail) — 4:5 hero + meta OG dinamis
 // ============================================================
 export async function loadProgramDetail() {
     const container = document.getElementById('programDetailContainer');
@@ -344,8 +419,63 @@ export async function loadProgramDetail() {
         }
 
         const data = docSnap.data();
-        const imageUrl = getImageUrl(data.gambar, 'assets/images/programs/default.jpg');
         
+        // 4:5 aspect — 1200x1500
+        const imageUrl = buildImageUrl(
+            data.gambar,
+            { width: 1200, height: 1500, crop: 'fill' },
+            'assets/images/programs/default.jpg'
+        );
+
+        // ============================================================
+        // UPDATE META TAG OG (dinamis)
+        // ============================================================
+        const pageTitle = `${data.nama || 'Program'} | IMDKOM Yogyakarta`;
+        const pageDesc = truncateText(data.deskripsiSingkat || data.deskripsi || 'Program pelatihan komputer di IMDKOM Yogyakarta.', 160);
+        
+        // OG image — 1200x630 (standar WhatsApp/FB)
+        const ogImageUrl = data.gambar
+            ? optimizeCloudinaryUrl(data.gambar, { width: 1200, height: 630, crop: 'fill' })
+            : 'https://imdkom.com/assets/images/logo/imdkom.svg';
+
+        document.title = pageTitle;
+
+        const setMetaProperty = (property, content) => {
+            let el = document.querySelector(`meta[property="${property}"]`);
+            if (!el) {
+                el = document.createElement('meta');
+                el.setAttribute('property', property);
+                document.head.appendChild(el);
+            }
+            el.setAttribute('content', content);
+        };
+
+        const setMetaName = (name, content) => {
+            let el = document.querySelector(`meta[name="${name}"]`);
+            if (!el) {
+                el = document.createElement('meta');
+                el.setAttribute('name', name);
+                document.head.appendChild(el);
+            }
+            el.setAttribute('content', content);
+        };
+
+        // Open Graph
+        setMetaProperty('og:title', data.nama || 'Program Kursus');
+        setMetaProperty('og:description', pageDesc);
+        setMetaProperty('og:image', ogImageUrl);
+        setMetaProperty('og:url', window.location.href);
+        setMetaProperty('og:type', 'article');
+
+        // Twitter Card
+        setMetaName('twitter:card', 'summary_large_image');
+        setMetaName('twitter:title', data.nama || 'Program Kursus');
+        setMetaName('twitter:description', pageDesc);
+        setMetaName('twitter:image', ogImageUrl);
+
+        // ============================================================
+        // RENDER HTML
+        // ============================================================
         let materiHtml = '';
         if (data.materi && Array.isArray(data.materi)) {
             materiHtml = '<ul class="list-disc list-inside space-y-1 text-gray-600">';
@@ -368,7 +498,7 @@ export async function loadProgramDetail() {
             <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
                 <div class="lg:w-1/2">
                     <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
-                         class="w-full rounded-lg shadow-sm detail-image" loading="lazy" />
+                         class="w-full aspect-[4/5] object-cover rounded-lg shadow-sm detail-image" loading="lazy" />
                 </div>
                 <div class="lg:w-1/2">
                     <h1 class="text-3xl md:text-4xl font-bold text-brand">${escapeHtml(data.nama || 'Program')}</h1>
@@ -406,19 +536,56 @@ export async function loadProgramDetail() {
                         </div>
                     ` : ''}
                     
-                    <div class="mt-6">
+                    <div class="mt-6 flex flex-wrap gap-3">
                         <button class="wa-program-btn bg-brand hover:bg-brand-light text-white font-medium px-8 py-3 rounded transition-colors" 
                                 data-program="${escapeHtml(data.nama || 'Program')}">
                             Tanya Program Ini
+                        </button>
+                        <button class="share-detail-btn bg-[#25d366] hover:bg-[#1da851] text-white font-medium px-6 py-3 rounded transition-colors inline-flex items-center gap-2"
+                                data-program-id="${docSnap.id}"
+                                data-program-name="${escapeHtml(data.nama || 'Program')}"
+                                data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
+                            Bagikan
                         </button>
                     </div>
                 </div>
             </div>
         `;
 
+        // Event: WhatsApp
         container.querySelector('.wa-program-btn').addEventListener('click', function() {
             openWhatsAppProgram(this.dataset.program);
         });
+
+        // Event: Share
+        const shareBtn = container.querySelector('.share-detail-btn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const programName = this.dataset.programName;
+                const programDesc = this.dataset.programDesc;
+                const shareUrl = window.location.href;
+                
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: programName,
+                            text: `Program Kursus IMDKOM: ${programName}`,
+                            url: shareUrl
+                        });
+                        return;
+                    } catch (err) {
+                        if (err.name === 'AbortError') return;
+                    }
+                }
+                
+                const waText = `*${programName}*\n\n${programDesc}\n\nDetail: ${shareUrl}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, '_blank', 'noopener,noreferrer');
+            });
+        }
 
     } catch (error) {
         console.error('Error loading program detail:', error);
@@ -427,7 +594,7 @@ export async function loadProgramDetail() {
 }
 
 // ============================================================
-// LOAD ALL PROGRAMS (Halaman Kursus)
+// LOAD ALL PROGRAMS (Halaman Kursus) — 3:4 card
 // ============================================================
 export async function loadAllPrograms() {
     const container = document.getElementById('allProgramsContainer');
@@ -452,25 +619,38 @@ export async function loadAllPrograms() {
         }
 
         let html = '';
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const imageUrl = getImageUrl(data.gambar, 'assets/images/programs/default.jpg');
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const imageUrl = buildImageUrl(
+                data.gambar,
+                { width: 600, height: 800, crop: 'fill' },
+                'assets/images/programs/default.jpg'
+            );
             
             html += `
                 <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
                     <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
-                         class="w-full h-48 object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
+                         class="w-full aspect-[3/4] object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
                     <h5 class="text-lg font-semibold text-brand">${escapeHtml(data.nama || 'Program')}</h5>
                     <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
                     <p class="text-gray-600 text-sm mt-1">${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}</p>
                     <p class="font-semibold text-brand mt-1">${formatRupiah(data.harga)}</p>
                     <div class="flex flex-wrap gap-2 mt-3">
-                        <a href="program-detail.html?id=${doc.id}" class="text-brand hover:text-brand-light font-medium text-sm border-b-2 border-brand hover:border-brand-light transition-colors">
+                        <a href="program-detail.html?id=${docSnap.id}" class="text-brand hover:text-brand-light font-medium text-sm border-b-2 border-brand hover:border-brand-light transition-colors">
                             Lihat Detail →
                         </a>
                         <button class="wa-program-btn text-[#25d366] hover:text-[#1da851] font-medium text-sm border-b-2 border-[#25d366] hover:border-[#1da851] transition-colors" 
                                 data-program="${escapeHtml(data.nama || 'Program')}">
                             Tanya WhatsApp
+                        </button>
+                        <button class="share-program-btn text-[#3b82f6] hover:text-[#2563eb] font-medium text-sm border-b-2 border-[#3b82f6] hover:border-[#2563eb] transition-colors inline-flex items-center gap-1"
+                                data-program-id="${docSnap.id}"
+                                data-program-name="${escapeHtml(data.nama || 'Program')}"
+                                data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                            </svg>
+                            Bagikan
                         </button>
                     </div>
                 </div>
@@ -484,6 +664,8 @@ export async function loadAllPrograms() {
             });
         });
 
+        attachShareHandler(container);
+
     } catch (error) {
         console.error('Error loading all programs:', error);
         container.innerHTML = `
@@ -495,7 +677,7 @@ export async function loadAllPrograms() {
 }
 
 // ============================================================
-// LOAD ALL SERVICES (Halaman Service)
+// LOAD ALL SERVICES (Halaman Service) — 3:4 card
 // ============================================================
 export async function loadAllServices() {
     const container = document.getElementById('allServicesContainer');
@@ -520,15 +702,19 @@ export async function loadAllServices() {
         }
 
         let html = '';
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const imageUrl = getImageUrl(data.gambar, 'assets/images/services/default.jpg');
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const imageUrl = buildImageUrl(
+                data.gambar,
+                { width: 600, height: 800, crop: 'fill' },
+                'assets/images/services/default.jpg'
+            );
             const serviceName = escapeHtml(data.nama || 'Layanan');
             
             html += `
                 <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
                     <img src="${imageUrl}" alt="${serviceName}" 
-                         class="w-full h-48 object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
+                         class="w-full aspect-[3/4] object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
                     <h5 class="text-lg font-semibold text-brand">${serviceName}</h5>
                     <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
                     <p class="text-gray-600 text-sm mt-1">${escapeHtml(truncateText(data.deskripsi || '', 100))}</p>

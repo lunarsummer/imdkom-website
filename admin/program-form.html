@@ -22,6 +22,12 @@
             border-radius: 4px;
             border: 1px solid #e5e7eb;
         }
+        .dynamic-item {
+            transition: all 0.2s ease;
+        }
+        .dynamic-item:hover {
+            background: rgba(26, 60, 94, 0.02);
+        }
     </style>
 </head>
 <body>
@@ -119,9 +125,11 @@
                         <div>
                             <label for="harga" class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
                             <input type="text" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none font-medium" 
                                    id="harga" 
-                                   placeholder="Rp 1.500.000" />
+                                   placeholder="Rp 1.500.000"
+                                   inputmode="numeric" />
+                            <p class="text-xs text-gray-400 mt-1">Ketik angka saja, otomatis format Rupiah.</p>
                         </div>
                         <div>
                             <label for="durasi" class="block text-sm font-medium text-gray-700 mb-1">Durasi</label>
@@ -137,47 +145,92 @@
                                    id="order" 
                                    value="1" 
                                    min="1" />
+                            <p class="text-xs text-gray-400 mt-1">Program lain akan otomatis digeser.</p>
                         </div>
                     </div>
 
-                    <!-- Materi -->
-                    <div class="mt-4">
-                        <label for="materi" class="block text-sm font-medium text-gray-700 mb-1">Materi (pisahkan dengan koma)</label>
-                        <input type="text" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                               id="materi" 
-                               placeholder="Word, Excel, PowerPoint" />
-                        <p class="text-xs text-gray-400 mt-1">Contoh: Word, Excel, PowerPoint</p>
+                    <!-- ============================================================
+                         MATERI — Dynamic List
+                         ============================================================ -->
+                    <div class="mt-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Materi <span class="text-red-500">*</span>
+                            </label>
+                            <span class="text-xs text-gray-400">Urutkan dengan tombol ▲ ▼</span>
+                        </div>
+                        
+                        <div id="materiList" class="space-y-2">
+                            <!-- Field dinamis di-render via JS -->
+                        </div>
+                        
+                        <button type="button" 
+                                id="addMateriBtn"
+                                class="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Tambah Materi
+                        </button>
                     </div>
 
-                    <!-- Benefit -->
-                    <div class="mt-4">
-                        <label for="benefit" class="block text-sm font-medium text-gray-700 mb-1">Benefit (pisahkan dengan koma)</label>
-                        <input type="text" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                               id="benefit" 
-                               placeholder="Sertifikat, Modul, Akses online" />
-                        <p class="text-xs text-gray-400 mt-1">Contoh: Sertifikat, Modul, Akses online</p>
+                    <!-- ============================================================
+                         BENEFIT — Dynamic List
+                         ============================================================ -->
+                    <div class="mt-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Benefit <span class="text-red-500">*</span>
+                            </label>
+                            <span class="text-xs text-gray-400">Urutkan dengan tombol ▲ ▼</span>
+                        </div>
+                        
+                        <div id="benefitList" class="space-y-2">
+                            <!-- Field dinamis di-render via JS -->
+                        </div>
+                        
+                        <button type="button" 
+                                id="addBenefitBtn"
+                                class="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Tambah Benefit
+                        </button>
                     </div>
 
-                    <!-- Gambar -->
-                    <div class="mt-4">
-                        <label for="gambar" class="block text-sm font-medium text-gray-700 mb-1">URL Gambar</label>
-                        <input type="text" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                               id="gambar" 
-                               placeholder="assets/images/programs/ms-office.jpg atau https://..." />
-                        <p class="text-xs text-gray-400 mt-1">
-                            Masukkan path gambar lokal (contoh: assets/images/programs/ms-office.jpg) atau URL eksternal.
-                        </p>
-                        <div id="gambarPreview" class="mt-2 hidden">
-                            <img src="" alt="Preview" class="form-preview-img" />
+                    <!-- Gambar Program (Cloudinary) -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gambar Program</label>
+
+                        <!-- Preview -->
+                        <div id="gambarPreviewWrapper" class="hidden mb-3">
+                            <img id="gambarPreview" src="" alt="Preview" class="form-preview-img" />
+                        </div>
+
+                        <!-- Tombol Aksi -->
+                        <div class="flex flex-wrap gap-2">
                             <button type="button" 
-                                    id="removeImage" 
-                                    class="text-red-600 hover:text-red-800 text-sm ml-2 border-b border-red-600 hover:border-red-800 transition-colors">
-                                Hapus
+                                    id="uploadGambarBtn" 
+                                    class="inline-flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-light text-white rounded-lg text-sm font-medium transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                </svg>
+                                <span id="uploadGambarText">Upload Gambar</span>
+                            </button>
+                            <button type="button" 
+                                    id="removeGambarBtn" 
+                                    class="hidden inline-flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-medium border border-red-200 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                Hapus Gambar
                             </button>
                         </div>
+
+                        <!-- Input Hidden untuk menyimpan URL Cloudinary -->
+                        <input type="hidden" id="gambar" />
+                        <p class="text-xs text-gray-400 mt-2">Upload ke Cloudinary — otomatis dioptimasi.</p>
                     </div>
 
                     <!-- Status Aktif -->
@@ -212,8 +265,26 @@
          JAVASCRIPT
          ============================================================ -->
     <script type="module">
-        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, addDoc, updateDoc, collection } from '../assets/js/firebase.js';
-        import { getImageUrl } from '../assets/js/utils.js';
+        import { 
+            auth, onAuthStateChanged, signOut, 
+            db, doc, getDoc, addDoc, updateDoc, collection,
+            getDocs, query, orderBy, writeBatch 
+        } from '../assets/js/firebase.js';
+        import { setupImageUploadField, setExistingImagePreview } from '../assets/js/cloudinary.js';
+
+        // ============================================================
+        // KONFIG FIELD GAMBAR
+        // ============================================================
+        const GAMBAR_FIELD_CONFIG = {
+            uploadBtnId: 'uploadGambarBtn',
+            uploadTextId: 'uploadGambarText',
+            removeBtnId: 'removeGambarBtn',
+            inputId: 'gambar',
+            previewWrapperId: 'gambarPreviewWrapper',
+            previewImgId: 'gambarPreview',
+            folder: 'programs',
+            previewWidth: 400
+        };
 
         // ============================================================
         // AUTH CHECK
@@ -237,6 +308,252 @@
             await signOut(auth);
             window.location.href = 'login.html';
         });
+
+        // ============================================================
+        // INIT CLOUDINARY + DYNAMIC LISTS
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            setupImageUploadField(GAMBAR_FIELD_CONFIG);
+            
+            // Mulai dengan 1 field kosong untuk materi & benefit
+            addMateriField('');
+            addBenefitField('');
+        });
+
+        // ============================================================
+        // FORMAT RUPIAH — Auto-format saat mengetik
+        // ============================================================
+        const hargaInput = document.getElementById('harga');
+
+        hargaInput.addEventListener('input', function(e) {
+            const cursorPos = e.target.selectionStart;
+            const oldValue = e.target.value;
+            const oldLength = oldValue.length;
+            
+            // Hapus semua non-digit
+            const digits = oldValue.replace(/\D/g, '');
+            
+            if (!digits) {
+                e.target.value = '';
+                return;
+            }
+            
+            // Format dengan titik ribuan
+            const formatted = parseInt(digits, 10).toLocaleString('id-ID');
+            const newValue = `Rp ${formatted}`;
+            e.target.value = newValue;
+            
+            // Sesuaikan posisi kursor
+            const newLength = newValue.length;
+            const newPos = Math.max(0, cursorPos + (newLength - oldLength));
+            e.target.setSelectionRange(newPos, newPos);
+        });
+
+        // Handle backspace kalau hanya "Rp " tersisa
+        hargaInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value === 'Rp ') {
+                e.preventDefault();
+                this.value = '';
+            }
+        });
+
+        // ============================================================
+        // UTILITY: Escape HTML
+        // ============================================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ============================================================
+        // DYNAMIC LIST — HELPER
+        // ============================================================
+        function createListItemHTML(value, type) {
+            const placeholder = type === 'materi' 
+                ? 'Contoh: Pengenalan Word' 
+                : 'Contoh: Sertifikat resmi';
+            
+            const labelText = type === 'materi' ? 'Materi' : 'Benefit';
+            
+            return `
+                <div class="dynamic-item flex gap-2 items-center bg-gray-50 p-2 rounded-lg">
+                    <!-- Reorder buttons -->
+                    <div class="flex flex-col gap-0.5 flex-shrink-0">
+                        <button type="button" 
+                                class="move-up p-1 text-gray-400 hover:text-brand hover:bg-white rounded transition-colors"
+                                title="Naikkan"
+                                aria-label="Naikkan">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </button>
+                        <button type="button" 
+                                class="move-down p-1 text-gray-400 hover:text-brand hover:bg-white rounded transition-colors"
+                                title="Turunkan"
+                                aria-label="Turunkan">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Input -->
+                    <input type="text" 
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white"
+                           value="${escapeHtml(value)}"
+                           placeholder="${placeholder}"
+                           data-${type}-input
+                           aria-label="${labelText}" />
+
+                    <!-- Delete -->
+                    <button type="button" 
+                            class="remove-item p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                            title="Hapus"
+                            aria-label="Hapus">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+        }
+
+        // ---------- MATERI ----------
+        const materiList = document.getElementById('materiList');
+        const addMateriBtn = document.getElementById('addMateriBtn');
+
+        function addMateriField(value = '') {
+            const div = document.createElement('div');
+            div.innerHTML = createListItemHTML(value, 'materi');
+            const item = div.firstElementChild;
+            materiList.appendChild(item);
+            attachListItemEvents(item, materiList);
+            if (!value) {
+                item.querySelector('input').focus();
+            }
+        }
+
+        function getMateriValues() {
+            const inputs = materiList.querySelectorAll('input[data-materi-input]');
+            const values = [];
+            inputs.forEach(input => {
+                const val = input.value.trim();
+                if (val) values.push(val);
+            });
+            return values;
+        }
+
+        addMateriBtn.addEventListener('click', () => addMateriField(''));
+
+        // ---------- BENEFIT ----------
+        const benefitList = document.getElementById('benefitList');
+        const addBenefitBtn = document.getElementById('addBenefitBtn');
+
+        function addBenefitField(value = '') {
+            const div = document.createElement('div');
+            div.innerHTML = createListItemHTML(value, 'benefit');
+            const item = div.firstElementChild;
+            benefitList.appendChild(item);
+            attachListItemEvents(item, benefitList);
+            if (!value) {
+                item.querySelector('input').focus();
+            }
+        }
+
+        function getBenefitValues() {
+            const inputs = benefitList.querySelectorAll('input[data-benefit-input]');
+            const values = [];
+            inputs.forEach(input => {
+                const val = input.value.trim();
+                if (val) values.push(val);
+            });
+            return values;
+        }
+
+        addBenefitBtn.addEventListener('click', () => addBenefitField(''));
+
+        // ============================================================
+        // EVENT HANDLER UNTUK SETIAP ITEM (reorder + delete)
+        // ============================================================
+        function attachListItemEvents(item, listContainer) {
+            const input = item.querySelector('input');
+            const moveUpBtn = item.querySelector('.move-up');
+            const moveDownBtn = item.querySelector('.move-down');
+            const removeBtn = item.querySelector('.remove-item');
+
+            moveUpBtn.addEventListener('click', () => {
+                const prev = item.previousElementSibling;
+                if (prev) {
+                    listContainer.insertBefore(item, prev);
+                }
+            });
+
+            moveDownBtn.addEventListener('click', () => {
+                const next = item.nextElementSibling;
+                if (next) {
+                    listContainer.insertBefore(next, item);
+                }
+            });
+
+            removeBtn.addEventListener('click', () => {
+                const count = listContainer.children.length;
+                if (count <= 1) {
+                    // Minimal 1 field — kosongkan saja
+                    input.value = '';
+                    input.focus();
+                    return;
+                }
+                item.remove();
+            });
+        }
+
+        // ============================================================
+        // REORDER PROGRAM — Normalisasi urutan setelah insert/update
+        // ============================================================
+        async function reorderPrograms(targetProgramId, targetProgramData, targetOrder) {
+            // 1. Ambil semua program, urutkan berdasarkan order
+            const q = query(collection(db, 'programs'), orderBy('order', 'asc'));
+            const snapshot = await getDocs(q);
+            
+            // 2. Kumpulkan program (kecuali yang baru disimpan)
+            const others = [];
+            snapshot.forEach(docSnap => {
+                if (docSnap.id === targetProgramId) return;
+                others.push({
+                    id: docSnap.id,
+                    data: docSnap.data()
+                });
+            });
+            
+            // 3. Insert program target di posisi targetOrder - 1
+            const insertIndex = Math.max(0, Math.min(targetOrder - 1, others.length));
+            others.splice(insertIndex, 0, {
+                id: targetProgramId,
+                data: targetProgramData
+            });
+            
+            // 4. Batch update — assign ulang order 1..N
+            const batch = writeBatch(db);
+            others.forEach((prog, index) => {
+                const newOrder = index + 1;
+                if (prog.id === targetProgramId) {
+                    batch.set(doc(db, 'programs', prog.id), {
+                        ...prog.data,
+                        order: newOrder
+                    });
+                } else {
+                    batch.update(doc(db, 'programs', prog.id), { order: newOrder });
+                }
+            });
+            
+            await batch.commit();
+            console.log(`✅ ${others.length} program di-reorder`);
+        }
 
         // ============================================================
         // CHECK EDIT MODE
@@ -274,17 +591,28 @@
                 document.getElementById('harga').value = data.harga || '';
                 document.getElementById('durasi').value = data.durasi || '';
                 document.getElementById('order').value = data.order || 1;
-                document.getElementById('materi').value = Array.isArray(data.materi) ? data.materi.join(', ') : '';
-                document.getElementById('benefit').value = Array.isArray(data.benefit) ? data.benefit.join(', ') : '';
                 document.getElementById('gambar').value = data.gambar || '';
                 document.getElementById('aktif').checked = data.aktif !== false;
                 
-                // Preview gambar
+                // Load materi
+                materiList.innerHTML = '';
+                if (Array.isArray(data.materi) && data.materi.length > 0) {
+                    data.materi.forEach(m => addMateriField(m));
+                } else {
+                    addMateriField('');
+                }
+                
+                // Load benefit
+                benefitList.innerHTML = '';
+                if (Array.isArray(data.benefit) && data.benefit.length > 0) {
+                    data.benefit.forEach(b => addBenefitField(b));
+                } else {
+                    addBenefitField('');
+                }
+                
+                // Preview gambar Cloudinary
                 if (data.gambar) {
-                    const preview = document.getElementById('gambarPreview');
-                    const img = preview.querySelector('img');
-                    img.src = getImageUrl(data.gambar);
-                    preview.classList.remove('hidden');
+                    setExistingImagePreview(GAMBAR_FIELD_CONFIG, data.gambar);
                 }
                 
             } catch (error) {
@@ -292,26 +620,6 @@
                 alert('Gagal memuat program: ' + error.message);
             }
         }
-
-        // ============================================================
-        // PREVIEW GAMBAR
-        // ============================================================
-        document.getElementById('gambar').addEventListener('input', function() {
-            const preview = document.getElementById('gambarPreview');
-            const img = preview.querySelector('img');
-            
-            if (this.value.trim()) {
-                img.src = getImageUrl(this.value.trim());
-                preview.classList.remove('hidden');
-            } else {
-                preview.classList.add('hidden');
-            }
-        });
-
-        document.getElementById('removeImage').addEventListener('click', function() {
-            document.getElementById('gambar').value = '';
-            document.getElementById('gambarPreview').classList.add('hidden');
-        });
 
         // ============================================================
         // SUBMIT FORM
@@ -322,6 +630,19 @@
             const id = document.getElementById('programId').value;
             const submitBtn = this.querySelector('button[type="submit"]');
             const messageEl = document.getElementById('formMessage');
+            
+            // Validasi materi & benefit minimal 1 terisi
+            const materiValues = getMateriValues();
+            const benefitValues = getBenefitValues();
+            
+            if (materiValues.length === 0) {
+                messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Materi wajib diisi minimal 1 item.</p>`;
+                return;
+            }
+            if (benefitValues.length === 0) {
+                messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Benefit wajib diisi minimal 1 item.</p>`;
+                return;
+            }
             
             // Disable button
             submitBtn.disabled = true;
@@ -337,24 +658,35 @@
                 harga: document.getElementById('harga').value.trim(),
                 durasi: document.getElementById('durasi').value.trim(),
                 order: parseInt(document.getElementById('order').value) || 1,
-                materi: document.getElementById('materi').value.split(',').map(s => s.trim()).filter(Boolean),
-                benefit: document.getElementById('benefit').value.split(',').map(s => s.trim()).filter(Boolean),
+                materi: materiValues,
+                benefit: benefitValues,
                 gambar: document.getElementById('gambar').value.trim(),
                 aktif: document.getElementById('aktif').checked
             };
 
             try {
                 if (id) {
-                    // Update
+                    // ========== EDIT MODE ==========
                     await updateDoc(doc(db, 'programs', id), data);
+                    await reorderPrograms(id, data, data.order);
                     messageEl.innerHTML = `<p class="text-green-600 font-medium">✅ Program berhasil diupdate!</p>`;
                 } else {
-                    // Create
+                    // ========== CREATE MODE ==========
                     data.createdAt = new Date().toISOString();
-                    await addDoc(collection(db, 'programs'), data);
+                    const docRef = await addDoc(collection(db, 'programs'), data);
+                    await reorderPrograms(docRef.id, data, data.order);
                     messageEl.innerHTML = `<p class="text-green-600 font-medium">✅ Program berhasil ditambahkan!</p>`;
+                    
+                    // Reset form
                     this.reset();
-                    document.getElementById('gambarPreview').classList.add('hidden');
+                    document.getElementById('gambarPreviewWrapper').classList.add('hidden');
+                    document.getElementById('removeGambarBtn').classList.add('hidden');
+                    document.getElementById('uploadGambarText').textContent = 'Upload Gambar';
+                    
+                    materiList.innerHTML = '';
+                    benefitList.innerHTML = '';
+                    addMateriField('');
+                    addBenefitField('');
                 }
                 
                 // Redirect setelah 1.5 detik

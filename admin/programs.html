@@ -142,6 +142,7 @@
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from '../assets/js/firebase.js';
         import { PLACEHOLDER_IMAGE } from '../assets/js/placeholder.js';
+        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
 
         // ============================================================
         // MOBILE SIDEBAR
@@ -207,8 +208,10 @@
                 let html = '';
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    // ✅ FIX: Pakai SVG placeholder dari helper
-                    const imageUrl = data.gambar ? '../' + data.gambar : PLACEHOLDER_IMAGE;
+                    // ✅ Cloudinary URL optimization (thumbnail 100x100)
+                  const imageUrl = data.gambar 
+                    ? optimizeCloudinaryUrl(data.gambar, { width: 100, height: 100, crop: 'fill' })
+                    : PLACEHOLDER_IMAGE;
                     
                     html += `
                         <tr>
