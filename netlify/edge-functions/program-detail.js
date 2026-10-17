@@ -1,44 +1,38 @@
 // ============================================================
-// NETLIFY EDGE FUNCTION
+// NETLIFY EDGE FUNCTION - FINAL
 // Path: /program-detail.html & /program-detail
 // ============================================================
 
-export default async (request) => {
+export default async (request, context) => {
     const url = new URL(request.url);
     const programId = url.searchParams.get('id');
     const userAgent = request.headers.get('user-agent') || '';
 
-    // Deteksi crawler (WhatsApp, FB, dll)
+    // 1. Deteksi Crawler
     const isCrawler = /WhatsApp|facebookexternalhit|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|Googlebot|bingbot/i.test(userAgent);
 
-    // Jika bukan crawler atau tidak ada ID, kembalikan respons kosong (biarkan Netlify menyajikan file statis)
-    // Kita gunakan trick: fetch URL asli dengan menambahkan parameter ?_edge=1 agar tidak loop
+    // 2. Jika bukan crawler atau tidak ada ID, lanjutkan request seperti biasa (jangan return apapun)
+    //    Ini akan membuat Netlify menyajikan file statis HTML asli.
     if (!isCrawler || !programId) {
-        const staticUrl = new URL(request.url);
-        staticUrl.searchParams.set('_edge', '1');
-        return fetch(staticUrl.toString());
+        return; 
     }
 
     try {
-        // ============================================================
-        // FETCH DATA DARI FIRESTORE
-        // ============================================================
+        // 3. Ambil Data dari Firestore
         const projectId = 'imdkomyk-9695a';
         const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/programs/${programId}`;
         
         const firestoreRes = await fetch(firestoreUrl);
-        
         if (!firestoreRes.ok) {
-            throw new Error(`Firestore error: ${firestoreRes.status}`);
+            // Jika gagal ambil data, biarkan Netlify menyajikan HTML asli
+            return; 
         }
 
         const firestoreData = await firestoreRes.json();
         const fields = firestoreData.fields || {};
 
         const nama = fields.nama?.stringValue || 'Program Kursus';
-        const deskripsi = fields.deskripsiSingkat?.stringValue 
-            || fields.deskripsi?.stringValue 
-            || 'Program pelatihan komputer di IMDKOM Yogyakarta.';
+        const deskripsi = fields.deskripsiSingkat?.stringValue || fields.deskripsi?.stringValue || 'Program pelatihan di IMDKOM.';
         const gambar = fields.gambar?.stringValue || '';
 
         let ogImage = 'https://imdkomyogyakarta.netlify.app/assets/images/logo/imdkom.svg';
@@ -51,18 +45,12 @@ export default async (request) => {
         const pageTitle = `${nama} | IMDKOM Yogyakarta`;
         const pageDesc = deskripsi.substring(0, 160);
 
-        // ============================================================
-        // AMBIL HTML ASLI (TANPA EDGE FUNCTION)
-        // ============================================================
-        // Kita fetch file statis aslinya dengan menambahkan ?_edge=1
-        const staticUrl = new URL(request.url);
-        staticUrl.searchParams.set('_edge', '1');
-        const htmlRes = await fetch(staticUrl.toString());
-        let html = await htmlRes.text();
+        // 4. AMBIL HTML ASLI MENGGUNAKAN context.next() (CARA YANG BENAR)
+        //    Ini mengambil file program-detail.html tanpa memicu Edge Function lagi.
+        const response = await context.next();
+        let html = await response.text();
 
-        // ============================================================
-        // INJECT META TAG
-        // ============================================================
+        // 5. Suntikkan Meta Tag
         const metaTags = `
     <meta property="og:type" content="article" />
     <meta property="og:title" content="${escapeAttr(pageTitle)}" />
@@ -77,22 +65,25 @@ export default async (request) => {
     <meta name="twitter:image" content="${escapeAttr(ogImage)}" />
     `;
 
+        // Ganti title lama & suntikkan meta baru
         html = html.replace(/<title>.*?<\/title>/i, `<title>${escapeAttr(pageTitle)}</title>`);
         html = html.replace(/<meta\s+property="og:[^"]*"[^>]*>/gi, '');
         html = html.replace(/<meta\s+name="twitter:[^"]*"[^>]*>/gi, '');
         html = html.replace(/(<title>.*?<\/title>)/i, `$1\n${metaTags}`);
 
+        // 6. Kembalikan HTML yang sudah dimodifikasi
         return new Response(html, {
             status: 200,
-            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+            headers: {
+                'Content-Type': 'text/html; charset=utf-8',
+                'Cache-Control': 'public, max-age=300, s-maxage=600'
+            }
         });
 
     } catch (error) {
+        // 7. Jika terjadi error, JANGAN crash. Biarkan Netlify menyajikan HTML asli.
         console.error('Edge Function error:', error.message);
-        // Fallback: jika error, kembalikan HTML asli
-        const staticUrl = new URL(request.url);
-        staticUrl.searchParams.set('_edge', '1');
-        return fetch(staticUrl.toString());
+        return; // Kembalikan undefined agar request berlanjut ke file statis
     }
 };
 
