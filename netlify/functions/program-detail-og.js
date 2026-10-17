@@ -144,3 +144,6 @@ function escapeAttr(str) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
 }
+export const config = {
+    path: ["/program-detail.html", "/program-detail"]
+};
