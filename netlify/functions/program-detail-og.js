@@ -4,8 +4,6 @@
 // Hanya aktif saat request dari crawler (WhatsApp, FB, dll)
 // ============================================================
 
-import { getStore } from "@netlify/blobs";
-
 export default async (request, context) => {
     const url = new URL(request.url);
     const programId = url.searchParams.get('id');
@@ -36,7 +34,6 @@ export default async (request, context) => {
     try {
         // ============================================================
         // FETCH DATA PROGRAM DARI FIRESTORE REST API
-        // (tanpa SDK — pakai fetch biasa, lebih ringan)
         // ============================================================
         const projectId = 'imdkomyk-9695a';
         const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/programs/${programId}`;
@@ -54,7 +51,7 @@ export default async (request, context) => {
         const firestoreData = await firestoreRes.json();
         const fields = firestoreData.fields || {};
 
-        // Parse field Firestore (format khusus)
+        // Parse field Firestore
         const nama = fields.nama?.stringValue || 'Program Kursus';
         const deskripsi = fields.deskripsiSingkat?.stringValue 
             || fields.deskripsi?.stringValue 
@@ -113,7 +110,7 @@ export default async (request, context) => {
             ''
         );
 
-        // Inject setelah <head> atau setelah <title>
+        // Inject setelah <title>
         html = html.replace(
             /(<title>.*?<\/title>)/i,
             `$1\n${metaTags}`
