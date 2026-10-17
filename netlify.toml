@@ -1,14 +1,31 @@
+# ============================================================
+# NETLIFY CONFIGURATION
+# IMDKOM Yogyakarta
+# ============================================================
+
 [build]
   publish = "."
 
-# Gunakan path tanpa .html agar fungsi ini menangkap request sebelum file statis
-[[edge_functions]]
-  path = "/program-detail"
-  function = "program-detail-og"
-
-# Redirect ini akan memastikan URL dengan .html juga diarahkan ke fungsi
+# ============================================================
+# REDIRECT — Kalau akses /program-detail tanpa .html
+# ============================================================
 [[redirects]]
-  from = "/program-detail.html"
-  to = "/program-detail"
+  from = "/program-detail"
+  to = "/program-detail.html"
   status = 200
   force = true
+
+# ============================================================
+# HEADERS — Cache & security
+# ============================================================
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

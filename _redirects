@@ -5,3 +5,5 @@
 
 # Redirect admin
 /admin    /admin/login.html   200
+/program-detail.html    /.netlify/edge-functions/program-detail-og   200
+/program-detail         /.netlify/edge-functions/program-detail-og   200
