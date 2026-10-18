@@ -26,7 +26,7 @@
             <a href="landing-page.html" class="nav-link"><i data-lucide="home" class="w-4 h-4"></i>Landing Page</a>
             <a href="programs.html" class="nav-link"><i data-lucide="book-open" class="w-4 h-4"></i>Program Kursus</a>
             <a href="services.html" class="nav-link active"><i data-lucide="wrench" class="w-4 h-4"></i>Computer Service</a>
-            <a href="pc-components.html" class="nav-link active">
+            <a href="pc-components.html" class="nav-link">
                 <i data-lucide="cpu" class="w-4 h-4"></i>
                 PC Components
             </a>
@@ -49,24 +49,35 @@
             </a>
         </div>
 
+        <!-- Info Alert -->
+        <div class="admin-card mb-4" style="background: rgba(26, 60, 94, 0.05); border-color: rgba(26, 60, 94, 0.15);">
+            <div class="flex items-start gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-brand flex-shrink-0 mt-0.5"></i>
+                <p class="text-sm text-gray-600">
+                    Urutan akan dirapikan secara otomatis (1, 2, 3, dst) saat halaman ini dimuat atau setelah menghapus layanan. 
+                    Untuk mengganti gambar, silakan klik <strong>Edit</strong> pada layanan.
+                </p>
+            </div>
+        </div>
+
         <div class="admin-card overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Urutan</th>
-                            <th>Icon</th>
-                            <th>Nama</th>
+                            <th style="width: 60px;">Urutan</th>
+                            <th style="width: 80px;">Gambar</th>
+                            <th>Nama Layanan</th>
                             <th>Slug</th>
                             <th>Status</th>
-                            <th>Aksi</th>
+                            <th style="width: 120px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="servicesList">
                         <tr>
                             <td colspan="6" class="text-center text-gray-500 py-8">
                                 <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
-                                <p class="mt-2">Memuat...</p>
+                                <p class="mt-2">Memuat & merapikan data...</p>
                             </td>
                         </tr>
                     </tbody>
@@ -76,7 +87,9 @@
     </main>
 
     <script type="module">
-        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from '../assets/js/firebase.js';
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc, writeBatch } from '../assets/js/firebase.js';
+        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+        import { PLACEHOLDER_IMAGE } from '../assets/js/placeholder.js';
 
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
@@ -92,7 +105,7 @@
         onAuthStateChanged(auth, (user) => {
             if (!user) window.location.href = 'login.html';
             else {
-                loadServices();
+                initPage();
                 lucide.createIcons();
             }
         });
@@ -102,6 +115,47 @@
             window.location.href = 'login.html';
         });
 
+        // ============================================================
+        // INIT PAGE & AUTO-FIX ORDER
+        // ============================================================
+        async function initPage() {
+            await autoFixOrders(); // Rapikan urutan dulu
+            await loadServices();  // Baru tampilkan
+        }
+
+        async function autoFixOrders() {
+            try {
+                const q = query(collection(db, 'services'), orderBy('order', 'asc'));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) return;
+
+                const batch = writeBatch(db);
+                let needsUpdate = false;
+                let index = 1;
+                
+                snapshot.forEach((docSnap) => {
+                    const currentOrder = docSnap.data().order;
+                    // Jika urutan tidak sama dengan index (berarti ada duplikat atau bolong)
+                    if (currentOrder !== index) {
+                        batch.update(doc(db, 'services', docSnap.id), { order: index });
+                        needsUpdate = true;
+                    }
+                    index++;
+                });
+                
+                if (needsUpdate) {
+                    await batch.commit();
+                    console.log('✅ Urutan layanan telah dirapikan otomatis.');
+                }
+            } catch (error) {
+                console.error('Auto-fix order error:', error);
+            }
+        }
+
+        // ============================================================
+        // LOAD SERVICES
+        // ============================================================
         async function loadServices() {
             const container = document.getElementById('servicesList');
             try {
@@ -116,23 +170,45 @@
                 let html = '';
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
+                    
+                    // Thumbnail dari Cloudinary (atau placeholder)
+                    const thumbUrl = data.gambar 
+                        ? optimizeCloudinaryUrl(data.gambar, { width: 200, height: 200, crop: 'fill' })
+                        : PLACEHOLDER_IMAGE;
+
                     html += `
                         <tr>
-                            <td data-label="Urutan">${data.order || '-'}</td>
-                            <td data-label="Icon">
-                                <div class="w-10 h-10 bg-brand/10 rounded-lg flex items-center justify-center text-brand">
-                                    <i data-lucide="${data.icon || 'wrench'}" class="w-5 h-5"></i>
-                                </div>
+                            <td data-label="Urutan">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-brand/10 text-brand font-bold text-sm rounded-lg">
+                                    ${data.order || '-'}
+                                </span>
                             </td>
-                            <td data-label="Nama"><span class="font-medium text-gray-800">${data.nama || '-'}</span></td>
+                            <td data-label="Gambar">
+                                <img src="${thumbUrl}" alt="${data.nama || ''}" 
+                                     class="w-12 h-12 object-cover rounded-lg border border-gray-200"
+                                     onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';" />
+                            </td>
+                            <td data-label="Nama">
+                                <div class="font-medium text-gray-800">${data.nama || '-'}</div>
+                                ${data.deskripsiSingkat ? `<div class="text-xs text-gray-400 mt-0.5 truncate max-w-[200px]">${data.deskripsiSingkat}</div>` : ''}
+                            </td>
                             <td data-label="Slug"><code class="text-xs bg-gray-100 px-2 py-1 rounded">${data.slug || '-'}</code></td>
                             <td data-label="Status">
                                 <span class="badge ${data.aktif ? 'badge-success' : 'badge-gray'}">${data.aktif ? 'Aktif' : 'Nonaktif'}</span>
                             </td>
                             <td data-label="Aksi">
-                                <div class="flex gap-2">
-                                    <a href="service-form.html?id=${docSnap.id}" class="text-brand hover:text-brand-light text-sm font-medium">Edit</a>
-                                    <button class="delete-btn text-red-600 hover:text-red-800 text-sm font-medium" data-id="${docSnap.id}" data-name="${data.nama || ''}">Hapus</button>
+                                <div class="flex gap-3">
+                                    <a href="service-form.html?id=${docSnap.id}" 
+                                       class="text-brand hover:text-brand-light text-sm font-medium inline-flex items-center gap-1">
+                                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                        Edit
+                                    </a>
+                                    <button class="delete-btn text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center gap-1" 
+                                            data-id="${docSnap.id}" 
+                                            data-name="${data.nama || ''}">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        Hapus
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -143,12 +219,26 @@
 
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', async () => {
-                        if (confirm(`Hapus layanan "${btn.dataset.name}"?`)) {
-                            await deleteDoc(doc(db, 'services', btn.dataset.id));
-                            loadServices();
+                        const id = btn.dataset.id;
+                        const name = btn.dataset.name;
+                        
+                        if (confirm(`Hapus layanan "${name}"?\n\nTindakan ini tidak dapat dibatalkan.`)) {
+                            try {
+                                btn.disabled = true;
+                                btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>`;
+                                lucide.createIcons();
+                                
+                                await deleteDoc(doc(db, 'services', id));
+                                initPage(); // Auto-fix order & reload tabel
+                            } catch (error) {
+                                console.error('Error deleting:', error);
+                                alert('Gagal menghapus: ' + error.message);
+                                btn.disabled = false;
+                            }
                         }
                     });
                 });
+
             } catch (error) {
                 console.error('Error:', error);
                 container.innerHTML = `<tr><td colspan="6" class="text-center text-red-600 py-8">Gagal memuat. <br><small>${error.message}</small></td></tr>`;

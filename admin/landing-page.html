@@ -124,7 +124,7 @@
                 <i data-lucide="wrench" class="w-4 h-4"></i>
                 Computer Service
             </a>
-            <a href="pc-components.html" class="nav-link active">
+            <a href="pc-components.html" class="nav-link">
                 <i data-lucide="cpu" class="w-4 h-4"></i>
                 PC Components
             </a>
@@ -213,21 +213,46 @@
                     <textarea id="heroSubtext" rows="2" class="form-input" placeholder="IMDKOM adalah lembaga kursus dan pelatihan komputer..."></textarea>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    <div>
-                        <label class="form-label">Text Tombol CTA</label>
-                        <input type="text" id="heroCtaText" class="form-input" placeholder="Lihat Program" />
-                    </div>
-                    <div>
-                        <label class="form-label">Gambar Hero</label>
-                        <input type="text" id="heroGambar" class="form-input" placeholder="assets/images/hero/hero-default.jpg" />
-                        <p class="form-hint">Path gambar lokal atau URL eksternal</p>
-                    </div>
+                <div class="mt-4">
+                    <label class="form-label">Text Tombol CTA</label>
+                    <input type="text" id="heroCtaText" class="form-input" placeholder="Lihat Program" />
                 </div>
 
-                <!-- Preview Hero Image -->
-                <div id="heroPreviewWrapper" class="mt-4 hidden">
-                    <img id="heroPreview" src="" alt="Preview Hero" class="form-preview-img" />
+                <!-- ============================================================ -->
+                <!-- GAMBAR HERO — Cloudinary Upload -->
+                <!-- ============================================================ -->
+                <div class="mt-4">
+                    <label class="form-label">Gambar Hero</label>
+
+                    <!-- Preview -->
+                    <div id="heroGambarPreviewWrapper" class="hidden mb-3">
+                        <img id="heroGambarPreview" src="" alt="Preview Hero" class="form-preview-img" />
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button type="button"
+                                id="uploadHeroGambarBtn"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold shadow-md shadow-emerald-200 transition-all hover:-translate-y-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                            </svg>
+                            <span id="uploadHeroGambarText">Upload Gambar</span>
+                        </button>
+
+                        <button type="button"
+                                id="removeHeroGambarBtn"
+                                class="hidden inline-flex items-center gap-2 px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-sm font-semibold border border-red-200 transition-all hover:-translate-y-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Hapus
+                        </button>
+                    </div>
+
+                    <!-- Hidden input untuk menyimpan URL Cloudinary -->
+                    <input type="hidden" id="heroGambar" />
+                    <p class="form-hint">Upload ke Cloudinary — otomatis dioptimasi. Kalau kosong, pakai gambar default lokal.</p>
                 </div>
             </div>
 
@@ -255,13 +280,41 @@
                     <textarea id="aboutDeskripsi" rows="3" class="form-input" placeholder="IMDKOM adalah lembaga kursus dan pelatihan komputer..."></textarea>
                 </div>
 
+                <!-- ============================================================ -->
+                <!-- GAMBAR ABOUT — Cloudinary Upload -->
+                <!-- ============================================================ -->
                 <div class="mt-4">
                     <label class="form-label">Gambar About</label>
-                    <input type="text" id="aboutGambar" class="form-input" placeholder="assets/images/about/about-imdkom.jpg" />
-                </div>
 
-                <div id="aboutPreviewWrapper" class="mt-4 hidden">
-                    <img id="aboutPreview" src="" alt="Preview About" class="form-preview-img" />
+                    <!-- Preview -->
+                    <div id="aboutGambarPreviewWrapper" class="hidden mb-3">
+                        <img id="aboutGambarPreview" src="" alt="Preview About" class="form-preview-img" />
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button type="button"
+                                id="uploadAboutGambarBtn"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold shadow-md shadow-emerald-200 transition-all hover:-translate-y-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                            </svg>
+                            <span id="uploadAboutGambarText">Upload Gambar</span>
+                        </button>
+
+                        <button type="button"
+                                id="removeAboutGambarBtn"
+                                class="hidden inline-flex items-center gap-2 px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-sm font-semibold border border-red-200 transition-all hover:-translate-y-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Hapus
+                        </button>
+                    </div>
+
+                    <!-- Hidden input untuk menyimpan URL Cloudinary -->
+                    <input type="hidden" id="aboutGambar" />
+                    <p class="form-hint">Upload ke Cloudinary — otomatis dioptimasi. Kalau kosong, pakai gambar default lokal.</p>
                 </div>
             </div>
 
@@ -355,6 +408,32 @@
     ============================================================ -->
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from '../assets/js/firebase.js';
+        import { setupImageUploadField, setExistingImagePreview } from '../assets/js/cloudinary.js';
+
+        // ============================================================
+        // KONFIGURASI CLOUDINARY FIELD GAMBAR
+        // ============================================================
+        const HERO_GAMBAR_CONFIG = {
+            uploadBtnId: 'uploadHeroGambarBtn',
+            uploadTextId: 'uploadHeroGambarText',
+            removeBtnId: 'removeHeroGambarBtn',
+            inputId: 'heroGambar',
+            previewWrapperId: 'heroGambarPreviewWrapper',
+            previewImgId: 'heroGambarPreview',
+            folder: 'landing/hero',
+            previewWidth: 600
+        };
+
+        const ABOUT_GAMBAR_CONFIG = {
+            uploadBtnId: 'uploadAboutGambarBtn',
+            uploadTextId: 'uploadAboutGambarText',
+            removeBtnId: 'removeAboutGambarBtn',
+            inputId: 'aboutGambar',
+            previewWrapperId: 'aboutGambarPreviewWrapper',
+            previewImgId: 'aboutGambarPreview',
+            folder: 'landing/about',
+            previewWidth: 600
+        };
 
         // ============================================================
         // MOBILE SIDEBAR
@@ -374,14 +453,20 @@
         });
 
         // ============================================================
-        // AUTH
+        // AUTH + SETUP CLOUDINARY
         // ============================================================
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = 'login.html';
             } else {
+                // Setup field gambar Cloudinary (setelah login)
+                setupImageUploadField(HERO_GAMBAR_CONFIG);
+                setupImageUploadField(ABOUT_GAMBAR_CONFIG);
+
+                // Load konten existing
                 loadContent();
-                lucide.createIcons();
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             }
         });
 
@@ -389,33 +474,6 @@
             await signOut(auth);
             window.location.href = 'login.html';
         });
-
-        // ============================================================
-        // IMAGE PREVIEW
-        // ============================================================
-        function attachImagePreview(inputId, previewWrapperId, previewImgId) {
-            const input = document.getElementById(inputId);
-            const wrapper = document.getElementById(previewWrapperId);
-            const img = document.getElementById(previewImgId);
-            
-            if (!input || !wrapper || !img) return;
-            
-            input.addEventListener('input', function() {
-                const value = this.value.trim();
-                if (value) {
-                    img.src = value.startsWith('http') ? value : '../' + value;
-                    img.onerror = () => {
-                        img.src = 'https://via.placeholder.com/400x300/1a3c5e/ffffff?text=Image+Not+Found';
-                    };
-                    wrapper.classList.remove('hidden');
-                } else {
-                    wrapper.classList.add('hidden');
-                }
-            });
-        }
-
-        attachImagePreview('heroGambar', 'heroPreviewWrapper', 'heroPreview');
-        attachImagePreview('aboutGambar', 'aboutPreviewWrapper', 'aboutPreview');
 
         // ============================================================
         // LOAD CONTENT
@@ -434,10 +492,12 @@
                     document.getElementById('heroDeskripsi').value = data.hero.deskripsi || '';
                     document.getElementById('heroSubtext').value = data.hero.subtext || '';
                     document.getElementById('heroCtaText').value = data.hero.ctaText || '';
-                    document.getElementById('heroGambar').value = data.hero.gambar || '';
-                    
+
+                    // Set gambar & preview via Cloudinary helper
                     if (data.hero.gambar) {
-                        document.getElementById('heroGambar').dispatchEvent(new Event('input'));
+                        setExistingImagePreview(HERO_GAMBAR_CONFIG, data.hero.gambar);
+                    } else {
+                        document.getElementById('heroGambar').value = '';
                     }
                 }
                 
@@ -445,10 +505,12 @@
                 if (data.about) {
                     document.getElementById('aboutTitle').value = data.about.judul || '';
                     document.getElementById('aboutDeskripsi').value = data.about.deskripsi || '';
-                    document.getElementById('aboutGambar').value = data.about.gambar || '';
-                    
+
+                    // Set gambar & preview via Cloudinary helper
                     if (data.about.gambar) {
-                        document.getElementById('aboutGambar').dispatchEvent(new Event('input'));
+                        setExistingImagePreview(ABOUT_GAMBAR_CONFIG, data.about.gambar);
+                    } else {
+                        document.getElementById('aboutGambar').value = '';
                     }
                 }
                 

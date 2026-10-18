@@ -260,6 +260,132 @@
                 transform: none;
             }
         }
+
+        /* ============================================================
+   LINE CLAMP — Truncate text dengan ellipsis
+   ============================================================ */
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================================
+   COURSE / SERVICE GRID
+   - Mobile: swipe horizontal (scroll snap)
+   - Tablet: grid 2 kolom
+   - Desktop: grid 4 kolom
+   ============================================================ */
+
+/* MOBILE: Horizontal scroll dengan snap */
+.course-grid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    
+    /* Sembunyikan scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    /* Padding bawah untuk ruang shadow saat hover */
+    padding: 0 0 1rem 0;
+}
+
+.course-grid::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* Setiap card — 78% lebar container */
+.course-grid > .course-item {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+    min-width: 0;
+    
+    /* Card flex column agar tinggi konsisten */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+    /* Styling Card */
+    background: white;
+    border-radius: 12px;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(26, 60, 94, 0.04);
+    
+    /* Animasi hover */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course-grid > .course-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(26, 60, 94, 0.1);
+}
+
+/* Tablet: grid 2 kolom */
+@media (min-width: 768px) {
+    .course-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        overflow: visible;
+        padding: 0;
+        align-items: stretch;
+    }
+    
+    .course-grid > .course-item {
+        flex: none;
+        width: auto;
+        height: 100%;
+    }
+}
+
+/* Desktop: grid 4 kolom */
+@media (min-width: 1024px) {
+    .course-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ============================================================
+   LOADING / EMPTY STATE — agar tidak terkena style card 78%
+   ============================================================ */
+.course-grid > .w-full {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+@media (min-width: 768px) {
+    .course-grid > .w-full {
+        grid-column: 1 / -1;
+    }
+}
     </style>
 </head>
 <body class="font-sans">
@@ -307,7 +433,7 @@
                     </span>
                     <i data-lucide="arrow-right" class="menu-arrow"></i>
                 </a>
-                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand">Rakit Komputer</a>
+                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
                 <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
                 <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
                 <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
@@ -354,7 +480,7 @@
                     <a href="service.html" 
                        class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" 
                        id="heroCtaServiceMobile">
-                        Service Laptop
+                        Computer Services
                     </a>
                     <a href="#" 
                        class="border border-white/60 hover:border-white text-white font-medium px-5 py-2.5 rounded transition-colors text-sm backdrop-blur-sm bg-white/10" 
@@ -365,54 +491,58 @@
             </div>
         </div>
 
-        <!-- DESKTOP VERSION -->
-        <div class="hidden md:block py-16 lg:py-24">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-row items-center gap-12 lg:gap-16">
-                    <div class="w-1/2 reveal-stagger">
-                        <h1 class="text-5xl lg:text-6xl font-extrabold text-brand leading-tight reveal-item" id="heroHeadingDesktop">
-                            IMDKOM YOGYAKARTA
-                        </h1>
-                        <p class="text-xl text-gray-500 mt-3 reveal-item" id="heroSubheadingDesktop">
-                            Kursus &amp; Pelatihan • Computer Service
-                        </p>
-                        <p class="text-2xl font-medium text-gray-800 mt-6 leading-snug reveal-item" id="heroDescriptionDesktop">
-                            Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
-                        </p>
-                        <p class="text-base text-gray-500 max-w-md mt-4 leading-relaxed reveal-item" id="heroSubtextDesktop">
-                            IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-3 mt-8 reveal-item">
-                            <a href="kursus.html" 
-                               class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3.5 rounded transition-colors text-base" 
-                               id="heroCtaPrimary">
-                                Lihat Program
-                            </a>
-                            <a href="service.html" 
-                               class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-7 py-3.5 rounded transition-colors text-base" 
-                               id="heroCtaService">
-                                Service Laptop
-                            </a>
-                            <a href="#" 
-                               class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-7 py-3.5 rounded transition-colors text-base" 
-                               id="heroWhatsApp">
-                                Konsultasi WhatsApp
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="w-1/2 reveal-item">
-                        <img src="assets/images/hero/hero-default.jpg" 
-                             alt="IMDKOM - Kursus dan Computer Service" 
-                             class="w-full rounded-lg shadow-sm hero-image" 
-                             id="heroImage" 
-                             loading="lazy" />
-                    </div>
+        <!-- DESKTOP VERSION — FULL BACKGROUND -->
+<div class="hidden md:block relative">
+       <!-- Background Image -->
+    <img id="heroImageDesktop"
+         src="assets/images/hero/hero-default.jpg" 
+         alt="IMDKOM - Kursus dan Computer Service" 
+         class="w-full object-cover" 
+         style="height: 100vh; min-height: 600px; max-height: 900px;"
+         loading="eager" />
+    
+    <!-- Overlay Gradient -->
+    <div class="absolute inset-0"
+         style="background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.1) 100%);"></div>
+    
+    <!-- Content Overlay -->
+    <div class="absolute inset-0 flex items-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl reveal-stagger">
+                <h1 class="text-5xl lg:text-6xl font-extrabold text-white leading-tight reveal-item" id="heroHeadingDesktop">
+                    IMDKOM YOGYAKARTA
+                </h1>
+                <p class="text-xl text-gray-200 mt-3 reveal-item" id="heroSubheadingDesktop">
+                    Kursus &amp; Pelatihan • Computer Service
+                </p>
+                <p class="text-2xl font-medium text-white mt-6 leading-snug reveal-item" id="heroDescriptionDesktop">
+                    Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
+                </p>
+                <p class="text-base text-gray-300 max-w-xl mt-4 leading-relaxed reveal-item" id="heroSubtextDesktop">
+                    IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
+                </p>
+                
+                <div class="flex flex-wrap gap-3 mt-8 reveal-item">
+                    <a href="kursus.html" 
+                       class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3.5 rounded transition-colors text-base" 
+                       id="heroCtaPrimary">
+                        Lihat Program
+                    </a>
+                    <a href="service.html" 
+                       class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-7 py-3.5 rounded transition-colors text-base" 
+                       id="heroCtaService">
+                        Computer Services
+                    </a>
+                    <a href="#" 
+                       class="border border-white/70 hover:border-white text-white font-medium px-7 py-3.5 rounded transition-colors text-base backdrop-blur-sm bg-white/10" 
+                       id="heroWhatsApp">
+                        Konsultasi WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
-
+    </div>
+</div>
     </section>
 
     <!-- ============================================================
@@ -450,8 +580,8 @@
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Kursus &amp; Pelatihan</h2>
             <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10 reveal-item">Program pelatihan komputer untuk berbagai kebutuhan.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 reveal-stagger" id="coursePreviewContainer">
-                <div class="col-span-full text-center text-gray-500 py-10">
+            <div class="course-grid reveal-stagger" id="coursePreviewContainer">
+                <div class="w-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
                     <p class="mt-3 text-sm">Memuat program...</p>
                 </div>
@@ -473,8 +603,8 @@
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Computer Service</h2>
             <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10 reveal-item">Layanan perbaikan dan kebutuhan perangkat komputer.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 reveal-stagger" id="servicePreviewContainer">
-                <div class="col-span-full text-center text-gray-500 py-10">
+            <div class="course-grid reveal-stagger" id="servicePreviewContainer">
+                <div class="w-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
                     <p class="mt-3 text-sm">Memuat layanan...</p>
                 </div>
@@ -591,13 +721,12 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('revealed');
-                        // Unobserve setelah reveal — biar tidak animasi ulang
                         revealObserver.unobserve(entry.target);
                     }
                 });
             }, {
-                threshold: 0.15,                    // 15% elemen terlihat = trigger
-                rootMargin: '0px 0px -50px 0px'     // sedikit sebelum masuk viewport
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
             });
             
             revealItems.forEach(el => {

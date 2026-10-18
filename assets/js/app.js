@@ -4,7 +4,7 @@
 // ============================================================
 
 import { db, collection, getDocs, query, where, orderBy, limit, getDoc, doc } from './firebase.js';
-import { getImageUrl, truncateText, formatRupiah, escapeHtml } from './utils.js';
+import { truncateText, formatRupiah, escapeHtml } from './utils.js';
 import { optimizeCloudinaryUrl } from './cloudinary.js';
 import { openWhatsAppProgram, openWhatsAppService, openWhatsAppGeneric } from './whatsapp.js';
 
@@ -29,14 +29,12 @@ function attachShareHandler(container) {
             const programName = this.dataset.programName;
             const programDesc = this.dataset.programDesc;
 
-            // Bangun URL detail
             const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
             const shareUrl = `${baseUrl}program-detail.html?id=${programId}`;
 
             const shareTitle = programName;
             const shareText = `Program Kursus IMDKOM: ${programName}`;
 
-            // ==== COBA NATIVE SHARE API DULU ====
             if (navigator.share) {
                 try {
                     await navigator.share({
@@ -51,7 +49,6 @@ function attachShareHandler(container) {
                 }
             }
 
-            // ==== FALLBACK: WHATSAPP ====
             const waText = `*${shareTitle}*\n\n${programDesc}\n\nDetail: ${shareUrl}`;
             const waUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;
             window.open(waUrl, '_blank', 'noopener,noreferrer');
@@ -60,7 +57,7 @@ function attachShareHandler(container) {
 }
 
 // ============================================================
-// LOAD PROGRAM KURSUS (Preview di Homepage) — 4:3
+// LOAD PROGRAM KURSUS (Preview di Homepage) — 4:5
 // ============================================================
 export async function loadCoursePreview() {
     const container = document.getElementById('coursePreviewContainer');
@@ -71,7 +68,7 @@ export async function loadCoursePreview() {
             collection(db, 'programs'),
             where('aktif', '==', true),
             orderBy('order', 'asc'),
-            limit(3)
+            limit(4)
         );
         const snapshot = await getDocs(q);
         
@@ -87,37 +84,57 @@ export async function loadCoursePreview() {
         let html = '';
         snapshot.forEach((docSnap) => {
             const data = docSnap.data();
-            // 4:3 landscape — compact untuk preview homepage
             const imageUrl = buildImageUrl(
                 data.gambar,
-                { width: 800, height: 600, crop: 'fill' },
+                { width: 600, height: 750, crop: 'fill' },
                 'assets/images/programs/default.jpg'
             );
             
             html += `
-                <div class="course-item border-b border-gray-200 pb-4">
-                    <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
-                         class="w-full aspect-[4/3] object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
-                    <h5 class="text-lg font-semibold text-brand">${escapeHtml(data.nama || 'Program')}</h5>
-                    <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
-                    <p class="text-gray-600 text-sm mt-1">${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 80))}</p>
-                    <p class="font-semibold text-brand mt-1">${formatRupiah(data.harga)}</p>
-                    <div class="flex flex-wrap gap-3 mt-2">
-                        <a href="program-detail.html?id=${docSnap.id}" class="text-brand hover:text-brand-light font-medium text-sm border-b-2 border-brand hover:border-brand-light transition-colors">
-                            Lihat Detail →
-                        </a>
-                        <button class="share-program-btn text-[#25d366] hover:text-[#1da851] font-medium text-sm border-b-2 border-[#25d366] hover:border-[#1da851] transition-colors inline-flex items-center gap-1"
-                                data-program-id="${docSnap.id}"
-                                data-program-name="${escapeHtml(data.nama || 'Program')}"
-                                data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
-                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                            </svg>
-                            Bagikan
-                        </button>
-                    </div>
-                </div>
-            `;
+    <a href="program-detail.html?id=${docSnap.id}" class="course-item block cursor-pointer hover:opacity-95 transition-opacity">
+        <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3">
+            <img src="${imageUrl}" 
+                 alt="${escapeHtml(data.nama || 'Program')}" 
+                 class="w-full h-full object-cover"
+                 loading="lazy" />
+        </div>
+        
+        <div class="flex flex-col flex-1">
+            <h5 class="text-base font-semibold text-brand line-clamp-1 leading-tight">
+                ${escapeHtml(data.nama || 'Program')}
+            </h5>
+            
+            <p class="text-xs text-gray-500 mt-1 line-clamp-1">
+                ${escapeHtml(data.kategori || '')}
+            </p>
+            
+            <p class="text-sm text-gray-600 mt-2 line-clamp-2 leading-snug flex-1">
+                ${escapeHtml(data.deskripsiSingkat || data.deskripsi || '')}
+            </p>
+            
+            <p class="font-bold text-brand mt-3 text-base">
+                ${formatRupiah(data.harga)}
+            </p>
+            
+            <div class="flex flex-wrap gap-3 mt-2">
+                <span class="text-brand font-medium text-xs border-b border-brand">
+                    Lihat Detail →
+                </span>
+                
+                <button class="share-program-btn text-[#25d366] hover:text-[#1da851] font-medium text-xs border-b border-[#25d366] hover:border-[#1da851] transition-colors inline-flex items-center gap-1"
+                        onclick="event.preventDefault(); event.stopPropagation();"
+                        data-program-id="${docSnap.id}"
+                        data-program-name="${escapeHtml(data.nama || 'Program')}"
+                        data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382..."/>
+                    </svg>
+                    Bagikan
+                </button>
+            </div>
+        </div>
+    </a>
+`;
         });
         container.innerHTML = html;
         attachShareHandler(container);
@@ -132,7 +149,7 @@ export async function loadCoursePreview() {
 }
 
 // ============================================================
-// LOAD COMPUTER SERVICE (Preview di Homepage) — 4:3
+// LOAD COMPUTER SERVICE (Preview di Homepage) — 4:5
 // ============================================================
 export async function loadServicePreview() {
     const container = document.getElementById('servicePreviewContainer');
@@ -143,7 +160,7 @@ export async function loadServicePreview() {
             collection(db, 'services'),
             where('aktif', '==', true),
             orderBy('order', 'asc'),
-            limit(3)
+            limit(4)
         );
         const snapshot = await getDocs(q);
         
@@ -161,34 +178,63 @@ export async function loadServicePreview() {
             const data = docSnap.data();
             const imageUrl = buildImageUrl(
                 data.gambar,
-                { width: 800, height: 600, crop: 'fill' },
+                { width: 600, height: 750, crop: 'fill' },
                 'assets/images/services/default.jpg'
             );
             const serviceName = escapeHtml(data.nama || 'Layanan');
             
+            let targetUrl = '';
+            if (data.slug === 'sparepart') {
+                targetUrl = 'sparepart.html';
+            } else {
+                targetUrl = `service-${data.slug}.html`;
+            }
+            
             html += `
-                <div class="service-item border-b border-gray-200 pb-4">
-                    <img src="${imageUrl}" alt="${serviceName}" 
-                         class="w-full aspect-[4/3] object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
-                    <h5 class="text-lg font-semibold text-brand">${serviceName}</h5>
-                    <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
-                    <p class="text-gray-600 text-sm mt-1">${escapeHtml(truncateText(data.deskripsi || '', 80))}</p>
-                    ${data.hargaMulai ? `<p class="text-sm text-gray-500 mt-1">Mulai ${formatRupiah(data.hargaMulai)}</p>` : ''}
-                    <button class="wa-service-btn mt-2 text-brand hover:text-brand-light font-medium text-sm border-b-2 border-brand hover:border-brand-light transition-colors" 
-                            data-service="${serviceName}">
-                        Tanya via WhatsApp →
-                    </button>
-                </div>
-            `;
+    <a href="${targetUrl}" class="course-item block cursor-pointer transition-all duration-200 hover:-translate-y-1">
+        <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3">
+            <img src="${imageUrl}" 
+                 alt="${serviceName}" 
+                 class="w-full h-full object-cover"
+                 loading="lazy" />
+        </div>
+        
+        <div class="flex flex-col flex-1">
+            <h5 class="text-base font-semibold text-brand line-clamp-1 leading-tight">
+                ${serviceName}
+            </h5>
+            
+            <p class="text-xs text-gray-500 mt-1 line-clamp-1">
+                ${escapeHtml(data.kategori || '')}
+            </p>
+            
+            <p class="text-sm text-gray-600 mt-2 line-clamp-2 leading-snug flex-1">
+                ${escapeHtml(data.deskripsi || '')}
+            </p>
+            
+            ${data.hargaMulai ? `
+                <p class="text-xs text-gray-500 mt-2">
+                    Mulai <span class="font-bold text-brand text-sm">${formatRupiah(data.hargaMulai)}</span>
+                </p>
+            ` : ''}
+            
+            <button class="wa-service-btn mt-2 text-brand hover:text-brand-light font-medium text-xs border-b border-brand hover:border-brand-light transition-colors text-left"
+                    onclick="event.preventDefault(); event.stopPropagation();"
+                    data-service="${serviceName}">
+                Tanya via WhatsApp →
+            </button>
+        </div>
+    </a>
+`;
         });
         container.innerHTML = html;
 
         container.querySelectorAll('.wa-service-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
                 openWhatsAppService(btn.dataset.service);
             });
         });
-
+        
     } catch (error) {
         console.error('Error loading services:', error);
         container.innerHTML = `
@@ -319,10 +365,13 @@ export async function loadLandingPageContent() {
         
         const data = docSnap.data();
         
+        // ============================================================
         // HERO
+        // ============================================================
         if (data.hero) {
             const hero = data.hero;
             
+            // --- TEKS: Mobile ---
             const heroHeading = document.getElementById('heroHeading');
             const heroSubheading = document.getElementById('heroSubheading');
             const heroDescription = document.getElementById('heroDescription');
@@ -335,6 +384,7 @@ export async function loadLandingPageContent() {
             if (heroSubtext && hero.subtext) heroSubtext.textContent = hero.subtext;
             if (heroCtaPrimaryMobile && hero.ctaText) heroCtaPrimaryMobile.textContent = hero.ctaText;
             
+            // --- TEKS: Desktop ---
             const heroHeadingDesktop = document.getElementById('heroHeadingDesktop');
             const heroSubheadingDesktop = document.getElementById('heroSubheadingDesktop');
             const heroDescriptionDesktop = document.getElementById('heroDescriptionDesktop');
@@ -347,18 +397,23 @@ export async function loadLandingPageContent() {
             if (heroSubtextDesktop && hero.subtext) heroSubtextDesktop.textContent = hero.subtext;
             if (heroCtaPrimary && hero.ctaText) heroCtaPrimary.textContent = hero.ctaText;
             
+            // --- GAMBAR: Mobile + Desktop ---
             if (hero.gambar) {
                 const heroOptimized = optimizeCloudinaryUrl(hero.gambar, { width: 1600, crop: 'limit' });
-                
+
+                // Mobile hero image (alt mengandung "IMDKOM")
                 const mobileImg = document.querySelector('#heroSection img[alt*="IMDKOM"]');
                 if (mobileImg) mobileImg.src = heroOptimized;
-                
-                const heroImage = document.getElementById('heroImage');
-                if (heroImage) heroImage.src = heroOptimized;
+
+                // Desktop hero image (full-background) — pakai id
+                const desktopImg = document.getElementById('heroImageDesktop');
+                if (desktopImg) desktopImg.src = heroOptimized;
             }
         }
         
+        // ============================================================
         // ABOUT
+        // ============================================================
         if (data.about) {
             const about = data.about;
             const aboutTitle = document.getElementById('aboutTitle');
@@ -373,7 +428,9 @@ export async function loadLandingPageContent() {
             }
         }
         
+        // ============================================================
         // CONTACT
+        // ============================================================
         if (data.contact) {
             const contact = data.contact;
             if (contact.whatsapp) {
@@ -386,7 +443,9 @@ export async function loadLandingPageContent() {
             }
         }
         
+        // ============================================================
         // FOOTER
+        // ============================================================
         if (data.footer && data.footer.copyright) {
             const footerCopy = document.getElementById('footerCopyright');
             if (footerCopy) footerCopy.textContent = data.footer.copyright;
@@ -420,20 +479,15 @@ export async function loadProgramDetail() {
 
         const data = docSnap.data();
         
-        // 4:5 aspect — 1200x1500
         const imageUrl = buildImageUrl(
             data.gambar,
             { width: 1200, height: 1500, crop: 'fill' },
             'assets/images/programs/default.jpg'
         );
 
-        // ============================================================
-        // UPDATE META TAG OG (dinamis)
-        // ============================================================
         const pageTitle = `${data.nama || 'Program'} | IMDKOM Yogyakarta`;
         const pageDesc = truncateText(data.deskripsiSingkat || data.deskripsi || 'Program pelatihan komputer di IMDKOM Yogyakarta.', 160);
         
-        // OG image — 1200x630 (standar WhatsApp/FB)
         const ogImageUrl = data.gambar
             ? optimizeCloudinaryUrl(data.gambar, { width: 1200, height: 630, crop: 'fill' })
             : 'https://imdkom.com/assets/images/logo/imdkom.svg';
@@ -460,22 +514,17 @@ export async function loadProgramDetail() {
             el.setAttribute('content', content);
         };
 
-        // Open Graph
         setMetaProperty('og:title', data.nama || 'Program Kursus');
         setMetaProperty('og:description', pageDesc);
         setMetaProperty('og:image', ogImageUrl);
         setMetaProperty('og:url', window.location.href);
         setMetaProperty('og:type', 'article');
 
-        // Twitter Card
         setMetaName('twitter:card', 'summary_large_image');
         setMetaName('twitter:title', data.nama || 'Program Kursus');
         setMetaName('twitter:description', pageDesc);
         setMetaName('twitter:image', ogImageUrl);
 
-        // ============================================================
-        // RENDER HTML
-        // ============================================================
         let materiHtml = '';
         if (data.materi && Array.isArray(data.materi)) {
             materiHtml = '<ul class="list-disc list-inside space-y-1 text-gray-600">';
@@ -555,12 +604,10 @@ export async function loadProgramDetail() {
             </div>
         `;
 
-        // Event: WhatsApp
         container.querySelector('.wa-program-btn').addEventListener('click', function() {
             openWhatsAppProgram(this.dataset.program);
         });
 
-        // Event: Share
         const shareBtn = container.querySelector('.share-detail-btn');
         if (shareBtn) {
             shareBtn.addEventListener('click', async function(e) {

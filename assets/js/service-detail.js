@@ -5,9 +5,8 @@
 import { 
     db, collection, getDocs, query, where, orderBy, limit, doc, getDoc 
 } from './firebase.js';
-import { getImageUrl, escapeHtml, formatRupiah } from './utils.js';
+import { escapeHtml, formatRupiah } from './utils.js';
 import { optimizeCloudinaryUrl } from './cloudinary.js';
-import { openWhatsApp } from './whatsapp.js';
 
 // ============================================================
 // KONFIGURASI PRICELIST
@@ -27,7 +26,7 @@ function getServiceSlugFromUrl() {
         console.log('✅ Slug:', dataSlug, '(dari data attribute)');
         return dataSlug;
     }
-    
+
     // 2. URL param ?slug=xxx
     const urlParams = new URLSearchParams(window.location.search);
     const slugFromParam = urlParams.get('slug');
@@ -35,11 +34,11 @@ function getServiceSlugFromUrl() {
         console.log('✅ Slug:', slugFromParam, '(dari URL param)');
         return slugFromParam;
     }
-    
+
     // 3. Mapping filename → slug
     const path = window.location.pathname;
     const filename = path.substring(path.lastIndexOf('/') + 1);
-    
+
     const slugMap = {
         'service-laptop': 'laptop',
         'service-laptop.html': 'laptop',
@@ -56,19 +55,19 @@ function getServiceSlugFromUrl() {
         'instalasi': 'instalasi',
         'instalasi.html': 'instalasi'
     };
-    
+
     if (slugMap[filename]) {
         console.log('✅ Slug:', slugMap[filename], '(dari mapping)');
         return slugMap[filename];
     }
-    
+
     // 4. Fallback: regex
     const match = path.match(/service-([a-z-]+)(?:\.html)?$/i);
     if (match) {
         console.log('✅ Slug:', match[1], '(dari regex)');
         return match[1];
     }
-    
+
     // 5. Fallback 2
     const lastPart = path.split('/').filter(Boolean).pop();
     if (lastPart) {
@@ -78,7 +77,7 @@ function getServiceSlugFromUrl() {
             return cleaned;
         }
     }
-    
+
     console.error('❌ Slug tidak ditemukan:', path);
     return null;
 }
@@ -89,13 +88,13 @@ function getServiceSlugFromUrl() {
 export async function loadServiceDetail() {
     const container = document.getElementById('serviceHeroContainer');
     if (!container) return;
-    
+
     const slug = getServiceSlugFromUrl();
     if (!slug) {
         console.error('Service slug not found');
         return;
     }
-    
+
     try {
         const q = query(
             collection(db, 'services'),
@@ -104,7 +103,7 @@ export async function loadServiceDetail() {
             limit(1)
         );
         const snapshot = await getDocs(q);
-        
+
         if (snapshot.empty) {
             container.innerHTML = `
                 <div class="text-center py-12">
@@ -114,15 +113,15 @@ export async function loadServiceDetail() {
             `;
             return;
         }
-        
+
         const serviceDoc = snapshot.docs[0];
         const data = serviceDoc.data();
-        
+
         document.title = `${data.nama} | IMDKOM Yogyakarta`;
-        
+
         const breadcrumbName = document.getElementById('breadcrumbName');
         if (breadcrumbName) breadcrumbName.textContent = data.nama;
-        
+
         container.innerHTML = `
             <div class="flex flex-col md:flex-row items-start gap-6 md:gap-8">
                 <div class="w-full md:w-auto">
@@ -130,35 +129,35 @@ export async function loadServiceDetail() {
                         <i data-lucide="${data.icon || 'wrench'}" class="w-10 h-10 md:w-12 md:h-12 text-brand"></i>
                     </div>
                 </div>
-                
+
                 <div class="flex-1">
                     <div class="inline-flex items-center gap-2 glass px-4 py-1.5 rounded-full text-xs font-medium text-brand mb-4">
                         <i data-lucide="wrench" class="w-3.5 h-3.5"></i>
                         ${escapeHtml(data.kategori || 'Layanan')}
                     </div>
-                    
+
                     <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-brand leading-tight">
                         ${escapeHtml(data.nama || 'Service')}
                     </h1>
-                    
+
                     <p class="text-base sm:text-lg text-gray-600 mt-4 max-w-2xl">
                         ${escapeHtml(data.deskripsi || '')}
                     </p>
-                    
+
                     ${data.hargaMulai ? `
                         <div class="mt-4 inline-flex items-center gap-2 bg-success/10 border border-success/30 px-4 py-2 rounded-xl">
                             <i data-lucide="tag" class="w-4 h-4 text-success"></i>
                             <span class="text-sm font-semibold text-success">Mulai ${formatRupiah(data.hargaMulai)}</span>
                         </div>
                     ` : ''}
-                    
+
                     <div class="flex flex-wrap gap-3 mt-6">
-                        <button onclick="openConsultationModal('${data.slug}', '${escapeHtml(data.nama)}')" 
+                        <button onclick="openConsultationModal('${data.slug}', '${escapeHtml(data.nama)}')"
                                 class="inline-flex items-center gap-2 bg-brand hover:bg-brand-light text-white font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-brand/20">
                             <i data-lucide="message-circle" class="w-4 h-4"></i>
                             Konsultasi
                         </button>
-                        <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20booking%20${encodeURIComponent(data.nama)}" 
+                        <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20booking%20${encodeURIComponent(data.nama)}"
                            target="_blank"
                            class="inline-flex items-center gap-2 border border-brand text-brand hover:bg-brand hover:text-white font-medium px-6 py-3 rounded-xl transition-all">
                             <i data-lucide="calendar-check" class="w-4 h-4"></i>
@@ -168,9 +167,9 @@ export async function loadServiceDetail() {
                 </div>
             </div>
         `;
-        
+
         if (typeof lucide !== 'undefined') lucide.createIcons();
-        
+
     } catch (error) {
         console.error('Error loading service detail:', error);
     }
@@ -182,10 +181,10 @@ export async function loadServiceDetail() {
 export async function loadPricelist() {
     const container = document.getElementById('pricelistContainer');
     if (!container) return;
-    
+
     const slug = getServiceSlugFromUrl();
     if (!slug) return;
-    
+
     try {
         const q = query(
             collection(db, 'pricelists'),
@@ -195,7 +194,7 @@ export async function loadPricelist() {
             orderBy('order', 'asc')
         );
         const snapshot = await getDocs(q);
-        
+
         if (snapshot.empty) {
             container.innerHTML = `
                 <div class="text-center py-8">
@@ -204,7 +203,7 @@ export async function loadPricelist() {
             `;
             return;
         }
-        
+
         const grouped = {};
         snapshot.forEach((docSnap) => {
             const data = docSnap.data();
@@ -212,23 +211,23 @@ export async function loadPricelist() {
             if (!grouped[kat]) grouped[kat] = [];
             grouped[kat].push({ id: docSnap.id, ...data });
         });
-        
+
         pricelistGroupedData = grouped;
-        
+
         Object.keys(grouped).forEach(kat => {
             pricelistState[kat] = PRICELIST_LIMIT;
         });
-        
+
         let html = '';
         let kategoriIndex = 0;
-        
+
         Object.keys(grouped).forEach((kategori) => {
             const items = grouped[kategori];
             const totalItems = items.length;
             const visibleItems = items.slice(0, PRICELIST_LIMIT);
             const hasMore = totalItems > PRICELIST_LIMIT;
             const remaining = totalItems - PRICELIST_LIMIT;
-            
+
             html += `
                 <div class="glass rounded-2xl overflow-hidden mb-4" data-kategori-group="${escapeHtml(kategori)}">
                     <div class="bg-brand text-white px-4 py-3 flex items-center gap-2">
@@ -236,7 +235,7 @@ export async function loadPricelist() {
                         <h3 class="font-bold text-sm uppercase tracking-wide">${escapeHtml(kategori)}</h3>
                         <span class="ml-auto bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${totalItems} item</span>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
@@ -252,7 +251,7 @@ export async function loadPricelist() {
                             </tbody>
                         </table>
                     </div>
-                    
+
                     ${hasMore ? `
                         <div class="px-4 py-3 bg-white/40 border-t border-gray-200 text-center">
                             <button type="button"
@@ -268,16 +267,16 @@ export async function loadPricelist() {
                     ` : ''}
                 </div>
             `;
-            
+
             kategoriIndex++;
         });
-        
+
         container.innerHTML = html;
-        
+
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
-        
+
     } catch (error) {
         console.error('Error loading pricelist:', error);
         container.innerHTML = `<p class="text-center text-red-500 text-sm py-8">Gagal memuat pricelist.</p>`;
@@ -289,10 +288,10 @@ export async function loadPricelist() {
 // ============================================================
 function renderPricelistRows(items) {
     let html = '';
-    
+
     items.forEach((item) => {
         const hasPromo = item.hargaPromo && item.hargaPromo < item.harga;
-        
+
         html += `
             <tr class="border-b border-gray-100 hover:bg-white/60 transition-colors last:border-0">
                 <td class="px-4 py-3" data-label="Layanan">
@@ -301,7 +300,7 @@ function renderPricelistRows(items) {
                         ${hasPromo ? `<span class="promo-shine">PROMO</span>` : ''}
                     </div>
                     ${item.deskripsi ? `<p class="text-xs text-gray-500 mt-0.5">${escapeHtml(item.deskripsi)}</p>` : ''}
-                    
+
                     <div class="flex items-center gap-3 mt-1 text-[11px] text-gray-400 sm:hidden">
                         ${item.estimasi ? `<span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${escapeHtml(item.estimasi)}</span>` : ''}
                         ${item.garansi && item.garansi !== '-' ? `<span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i>${escapeHtml(item.garansi)}</span>` : ''}
@@ -324,7 +323,7 @@ function renderPricelistRows(items) {
             </tr>
         `;
     });
-    
+
     return html;
 }
 
@@ -336,20 +335,20 @@ window.loadMorePricelist = function(button) {
     const index = parseInt(button.dataset.index);
     const total = parseInt(button.dataset.total);
     const tbody = document.getElementById(`pricelist-body-${index}`);
-    
+
     if (!tbody) return;
-    
+
     const items = pricelistGroupedData[kategori];
     if (!items) return;
-    
+
     const currentCount = pricelistState[kategori] || PRICELIST_LIMIT;
     const newCount = Math.min(currentCount + PRICELIST_LIMIT, total);
     const newItems = items.slice(currentCount, newCount);
-    
+
     tbody.insertAdjacentHTML('beforeend', renderPricelistRows(newItems));
-    
+
     pricelistState[kategori] = newCount;
-    
+
     const remaining = total - newCount;
     if (remaining <= 0) {
         button.parentElement.remove();
@@ -359,7 +358,7 @@ window.loadMorePricelist = function(button) {
             textEl.textContent = `Muat Lebih Banyak (${remaining} tersisa)`;
         }
     }
-    
+
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
@@ -371,10 +370,10 @@ window.loadMorePricelist = function(button) {
 export async function loadDocumentations() {
     const container = document.getElementById('documentationContainer');
     if (!container) return;
-    
+
     const slug = getServiceSlugFromUrl();
     if (!slug) return;
-    
+
     try {
         const q = query(
             collection(db, 'documentations'),
@@ -383,47 +382,41 @@ export async function loadDocumentations() {
             orderBy('order', 'asc')
         );
         const snapshot = await getDocs(q);
-        
+
         if (snapshot.empty) {
             const section = document.getElementById('documentationSection');
             if (section) section.style.display = 'none';
             return;
         }
-        
+
         let html = '';
         snapshot.forEach((docSnap) => {
             const data = docSnap.data();
-            
-            // ============================================================
-            // SUPPORT MULTI-FOTO: Cek gambarList (baru) atau gambar (lama)
-            // ============================================================
+
+            // Support multi-foto: cek gambarList (baru) atau gambar (lama)
             let images = [];
-            
+
             if (data.gambarList && Array.isArray(data.gambarList) && data.gambarList.length > 0) {
                 images = data.gambarList;
             } else if (data.gambar) {
                 images = [data.gambar];
             }
-            
+
             // Render SETIAP gambar dalam dokumentasi ini
             images.forEach((imgUrl, imgIndex) => {
-                // Thumbnail untuk grid (hemat bandwidth)
                 const thumbUrl = optimizeCloudinaryUrl(imgUrl, { 
                     width: 600, 
                     height: 600, 
                     crop: 'fill' 
                 });
-                
-                // URL besar untuk modal zoom
                 const fullUrl = optimizeCloudinaryUrl(imgUrl, { 
                     width: 1600 
                 });
-                
-                // Caption: kalau lebih dari 1 foto, tambah nomor urut
+
                 const caption = images.length > 1 
                     ? `${data.nama || 'Dokumentasi'} (${imgIndex + 1}/${images.length})`
                     : (data.nama || 'Dokumentasi');
-                
+
                 html += `
                     <div class="group cursor-pointer" 
                          onclick="openImageModal('${fullUrl}', '${escapeHtml(caption)}')">
@@ -433,16 +426,15 @@ export async function loadDocumentations() {
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                  loading="lazy"
                                  onerror="this.src='assets/images/placeholder.svg'" />
-                            
+
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            
-                            <!-- Badge nomor foto (jika lebih dari 1) -->
+
                             ${images.length > 1 ? `
                                 <span class="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                                     ${imgIndex + 1}/${images.length}
                                 </span>
                             ` : ''}
-                            
+
                             <div class="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                                 <p class="text-sm font-semibold">${escapeHtml(data.nama || '')}</p>
                                 ${data.keterangan ? `<p class="text-xs text-white/80 mt-1">${escapeHtml(data.keterangan)}</p>` : ''}
@@ -452,9 +444,9 @@ export async function loadDocumentations() {
                 `;
             });
         });
-        
+
         container.innerHTML = html;
-        
+
     } catch (error) {
         console.error('Error loading documentations:', error);
     }
@@ -467,7 +459,7 @@ window.openImageModal = function(url, caption) {
     const modal = document.getElementById('imageModal');
     const img = document.getElementById('imageModalImg');
     const cap = document.getElementById('imageModalCaption');
-    
+
     if (modal && img) {
         img.src = url;
         if (cap) cap.textContent = caption || '';
@@ -485,10 +477,38 @@ window.closeImageModal = function() {
 };
 
 // ============================================================
-// INITIALIZATION
+// INIT — pasang semua loader
+// Pakai readyState check supaya tetap jalan meski module di-defer
 // ============================================================
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadServiceDetail();
-    await loadPricelist();
-    await loadDocumentations();
-});
+let serviceDetailInitialized = false;
+
+export async function initServiceDetail() {
+    if (serviceDetailInitialized) return;
+    serviceDetailInitialized = true;
+
+    try {
+        await loadServiceDetail();
+    } catch (e) {
+        console.error('loadServiceDetail error:', e);
+    }
+
+    try {
+        await loadPricelist();
+    } catch (e) {
+        console.error('loadPricelist error:', e);
+    }
+
+    try {
+        await loadDocumentations();
+    } catch (e) {
+        console.error('loadDocumentations error:', e);
+    }
+}
+
+// Auto-init: kalau DOM belum siap → tunggu DOMContentLoaded
+// Kalau sudah siap → langsung init
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initServiceDetail);
+} else {
+    initServiceDetail();
+}

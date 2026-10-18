@@ -4,8 +4,12 @@
 
 import { db, getDoc, doc } from './firebase.js';
 
+// Nomor default — fallback kalau Firestore belum siap / gagal fetch
 let whatsappNumber = '6285601913435';
 
+// ============================================================
+// AMBIL NOMOR WA DARI FIRESTORE
+// ============================================================
 export async function getWhatsAppNumber() {
     try {
         const settingsRef = doc(db, 'settings', 'general');
@@ -30,6 +34,9 @@ export async function getWhatsAppNumber() {
     return whatsappNumber;
 }
 
+// ============================================================
+// FUNGSI BUKA WHATSAPP
+// ============================================================
 export function openWhatsApp(message = '') {
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/${whatsappNumber}?text=${encoded}`, '_blank');
@@ -50,40 +57,59 @@ export function openWhatsAppGeneric() {
     openWhatsApp(message);
 }
 
-// Expose ke window
+// Expose ke window (untuk onclick di HTML)
 window.openWhatsAppProgram = openWhatsAppProgram;
 window.openWhatsAppService = openWhatsAppService;
 window.openWhatsAppGeneric = openWhatsAppGeneric;
+window.openWhatsApp = openWhatsApp;
 
-// Inisialisasi
-// Di assets/js/whatsapp.js
-document.addEventListener('DOMContentLoaded', async () => {
+// ============================================================
+// PASANG LISTENER TOMBOL WA
+// ============================================================
+let whatsappInitialized = false;
+
+async function initWhatsAppButtons() {
+    if (whatsappInitialized) return;
+    whatsappInitialized = true;
+
+    // Pastikan nomor WA sudah di-fetch dari Firestore
     await getWhatsAppNumber();
 
-    // Hero WhatsApp - Desktop
-    const heroWA = document.getElementById('heroWhatsApp');
-    if (heroWA) {
-        heroWA.addEventListener('click', (e) => {
-            e.preventDefault();
-            openWhatsAppGeneric();
-        });
+    // Helper: pasang listener kalau elemen ada & belum pernah dipasang
+    function bindClick(id, handler) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.dataset.waBound === 'true') return;
+        el.dataset.waBound = 'true';
+        el.addEventListener('click', handler);
     }
 
-    // Hero WhatsApp - Mobile
-    const heroWAMobile = document.getElementById('heroWhatsAppMobile');
-    if (heroWAMobile) {
-        heroWAMobile.addEventListener('click', (e) => {
-            e.preventDefault();
-            openWhatsAppGeneric();
-        });
-    }
+    // Hero WhatsApp — Desktop (index.html)
+    bindClick('heroWhatsApp', (e) => {
+        e.preventDefault();
+        openWhatsAppGeneric();
+    });
 
-    // Floating WhatsApp
-    const floatingWA = document.getElementById('floatingWhatsApp');
-    if (floatingWA) {
-        floatingWA.addEventListener('click', (e) => {
-            e.preventDefault();
-            openWhatsAppGeneric();
-        });
-    }
-});
+    // Hero WhatsApp — Mobile (index.html)
+    bindClick('heroWhatsAppMobile', (e) => {
+        e.preventDefault();
+        openWhatsAppGeneric();
+    });
+
+    // Floating WhatsApp (semua halaman)
+    bindClick('floatingWhatsApp', (e) => {
+        e.preventDefault();
+        openWhatsAppGeneric();
+    });
+}
+
+// ============================================================
+// READY STATE HANDLING
+// Kalau DOM belum siap → tunggu DOMContentLoaded
+// Kalau sudah siap → langsung init
+// ============================================================
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWhatsAppButtons);
+} else {
+    initWhatsAppButtons();
+}
