@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daftar Tentor | IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .keahlian-item {
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-8">
+
+    <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-brand">IMDKOM</h1>
+        <p class="text-gray-500 text-sm mb-6">Daftar sebagai Tentor</p>
+
+        <form id="registerForm">
+            <div class="mb-4">
+                <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
+                <input type="text" id="nama" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
+                       placeholder="Contoh: Budi Santoso" />
+            </div>
+
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <input type="email" id="email" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
+                       placeholder="nama@email.com" />
+            </div>
+
+            <div class="mb-4">
+                <label for="whatsapp" class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
+                <input type="tel" id="whatsapp" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
+                       placeholder="08xxxxxxxxxx" />
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- KEAHLIAN — Dynamic List                                       -->
+            <!-- ============================================================ -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Keahlian / Bidang yang Bisa Diajarkan <span class="text-red-500">*</span>
+                </label>
+                <div id="keahlianList" class="space-y-2 mb-2"></div>
+                <button type="button" id="addKeahlianBtn"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    Tambah Keahlian
+                </button>
+                <p class="text-xs text-gray-400 mt-1">
+                    Contoh: Microsoft Office, Desain Grafis, Pemrograman Web
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password *</label>
+                <input type="password" id="password" required minlength="6"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
+                       placeholder="Minimal 6 karakter" />
+            </div>
+
+            <div class="mb-4">
+                <label for="passwordConfirm" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password *</label>
+                <input type="password" id="passwordConfirm" required minlength="6"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none"
+                       placeholder="Ulangi password" />
+            </div>
+
+            <button type="submit" id="submitBtn"
+                    class="w-full bg-brand hover:bg-brand-light text-white font-medium py-2 rounded-lg transition-colors">
+                Daftar
+            </button>
+
+            <div id="message" class="mt-3 text-sm"></div>
+        </form>
+
+        <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+            <p class="text-sm text-gray-500">
+                Sudah punya akun?
+                <a href="login.html" class="text-brand hover:text-brand-light font-medium">Masuk di sini</a>
+            </p>
+        </div>
+
+        <a href="index.html" class="block text-center text-gray-400 text-sm mt-4 hover:text-gray-600 transition-colors">
+            ← Kembali ke Beranda
+        </a>
+    </div>
+
+    <script type="module">
+        import { auth, db, createUserWithEmailAndPassword, signOut, doc, setDoc } from './assets/js/firebase.js';
+
+        const form = document.getElementById('registerForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageEl = document.getElementById('message');
+        const keahlianList = document.getElementById('keahlianList');
+        const addKeahlianBtn = document.getElementById('addKeahlianBtn');
+
+        // ============================================================
+        // KEAHLIAN — Dynamic List
+        // ============================================================
+        function createKeahlianItem(value = '') {
+            const div = document.createElement('div');
+            div.className = 'keahlian-item flex gap-2 items-center';
+            div.innerHTML = `
+                <input type="text"
+                       class="keahlian-input flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                       value="${escapeHtml(value)}"
+                       placeholder="Contoh: Microsoft Office" />
+                <button type="button"
+                        class="remove-keahlian p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                        title="Hapus">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            `;
+            return div;
+        }
+
+        function addKeahlianItem(value = '') {
+            const item = createKeahlianItem(value);
+            keahlianList.appendChild(item);
+
+            item.querySelector('.remove-keahlian').addEventListener('click', () => {
+                if (keahlianList.children.length <= 1) {
+                    // Minimal 1 field — kosongkan saja
+                    item.querySelector('input').value = '';
+                    item.querySelector('input').focus();
+                    return;
+                }
+                item.remove();
+            });
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            return item;
+        }
+
+        function getKeahlianValues() {
+            const inputs = keahlianList.querySelectorAll('.keahlian-input');
+            const values = [];
+            inputs.forEach(input => {
+                const val = input.value.trim();
+                if (val) values.push(val);
+            });
+            return values;
+        }
+
+        addKeahlianBtn.addEventListener('click', () => {
+            const item = addKeahlianItem('');
+            item.querySelector('input').focus();
+        });
+
+        // Mulai dengan 1 field kosong
+        addKeahlianItem('');
+
+        // ============================================================
+        // HELPER: escapeHtml
+        // ============================================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ============================================================
+        // SUBMIT REGISTER
+        // ============================================================
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nama = document.getElementById('nama').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+            messageEl.innerHTML = '';
+
+            // Validasi dasar
+            if (password !== passwordConfirm) {
+                messageEl.innerHTML = `<p class="text-red-600">Password dan konfirmasi tidak sama.</p>`;
+                return;
+            }
+
+            if (password.length < 6) {
+                messageEl.innerHTML = `<p class="text-red-600">Password minimal 6 karakter.</p>`;
+                return;
+            }
+
+            // Validasi keahlian
+            const keahlianValues = getKeahlianValues();
+            if (keahlianValues.length === 0) {
+                messageEl.innerHTML = `<p class="text-red-600">Keahlian wajib diisi minimal 1.</p>`;
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Mendaftar...';
+
+            try {
+                // 1. Buat user di Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                console.log('✅ User dibuat:', user.email, 'UID:', user.uid);
+
+                // 2. Simpan profil ke Firestore
+                const now = new Date().toISOString();
+                await setDoc(doc(db, 'users', user.uid), {
+                    uid: user.uid,
+                    email: email,
+                    nama: nama,
+                    whatsapp: whatsapp,
+                    keahlian: keahlianValues,   // ← BARU
+                    role: 'tentor',
+                    status: 'pending',
+                    foto: '',
+                    bio: '',
+                    createdAt: now,
+                    updatedAt: now
+                });
+
+                console.log('✅ Profil tersimpan dengan keahlian:', keahlianValues);
+
+                // 3. Logout (supaya tidak auto-login sebelum di-acc)
+                await signOut(auth);
+
+                // 4. Redirect ke halaman pending
+                messageEl.innerHTML = `<p class="text-green-600 font-medium">✅ Pendaftaran berhasil! Mengarahkan...</p>`;
+                setTimeout(() => {
+                    window.location.href = 'pending-approval.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Register error:', error);
+                let msg = 'Pendaftaran gagal. Coba lagi.';
+                if (error.code === 'auth/email-already-in-use') {
+                    msg = 'Email sudah terdaftar. Silakan login.';
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = 'Format email tidak valid.';
+                } else if (error.code === 'auth/weak-password') {
+                    msg = 'Password terlalu lemah. Minimal 6 karakter.';
+                } else if (error.code === 'permission-denied') {
+                    msg = 'Firestore Rules menolak penyimpanan profil. Hubungi admin.';
+                }
+                messageEl.innerHTML = `<p class="text-red-600">${msg}</p>`;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Daftar';
+            }
+        });
+    </script>
+
+</body>
+</html>

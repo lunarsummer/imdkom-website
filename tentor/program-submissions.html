@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usulan Program | IMDKOM Tentor</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        .stat-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 60, 94, 0.1);
+        }
+
+        /* ============================================================
+           TENTOR BRAND (sidebar tentor) — SAMA DENGAN DASHBOARD
+           ============================================================ */
+        .tentor-brand {
+            display: flex !important;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tentor-avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: #2a5a7a;
+        }
+
+        .tentor-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .tentor-avatar-default {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2a5a7a;
+        }
+
+        .tentor-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tentor-name {
+            font-weight: 700;
+            color: white;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tentor-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.15rem;
+        }
+
+        /* ============================================================
+           GRID CARD USULAN
+           ============================================================ */
+        .submission-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .submission-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .submission-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 1280px) {
+            .submission-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .submission-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .submission-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(26, 60, 94, 0.12);
+        }
+
+        .thumbnail-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            background: #f3f4f6;
+            overflow: hidden;
+        }
+        .thumbnail-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .submission-card:hover .thumbnail-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.625rem;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+        .status-draft        { background: #f3f4f6; color: #4b5563; }
+        .status-pending_review { background: #fef3c7; color: #92400e; }
+        .status-approved     { background: #dbeafe; color: #1e40af; }
+        .status-rejected     { background: #fee2e2; color: #991b1b; }
+        .status-published    { background: #d1fae5; color: #065f46; }
+
+        .thumbnail-status {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            z-index: 2;
+        }
+
+        .action-btn {
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    MOBILE HEADER
+    ============================================================ -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Usulan Program</span>
+        <div class="w-8"></div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR TENTOR — SAMA DENGAN DASHBOARD
+    ============================================================ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand tentor-brand">
+            <div class="tentor-avatar-wrapper">
+                <img id="sidebarAvatar" 
+                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%232a5a7a'/%3E%3C/svg%3E" 
+                     alt="Avatar" 
+                     class="tentor-avatar hidden" />
+                <div id="sidebarAvatarDefault" class="tentor-avatar-default">
+                    <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+            <div class="tentor-info">
+                <div class="tentor-name" id="sidebarTentorName">Memuat...</div>
+                <div class="tentor-label">Tentor</div>
+            </div>
+        </div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="program-submissions.html" class="nav-link active">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                Usulan Program
+            </a>
+            <a href="jadwal.html" class="nav-link">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                Jadwal Mengajar
+            </a>
+            <a href="profil.html" class="nav-link">
+                <i data-lucide="user" class="w-4 h-4"></i>
+                Profil
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h2>Usulan Program</h2>
+                <p class="text-gray-500 text-sm mt-1">Kelola usulan program yang Anda ajukan ke admin</p>
+            </div>
+            <a href="program-submission-form.html" class="btn-primary">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Buat Usulan
+            </a>
+        </div>
+
+        <!-- ============================================================
+        STATISTIK
+        ============================================================ -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Total</p>
+                        <p class="text-2xl font-bold text-brand mt-1" id="statTotal">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-brand/10 rounded-lg flex items-center justify-center">
+                        <i data-lucide="file-text" class="w-6 h-6 text-brand"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Draft</p>
+                        <p class="text-2xl font-bold text-gray-600 mt-1" id="statDraft">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="edit-3" class="w-6 h-6 text-gray-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Menunggu</p>
+                        <p class="text-2xl font-bold text-yellow-600 mt-1" id="statPending">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="clock" class="w-6 h-6 text-yellow-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Tayang</p>
+                        <p class="text-2xl font-bold text-green-600 mt-1" id="statPublished">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        FILTER & REFRESH
+        ============================================================ -->
+        <div class="admin-card mb-4">
+            <div class="flex flex-wrap items-center gap-3">
+                <label class="text-sm font-medium text-gray-700">Filter Status:</label>
+                <select id="filterStatus" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
+                    <option value="all">Semua</option>
+                    <option value="draft">Draft</option>
+                    <option value="pending_review">Menunggu Review</option>
+                    <option value="approved">Disetujui</option>
+                    <option value="rejected">Ditolak</option>
+                    <option value="published">Tayang</option>
+                </select>
+                <button id="refreshBtn" 
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    Refresh
+                </button>
+                <div id="filterInfo" class="text-xs text-gray-500 ml-auto"></div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        GRID USULAN
+        ============================================================ -->
+        <div id="submissionsGrid" class="submission-grid">
+            <div class="col-span-full text-center text-gray-500 py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm">Memuat usulan...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    MODAL DETAIL
+    ============================================================ -->
+    <div id="detailModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeDetailModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 overflow-hidden">
+            <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between p-5 border-b border-gray-200 sticky top-0 bg-white rounded-t-2xl z-10">
+                    <h3 class="text-lg font-bold text-brand">Detail Usulan</h3>
+                    <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-5" id="detailContent">
+                    <!-- Diisi JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MODAL HAPUS
+    ============================================================ -->
+    <div id="deleteModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeDeleteModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full">
+                <div class="p-5">
+                    <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="alert-triangle" class="w-7 h-7 text-red-600"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 text-center mb-2">Hapus Usulan?</h3>
+                    <p class="text-sm text-gray-600 text-center mb-4">
+                        Usulan <strong id="deleteJudul">-</strong> akan dihapus permanen.
+                        Tindakan ini tidak bisa dibatalkan.
+                    </p>
+                </div>
+                <div class="flex gap-3 p-5 pt-0">
+                    <button onclick="closeDeleteModal()" 
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                        Batal
+                    </button>
+                    <button id="confirmDeleteBtn" 
+                            class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script type="module">
+        import { 
+            auth, db, signOut, 
+            collection, getDocs, query, where, orderBy, doc, deleteDoc, updateDoc 
+        } from '../assets/js/firebase.js';
+        import { protectPage } from '../assets/js/auth.js';
+        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        let currentTentor = null;
+        let allSubmissions = [];
+
+        protectPage({
+            allowedRoles: ['tentor'],
+            requireActive: true,
+            onAuthorized: async (profile) => {
+                currentTentor = profile;
+
+                // Render sidebar brand (avatar + nama) — SAMA DENGAN DASHBOARD
+                renderSidebarBrand(profile);
+
+                // Load submissions
+                await loadSubmissions();
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        // ============================================================
+        // LOGOUT
+        // ============================================================
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = '../login.html';
+        });
+
+        // ============================================================
+        // RENDER SIDEBAR BRAND — nama tentor + avatar
+        // ============================================================
+        function renderSidebarBrand(profile) {
+            const nameEl = document.getElementById('sidebarTentorName');
+            const avatarEl = document.getElementById('sidebarAvatar');
+            const defaultEl = document.getElementById('sidebarAvatarDefault');
+
+            if (!nameEl) return;
+
+            // Nama
+            nameEl.textContent = profile.nama || 'Tentor';
+
+            // Avatar
+            if (profile.foto) {
+                const optimizedUrl = optimizeCloudinaryUrl(profile.foto, { 
+                    width: 80, 
+                    height: 80, 
+                    crop: 'fill' 
+                });
+                avatarEl.src = optimizedUrl;
+                avatarEl.classList.remove('hidden');
+                defaultEl.classList.add('hidden');
+            } else {
+                avatarEl.classList.add('hidden');
+                defaultEl.classList.remove('hidden');
+            }
+        }
+
+        // ============================================================
+        // LOAD SUBMISSIONS
+        // ============================================================
+        async function loadSubmissions() {
+            const container = document.getElementById('submissionsGrid');
+            const filterStatus = document.getElementById('filterStatus').value;
+
+            try {
+                // Query: usulan milik tentor ini, sort terbaru
+                const q = query(
+                    collection(db, 'programSubmissions'),
+                    where('tentorId', '==', currentTentor.uid),
+                    orderBy('updatedAt', 'desc')
+                );
+                const snapshot = await getDocs(q);
+
+                allSubmissions = [];
+                snapshot.forEach((docSnap) => {
+                    allSubmissions.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // Update statistik
+                updateStats(allSubmissions);
+
+                // Filter
+                let filtered = allSubmissions;
+                if (filterStatus !== 'all') {
+                    filtered = allSubmissions.filter(s => s.status === filterStatus);
+                }
+
+                // Update info filter
+                const infoEl = document.getElementById('filterInfo');
+                if (infoEl) {
+                    infoEl.textContent = `Menampilkan ${filtered.length} dari ${allSubmissions.length} usulan`;
+                }
+
+                // Empty state
+                if (filtered.length === 0) {
+                    if (allSubmissions.length === 0) {
+                        // Belum ada usulan sama sekali
+                        container.innerHTML = `
+                            <div class="col-span-full">
+                                <div class="admin-card text-center py-12">
+                                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i data-lucide="file-text" class="w-8 h-8 text-gray-300"></i>
+                                    </div>
+                                    <p class="text-gray-500 font-medium">Belum ada usulan program</p>
+                                    <p class="text-sm text-gray-400 mt-1">Mulai dengan membuat usulan program pertama Anda.</p>
+                                    <a href="program-submission-form.html" 
+                                       class="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-brand hover:bg-brand-light text-white rounded-lg text-sm font-medium transition-colors">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                        Buat Usulan Pertama
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Ada usulan tapi tidak cocok filter
+                        container.innerHTML = `
+                            <div class="col-span-full">
+                                <div class="admin-card text-center py-12">
+                                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i data-lucide="filter-x" class="w-8 h-8 text-gray-300"></i>
+                                    </div>
+                                    <p class="text-gray-500 font-medium">Tidak ada usulan dengan status ini</p>
+                                    <p class="text-sm text-gray-400 mt-1">Coba ubah filter atau buat usulan baru.</p>
+                                    <button onclick="document.getElementById('filterStatus').value='all'; loadSubmissions();" 
+                                            class="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors">
+                                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                                        Lihat Semua
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    return;
+                }
+
+                // Render cards
+                let html = '';
+                filtered.forEach((sub) => {
+                    html += renderSubmissionCard(sub);
+                });
+                container.innerHTML = html;
+
+                attachCardListeners();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                container.innerHTML = `
+                    <div class="col-span-full">
+                        <div class="admin-card text-center py-12">
+                            <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-red-300 mb-3"></i>
+                            <p class="text-red-600 font-medium">Gagal memuat usulan</p>
+                            <p class="text-gray-500 text-xs mt-1">${error.message}</p>
+                        </div>
+                    </div>
+                `;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        // ============================================================
+        // RENDER CARD
+        // ============================================================
+        function renderSubmissionCard(sub) {
+            const thumbUrl = sub.thumbnailUrl
+                ? optimizeCloudinaryUrl(sub.thumbnailUrl, { width: 600, height: 750, crop: 'fill' })
+                : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22750%22%3E%3Crect width=%22600%22 height=%22750%22 fill=%22%23e5e7eb%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-family=%22sans-serif%22 font-size=%2230%22 fill=%22%239ca3af%22 text-anchor=%22middle%22 dy=%22.3em%22%3ENo Image%3C/text%3E%3C/svg%3E';
+
+            const statusBadge = getStatusBadge(sub.status);
+            const tanggal = sub.updatedAt
+                ? new Date(sub.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+                : '-';
+
+            // Tombol aksi berdasarkan status
+            let actionButtons = '';
+
+            if (sub.status === 'draft' || sub.status === 'rejected') {
+                actionButtons = `
+                    <a href="program-submission-form.html?id=${sub.id}" 
+                       class="action-btn flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors shadow-sm">
+                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                        Edit
+                    </a>
+                `;
+                if (sub.status === 'draft') {
+                    actionButtons += `
+                        <button class="action-btn ajukan-btn flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition-colors"
+                                data-id="${sub.id}" data-judul="${escapeHtml(sub.judul || '')}">
+                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                            Ajukan
+                        </button>
+                    `;
+                }
+            } else {
+                actionButtons = `
+                    <a href="program-submission-form.html?id=${sub.id}" 
+                       class="action-btn flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                        Lihat
+                    </a>
+                `;
+            }
+
+            // Tombol hapus (hanya draft/rejected)
+            const deleteBtn = (sub.status === 'draft' || sub.status === 'rejected')
+                ? `<button class="action-btn delete-btn inline-flex items-center justify-center w-9 h-9 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg border border-red-200 transition-colors"
+                           title="Hapus"
+                           data-id="${sub.id}" data-judul="${escapeHtml(sub.judul || '')}">
+                       <i data-lucide="trash-2" class="w-4 h-4"></i>
+                   </button>`
+                : '';
+
+            return `
+                <div class="submission-card">
+                    <!-- Thumbnail 4:5 -->
+                    <div class="thumbnail-wrapper">
+                        <img src="${thumbUrl}" alt="${escapeHtml(sub.judul || 'Usulan')}" loading="lazy" />
+                        <div class="thumbnail-status">
+                            ${statusBadge}
+                        </div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="p-3 flex flex-col flex-1">
+                        <h4 class="font-semibold text-gray-800 line-clamp-2 leading-tight" title="${escapeHtml(sub.judul || '')}">
+                            ${escapeHtml(sub.judul || 'Tanpa judul')}
+                        </h4>
+                        ${sub.level ? `
+                            <p class="text-xs text-gray-500 mt-1">${escapeHtml(sub.level)}</p>
+                        ` : ''}
+                        <p class="text-xs text-gray-400 mt-1">
+                            <i data-lucide="clock" class="w-3 h-3 inline"></i>
+                            ${tanggal}
+                        </p>
+
+                        ${sub.status === 'rejected' && sub.adminNotes ? `
+                            <div class="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700 line-clamp-2">
+                                <strong>Ditolak:</strong> ${escapeHtml(sub.adminNotes)}
+                            </div>
+                        ` : ''}
+
+                        <!-- Aksi -->
+                        <div class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-100">
+                            ${actionButtons}
+                            ${deleteBtn}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // STATUS BADGE
+        // ============================================================
+        function getStatusBadge(status) {
+            const map = {
+                'draft':          { label: 'Draft',    icon: 'edit-3' },
+                'pending_review': { label: 'Pending',  icon: 'clock' },
+                'approved':       { label: 'Disetujui',icon: 'check' },
+                'rejected':       { label: 'Ditolak',  icon: 'x' },
+                'published':      { label: 'Tayang',   icon: 'check-circle' }
+            };
+            const info = map[status] || { label: status, icon: 'circle' };
+            return `
+                <span class="status-badge status-${status}">
+                    <i data-lucide="${info.icon}" class="w-3 h-3"></i>
+                    ${info.label}
+                </span>
+            `;
+        }
+
+        // ============================================================
+        // UPDATE STATISTIK
+        // ============================================================
+        function updateStats(subs) {
+            const total = subs.length;
+            const draft = subs.filter(s => s.status === 'draft').length;
+            const pending = subs.filter(s => s.status === 'pending_review').length;
+            const published = subs.filter(s => s.status === 'published').length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statDraft').textContent = draft;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statPublished').textContent = published;
+        }
+
+        // ============================================================
+        // ATTACH CARD LISTENERS
+        // ============================================================
+        function attachCardListeners() {
+            // Ajukan ke admin
+            document.querySelectorAll('.ajukan-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    const judul = btn.dataset.judul;
+                    if (!confirm(`Ajukan usulan "${judul}" ke admin?\n\nSetelah diajukan, usulan tidak bisa diedit sampai admin mereview.`)) {
+                        return;
+                    }
+                    btn.disabled = true;
+                    btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>`;
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+                    try {
+                        await updateDoc(doc(db, 'programSubmissions', id), {
+                            status: 'pending_review',
+                            submittedAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        });
+                        alert('✅ Usulan berhasil diajukan ke admin!');
+                        await loadSubmissions();
+                    } catch (error) {
+                        console.error('Error submitting:', error);
+                        alert('Gagal mengajukan: ' + error.message);
+                        btn.disabled = false;
+                        btn.innerHTML = `<i data-lucide="send" class="w-3.5 h-3.5"></i> Ajukan`;
+                        if (typeof lucide !== 'undefined') lucide.createIcons();
+                    }
+                });
+            });
+
+            // Hapus
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const judul = btn.dataset.judul;
+                    openDeleteModal(id, judul);
+                });
+            });
+        }
+
+        // ============================================================
+        // MODAL HAPUS
+        // ============================================================
+        let deleteTargetId = null;
+
+        window.openDeleteModal = function(id, judul) {
+            deleteTargetId = id;
+            document.getElementById('deleteJudul').textContent = judul || 'ini';
+            document.getElementById('deleteModal').classList.remove('hidden');
+        };
+
+        window.closeDeleteModal = function() {
+            deleteTargetId = null;
+            document.getElementById('deleteModal').classList.add('hidden');
+        };
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+            if (!deleteTargetId) return;
+            const btn = document.getElementById('confirmDeleteBtn');
+            btn.disabled = true;
+            btn.textContent = 'Menghapus...';
+
+            try {
+                await deleteDoc(doc(db, 'programSubmissions', deleteTargetId));
+                closeDeleteModal();
+                await loadSubmissions();
+            } catch (error) {
+                console.error('Error deleting:', error);
+                alert('Gagal menghapus: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Hapus';
+            }
+        });
+
+        // ============================================================
+        // MODAL DETAIL
+        // ============================================================
+        window.openDetailModal = function(sub) {
+            const content = document.getElementById('detailContent');
+            const tanggal = sub.updatedAt
+                ? new Date(sub.updatedAt).toLocaleString('id-ID')
+                : '-';
+
+            content.innerHTML = `
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs text-gray-500">Judul</p>
+                        <p class="font-medium text-gray-800">${escapeHtml(sub.judul || '-')}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Status</p>
+                        ${getStatusBadge(sub.status)}
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Deskripsi Singkat</p>
+                        <p class="text-sm text-gray-700">${escapeHtml(sub.deskripsiSingkat || '-')}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Deskripsi Lengkap</p>
+                        <p class="text-sm text-gray-700 whitespace-pre-line">${escapeHtml(sub.deskripsi || '-')}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Materi</p>
+                        <ul class="list-disc list-inside text-sm text-gray-700">
+                            ${(sub.materi || []).map(m => `<li>${escapeHtml(m)}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Benefit</p>
+                        <ul class="list-disc list-inside text-sm text-gray-700">
+                            ${(sub.benefit || []).map(b => `<li>${escapeHtml(b)}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ${sub.adminNotes ? `
+                        <div>
+                            <p class="text-xs text-gray-500">Catatan Admin</p>
+                            <p class="text-sm text-red-600 bg-red-50 p-2 rounded">${escapeHtml(sub.adminNotes)}</p>
+                        </div>
+                    ` : ''}
+                    <div>
+                        <p class="text-xs text-gray-500">Terakhir Diperbarui</p>
+                        <p class="text-sm text-gray-700">${tanggal}</p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.closeDetailModal = function() {
+            document.getElementById('detailModal').classList.add('hidden');
+        };
+
+        // ============================================================
+        // HELPER: escapeHtml
+        // ============================================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ============================================================
+        // FILTER & REFRESH
+        // ============================================================
+        document.getElementById('filterStatus').addEventListener('change', loadSubmissions);
+        document.getElementById('refreshBtn').addEventListener('click', loadSubmissions);
+    </script>
+
+</body>
+</html>

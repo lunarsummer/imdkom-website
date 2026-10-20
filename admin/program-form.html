@@ -4,18 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Form Program | Admin IMDKOM</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
     <style>
         .form-preview-img {
             max-height: 200px;
@@ -28,242 +21,460 @@
         .dynamic-item:hover {
             background: rgba(26, 60, 94, 0.02);
         }
+
+        /* NAV GROUP / SUBMENU */
+.nav-group { margin: 0; }
+
+.nav-group-toggle {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+}
+
+.nav-group-toggle .nav-chevron {
+    transition: transform 0.25s ease;
+    opacity: 0.6;
+}
+
+.nav-group-toggle.open .nav-chevron {
+    transform: rotate(180deg);
+    opacity: 1;
+}
+
+.nav-group-toggle.open {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.25rem 0 0.5rem 0;
+    margin-left: 0.5rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    animation: submenuSlide 0.25s ease;
+}
+
+.nav-submenu.hidden { display: none; }
+
+@keyframes submenuSlide {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.nav-submenu-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    color: #d1d5db;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    margin-left: 0.25rem;
+}
+
+.nav-submenu-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.nav-submenu-link.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-weight: 600;
+}
+
+.nav-submenu-link i { opacity: 0.7; flex-shrink: 0; }
+.nav-submenu-link.active i { opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div class="flex min-h-screen">
-        <!-- ============================================================
-             SIDEBAR
-             ============================================================ -->
-        <aside class="w-64 bg-brand min-h-screen hidden md:block">
-            <div class="p-6 border-b border-brand-light">
-                <span class="text-white font-bold text-xl">IMDKOM Admin</span>
-            </div>
-            <nav class="p-4 space-y-1">
-                <a href="dashboard.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Dashboard</a>
-                <a href="landing-page.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Landing Page</a>
-                <a href="programs.html" class="block px-4 py-2 text-white bg-brand-light rounded-lg">Program Kursus</a>
-                <a href="services.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Computer Service</a>
-                <a href="testimonials.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Testimoni</a>
-                <a href="faq.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">FAQ</a>
-                <a href="settings.html" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-brand-light rounded-lg transition-colors">Pengaturan</a>
-                <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-gray-400 hover:text-white hover:bg-brand-light rounded-lg transition-colors mt-4">Logout</button>
-            </nav>
-        </aside>
+    <!-- ============================================================
+    MOBILE HEADER
+    ============================================================ -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Form Program</span>
+        <div class="w-8"></div>
+    </div>
 
-        <!-- ============================================================
-             MOBILE HEADER
-             ============================================================ -->
-        <div class="md:hidden w-full bg-brand p-4 flex justify-between items-center fixed top-0 left-0 z-50">
-            <span class="text-white font-bold">IMDKOM Admin</span>
-            <button id="mobileLogout" class="text-gray-300 hover:text-white text-sm">Logout</button>
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+   <!-- ============================================================
+    SIDEBAR ADMIN
+    ============================================================ -->
+<aside class="admin-sidebar" id="sidebar">
+    <div class="brand">IMDKOM Admin</div>
+    <nav>
+        <a href="dashboard.html" class="nav-link">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            Dashboard
+        </a>
+        <a href="landing-page.html" class="nav-link">
+            <i data-lucide="home" class="w-4 h-4"></i>
+            Landing Page
+        </a>
+
+        <!-- Program Kursus — dengan submenu -->
+        <div class="nav-group">
+            <button type="button" 
+                    class="nav-link nav-group-toggle w-full justify-between" 
+                    data-target="submenu-program">
+                <span class="flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    Program Kursus
+                </span>
+                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform nav-chevron"></i>
+            </button>
+
+            <div id="submenu-program" class="nav-submenu hidden">
+                <a href="programs.html" class="nav-submenu-link active">
+                    <i data-lucide="list" class="w-3.5 h-3.5"></i>
+                    Daftar Program
+                </a>
+                <a href="program-submissions.html" class="nav-submenu-link">
+                    <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                    Review Usulan
+                </a>
+                <a href="tentors.html" class="nav-submenu-link">
+                    <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+                    Tentor
+                </a>
+            </div>
         </div>
 
-        <!-- ============================================================
-             MAIN CONTENT
-             ============================================================ -->
-        <main class="flex-1 p-6 md:pt-6 pt-20">
-            <!-- Header -->
-            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-                <h2 class="text-2xl md:text-3xl font-bold text-brand" id="formTitle">Tambah Program</h2>
-                <a href="programs.html" class="text-gray-500 hover:text-gray-700 transition-colors">← Kembali</a>
-            </div>
+        <a href="services.html" class="nav-link">
+            <i data-lucide="wrench" class="w-4 h-4"></i>
+            Computer Service
+        </a>
+        <a href="pc-components.html" class="nav-link">
+            <i data-lucide="cpu" class="w-4 h-4"></i>
+            PC Components
+        </a>
+        <a href="pricelists.html" class="nav-link">
+            <i data-lucide="tag" class="w-4 h-4"></i>
+            Pricelist
+        </a>
+        <a href="documentations.html" class="nav-link">
+            <i data-lucide="image" class="w-4 h-4"></i>
+            Dokumentasi
+        </a>
+        <a href="testimonials.html" class="nav-link">
+            <i data-lucide="message-square" class="w-4 h-4"></i>
+            Testimoni
+        </a>
+        <a href="faq.html" class="nav-link">
+            <i data-lucide="help-circle" class="w-4 h-4"></i>
+            FAQ
+        </a>
+        <a href="consultations.html" class="nav-link">
+            <i data-lucide="inbox" class="w-4 h-4"></i>
+            Konsultasi
+        </a>
+        <a href="settings.html" class="nav-link">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            Pengaturan
+        </a>
+        <button id="logoutBtn" class="logout-btn">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            Logout
+        </button>
+    </nav>
+</aside>
 
-            <!-- Form -->
-            <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <form id="programForm">
-                    <input type="hidden" id="programId" />
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2 id="formTitle">Tambah Program</h2>
+            <a href="programs.html" class="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Kembali
+            </a>
+        </div>
+
+        <div class="admin-card max-w-3xl">
+            <form id="programForm">
+                <input type="hidden" id="programId" />
+                <input type="hidden" id="submissionId" />
+
+                <!-- ============================================================ -->
+                <!-- BANNER: dari usulan tentor (muncul kalau submissionId ada)   -->
+                <!-- ============================================================ -->
+                <div id="fromSubmissionBanner" class="hidden mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="file-check" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-blue-800">Data dari Usulan Tentor</p>
+                            <p class="text-sm text-blue-700 mt-0.5">
+                                Usulan dari <strong id="submissionTentorName">-</strong>. Data sudah terisi otomatis.
+                                Silakan lengkapi <strong>harga, durasi, pertemuan, jam/sesi,</strong> dan <strong>promo</strong> sebelum publish.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nama & Kategori -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Program *</label>
+                        <input type="text" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                               id="nama" 
+                               required 
+                               placeholder="Contoh: Microsoft Office" />
+                    </div>
+                    <div>
+                        <label for="kategori" class="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                                id="kategori" 
+                                required>
+                            <option value="">Pilih kategori</option>
+                            <option value="Kursus Reguler">Kursus Reguler</option>
+                            <option value="Kursus Privat">Kursus Privat</option>
+                            <option value="Kursus Singkat">Kursus Singkat</option>
+                            <option value="Sertifikasi">Sertifikasi</option>
+                            <option value="Microsoft Office">Microsoft Office</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="mt-4">
+                    <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                              id="deskripsi" 
+                              rows="3"
+                              placeholder="Deskripsi lengkap program..."></textarea>
+                </div>
+
+                <!-- Deskripsi Singkat -->
+                <div class="mt-4">
+                    <label for="deskripsiSingkat" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                              id="deskripsiSingkat" 
+                              rows="2"
+                              placeholder="Deskripsi singkat untuk preview..."></textarea>
+                    <p class="text-xs text-gray-400 mt-1">Maksimal 100 karakter untuk tampilan di halaman utama.</p>
+                </div>
+
+                <!-- Harga, Durasi, Order -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div>
+                        <label for="harga" class="block text-sm font-medium text-gray-700 mb-1">
+                            Harga <span id="hargaRequired" class="text-red-500 hidden">*</span>
+                        </label>
+                        <input type="text" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none font-medium text-sm" 
+                               id="harga" 
+                               placeholder="Rp 1.500.000"
+                               inputmode="numeric" />
+                        <p class="text-xs text-gray-400 mt-1">Ketik angka saja, otomatis format Rupiah.</p>
+                    </div>
+                    <div>
+                        <label for="durasi" class="block text-sm font-medium text-gray-700 mb-1">Durasi</label>
+                        <input type="text" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                               id="durasi" 
+                               placeholder="3 bulan" />
+                    </div>
+                    <div>
+                        <label for="order" class="block text-sm font-medium text-gray-700 mb-1">Urutan Tampil</label>
+                        <input type="number" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                               id="order" 
+                               value="1" 
+                               min="1" />
+                        <p class="text-xs text-gray-400 mt-1">Program lain akan otomatis digeser.</p>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- DURASI & SESI -->
+                <!-- ============================================================ -->
+                <div class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="clock" class="w-4 h-4 text-brand"></i>
+                        <h4 class="text-sm font-semibold text-gray-700">Durasi & Sesi <span class="text-gray-400 font-normal">(opsional)</span></h4>
+                    </div>
                     
-                    <!-- Nama & Kategori -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Program *</label>
-                            <input type="text" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="nama" 
-                                   required 
-                                   placeholder="Contoh: Microsoft Office" />
+                            <label for="totalPertemuan" class="block text-sm font-medium text-gray-700 mb-1">Total Pertemuan</label>
+                            <input type="number" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                                   id="totalPertemuan" 
+                                   min="1"
+                                   placeholder="12" />
                         </div>
                         <div>
-                            <label for="kategori" class="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
-                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                    id="kategori" 
-                                    required>
-                                <option value="">Pilih kategori</option>
-                                <option value="Kursus Reguler">Kursus Reguler</option>
-                                <option value="Kursus Privat">Kursus Privat</option>
-                                <option value="Kursus Singkat">Kursus Singkat</option>
-                                <option value="Sertifikasi">Sertifikasi</option>
-                                <option value="Microsoft Office">Microsoft Office</option>
-                                <option value="Lainnya">Lainnya</option>
+                            <label for="jamPerSesi" class="block text-sm font-medium text-gray-700 mb-1">Jam per Sesi</label>
+                            <input type="number" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                                   id="jamPerSesi" 
+                                   min="0.5"
+                                   step="0.5"
+                                   placeholder="2" />
+                        </div>
+                        <div>
+                            <label for="level" class="block text-sm font-medium text-gray-700 mb-1">Level</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                                    id="level">
+                                <option value="">— Tidak ditentukan —</option>
+                                <option value="Pemula">Pemula</option>
+                                <option value="Menengah">Menengah</option>
+                                <option value="Mahir">Mahir</option>
                             </select>
                         </div>
                     </div>
+                    
+                    <p class="text-xs text-gray-500 mt-2" id="totalJamInfo">💡 Total jam belajar akan dihitung otomatis.</p>
+                </div>
 
-                    <!-- Deskripsi -->
-                    <div class="mt-4">
-                        <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                  id="deskripsi" 
-                                  rows="3"
-                                  placeholder="Deskripsi lengkap program..."></textarea>
-                    </div>
-
-                    <!-- Deskripsi Singkat -->
-                    <div class="mt-4">
-                        <label for="deskripsiSingkat" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat</label>
-                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                  id="deskripsiSingkat" 
-                                  rows="2"
-                                  placeholder="Deskripsi singkat untuk preview..."></textarea>
-                        <p class="text-xs text-gray-400 mt-1">Maksimal 100 karakter untuk tampilan di halaman utama.</p>
-                    </div>
-
-                    <!-- Harga, Durasi, Order -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                        <div>
-                            <label for="harga" class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
-                            <input type="text" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none font-medium" 
-                                   id="harga" 
-                                   placeholder="Rp 1.500.000"
-                                   inputmode="numeric" />
-                            <p class="text-xs text-gray-400 mt-1">Ketik angka saja, otomatis format Rupiah.</p>
-                        </div>
-                        <div>
-                            <label for="durasi" class="block text-sm font-medium text-gray-700 mb-1">Durasi</label>
-                            <input type="text" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="durasi" 
-                                   placeholder="3 bulan" />
-                        </div>
-                        <div>
-                            <label for="order" class="block text-sm font-medium text-gray-700 mb-1">Urutan Tampil</label>
-                            <input type="number" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                                   id="order" 
-                                   value="1" 
-                                   min="1" />
-                            <p class="text-xs text-gray-400 mt-1">Program lain akan otomatis digeser.</p>
-                        </div>
-                    </div>
-
-                    <!-- ============================================================
-                         MATERI — Dynamic List
-                         ============================================================ -->
-                    <div class="mt-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <label class="block text-sm font-medium text-gray-700">
-                                Materi <span class="text-red-500">*</span>
-                            </label>
-                            <span class="text-xs text-gray-400">Urutkan dengan tombol ▲ ▼</span>
-                        </div>
-                        
-                        <div id="materiList" class="space-y-2">
-                            <!-- Field dinamis di-render via JS -->
-                        </div>
-                        
-                        <button type="button" 
-                                id="addMateriBtn"
-                                class="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            Tambah Materi
-                        </button>
-                    </div>
-
-                    <!-- ============================================================
-                         BENEFIT — Dynamic List
-                         ============================================================ -->
-                    <div class="mt-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <label class="block text-sm font-medium text-gray-700">
-                                Benefit <span class="text-red-500">*</span>
-                            </label>
-                            <span class="text-xs text-gray-400">Urutkan dengan tombol ▲ ▼</span>
-                        </div>
-                        
-                        <div id="benefitList" class="space-y-2">
-                            <!-- Field dinamis di-render via JS -->
-                        </div>
-                        
-                        <button type="button" 
-                                id="addBenefitBtn"
-                                class="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            Tambah Benefit
-                        </button>
-                    </div>
-
-                    <!-- Gambar Program (Cloudinary) -->
-                    <div class="mt-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Gambar Program</label>
-
-                        <!-- Preview -->
-                        <div id="gambarPreviewWrapper" class="hidden mb-3">
-                            <img id="gambarPreview" src="" alt="Preview" class="form-preview-img" />
-                        </div>
-
-                        <!-- Tombol Aksi -->
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button" 
-                                    id="uploadGambarBtn" 
-                                    class="inline-flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-light text-white rounded-lg text-sm font-medium transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                                </svg>
-                                <span id="uploadGambarText">Upload Gambar</span>
-                            </button>
-                            <button type="button" 
-                                    id="removeGambarBtn" 
-                                    class="hidden inline-flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-medium border border-red-200 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                                Hapus Gambar
-                            </button>
-                        </div>
-
-                        <!-- Input Hidden untuk menyimpan URL Cloudinary -->
-                        <input type="hidden" id="gambar" />
-                        <p class="text-xs text-gray-400 mt-2">Upload ke Cloudinary — otomatis dioptimasi.</p>
-                    </div>
-
-                    <!-- Status Aktif -->
-                    <div class="mt-4 flex items-center gap-3">
-                        <input type="checkbox" 
-                               class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" 
-                               id="aktif" 
-                               checked />
-                        <label for="aktif" class="text-sm text-gray-700">Aktif</label>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="flex flex-wrap gap-3 mt-6">
-                        <button type="submit" 
-                                class="bg-brand hover:bg-brand-light text-white font-medium px-6 py-2 rounded-lg transition-colors">
-                            Simpan
-                        </button>
-                        <a href="programs.html" 
-                           class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-6 py-2 rounded-lg transition-colors">
-                            Batal
-                        </a>
+                <!-- ============================================================ -->
+                <!-- PROMO -->
+                <!-- ============================================================ -->
+                <div class="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="tag" class="w-4 h-4 text-brand-dark"></i>
+                        <h4 class="text-sm font-semibold text-gray-700">Promo <span class="text-gray-400 font-normal">(opsional)</span></h4>
                     </div>
                     
-                    <!-- Message -->
-                    <div id="formMessage" class="mt-3"></div>
-                </form>
-            </div>
-        </main>
-    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="hargaPromo" class="block text-sm font-medium text-gray-700 mb-1">Harga Promo</label>
+                            <input type="text" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none font-medium text-sm" 
+                                   id="hargaPromo" 
+                                   placeholder="Rp 1.200.000"
+                                   inputmode="numeric" />
+                            <p class="text-xs text-gray-400 mt-1">Kosongkan kalau tidak ada promo.</p>
+                        </div>
+                        <div>
+                            <label for="labelPromo" class="block text-sm font-medium text-gray-700 mb-1">Label Badge Promo</label>
+                            <input type="text" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" 
+                                   id="labelPromo" 
+                                   placeholder="PROMO"
+                                   maxlength="20" />
+                            <p class="text-xs text-gray-400 mt-1">Default: "PROMO". Bisa diubah jadi "DISKON 20%", "TERBATAS", dll.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- MATERI — Dynamic List -->
+                <!-- ============================================================ -->
+                <div class="mt-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Materi <span class="text-red-500">*</span>
+                        </label>
+                        <span class="text-xs text-gray-400">Urutkan dengan tombol ▲ ▼</span>
+                    </div>
+                    
+                    <div id="materiList" class="space-y-2"></div>
+                    
+                    <button type="button" 
+                            id="addMateriBtn"
+                            class="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Tambah Materi
+                    </button>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- BENEFIT — Dynamic List -->
+                <!-- ============================================================ -->
+                <div class="mt-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Benefit <span class="text-red-500">*</span>
+                        </label>
+                        <span class="text-xs text-gray-400">Urutkan dengan tombol ▲ ▼</span>
+                    </div>
+                    
+                    <div id="benefitList" class="space-y-2"></div>
+                    
+                    <button type="button" 
+                            id="addBenefitBtn"
+                            class="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Tambah Benefit
+                    </button>
+                </div>
+
+                <!-- Gambar Program (Cloudinary) -->
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Gambar Program</label>
+
+                    <div id="gambarPreviewWrapper" class="hidden mb-3">
+                        <img id="gambarPreview" src="" alt="Preview" class="form-preview-img" />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" 
+                                id="uploadGambarBtn" 
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors">
+                            <i data-lucide="upload" class="w-4 h-4"></i>
+                            <span id="uploadGambarText">Upload Gambar</span>
+                        </button>
+                        <button type="button" 
+                                id="removeGambarBtn" 
+                                class="hidden inline-flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-medium border border-red-200 transition-colors">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                            Hapus Gambar
+                        </button>
+                    </div>
+
+                    <input type="hidden" id="gambar" />
+                    <p class="text-xs text-gray-400 mt-2">Upload ke Cloudinary — otomatis dioptimasi.</p>
+                </div>
+
+                <!-- Status Aktif -->
+                <div class="mt-4 flex items-center gap-3">
+                    <input type="checkbox" 
+                           class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded" 
+                           id="aktif" 
+                           checked />
+                    <label for="aktif" class="text-sm text-gray-700">Aktif</label>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex flex-wrap gap-3 mt-6 pt-4 border-t border-gray-200">
+                    <button type="submit" id="submitBtn" class="btn-primary">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span id="submitBtnText">Simpan</span>
+                    </button>
+                    <a href="programs.html" class="btn-secondary">Batal</a>
+                </div>
+                
+                <div id="formMessage" class="mt-3"></div>
+            </form>
+        </div>
+    </main>
 
     <!-- ============================================================
-         JAVASCRIPT
-         ============================================================ -->
+    JAVASCRIPT
+    ============================================================ -->
     <script type="module">
         import { 
             auth, onAuthStateChanged, signOut, 
@@ -271,6 +482,23 @@
             getDocs, query, orderBy, writeBatch 
         } from '../assets/js/firebase.js';
         import { setupImageUploadField, setExistingImagePreview } from '../assets/js/cloudinary.js';
+
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
 
         // ============================================================
         // KONFIG FIELD GAMBAR
@@ -287,26 +515,20 @@
         };
 
         // ============================================================
-        // AUTH CHECK
+        // AUTH
         // ============================================================
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = 'login.html';
+                window.location.href = '../login.html';
             } else {
-                checkEditMode();
+                checkMode();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             }
         });
 
-        // ============================================================
-        // LOGOUT
-        // ============================================================
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = 'login.html';
-        });
-        document.getElementById('mobileLogout').addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.href = 'login.html';
+            window.location.href = '../login.html';
         });
 
         // ============================================================
@@ -314,51 +536,63 @@
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             setupImageUploadField(GAMBAR_FIELD_CONFIG);
-            
-            // Mulai dengan 1 field kosong untuk materi & benefit
             addMateriField('');
             addBenefitField('');
         });
 
         // ============================================================
-        // FORMAT RUPIAH — Auto-format saat mengetik
+        // FORMAT RUPIAH
         // ============================================================
-        const hargaInput = document.getElementById('harga');
+        function attachRupiahFormatter(inputEl) {
+            if (!inputEl) return;
+            inputEl.addEventListener('input', function(e) {
+                const cursorPos = e.target.selectionStart;
+                const oldValue = e.target.value;
+                const oldLength = oldValue.length;
+                const digits = oldValue.replace(/\D/g, '');
+                if (!digits) {
+                    e.target.value = '';
+                    return;
+                }
+                const formatted = parseInt(digits, 10).toLocaleString('id-ID');
+                const newValue = `Rp ${formatted}`;
+                e.target.value = newValue;
+                const newLength = newValue.length;
+                const newPos = Math.max(0, cursorPos + (newLength - oldLength));
+                e.target.setSelectionRange(newPos, newPos);
+            });
+            inputEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value === 'Rp ') {
+                    e.preventDefault();
+                    this.value = '';
+                }
+            });
+        }
 
-        hargaInput.addEventListener('input', function(e) {
-            const cursorPos = e.target.selectionStart;
-            const oldValue = e.target.value;
-            const oldLength = oldValue.length;
-            
-            // Hapus semua non-digit
-            const digits = oldValue.replace(/\D/g, '');
-            
-            if (!digits) {
-                e.target.value = '';
-                return;
-            }
-            
-            // Format dengan titik ribuan
-            const formatted = parseInt(digits, 10).toLocaleString('id-ID');
-            const newValue = `Rp ${formatted}`;
-            e.target.value = newValue;
-            
-            // Sesuaikan posisi kursor
-            const newLength = newValue.length;
-            const newPos = Math.max(0, cursorPos + (newLength - oldLength));
-            e.target.setSelectionRange(newPos, newPos);
-        });
-
-        // Handle backspace kalau hanya "Rp " tersisa
-        hargaInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace' && this.value === 'Rp ') {
-                e.preventDefault();
-                this.value = '';
-            }
-        });
+        attachRupiahFormatter(document.getElementById('harga'));
+        attachRupiahFormatter(document.getElementById('hargaPromo'));
 
         // ============================================================
-        // UTILITY: Escape HTML
+        // HITUNG TOTAL JAM
+        // ============================================================
+        function updateTotalJamInfo() {
+            const total = parseFloat(document.getElementById('totalPertemuan').value) || 0;
+            const jam = parseFloat(document.getElementById('jamPerSesi').value) || 0;
+            const infoEl = document.getElementById('totalJamInfo');
+            if (!infoEl) return;
+            if (total > 0 && jam > 0) {
+                const totalJam = total * jam;
+                infoEl.innerHTML = `💡 Total jam belajar: <strong class="text-brand">${totalJam} jam</strong> (${total} pertemuan × ${jam} jam/sesi)`;
+            } else {
+                infoEl.innerHTML = '💡 Total jam belajar akan dihitung otomatis.';
+            }
+        }
+
+        document.getElementById('totalPertemuan').addEventListener('input', updateTotalJamInfo);
+        document.getElementById('jamPerSesi').addEventListener('input', updateTotalJamInfo);
+
+        // ============================================================
+        // UTILITY: escapeHtml
         // ============================================================
         function escapeHtml(str) {
             if (!str) return '';
@@ -374,35 +608,20 @@
         // DYNAMIC LIST — HELPER
         // ============================================================
         function createListItemHTML(value, type) {
-            const placeholder = type === 'materi' 
-                ? 'Contoh: Pengenalan Word' 
-                : 'Contoh: Sertifikat resmi';
-            
+            const placeholder = type === 'materi' ? 'Contoh: Pengenalan Word' : 'Contoh: Sertifikat resmi';
             const labelText = type === 'materi' ? 'Materi' : 'Benefit';
             
             return `
                 <div class="dynamic-item flex gap-2 items-center bg-gray-50 p-2 rounded-lg">
-                    <!-- Reorder buttons -->
                     <div class="flex flex-col gap-0.5 flex-shrink-0">
-                        <button type="button" 
-                                class="move-up p-1 text-gray-400 hover:text-brand hover:bg-white rounded transition-colors"
-                                title="Naikkan"
-                                aria-label="Naikkan">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
+                        <button type="button" class="move-up p-1 text-gray-400 hover:text-brand hover:bg-white rounded transition-colors" title="Naikkan">
+                            <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
                         </button>
-                        <button type="button" 
-                                class="move-down p-1 text-gray-400 hover:text-brand hover:bg-white rounded transition-colors"
-                                title="Turunkan"
-                                aria-label="Turunkan">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
+                        <button type="button" class="move-down p-1 text-gray-400 hover:text-brand hover:bg-white rounded transition-colors" title="Turunkan">
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
 
-                    <!-- Input -->
                     <input type="text" 
                            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white"
                            value="${escapeHtml(value)}"
@@ -410,20 +629,13 @@
                            data-${type}-input
                            aria-label="${labelText}" />
 
-                    <!-- Delete -->
-                    <button type="button" 
-                            class="remove-item p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
-                            title="Hapus"
-                            aria-label="Hapus">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
+                    <button type="button" class="remove-item p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0" title="Hapus">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
                     </button>
                 </div>
             `;
         }
 
-        // ---------- MATERI ----------
         const materiList = document.getElementById('materiList');
         const addMateriBtn = document.getElementById('addMateriBtn');
 
@@ -433,9 +645,8 @@
             const item = div.firstElementChild;
             materiList.appendChild(item);
             attachListItemEvents(item, materiList);
-            if (!value) {
-                item.querySelector('input').focus();
-            }
+            if (!value) item.querySelector('input').focus();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         function getMateriValues() {
@@ -450,7 +661,6 @@
 
         addMateriBtn.addEventListener('click', () => addMateriField(''));
 
-        // ---------- BENEFIT ----------
         const benefitList = document.getElementById('benefitList');
         const addBenefitBtn = document.getElementById('addBenefitBtn');
 
@@ -460,9 +670,8 @@
             const item = div.firstElementChild;
             benefitList.appendChild(item);
             attachListItemEvents(item, benefitList);
-            if (!value) {
-                item.querySelector('input').focus();
-            }
+            if (!value) item.querySelector('input').focus();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         function getBenefitValues() {
@@ -477,9 +686,6 @@
 
         addBenefitBtn.addEventListener('click', () => addBenefitField(''));
 
-        // ============================================================
-        // EVENT HANDLER UNTUK SETIAP ITEM (reorder + delete)
-        // ============================================================
         function attachListItemEvents(item, listContainer) {
             const input = item.querySelector('input');
             const moveUpBtn = item.querySelector('.move-up');
@@ -488,22 +694,17 @@
 
             moveUpBtn.addEventListener('click', () => {
                 const prev = item.previousElementSibling;
-                if (prev) {
-                    listContainer.insertBefore(item, prev);
-                }
+                if (prev) listContainer.insertBefore(item, prev);
             });
 
             moveDownBtn.addEventListener('click', () => {
                 const next = item.nextElementSibling;
-                if (next) {
-                    listContainer.insertBefore(next, item);
-                }
+                if (next) listContainer.insertBefore(next, item);
             });
 
             removeBtn.addEventListener('click', () => {
                 const count = listContainer.children.length;
                 if (count <= 1) {
-                    // Minimal 1 field — kosongkan saja
                     input.value = '';
                     input.focus();
                     return;
@@ -513,39 +714,26 @@
         }
 
         // ============================================================
-        // REORDER PROGRAM — Normalisasi urutan setelah insert/update
+        // REORDER PROGRAM
         // ============================================================
         async function reorderPrograms(targetProgramId, targetProgramData, targetOrder) {
-            // 1. Ambil semua program, urutkan berdasarkan order
             const q = query(collection(db, 'programs'), orderBy('order', 'asc'));
             const snapshot = await getDocs(q);
             
-            // 2. Kumpulkan program (kecuali yang baru disimpan)
             const others = [];
             snapshot.forEach(docSnap => {
                 if (docSnap.id === targetProgramId) return;
-                others.push({
-                    id: docSnap.id,
-                    data: docSnap.data()
-                });
+                others.push({ id: docSnap.id, data: docSnap.data() });
             });
             
-            // 3. Insert program target di posisi targetOrder - 1
             const insertIndex = Math.max(0, Math.min(targetOrder - 1, others.length));
-            others.splice(insertIndex, 0, {
-                id: targetProgramId,
-                data: targetProgramData
-            });
+            others.splice(insertIndex, 0, { id: targetProgramId, data: targetProgramData });
             
-            // 4. Batch update — assign ulang order 1..N
             const batch = writeBatch(db);
             others.forEach((prog, index) => {
                 const newOrder = index + 1;
                 if (prog.id === targetProgramId) {
-                    batch.set(doc(db, 'programs', prog.id), {
-                        ...prog.data,
-                        order: newOrder
-                    });
+                    batch.set(doc(db, 'programs', prog.id), { ...prog.data, order: newOrder });
                 } else {
                     batch.update(doc(db, 'programs', prog.id), { order: newOrder });
                 }
@@ -556,21 +744,36 @@
         }
 
         // ============================================================
-        // CHECK EDIT MODE
+        // CHECK MODE (edit / publish from submission / new)
         // ============================================================
-        async function checkEditMode() {
+        async function checkMode() {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
-            
+            const submissionId = urlParams.get('submissionId');
+
+            // Mode 1: Edit program existing
             if (id) {
                 document.getElementById('formTitle').textContent = 'Edit Program';
                 document.getElementById('programId').value = id;
                 await loadProgram(id);
+                return;
             }
+
+            // Mode 2: Dari usulan tentor
+            if (submissionId) {
+                document.getElementById('formTitle').textContent = 'Publish Program dari Usulan';
+                document.getElementById('submissionId').value = submissionId;
+                document.getElementById('submitBtnText').textContent = 'Publish Program';
+                document.getElementById('hargaRequired').classList.remove('hidden');
+                await loadSubmissionData(submissionId);
+                return;
+            }
+
+            // Mode 3: Tambah program baru (default)
         }
 
         // ============================================================
-        // LOAD PROGRAM (untuk edit)
+        // LOAD PROGRAM (edit)
         // ============================================================
         async function loadProgram(id) {
             try {
@@ -593,8 +796,14 @@
                 document.getElementById('order').value = data.order || 1;
                 document.getElementById('gambar').value = data.gambar || '';
                 document.getElementById('aktif').checked = data.aktif !== false;
+
+                document.getElementById('totalPertemuan').value = data.totalPertemuan || '';
+                document.getElementById('jamPerSesi').value = data.jamPerSesi || '';
+                document.getElementById('level').value = data.level || '';
+                document.getElementById('hargaPromo').value = data.hargaPromo || '';
+                document.getElementById('labelPromo').value = data.labelPromo || '';
+                updateTotalJamInfo();
                 
-                // Load materi
                 materiList.innerHTML = '';
                 if (Array.isArray(data.materi) && data.materi.length > 0) {
                     data.materi.forEach(m => addMateriField(m));
@@ -602,7 +811,6 @@
                     addMateriField('');
                 }
                 
-                // Load benefit
                 benefitList.innerHTML = '';
                 if (Array.isArray(data.benefit) && data.benefit.length > 0) {
                     data.benefit.forEach(b => addBenefitField(b));
@@ -610,7 +818,6 @@
                     addBenefitField('');
                 }
                 
-                // Preview gambar Cloudinary
                 if (data.gambar) {
                     setExistingImagePreview(GAMBAR_FIELD_CONFIG, data.gambar);
                 }
@@ -622,19 +829,87 @@
         }
 
         // ============================================================
+        // LOAD SUBMISSION DATA (dari usulan tentor)
+        // ============================================================
+        async function loadSubmissionData(submissionId) {
+            try {
+                const docSnap = await getDoc(doc(db, 'programSubmissions', submissionId));
+
+                if (!docSnap.exists()) {
+                    alert('Usulan tidak ditemukan');
+                    window.location.href = 'program-submissions.html';
+                    return;
+                }
+
+                const data = docSnap.data();
+
+                // Cek status — harus 'approved'
+                if (data.status !== 'approved') {
+                    alert(`Usulan berstatus "${data.status}". Hanya usulan "approved" yang bisa dipublish.`);
+                    window.location.href = 'program-submissions.html';
+                    return;
+                }
+
+                // Tampilkan banner
+                const banner = document.getElementById('fromSubmissionBanner');
+                const tentorName = document.getElementById('submissionTentorName');
+                if (banner) banner.classList.remove('hidden');
+                if (tentorName) tentorName.textContent = data.tentorNama || 'Tentor';
+
+                // Pre-fill form dengan data usulan
+                document.getElementById('nama').value = data.judul || '';
+                document.getElementById('deskripsi').value = data.deskripsi || '';
+                document.getElementById('deskripsiSingkat').value = data.deskripsiSingkat || '';
+                document.getElementById('level').value = data.level || '';
+
+                // Thumbnail dari submission
+                if (data.thumbnailUrl) {
+                    document.getElementById('gambar').value = data.thumbnailUrl;
+                    setExistingImagePreview(GAMBAR_FIELD_CONFIG, data.thumbnailUrl);
+                }
+
+                // Load materi
+                materiList.innerHTML = '';
+                if (Array.isArray(data.materi) && data.materi.length > 0) {
+                    data.materi.forEach(m => addMateriField(m));
+                } else {
+                    addMateriField('');
+                }
+
+                // Load benefit
+                benefitList.innerHTML = '';
+                if (Array.isArray(data.benefit) && data.benefit.length > 0) {
+                    data.benefit.forEach(b => addBenefitField(b));
+                } else {
+                    addBenefitField('');
+                }
+
+                // Scroll ke atas
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                console.log('✅ Submission data loaded:', submissionId);
+
+            } catch (error) {
+                console.error('Error loading submission:', error);
+                alert('Gagal memuat usulan: ' + error.message);
+                window.location.href = 'program-submissions.html';
+            }
+        }
+
+        // ============================================================
         // SUBMIT FORM
         // ============================================================
         document.getElementById('programForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const id = document.getElementById('programId').value;
-            const submitBtn = this.querySelector('button[type="submit"]');
+            const submissionId = document.getElementById('submissionId').value;
+            const submitBtn = document.getElementById('submitBtn');
             const messageEl = document.getElementById('formMessage');
-            
-            // Validasi materi & benefit minimal 1 terisi
+
             const materiValues = getMateriValues();
             const benefitValues = getBenefitValues();
-            
+
             if (materiValues.length === 0) {
                 messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Materi wajib diisi minimal 1 item.</p>`;
                 return;
@@ -643,13 +918,26 @@
                 messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Benefit wajib diisi minimal 1 item.</p>`;
                 return;
             }
-            
-            // Disable button
+
+            // Validasi tambahan untuk publish dari submission
+            if (submissionId) {
+                const harga = document.getElementById('harga').value.trim();
+                if (!harga) {
+                    messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Harga wajib diisi sebelum publish.</p>`;
+                    return;
+                }
+                const kategori = document.getElementById('kategori').value;
+                if (!kategori) {
+                    messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Kategori wajib dipilih sebelum publish.</p>`;
+                    return;
+                }
+            }
+
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Menyimpan...';
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
             messageEl.innerHTML = '';
 
-            // Build data
             const data = {
                 nama: document.getElementById('nama').value.trim(),
                 kategori: document.getElementById('kategori').value,
@@ -661,7 +949,12 @@
                 materi: materiValues,
                 benefit: benefitValues,
                 gambar: document.getElementById('gambar').value.trim(),
-                aktif: document.getElementById('aktif').checked
+                aktif: document.getElementById('aktif').checked,
+                totalPertemuan: parseInt(document.getElementById('totalPertemuan').value) || null,
+                jamPerSesi: parseFloat(document.getElementById('jamPerSesi').value) || null,
+                level: document.getElementById('level').value.trim(),
+                hargaPromo: document.getElementById('hargaPromo').value.trim(),
+                labelPromo: document.getElementById('labelPromo').value.trim(),
             };
 
             try {
@@ -670,37 +963,91 @@
                     await updateDoc(doc(db, 'programs', id), data);
                     await reorderPrograms(id, data, data.order);
                     messageEl.innerHTML = `<p class="text-green-600 font-medium">✅ Program berhasil diupdate!</p>`;
+
                 } else {
                     // ========== CREATE MODE ==========
                     data.createdAt = new Date().toISOString();
+
+                    if (submissionId) {
+                        data.submissionId = submissionId;
+                    }
+
                     const docRef = await addDoc(collection(db, 'programs'), data);
                     await reorderPrograms(docRef.id, data, data.order);
-                    messageEl.innerHTML = `<p class="text-green-600 font-medium">✅ Program berhasil ditambahkan!</p>`;
-                    
-                    // Reset form
-                    this.reset();
-                    document.getElementById('gambarPreviewWrapper').classList.add('hidden');
-                    document.getElementById('removeGambarBtn').classList.add('hidden');
-                    document.getElementById('uploadGambarText').textContent = 'Upload Gambar';
-                    
-                    materiList.innerHTML = '';
-                    benefitList.innerHTML = '';
-                    addMateriField('');
-                    addBenefitField('');
+
+                    // Kalau dari submission → update submission
+                    if (submissionId) {
+                        await updateDoc(doc(db, 'programSubmissions', submissionId), {
+                            status: 'published',
+                            programId: docRef.id,
+                            publishedAt: new Date().toISOString(),
+                            publishedBy: auth.currentUser?.uid || '',
+                            updatedAt: new Date().toISOString()
+                        });
+                        messageEl.innerHTML = `<p class="text-green-600 font-medium">✅ Program berhasil dipublish dari usulan tentor!</p>`;
+                    } else {
+                        messageEl.innerHTML = `<p class="text-green-600 font-medium">✅ Program berhasil ditambahkan!</p>`;
+                    }
+
+                    // Reset form (hanya kalau bukan dari submission)
+                    if (!submissionId) {
+                        this.reset();
+                        document.getElementById('gambarPreviewWrapper').classList.add('hidden');
+                        document.getElementById('removeGambarBtn').classList.add('hidden');
+                        document.getElementById('uploadGambarText').textContent = 'Upload Gambar';
+                        materiList.innerHTML = '';
+                        benefitList.innerHTML = '';
+                        addMateriField('');
+                        addBenefitField('');
+                        updateTotalJamInfo();
+                    }
                 }
-                
-                // Redirect setelah 1.5 detik
+
                 setTimeout(() => {
-                    window.location.href = 'programs.html';
+                    window.location.href = submissionId ? 'program-submissions.html' : 'programs.html';
                 }, 1500);
-                
+
             } catch (error) {
                 console.error('Error saving program:', error);
                 messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Gagal menyimpan: ${error.message}</p>`;
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Simpan';
+                submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> <span id="submitBtnText">${submissionId ? 'Publish Program' : 'Simpan'}</span>`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             }
         });
+
+        // ============================================================
+// NAV SUBMENU — TOGGLE
+// ============================================================
+document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        const targetId = toggle.dataset.target;
+        const submenu = document.getElementById(targetId);
+        if (!submenu) return;
+
+        const isOpen = !submenu.classList.contains('hidden');
+
+        if (isOpen) {
+            submenu.classList.add('hidden');
+            toggle.classList.remove('open');
+        } else {
+            submenu.classList.remove('hidden');
+            toggle.classList.add('open');
+        }
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+});
+
+// Auto-buka submenu kalau ada link active di dalamnya
+document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
+    const submenu = activeLink.closest('.nav-submenu');
+    if (submenu) {
+        submenu.classList.remove('hidden');
+        const toggle = document.querySelector(`.nav-group-toggle[data-target="${submenu.id}"]`);
+        if (toggle) toggle.classList.add('open');
+    }
+});
     </script>
 
 </body>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menunggu Verifikasi | IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+
+    <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full text-center">
+        
+        <!-- Ikon jam -->
+        <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+
+        <h1 class="text-2xl font-bold text-brand mb-2">Menunggu Verifikasi</h1>
+        <p class="text-gray-600 text-sm mb-6">
+            Akun Anda sedang ditinjau oleh admin. Anda akan bisa mengakses dashboard tentor setelah akun disetujui.
+        </p>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left mb-6">
+            <p class="text-xs text-blue-800">
+                <strong>ℹ️ Info:</strong> Proses verifikasi biasanya memakan waktu 1×24 jam. Hubungi admin via WhatsApp jika lebih dari itu.
+            </p>
+        </div>
+
+        <div class="space-y-2">
+            <a href="login.html" 
+               class="block w-full bg-brand hover:bg-brand-light text-white font-medium py-2 rounded-lg transition-colors text-sm">
+                Login Ulang
+            </a>
+            <a href="index.html" 
+               class="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 rounded-lg transition-colors text-sm">
+                Kembali ke Beranda
+            </a>
+        </div>
+
+        <!-- Status cek (kalau user sudah login, cek status berkala) -->
+        <p id="statusInfo" class="text-xs text-gray-400 mt-4 hidden"></p>
+    </div>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut } from './assets/js/firebase.js';
+        import { getUserProfile, getDashboardUrl } from './assets/js/auth.js';
+
+        // ============================================================
+        // CEK STATUS — kalau sudah login & status active, redirect
+        // ============================================================
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) return; // belum login — biarkan halaman tampil
+
+            const profile = await getUserProfile(user.uid);
+            if (!profile) return;
+
+            // Kalau sudah active → redirect ke dashboard
+            if (profile.status === 'active') {
+                window.location.href = getDashboardUrl(profile.role);
+                return;
+            }
+
+            // Kalau rejected → logout + redirect ke login
+            if (profile.status === 'rejected') {
+                await signOut(auth);
+                window.location.href = 'login.html?error=account_inactive';
+                return;
+            }
+
+            // Kalau masih pending → tampilkan info
+            const statusInfo = document.getElementById('statusInfo');
+            if (statusInfo) {
+                statusInfo.textContent = `Status: ${profile.status} • Terdaftar: ${new Date(profile.createdAt).toLocaleDateString('id-ID')}`;
+                statusInfo.classList.remove('hidden');
+            }
+        });
+    </script>
+
+</body>
+</html>

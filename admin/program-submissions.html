@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Review Usulan Program | Admin IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        .stat-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 60, 94, 0.1);
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.625rem;
+            border-radius: 999px;
+        }
+        .status-draft        { background: #f3f4f6; color: #4b5563; }
+        .status-pending_review { background: #fef3c7; color: #92400e; }
+        .status-approved     { background: #dbeafe; color: #1e40af; }
+        .status-rejected     { background: #fee2e2; color: #991b1b; }
+        .status-published    { background: #d1fae5; color: #065f46; }
+
+        /* ============================================================
+       NAV GROUP / SUBMENU
+       ============================================================ */
+    .nav-group {
+        margin: 0;
+    }
+
+    .nav-group-toggle {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+    }
+
+    .nav-group-toggle .nav-chevron {
+        transition: transform 0.25s ease;
+        opacity: 0.6;
+    }
+
+    .nav-group-toggle.open .nav-chevron {
+        transform: rotate(180deg);
+        opacity: 1;
+    }
+
+    .nav-group-toggle.open {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Submenu container */
+    .nav-submenu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.25rem 0 0.5rem 0;
+        margin-left: 0.5rem;
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        animation: submenuSlide 0.25s ease;
+    }
+
+    .nav-submenu.hidden {
+        display: none;
+    }
+
+    @keyframes submenuSlide {
+        from {
+            opacity: 0;
+            transform: translateY(-4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Submenu link */
+    .nav-submenu-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        color: #d1d5db;
+        text-decoration: none;
+        border-radius: 0.375rem;
+        transition: all 0.2s ease;
+        margin-left: 0.25rem;
+    }
+
+    .nav-submenu-link:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+    }
+
+    .nav-submenu-link.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        font-weight: 600;
+    }
+
+    .nav-submenu-link i {
+        opacity: 0.7;
+        flex-shrink: 0;
+    }
+
+    .nav-submenu-link.active i {
+        opacity: 1;
+    }
+    </style>
+</head>
+<body>
+
+    <!-- MOBILE HEADER -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Review Usulan</span>
+        <div class="w-8"></div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR ADMIN
+    ============================================================ -->
+<aside class="admin-sidebar" id="sidebar">
+    <div class="brand">IMDKOM Admin</div>
+    <nav>
+        <a href="dashboard.html" class="nav-link">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            Dashboard
+        </a>
+        <a href="landing-page.html" class="nav-link">
+            <i data-lucide="home" class="w-4 h-4"></i>
+            Landing Page
+        </a>
+
+        <!-- Program Kursus — dengan submenu -->
+        <div class="nav-group">
+            <button type="button" 
+                    class="nav-link nav-group-toggle w-full justify-between" 
+                    data-target="submenu-program">
+                <span class="flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    Program Kursus
+                </span>
+                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform nav-chevron"></i>
+            </button>
+
+            <div id="submenu-program" class="nav-submenu hidden">
+                <a href="programs.html" class="nav-submenu-link">
+                    <i data-lucide="list" class="w-3.5 h-3.5"></i>
+                    Daftar Program
+                </a>
+                <a href="program-submissions.html" class="nav-submenu-link active">
+                    <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                    Review Usulan
+                </a>
+                <a href="tentors.html" class="nav-submenu-link">
+                    <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+                    Tentor
+                </a>
+            </div>
+        </div>
+
+        <a href="services.html" class="nav-link">
+            <i data-lucide="wrench" class="w-4 h-4"></i>
+            Computer Service
+        </a>
+        <a href="pc-components.html" class="nav-link">
+            <i data-lucide="cpu" class="w-4 h-4"></i>
+            PC Components
+        </a>
+        <a href="pricelists.html" class="nav-link">
+            <i data-lucide="tag" class="w-4 h-4"></i>
+            Pricelist
+        </a>
+        <a href="documentations.html" class="nav-link">
+            <i data-lucide="image" class="w-4 h-4"></i>
+            Dokumentasi
+        </a>
+        <a href="testimonials.html" class="nav-link">
+            <i data-lucide="message-square" class="w-4 h-4"></i>
+            Testimoni
+        </a>
+        <a href="faq.html" class="nav-link">
+            <i data-lucide="help-circle" class="w-4 h-4"></i>
+            FAQ
+        </a>
+        <a href="consultations.html" class="nav-link">
+            <i data-lucide="inbox" class="w-4 h-4"></i>
+            Konsultasi
+        </a>
+        <a href="settings.html" class="nav-link">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            Pengaturan
+        </a>
+        <button id="logoutBtn" class="logout-btn">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            Logout
+        </button>
+    </nav>
+</aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h2>Review Usulan Program</h2>
+                <p class="text-gray-500 text-sm mt-1">Review usulan program dari tentor</p>
+            </div>
+        </div>
+
+        <!-- STATISTIK -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Total</p>
+                        <p class="text-2xl font-bold text-brand mt-1" id="statTotal">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-brand/10 rounded-lg flex items-center justify-center">
+                        <i data-lucide="file-text" class="w-6 h-6 text-brand"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Menunggu</p>
+                        <p class="text-2xl font-bold text-yellow-600 mt-1" id="statPending">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="clock" class="w-6 h-6 text-yellow-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Disetujui</p>
+                        <p class="text-2xl font-bold text-blue-600 mt-1" id="statApproved">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="check" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Tayang</p>
+                        <p class="text-2xl font-bold text-green-600 mt-1" id="statPublished">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER -->
+        <div class="admin-card mb-4">
+            <div class="flex flex-wrap items-center gap-3">
+                <label class="text-sm font-medium text-gray-700">Filter Status:</label>
+                <select id="filterStatus" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
+                    <option value="pending_review">Menunggu Review</option>
+                    <option value="approved">Disetujui</option>
+                    <option value="published">Tayang</option>
+                    <option value="rejected">Ditolak</option>
+                    <option value="all">Semua</option>
+                </select>
+                <button id="refreshBtn" 
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    Refresh
+                </button>
+                <div id="filterInfo" class="text-xs text-gray-500 ml-auto"></div>
+            </div>
+        </div>
+
+        <!-- TABEL -->
+        <div class="admin-card" style="padding: 0; overflow: hidden;">
+            <div class="overflow-x-auto">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Judul Program</th>
+                            <th>Tentor</th>
+                            <th>Tanggal Ajukan</th>
+                            <th>Status</th>
+                            <th style="width: 280px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionsList">
+                        <tr>
+                            <td colspan="5" class="text-center text-gray-500 py-12">
+                                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                                <p class="mt-3 text-sm">Memuat usulan...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    MODAL DETAIL & REVIEW
+    ============================================================ -->
+    <div id="detailModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeDetailModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+            <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between p-5 border-b border-gray-200 sticky top-0 bg-white rounded-t-2xl z-10">
+                    <div>
+                        <h3 class="text-lg font-bold text-brand">Detail Usulan</h3>
+                        <p class="text-xs text-gray-500 mt-0.5" id="detailSubtitle">-</p>
+                    </div>
+                    <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-5" id="detailContent">
+                    <!-- Diisi JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MODAL REJECT
+    ============================================================ -->
+    <div id="rejectModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeRejectModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full">
+                <div class="flex items-center justify-between p-5 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-brand">Tolak Usulan</h3>
+                    <button onclick="closeRejectModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <p class="text-sm text-gray-600 mb-4">
+                        Tolak usulan <strong id="rejectJudul">-</strong>?
+                    </p>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Alasan Penolakan <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="rejectReason" rows="4" required
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                              placeholder="Contoh: Materi kurang lengkap, silakan tambahkan..."></textarea>
+                    <p class="text-xs text-gray-400 mt-1">Alasan akan ditampilkan ke tentor</p>
+                </div>
+                <div class="flex gap-3 p-5 pt-0">
+                    <button onclick="closeRejectModal()" 
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                        Batal
+                    </button>
+                    <button id="confirmRejectBtn" 
+                            class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium">
+                        Tolak Usulan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script type="module">
+        import { 
+            auth, db, signOut, 
+            collection, getDocs, query, where, orderBy, doc, updateDoc, getDoc 
+        } from '../assets/js/firebase.js';
+        import { protectPage } from '../assets/js/auth.js';
+        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+
+        // MOBILE SIDEBAR
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // AUTH
+        let currentAdmin = null;
+        let allSubmissions = [];
+        let currentDetailSub = null;
+
+        protectPage({
+            allowedRoles: ['admin'],
+            requireActive: true,
+            onAuthorized: async (profile) => {
+                currentAdmin = profile;
+                await loadSubmissions();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = '../login.html';
+        });
+
+        // ============================================================
+        // LOAD SUBMISSIONS
+        // ============================================================
+        async function loadSubmissions() {
+            const container = document.getElementById('submissionsList');
+            const filterStatus = document.getElementById('filterStatus').value;
+
+            try {
+                // Ambil semua submission (urut terbaru)
+                // Query tanpa filter status dulu — filter di JS (lebih fleksibel)
+                const q = query(
+                    collection(db, 'programSubmissions'),
+                    orderBy('updatedAt', 'desc')
+                );
+                const snapshot = await getDocs(q);
+
+                allSubmissions = [];
+                snapshot.forEach((docSnap) => {
+                    allSubmissions.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // Update statistik
+                updateStats(allSubmissions);
+
+                // Filter
+                let filtered = allSubmissions;
+                if (filterStatus !== 'all') {
+                    filtered = allSubmissions.filter(s => s.status === filterStatus);
+                }
+
+                // Info filter
+                const infoEl = document.getElementById('filterInfo');
+                if (infoEl) {
+                    infoEl.textContent = `Menampilkan ${filtered.length} dari ${allSubmissions.length} usulan`;
+                }
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-12">
+                                <i data-lucide="inbox" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                                <p class="text-gray-500">Tidak ada usulan dengan status <strong>${filterStatus}</strong>.</p>
+                            </td>
+                        </tr>
+                    `;
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    return;
+                }
+
+                // Render rows
+                let html = '';
+                filtered.forEach((sub) => {
+                    html += renderSubmissionRow(sub);
+                });
+                container.innerHTML = html;
+
+                attachRowListeners();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-12">
+                            <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-red-300 mb-3"></i>
+                            <p class="text-red-600 font-medium">Gagal memuat usulan</p>
+                            <p class="text-gray-500 text-xs mt-1">${error.message}</p>
+                        </td>
+                    </tr>
+                `;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        // ============================================================
+        // RENDER ROW
+        // ============================================================
+        function renderSubmissionRow(sub) {
+            const statusBadge = getStatusBadge(sub.status);
+            const tanggal = sub.submittedAt 
+                ? new Date(sub.submittedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+                : (sub.updatedAt 
+                    ? new Date(sub.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+                    : '-');
+
+            let actionButtons = '';
+
+            if (sub.status === 'pending_review') {
+                actionButtons = `
+                    <button class="review-btn inline-flex items-center gap-1 px-3 py-1.5 bg-brand hover:bg-brand-light text-white text-xs font-medium rounded-lg transition-colors"
+                            data-id="${sub.id}">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                        Review
+                    </button>
+                `;
+            } else if (sub.status === 'approved') {
+                actionButtons = `
+                    <a href="program-form.html?submissionId=${sub.id}" 
+                       class="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition-colors">
+                        <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                        Publish
+                    </a>
+                    <button class="review-btn inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors"
+                            data-id="${sub.id}">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                        Detail
+                    </button>
+                `;
+            } else if (sub.status === 'published') {
+                actionButtons = `
+                    <a href="../program-detail.html?id=${sub.programId || ''}" target="_blank"
+                       class="inline-flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors">
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        Lihat
+                    </a>
+                    <button class="review-btn inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors"
+                            data-id="${sub.id}">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                        Detail
+                    </button>
+                `;
+            } else if (sub.status === 'rejected') {
+                actionButtons = `
+                    <button class="review-btn inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors"
+                            data-id="${sub.id}">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                        Detail
+                    </button>
+                `;
+            }
+
+            return `
+                <tr>
+                    <td data-label="Judul">
+                        <div class="font-medium text-gray-800">${escapeHtml(sub.judul || '-')}</div>
+                        ${sub.level ? `<div class="text-xs text-gray-400 mt-0.5">${escapeHtml(sub.level)}</div>` : ''}
+                    </td>
+                    <td data-label="Tentor">
+                        <span class="text-sm text-gray-600">${escapeHtml(sub.tentorNama || '-')}</span>
+                    </td>
+                    <td data-label="Tanggal Ajukan">
+                        <span class="text-sm text-gray-600">${tanggal}</span>
+                    </td>
+                    <td data-label="Status">
+                        ${statusBadge}
+                    </td>
+                    <td data-label="Aksi">
+                        <div class="flex flex-wrap gap-2">
+                            ${actionButtons}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // ============================================================
+        // STATUS BADGE
+        // ============================================================
+        function getStatusBadge(status) {
+            const map = {
+                'draft':          { label: 'Draft',    icon: 'edit-3' },
+                'pending_review': { label: 'Pending',  icon: 'clock' },
+                'approved':       { label: 'Disetujui',icon: 'check' },
+                'rejected':       { label: 'Ditolak',  icon: 'x' },
+                'published':      { label: 'Tayang',   icon: 'check-circle' }
+            };
+            const info = map[status] || { label: status, icon: 'circle' };
+            return `
+                <span class="status-badge status-${status}">
+                    <i data-lucide="${info.icon}" class="w-3 h-3"></i>
+                    ${info.label}
+                </span>
+            `;
+        }
+
+        // ============================================================
+        // UPDATE STATISTIK
+        // ============================================================
+        function updateStats(subs) {
+            const total = subs.length;
+            const pending = subs.filter(s => s.status === 'pending_review').length;
+            const approved = subs.filter(s => s.status === 'approved').length;
+            const published = subs.filter(s => s.status === 'published').length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statApproved').textContent = approved;
+            document.getElementById('statPublished').textContent = published;
+        }
+
+        // ============================================================
+        // ATTACH ROW LISTENERS
+        // ============================================================
+        function attachRowListeners() {
+            document.querySelectorAll('.review-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const sub = allSubmissions.find(s => s.id === id);
+                    if (sub) openDetailModal(sub);
+                });
+            });
+        }
+
+        // ============================================================
+        // DETAIL MODAL
+        // ============================================================
+        window.openDetailModal = function(sub) {
+            currentDetailSub = sub;
+            const content = document.getElementById('detailContent');
+            const subtitle = document.getElementById('detailSubtitle');
+            subtitle.textContent = `Oleh: ${sub.tentorNama || '-'}`;
+
+            const thumbUrl = sub.thumbnailUrl 
+                ? optimizeCloudinaryUrl(sub.thumbnailUrl, { width: 600, crop: 'fill' })
+                : '';
+            const tanggal = sub.submittedAt 
+                ? new Date(sub.submittedAt).toLocaleString('id-ID')
+                : '-';
+
+            // Action buttons di modal
+            let modalActions = '';
+            if (sub.status === 'pending_review') {
+                modalActions = `
+                    <div class="flex flex-wrap gap-3 mt-6 pt-4 border-t border-gray-200">
+                        <button id="approveBtn" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            Setujui
+                        </button>
+                        <button id="rejectBtn" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 font-semibold rounded-lg border border-red-200 transition-colors">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                            Tolak
+                        </button>
+                    </div>
+                `;
+            }
+
+            // Modul PDF
+            const modulSection = sub.modulUrl ? `
+                <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-sm font-medium text-gray-800 truncate">${escapeHtml(sub.modulFileName || 'modul.pdf')}</p>
+                                <p class="text-xs text-gray-500">${sub.modulSize ? formatBytes(sub.modulSize) : '-'}</p>
+                            </div>
+                        </div>
+                        <a href="${sub.modulUrl}" target="_blank" download
+                           class="inline-flex items-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors flex-shrink-0">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+            ` : '';
+
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        ${thumbUrl ? `<img src="${thumbUrl}" alt="Thumbnail" class="w-full rounded-xl border border-gray-200 object-cover" style="aspect-ratio: 4/5;" />` : '<div class="w-full rounded-xl bg-gray-100 flex items-center justify-center" style="aspect-ratio: 4/5;"><i data-lucide="image" class="w-12 h-12 text-gray-300"></i></div>'}
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            ${getStatusBadge(sub.status)}
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800 mb-1">${escapeHtml(sub.judul || '-')}</h4>
+                        ${sub.level ? `<p class="text-sm text-gray-500">Level: ${escapeHtml(sub.level)}</p>` : ''}
+                        <p class="text-xs text-gray-400 mt-2">Diajukan: ${tanggal}</p>
+                        
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-1">Deskripsi Singkat</p>
+                            <p class="text-sm text-gray-700">${escapeHtml(sub.deskripsiSingkat || '-')}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <p class="text-xs text-gray-500 mb-1">Deskripsi Lengkap</p>
+                    <p class="text-sm text-gray-700 whitespace-pre-line">${escapeHtml(sub.deskripsi || '-')}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-2 font-semibold uppercase">Materi</p>
+                        <ul class="space-y-1">
+                            ${(sub.materi || []).map(m => `
+                                <li class="flex items-start gap-2 text-sm text-gray-700">
+                                    <i data-lucide="check" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i>
+                                    ${escapeHtml(m)}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-2 font-semibold uppercase">Benefit</p>
+                        <ul class="space-y-1">
+                            ${(sub.benefit || []).map(b => `
+                                <li class="flex items-start gap-2 text-sm text-gray-700">
+                                    <i data-lucide="gift" class="w-4 h-4 text-brand flex-shrink-0 mt-0.5"></i>
+                                    ${escapeHtml(b)}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+                ${modulSection}
+
+                ${sub.status === 'rejected' && sub.adminNotes ? `
+                    <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
+                        <p class="text-xs text-red-700 font-semibold mb-1">Alasan Ditolak:</p>
+                        <p class="text-sm text-red-800">${escapeHtml(sub.adminNotes)}</p>
+                    </div>
+                ` : ''}
+
+                ${modalActions}
+            `;
+
+            document.getElementById('detailModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            // Attach modal action listeners
+            if (sub.status === 'pending_review') {
+                document.getElementById('approveBtn')?.addEventListener('click', () => handleApprove(sub));
+                document.getElementById('rejectBtn')?.addEventListener('click', () => {
+                    closeDetailModal();
+                    openRejectModal(sub.id, sub.judul);
+                });
+            }
+        };
+
+        window.closeDetailModal = function() {
+            document.getElementById('detailModal').classList.add('hidden');
+            currentDetailSub = null;
+        };
+
+        // ============================================================
+        // APPROVE
+        // ============================================================
+        async function handleApprove(sub) {
+            if (!confirm(`Setujui usulan "${sub.judul}"?\n\nAnda akan diarahkan ke form program untuk mengisi harga & detail lainnya.`)) {
+                return;
+            }
+
+            const btn = document.getElementById('approveBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Memproses...`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            try {
+                await updateDoc(doc(db, 'programSubmissions', sub.id), {
+                    status: 'approved',
+                    approvedAt: new Date().toISOString(),
+                    approvedBy: currentAdmin.uid,
+                    updatedAt: new Date().toISOString()
+                });
+                console.log('✅ Submission approved:', sub.id);
+
+                // Redirect ke program-form dengan submissionId
+                window.location.href = `program-form.html?submissionId=${sub.id}`;
+
+            } catch (error) {
+                console.error('Error approving:', error);
+                alert('Gagal menyetujui: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Setujui`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        // ============================================================
+        // REJECT MODAL
+        // ============================================================
+        let rejectTargetId = null;
+
+        window.openRejectModal = function(id, judul) {
+            rejectTargetId = id;
+            document.getElementById('rejectJudul').textContent = judul || 'ini';
+            document.getElementById('rejectReason').value = '';
+            document.getElementById('rejectModal').classList.remove('hidden');
+        };
+
+        window.closeRejectModal = function() {
+            rejectTargetId = null;
+            document.getElementById('rejectModal').classList.add('hidden');
+        };
+
+        document.getElementById('confirmRejectBtn').addEventListener('click', async () => {
+            if (!rejectTargetId) return;
+            const reason = document.getElementById('rejectReason').value.trim();
+            if (!reason) {
+                alert('Alasan penolakan wajib diisi.');
+                return;
+            }
+
+            const btn = document.getElementById('confirmRejectBtn');
+            btn.disabled = true;
+            btn.textContent = 'Memproses...';
+
+            try {
+                await updateDoc(doc(db, 'programSubmissions', rejectTargetId), {
+                    status: 'rejected',
+                    adminNotes: reason,
+                    rejectedAt: new Date().toISOString(),
+                    rejectedBy: currentAdmin.uid,
+                    updatedAt: new Date().toISOString()
+                });
+                console.log('✅ Submission rejected:', rejectTargetId);
+                closeRejectModal();
+                await loadSubmissions();
+            } catch (error) {
+                console.error('Error rejecting:', error);
+                alert('Gagal menolak: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Tolak Usulan';
+            }
+        });
+
+        // ============================================================
+        // HELPERS
+        // ============================================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes || bytes === 0) return '-';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // ============================================================
+        // FILTER & REFRESH
+        // ============================================================
+        document.getElementById('filterStatus').addEventListener('change', loadSubmissions);
+        document.getElementById('refreshBtn').addEventListener('click', loadSubmissions);
+
+        // ============================================================
+// NAV SUBMENU — TOGGLE
+// ============================================================
+document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        const targetId = toggle.dataset.target;
+        const submenu = document.getElementById(targetId);
+        if (!submenu) return;
+
+        const isOpen = !submenu.classList.contains('hidden');
+
+        if (isOpen) {
+            submenu.classList.add('hidden');
+            toggle.classList.remove('open');
+        } else {
+            submenu.classList.remove('hidden');
+            toggle.classList.add('open');
+        }
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+});
+
+// Auto-buka submenu kalau ada link active di dalamnya
+document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
+    const submenu = activeLink.closest('.nav-submenu');
+    if (submenu) {
+        submenu.classList.remove('hidden');
+        const toggle = document.querySelector(`.nav-group-toggle[data-target="${submenu.id}"]`);
+        if (toggle) toggle.classList.add('open');
+    }
+});
+    </script>
+
+</body>
+</html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kursus & Pelatihan | IMDKOM</title>
-    <meta name="description" content="Daftar program kursus dan pelatihan komputer dari IMDKOM." />
+    <meta name="description" content="Daftar program kursus dan pelatihan komputer dari IMDKOM. Temukan program yang sesuai kebutuhan Anda." />
     
     <!-- Favicon -->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
@@ -19,6 +19,9 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     <!-- Tailwind Config -->
     <script>
@@ -36,240 +39,213 @@
         }
     </script>
 
-<style>
-    /* ============================================================
-       LOGO SHINE EFFECT (Shine Sweep)
-       ============================================================ */
-    .logo-shine {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        overflow: hidden;
-        border-radius: 6px;
-        padding: 2px 4px;
-    }
-    
-    .logo-shine::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            120deg,
-            transparent 30%,
-            rgba(255, 255, 255, 0.75) 50%,
-            transparent 70%
-        );
-        animation: shine-sweep 3s infinite;
-        z-index: 2;
-        pointer-events: none;
-    }
-    
-    @keyframes shine-sweep {
-        0% {
-            left: -100%;
+    <style>
+        /* ============================================================
+           LOGO SHINE
+           ============================================================ */
+        .logo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 2px 4px;
         }
-        50%, 100% {
-            left: 100%;
+        .logo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 50%, transparent 70%);
+            animation: shine-sweep 3s infinite;
+            z-index: 2;
+            pointer-events: none;
         }
-    }
-    
-    .logo-shine img {
-        position: relative;
-        z-index: 1;
-        display: block;
-        filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
-        transition: filter 0.3s ease;
-    }
-    
-    .logo-shine:hover img {
-        filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
-    }
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        .logo-shine img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
+            transition: filter 0.3s ease;
+        }
+        .logo-shine:hover img {
+            filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
+        }
 
-                       /* ============================================================
-   MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
-   ============================================================ */
-.mobile-menu-highlight {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
-    color: white !important;
-    padding: 0.75rem 1rem !important;
-    border-radius: 10px;
-    margin: 0.25rem 0;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.2);
-    transition: all 0.2s ease;
-}
+        /* ============================================================
+           MOBILE MENU — HIGHLIGHT
+           ============================================================ */
+        .mobile-menu-highlight {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            margin: 0.35rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            font-weight: 600;
+            background: linear-gradient(135deg, rgba(26,60,94,0.12) 0%, rgba(26,60,94,0.06) 50%, rgba(26,60,94,0.12) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 60, 94, 0.25);
+            box-shadow: 0 4px 20px rgba(26, 60, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            color: #1a3c5e !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.7) 50%, transparent 70%);
+            animation: mobile-shine 3.5s infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        @keyframes mobile-shine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        .mobile-menu-highlight > * { position: relative; z-index: 2; }
+        .mobile-menu-highlight .menu-icon-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .mobile-menu-highlight .menu-arrow {
+            width: 1rem; height: 1rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .mobile-menu-highlight:hover,
+        .mobile-menu-highlight:active {
+            transform: translateX(4px) scale(1.01);
+            background: linear-gradient(135deg, rgba(26,60,94,0.18) 0%, rgba(26,60,94,0.1) 50%, rgba(26,60,94,0.18) 100%);
+            border-color: rgba(26, 60, 94, 0.4);
+            box-shadow: 0 6px 24px rgba(26,60,94,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+        .mobile-menu-highlight:hover .menu-arrow,
+        .mobile-menu-highlight:active .menu-arrow {
+            opacity: 1;
+            transform: translateX(4px);
+        }
 
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px);
-    box-shadow: 0 6px 16px rgba(26, 60, 94, 0.3);
-}
+        /* ============================================================
+           PROGRAM GRID — MARKETPLACE
+           Mobile: 2 kolom | Tablet: 3 kolom | Desktop: 4 kolom
+           ============================================================ */
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        @media (min-width: 640px) {
+            .program-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        }
+        @media (min-width: 1024px) {
+            .program-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+        }
 
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        /* ============================================================
+           PROGRAM CARD
+           ============================================================ */
+        .program-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .program-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(26, 60, 94, 0.12);
+        }
 
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.7;
-}
+        .program-image-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            background: #f3f4f6;
+            overflow: hidden;
+        }
+        .program-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .program-card:hover .program-image-wrapper img {
+            transform: scale(1.05);
+        }
 
-/* ============================================================
-   MOBILE MENU — GLASSMORPHISM HIGHLIGHT + SHINE
-   ============================================================ */
-.mobile-menu-highlight {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-    margin: 0.35rem 0;
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    font-weight: 600;
-    
-    /* Glassmorphism */
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.12) 0%,
-        rgba(26, 60, 94, 0.06) 50%,
-        rgba(26, 60, 94, 0.12) 100%
-    );
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(26, 60, 94, 0.25);
-    box-shadow: 
-        0 4px 20px rgba(26, 60, 94, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    
-    color: #1a3c5e !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+        .badge-promo {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: #c2410c;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
+            z-index: 2;
+        }
 
-/* Shine Sweep — Kilau bergerak */
-.mobile-menu-highlight::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.7) 50%,
-        transparent 70%
-    );
-    animation: mobile-shine 3.5s infinite;
-    z-index: 1;
-    pointer-events: none;
-}
+        .badge-kategori {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(26, 60, 94, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            z-index: 2;
+        }
 
-@keyframes mobile-shine {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
-}
-
-/* Content di atas shine */
-.mobile-menu-highlight > * {
-    position: relative;
-    z-index: 2;
-}
-
-/* Icon wrap */
-.mobile-menu-highlight .menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
-
-/* Icon dengan glow */
-.mobile-menu-highlight .menu-icon-wrap i {
-    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
-    transition: filter 0.3s ease;
-}
-
-/* Arrow */
-.mobile-menu-highlight .menu-arrow {
-    width: 1rem;
-    height: 1rem;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-}
-
-/* Hover / Tap state */
-.mobile-menu-highlight:hover,
-.mobile-menu-highlight:active {
-    transform: translateX(4px) scale(1.01);
-    background: linear-gradient(
-        135deg,
-        rgba(26, 60, 94, 0.18) 0%,
-        rgba(26, 60, 94, 0.1) 50%,
-        rgba(26, 60, 94, 0.18) 100%
-    );
-    border-color: rgba(26, 60, 94, 0.4);
-    box-shadow: 
-        0 6px 24px rgba(26, 60, 94, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.mobile-menu-highlight:hover .menu-arrow,
-.mobile-menu-highlight:active .menu-arrow {
-    opacity: 1;
-    transform: translateX(4px);
-}
-
-.mobile-menu-highlight:hover .menu-icon-wrap i {
-    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
-}
-
-/* ⭐ Animasi glow berkala untuk menarik perhatian */
-@keyframes highlight-pulse {
-    0%, 100% {
-        box-shadow: 
-            0 4px 20px rgba(26, 60, 94, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    }
-    50% {
-        box-shadow: 
-            0 4px 24px rgba(26, 60, 94, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 0 20px rgba(26, 60, 94, 0.15);
-    }
-}
-
-.mobile-menu-highlight {
-    animation: highlight-pulse 3s ease-in-out infinite;
-}
-</style>
-
+        /* Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+        }
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
 </head>
-<body class="font-sans">
+<body class="font-sans bg-gray-50">
 
     <!-- ============================================================
     NAVIGATION
     ============================================================ -->
-    <nav class="bg-white border-b border-gray-200 py-3">
+    <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 logo-shine">
-               <img src="assets/images/logo/imdkom.svg" 
-                alt="Logo IMDKOM" 
-                class="h-4 w-auto" 
-                loading="eager" />
+                <img src="assets/images/logo/imdkom.svg" 
+                     alt="Logo IMDKOM" 
+                     class="h-4 w-auto" 
+                     loading="eager" />
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
-             </a>
+            </a>
             
-            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none" aria-label="Toggle menu">
+            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -281,53 +257,87 @@
                 <a href="service.html" class="text-gray-600 hover:text-brand">Computer Service</a>
                 <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
                 <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
-                <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600">Login</a>
+                <a href="login.html" class="text-xs text-gray-400 hover:text-gray-600">Login</a>
             </div>
         </div>
         
-       <!-- Mobile Menu -->
-<div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-    <div class="container mx-auto px-4 flex flex-col gap-2">
-        <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-        <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-        
-        <!-- ⭐ COMPUTER SERVICE — Glass + Shine -->
-        <a href="service.html" class="mobile-menu-highlight">
-            <span class="menu-icon-wrap">
-                <i data-lucide="wrench" class="w-4 h-4"></i>
-                Computer Service
-            </span>
-            <i data-lucide="arrow-right" class="menu-arrow"></i>
-        </a>
-        
-        <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-        <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
-        <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
-    </div>
-</div>
+        <!-- Mobile Menu -->
+        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+                
+                <a href="service.html" class="mobile-menu-highlight">
+                    <span class="menu-icon-wrap">
+                        <i data-lucide="wrench" class="w-4 h-4"></i>
+                        Computer Service
+                    </span>
+                    <i data-lucide="arrow-right" class="menu-arrow"></i>
+                </a>
+                
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+                <a href="login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
+            </div>
+        </div>
     </nav>
 
     <!-- ============================================================
-    MAIN CONTENT
+    HEADER + SEARCH + FILTER
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16">
+    <section class="py-8 sm:py-12">
         <div class="container mx-auto px-4">
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand text-center">Kursus &amp; Pelatihan</h1>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-2 mb-6 sm:mb-8">Program pelatihan komputer untuk berbagai kebutuhan.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" id="allProgramsContainer">
-                <div class="col-span-full text-center text-gray-500 py-10">
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
-                    <p class="mt-3 text-sm">Memuat program...</p>
-                </div>
+            <!-- Judul -->
+            <div class="text-center mb-8">
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Kursus &amp; Pelatihan</h1>
+                <p class="text-sm sm:text-base text-gray-500 mt-2">Temukan program yang sesuai kebutuhan Anda.</p>
             </div>
+
+            <!-- Search + Filter -->
+            <div class="max-w-3xl mx-auto mb-6">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <!-- Search -->
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" 
+                               id="searchInput"
+                               placeholder="Cari program kursus..." 
+                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                    </div>
+                    
+                    <!-- Filter kategori -->
+                    <select id="filterKategori"
+                            class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white">
+                        <option value="">Semua Kategori</option>
+                        <!-- Diisi via JS -->
+                    </select>
+                </div>
+                
+                <!-- Info filter -->
+                <div id="filterInfo" class="text-xs text-gray-500 mt-2 text-center"></div>
+            </div>
+
+            <!-- Grid program -->
+            <div class="program-grid" id="allProgramsContainer">
+                <!-- Skeleton loading -->
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+            </div>
+
         </div>
     </section>
 
     <!-- ============================================================
     FOOTER
     ============================================================ -->
-    <footer class="py-6 sm:py-8 border-t border-gray-200 bg-gray-50">
+    <footer class="py-6 sm:py-8 border-t border-gray-200 bg-white mt-8">
         <div class="container mx-auto px-4 text-center text-xs sm:text-sm text-gray-500">
             <p>&copy; 2026 IMDKOM. All rights reserved.</p>
         </div>
@@ -347,22 +357,39 @@
     ============================================================ -->
     <script type="module">
         import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
-        import { loadAllPrograms } from './assets/js/app.js';
+        import { loadAllPrograms, filterPrograms, getCategories } from './assets/js/app.js';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAllPrograms();
-            
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load program
+            await loadAllPrograms();
+
+            // Init Lucide icons
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            // Init filter kategori
+            const categories = getCategories();
+            const filterSelect = document.getElementById('filterKategori');
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                filterSelect.appendChild(opt);
+            });
+
+            // Event search & filter
+            document.getElementById('searchInput').addEventListener('input', filterPrograms);
+            document.getElementById('filterKategori').addEventListener('change', filterPrograms);
+
+            // Floating WhatsApp
             document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
                 e.preventDefault();
                 openWhatsAppGeneric();
             });
-        });
-    </script>
-    
-    <!-- Mobile Menu Toggle -->
-    <script>
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('mobileNav').classList.toggle('hidden');
+
+            // Mobile menu toggle
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                document.getElementById('mobileNav').classList.toggle('hidden');
+            });
         });
     </script>
 

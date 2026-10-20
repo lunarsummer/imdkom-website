@@ -3,39 +3,27 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Detail Program | IMDKOM</title>
-    <meta name="description" content="Detail program kursus dan pelatihan komputer dari IMDKOM Yogyakarta." />
-
-    <!-- ============================================================
-         OPEN GRAPH — Default (akan di-override via JS)
-         ============================================================ -->
-    <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="IMDKOM Yogyakarta" />
-    <meta property="og:title" content="Program Kursus | IMDKOM Yogyakarta" />
-    <meta property="og:description" content="Program pelatihan komputer untuk berbagai kebutuhan. IMDKOM Yogyakarta." />
-    <meta property="og:image" content="https://imdkomyogyakarta.netlify.app/assets/images/logo/imdkom.svg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:url" content="https://imdkomyogyakarta.netlify.app/program-detail.html" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Program Kursus | IMDKOM Yogyakarta" />
-    <meta name="twitter:description" content="Program pelatihan komputer untuk berbagai kebutuhan." />
-    <meta name="twitter:image" content="https://imdkomyogyakarta.netlify.app/assets/images/logo/imdkom.svg" />
-
+    <title>Detail Program | IMDKOM Yogyakarta</title>
+    <meta name="description" content="Detail program kursus dan pelatihan komputer di IMDKOM Yogyakarta." />
+    
+    <!-- Favicon -->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
-
+    
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- 🎨 THEME CSS -->
-    <link rel="stylesheet" href="assets/css/theme.css" />
-
+    <link rel="stylesheet" href="assets/css/theme.css">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -51,160 +39,238 @@
         }
     </script>
 
-<style>
-    /* ============================================================
-       LOGO SHINE EFFECT
-       ============================================================ */
-    .logo-shine {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        overflow: hidden;
-        border-radius: 6px;
-        padding: 2px 4px;
-    }
-    
-    .logo-shine::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.75) 50%, transparent 70%);
-        animation: shine-sweep 3s infinite;
-        z-index: 2;
-        pointer-events: none;
-    }
-    
-    @keyframes shine-sweep {
-        0% { left: -100%; }
-        50%, 100% { left: 100%; }
-    }
-    
-    .logo-shine img {
-        position: relative;
-        z-index: 1;
-        display: block;
-        filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
-        transition: filter 0.3s ease;
-    }
-    
-    .logo-shine:hover img {
-        filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
-    }
+    <style>
+        /* ============================================================
+           LOGO SHINE EFFECT
+           ============================================================ */
+        .logo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 2px 4px;
+        }
+        .logo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 50%, transparent 70%);
+            animation: shine-sweep 3s infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        .logo-shine img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
+            transition: filter 0.3s ease;
+        }
+        .logo-shine:hover img {
+            filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
+        }
 
-    /* ============================================================
-       MOBILE MENU HIGHLIGHT
-       ============================================================ */
-    .mobile-menu-highlight {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.85rem 1rem;
-        margin: 0.35rem 0;
-        border-radius: 12px;
-        overflow: hidden;
-        text-decoration: none;
-        font-weight: 600;
-        background: linear-gradient(135deg, rgba(26, 60, 94, 0.12) 0%, rgba(26, 60, 94, 0.06) 50%, rgba(26, 60, 94, 0.12) 100%);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(26, 60, 94, 0.25);
-        box-shadow: 0 4px 20px rgba(26, 60, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-        color: #1a3c5e !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+        /* Floating WhatsApp pulse */
+        @keyframes pulse-wa {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+        }
+        .floating-wa {
+            animation: pulse-wa 2s infinite;
+        }
 
-    .mobile-menu-highlight::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.7) 50%, transparent 70%);
-        animation: mobile-shine 3.5s infinite;
-        z-index: 1;
-        pointer-events: none;
-    }
+        /* ============================================================
+           MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
+           ============================================================ */
+        .mobile-menu-highlight {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            margin: 0.35rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            font-weight: 600;
+            background: linear-gradient(135deg, rgba(26,60,94,0.12) 0%, rgba(26,60,94,0.06) 50%, rgba(26,60,94,0.12) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 60, 94, 0.25);
+            box-shadow: 0 4px 20px rgba(26, 60, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            color: #1a3c5e !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: highlight-pulse 3s ease-in-out infinite;
+        }
+        .mobile-menu-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.7) 50%, transparent 70%);
+            animation: mobile-shine 3.5s infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        @keyframes mobile-shine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        .mobile-menu-highlight > * { position: relative; z-index: 2; }
+        .mobile-menu-highlight .menu-icon-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .mobile-menu-highlight .menu-icon-wrap i {
+            filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
+            transition: filter 0.3s ease;
+        }
+        .mobile-menu-highlight .menu-arrow {
+            width: 1rem; height: 1rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .mobile-menu-highlight:hover,
+        .mobile-menu-highlight:active {
+            transform: translateX(4px) scale(1.01);
+            background: linear-gradient(135deg, rgba(26,60,94,0.18) 0%, rgba(26,60,94,0.1) 50%, rgba(26,60,94,0.18) 100%);
+            border-color: rgba(26, 60, 94, 0.4);
+            box-shadow: 0 6px 24px rgba(26,60,94,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+        .mobile-menu-highlight:hover .menu-arrow,
+        .mobile-menu-highlight:active .menu-arrow {
+            opacity: 1;
+            transform: translateX(4px);
+        }
+        @keyframes highlight-pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(26,60,94,0.08), inset 0 1px 0 rgba(255,255,255,0.5); }
+            50% { box-shadow: 0 4px 24px rgba(26,60,94,0.2), inset 0 1px 0 rgba(255,255,255,0.5), 0 0 20px rgba(26,60,94,0.15); }
+        }
 
-    @keyframes mobile-shine {
-        0% { left: -100%; }
-        50%, 100% { left: 100%; }
-    }
+        /* ============================================================
+           REVEAL ON SCROLL
+           ============================================================ */
+        html { scroll-behavior: smooth; }
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal-item.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-stagger > .reveal-item:nth-child(1) { transition-delay: 0s; }
+        .reveal-stagger > .reveal-item:nth-child(2) { transition-delay: 0.1s; }
+        .reveal-stagger > .reveal-item:nth-child(3) { transition-delay: 0.2s; }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal-item { transition: none; opacity: 1; transform: none; }
+        }
 
-    .mobile-menu-highlight > * {
-        position: relative;
-        z-index: 2;
-    }
+        /* ============================================================
+           LINE CLAMP
+           ============================================================ */
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    .mobile-menu-highlight .menu-icon-wrap {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-    }
-
-    .mobile-menu-highlight .menu-arrow {
-        width: 1rem;
-        height: 1rem;
-        opacity: 0.6;
-        transition: all 0.3s ease;
-    }
-
-    .mobile-menu-highlight:hover,
-    .mobile-menu-highlight:active {
-        transform: translateX(4px) scale(1.01);
-        background: linear-gradient(135deg, rgba(26, 60, 94, 0.18) 0%, rgba(26, 60, 94, 0.1) 50%, rgba(26, 60, 94, 0.18) 100%);
-        border-color: rgba(26, 60, 94, 0.4);
-    }
-
-    .mobile-menu-highlight:hover .menu-arrow,
-    .mobile-menu-highlight:active .menu-arrow {
-        opacity: 1;
-        transform: translateX(4px);
-    }
-
-    /* ============================================================
-       DETAIL IMAGE — aspect 4:5
-       ============================================================ */
-    .detail-image {
-        width: 100%;
-        aspect-ratio: 4 / 5;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-
-    /* ============================================================
-       FLOATING WHATSAPP
-       ============================================================ */
-    @keyframes pulse-wa {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-        50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
-    }
-    .floating-wa {
-        animation: pulse-wa 2s infinite;
-    }
-</style>
-
+        /* ============================================================
+           COURSE GRID — mobile swipe, tablet grid 2, desktop grid 3
+           ============================================================ */
+        .course-grid {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 0 1rem 0;
+        }
+        .course-grid::-webkit-scrollbar {
+            display: none;
+            width: 0; height: 0;
+        }
+        .course-grid > .course-item {
+            flex: 0 0 78%;
+            scroll-snap-align: start;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: white;
+            border-radius: 12px;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(26, 60, 94, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .course-grid > .course-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 60, 94, 0.1);
+        }
+        @media (min-width: 768px) {
+            .course-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                overflow: visible;
+                padding: 0;
+                align-items: stretch;
+            }
+            .course-grid > .course-item {
+                flex: none;
+                width: auto;
+                height: 100%;
+            }
+        }
+        @media (min-width: 1024px) {
+            .course-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
 </head>
 <body class="font-sans">
 
     <!-- ============================================================
     NAVIGATION
     ============================================================ -->
-    <nav class="bg-white border-b border-gray-200 py-3">
+    <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 logo-shine">
-               <img src="assets/images/logo/imdkom.svg" 
-                    alt="Logo IMDKOM" 
-                    class="h-4 w-auto" 
-                    loading="eager" />
+                <img src="assets/images/logo/imdkom.svg" 
+                     alt="Logo IMDKOM" 
+                     class="h-4 w-auto" 
+                     loading="eager" />
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
-             </a>
+            </a>
             
-            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none" aria-label="Toggle menu">
+            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -233,7 +299,6 @@
                     </span>
                     <i data-lucide="arrow-right" class="menu-arrow"></i>
                 </a>
-                
                 <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
                 <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
                 <a href="admin/login.html" class="text-xs text-gray-400 hover:text-gray-600 py-1.5">Login</a>
@@ -242,15 +307,67 @@
     </nav>
 
     <!-- ============================================================
-    MAIN CONTENT
+    BREADCRUMB
     ============================================================ -->
-    <section class="py-8 sm:py-12 md:py-16">
+    <div class="bg-gray-50 border-b border-gray-200 py-3">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+                <a href="index.html" class="hover:text-brand">Beranda</a>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <a href="kursus.html" class="hover:text-brand">Kursus &amp; Pelatihan</a>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <span id="breadcrumbProgramName" class="text-brand font-medium">Detail Program</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    DETAIL PROGRAM CONTAINER
+    ============================================================ -->
+    <main class="py-8 sm:py-12">
         <div class="container mx-auto px-4">
             <div id="programDetailContainer">
-                <div class="text-center text-gray-500 py-10">
+                <!-- Loading state -->
+                <div class="text-center text-gray-500 py-12">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
                     <p class="mt-3 text-sm">Memuat detail program...</p>
                 </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================================
+    REKOMENDASI PROGRAM LAIN
+    ============================================================ -->
+    <section id="recommendationSection" class="py-12 sm:py-16 bg-gray-50" style="display:none;">
+        <div class="container mx-auto px-4">
+            <div class="mb-8 reveal-item">
+                <h2 class="text-2xl sm:text-3xl font-bold text-brand">Program Lain yang Mungkin Anda Minati</h2>
+                <p class="text-sm text-gray-500 mt-1">Jelajahi program lain yang relevan dengan minat Anda.</p>
+            </div>
+            <div class="course-grid reveal-stagger" id="recommendationContainer">
+                <!-- Diisi oleh loadRecommendations() di app.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    CTA AKHIR
+    ============================================================ -->
+    <section id="finalCtaSection" class="py-12 sm:py-16">
+        <div class="container mx-auto px-4">
+            <div class="bg-brand rounded-2xl p-8 sm:p-12 text-center text-white reveal-item">
+                <h2 class="text-2xl sm:text-3xl font-bold">Masih ragu memilih program?</h2>
+                <p class="text-white/80 mt-2 max-w-xl mx-auto">
+                    Konsultasi gratis dengan tim kami. Kami akan membantu Anda memilih program yang paling sesuai dengan kebutuhan Anda.
+                </p>
+                <a href="#" id="finalCtaWhatsApp" 
+                   class="inline-flex items-center gap-2 bg-white text-brand font-semibold px-6 py-3 rounded-lg mt-6 hover:bg-gray-100 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Chat WhatsApp
+                </a>
             </div>
         </div>
     </section>
@@ -258,16 +375,29 @@
     <!-- ============================================================
     FOOTER
     ============================================================ -->
-    <footer class="py-6 sm:py-8 border-t border-gray-200 bg-gray-50">
-        <div class="container mx-auto px-4 text-center text-xs sm:text-sm text-gray-500">
-            <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+    <footer class="py-8 sm:py-10 border-t border-gray-200 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h5 class="text-xl font-bold text-brand">IMDKOM</h5>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Kursus &amp; Pelatihan • Computer Service</p>
+                </div>
+                <div>
+                    <h6 class="font-medium text-gray-700 text-sm mb-2">Kontak</h6>
+                    <p class="text-gray-500 text-xs sm:text-sm" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="text-gray-500 text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
+                </div>
+                <div class="md:text-right">
+                    <p class="text-gray-400 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                </div>
+            </div>
         </div>
     </footer>
 
     <!-- ============================================================
-    FLOATING WHATSAPP
+    FLOATING WHATSAPP BUTTON
     ============================================================ -->
-    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
@@ -277,24 +407,73 @@
     JAVASCRIPT
     ============================================================ -->
     <script type="module">
-        import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
         import { loadProgramDetail } from './assets/js/app.js';
+        import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProgramDetail();
-            
-            document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
-                e.preventDefault();
-                openWhatsAppGeneric();
+        // ============================================================
+        // MOBILE MENU TOGGLE
+        // ============================================================
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
+            document.getElementById('mobileNav')?.classList.toggle('hidden');
+        });
+
+        // ============================================================
+        // LOAD DETAIL PROGRAM
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadProgramDetail();
+            updateBreadcrumb();
+
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
+            // Init reveal animation untuk section rekomendasi & CTA
+            setTimeout(initReveal, 300);
+        });
+
+        // ============================================================
+        // UPDATE BREADCRUMB — pakai nama program dari document.title
+        // (di-set oleh loadProgramDetail)
+        // ============================================================
+        function updateBreadcrumb() {
+            const title = document.title;
+            const match = title.match(/^(.+?)\s*\|\s*IMDKOM/);
+            if (match && match[1]) {
+                const el = document.getElementById('breadcrumbProgramName');
+                if (el) el.textContent = match[1];
+            }
+        }
+
+        // ============================================================
+        // CTA AKHIR — WhatsApp
+        // ============================================================
+        document.getElementById('finalCtaWhatsApp')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            openWhatsAppGeneric();
+        });
+
+        // ============================================================
+        // REVEAL ON SCROLL
+        // ============================================================
+        function initReveal() {
+            const revealItems = document.querySelectorAll('.reveal-item');
+            if (revealItems.length === 0) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
             });
-        });
-    </script>
-    
-    <!-- Mobile Menu Toggle -->
-    <script>
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('mobileNav').classList.toggle('hidden');
-        });
+
+            revealItems.forEach(el => observer.observe(el));
+        }
     </script>
 
 </body>

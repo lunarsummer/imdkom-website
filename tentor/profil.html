@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Tentor | IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 16px rgba(26, 60, 94, 0.15);
+            background: #f3f4f6;
+        }
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .avatar-edit-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1a3c5e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: all 0.2s ease;
+        }
+        .avatar-edit-btn:hover {
+            background: #2a5a7a;
+            transform: scale(1.05);
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .keahlian-item {
+            transition: all 0.2s ease;
+        }
+
+        /* ============================================================
+           TENTOR BRAND (sidebar tentor) — SAMA DENGAN DASHBOARD
+           ============================================================ */
+        .tentor-brand {
+            display: flex !important;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tentor-avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: #2a5a7a;
+        }
+
+        .tentor-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .tentor-avatar-default {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2a5a7a;
+        }
+
+        .tentor-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tentor-name {
+            font-weight: 700;
+            color: white;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tentor-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.15rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    MOBILE HEADER
+    ============================================================ -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Profil</span>
+        <div class="w-8"></div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR TENTOR — SAMA DENGAN DASHBOARD
+    ============================================================ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand tentor-brand">
+            <div class="tentor-avatar-wrapper">
+                <img id="sidebarAvatar" 
+                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%232a5a7a'/%3E%3C/svg%3E" 
+                     alt="Avatar" 
+                     class="tentor-avatar hidden" />
+                <div id="sidebarAvatarDefault" class="tentor-avatar-default">
+                    <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+            <div class="tentor-info">
+                <div class="tentor-name" id="sidebarTentorName">Memuat...</div>
+                <div class="tentor-label">Tentor</div>
+            </div>
+        </div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="program-submissions.html" class="nav-link">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                Usulan Program
+            </a>
+            <a href="jadwal.html" class="nav-link">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                Jadwal Mengajar
+            </a>
+            <a href="profil.html" class="nav-link active">
+                <i data-lucide="user" class="w-4 h-4"></i>
+                Profil
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="admin-main">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h2>Profil Saya</h2>
+                <p class="text-gray-500 text-sm mt-1">Kelola data diri & kontak Anda</p>
+            </div>
+            <a href="dashboard.html" class="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Kembali
+            </a>
+        </div>
+
+        <!-- ============================================================
+        CARD PROFIL — AVATAR & INFO RINGKAS
+        ============================================================ -->
+        <div class="admin-card mb-4">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+                <!-- Avatar -->
+                <div class="avatar-wrapper">
+                    <img id="avatarImg" 
+                         src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='40' fill='%239ca3af' text-anchor='middle' dy='.3em'%3E?%3C/text%3E%3C/svg%3E" 
+                         alt="Foto Profil" 
+                         class="profile-avatar" />
+                    <button id="uploadAvatarBtn" 
+                            class="avatar-edit-btn"
+                            title="Ganti foto">
+                        <i data-lucide="camera" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Info ringkas -->
+                <div class="flex-1 text-center sm:text-left">
+                    <h3 class="text-xl font-bold text-brand" id="displayNama">-</h3>
+                    <p class="text-sm text-gray-500 mt-1" id="displayEmail">-</p>
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-3">
+                        <span id="displayStatus" class="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                            <i data-lucide="check-circle" class="w-3 h-3"></i>
+                            Aktif
+                        </span>
+                        <span class="inline-flex items-center gap-1 bg-brand/10 text-brand text-xs font-semibold px-2.5 py-1 rounded-full">
+                            <i data-lucide="graduation-cap" class="w-3 h-3"></i>
+                            Tentor
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        FORM EDIT PROFIL
+        ============================================================ -->
+        <div class="admin-card mb-4">
+            <h3 class="text-lg font-bold text-brand mb-4">Edit Profil</h3>
+
+            <form id="profilForm">
+                <!-- Hidden input untuk URL foto Cloudinary -->
+                <input type="hidden" id="foto" />
+
+                <!-- Nama -->
+                <div class="mb-4">
+                    <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">
+                        Nama Lengkap <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" 
+                           id="nama" 
+                           required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                           placeholder="Contoh: Budi Santoso" />
+                </div>
+
+                <!-- Email (read-only) -->
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                        <span class="text-xs text-gray-400 font-normal">(tidak bisa diubah)</span>
+                    </label>
+                    <input type="email" 
+                           id="email" 
+                           readonly 
+                           disabled
+                           class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 outline-none text-sm cursor-not-allowed" />
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="mb-4">
+                    <label for="whatsapp" class="block text-sm font-medium text-gray-700 mb-1">
+                        No. WhatsApp <span class="text-red-500">*</span>
+                    </label>
+                    <input type="tel" 
+                           id="whatsapp" 
+                           required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                           placeholder="08xxxxxxxxxx" />
+                    <p class="text-xs text-gray-400 mt-1">Digunakan untuk komunikasi dengan admin</p>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- KEAHLIAN — Dynamic List                                       -->
+                <!-- ============================================================ -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Keahlian / Bidang yang Bisa Diajarkan <span class="text-red-500">*</span>
+                    </label>
+                    <div id="keahlianList" class="space-y-2 mb-2"></div>
+                    <button type="button" id="addKeahlianBtn"
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Tambah Keahlian
+                    </button>
+                    <p class="text-xs text-gray-400 mt-1">Contoh: Microsoft Office, Desain Grafis, Pemrograman Web</p>
+                </div>
+
+                <!-- Bio -->
+                <div class="mb-4">
+                    <label for="bio" class="block text-sm font-medium text-gray-700 mb-1">
+                        Bio Singkat
+                        <span class="text-xs text-gray-400 font-normal">(opsional)</span>
+                    </label>
+                    <textarea id="bio" 
+                              rows="3" 
+                              maxlength="300"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
+                              placeholder="Ceritakan singkat tentang pengalaman & keahlian Anda..."></textarea>
+                    <p class="text-xs text-gray-400 mt-1">
+                        <span id="bioCount">0</span>/300 karakter
+                    </p>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
+                    <button type="submit" id="submitBtn" class="btn-primary">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        Simpan Perubahan
+                    </button>
+                    <a href="dashboard.html" class="btn-secondary">Batal</a>
+                </div>
+
+                <div id="formMessage" class="mt-3"></div>
+            </form>
+        </div>
+
+        <!-- ============================================================
+        INFO AKUN (READ-ONLY)
+        ============================================================ -->
+        <div class="admin-card">
+            <h3 class="text-lg font-bold text-brand mb-3">Informasi Akun</h3>
+            <div>
+                <div class="info-row">
+                    <span class="text-sm text-gray-500">Status Akun</span>
+                    <span id="infoStatus" class="text-sm font-medium text-gray-800">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="text-sm text-gray-500">Tanggal Daftar</span>
+                    <span id="infoCreatedAt" class="text-sm font-medium text-gray-800">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="text-sm text-gray-500">Terakhir Diperbarui</span>
+                    <span id="infoUpdatedAt" class="text-sm font-medium text-gray-800">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="text-sm text-gray-500">UID</span>
+                    <span id="infoUid" class="text-xs font-mono text-gray-400 break-all">-</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script type="module">
+        import { auth, db, signOut, doc, getDoc, updateDoc } from '../assets/js/firebase.js';
+        import { protectPage } from '../assets/js/auth.js';
+        import { openCloudinaryUpload, optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        let currentTentor = null;
+
+        protectPage({
+            allowedRoles: ['tentor'],
+            requireActive: true,
+            onAuthorized: async (profile) => {
+                currentTentor = profile;
+
+                // Render sidebar brand (avatar + nama) — SAMA DENGAN DASHBOARD
+                renderSidebarBrand(profile);
+
+                // Load profil
+                await loadProfile(profile);
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        // ============================================================
+        // LOGOUT
+        // ============================================================
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = '../login.html';
+        });
+
+        // ============================================================
+        // RENDER SIDEBAR BRAND — nama tentor + avatar
+        // ============================================================
+        function renderSidebarBrand(profile) {
+            const nameEl = document.getElementById('sidebarTentorName');
+            const avatarEl = document.getElementById('sidebarAvatar');
+            const defaultEl = document.getElementById('sidebarAvatarDefault');
+
+            if (!nameEl) return;
+
+            // Nama
+            nameEl.textContent = profile.nama || 'Tentor';
+
+            // Avatar
+            if (profile.foto) {
+                const optimizedUrl = optimizeCloudinaryUrl(profile.foto, { 
+                    width: 80, 
+                    height: 80, 
+                    crop: 'fill' 
+                });
+                avatarEl.src = optimizedUrl;
+                avatarEl.classList.remove('hidden');
+                defaultEl.classList.add('hidden');
+            } else {
+                avatarEl.classList.add('hidden');
+                defaultEl.classList.remove('hidden');
+            }
+        }
+
+        // ============================================================
+        // KEAHLIAN — Dynamic List
+        // ============================================================
+        const keahlianList = document.getElementById('keahlianList');
+        const addKeahlianBtn = document.getElementById('addKeahlianBtn');
+
+        function createKeahlianItem(value = '') {
+            const div = document.createElement('div');
+            div.className = 'keahlian-item flex gap-2 items-center';
+            div.innerHTML = `
+                <input type="text"
+                       class="keahlian-input flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                       value="${escapeHtml(value)}"
+                       placeholder="Contoh: Microsoft Office" />
+                <button type="button"
+                        class="remove-keahlian p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                        title="Hapus">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            `;
+            return div;
+        }
+
+        function addKeahlianItem(value = '') {
+            const item = createKeahlianItem(value);
+            keahlianList.appendChild(item);
+
+            item.querySelector('.remove-keahlian').addEventListener('click', () => {
+                if (keahlianList.children.length <= 1) {
+                    item.querySelector('input').value = '';
+                    item.querySelector('input').focus();
+                    return;
+                }
+                item.remove();
+            });
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            return item;
+        }
+
+        function getKeahlianValues() {
+            const inputs = keahlianList.querySelectorAll('.keahlian-input');
+            const values = [];
+            inputs.forEach(input => {
+                const val = input.value.trim();
+                if (val) values.push(val);
+            });
+            return values;
+        }
+
+        addKeahlianBtn.addEventListener('click', () => {
+            const item = addKeahlianItem('');
+            item.querySelector('input').focus();
+        });
+
+        // ============================================================
+        // HELPER: escapeHtml
+        // ============================================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ============================================================
+        // LOAD PROFIL
+        // ============================================================
+        async function loadProfile(profile) {
+            // Isi form
+            document.getElementById('nama').value = profile.nama || '';
+            document.getElementById('email').value = profile.email || '';
+            document.getElementById('whatsapp').value = profile.whatsapp || '';
+            document.getElementById('bio').value = profile.bio || '';
+            document.getElementById('foto').value = profile.foto || '';
+
+            // Update counter bio
+            updateBioCount();
+
+            // Keahlian
+            keahlianList.innerHTML = '';
+            if (Array.isArray(profile.keahlian) && profile.keahlian.length > 0) {
+                profile.keahlian.forEach(k => addKeahlianItem(k));
+            } else {
+                addKeahlianItem('');
+            }
+
+            // Tampilkan info ringkas
+            document.getElementById('displayNama').textContent = profile.nama || 'Tanpa nama';
+            document.getElementById('displayEmail').textContent = profile.email || '-';
+
+            // Avatar
+            const avatarImg = document.getElementById('avatarImg');
+            if (profile.foto) {
+                avatarImg.src = optimizeCloudinaryUrl(profile.foto, { width: 240, height: 240, crop: 'fill' });
+            }
+
+            // Info akun
+            document.getElementById('infoStatus').textContent = 
+                profile.status === 'active' ? 'Aktif' : 
+                profile.status === 'pending' ? 'Menunggu Acc' : 
+                profile.status === 'rejected' ? 'Ditolak' : profile.status || '-';
+            
+            document.getElementById('infoCreatedAt').textContent = 
+                profile.createdAt ? new Date(profile.createdAt).toLocaleString('id-ID') : '-';
+            
+            document.getElementById('infoUpdatedAt').textContent = 
+                profile.updatedAt ? new Date(profile.updatedAt).toLocaleString('id-ID') : '-';
+            
+            document.getElementById('infoUid').textContent = profile.uid || '-';
+        }
+
+        // ============================================================
+        // BIO COUNTER
+        // ============================================================
+        const bioInput = document.getElementById('bio');
+        const bioCount = document.getElementById('bioCount');
+
+        function updateBioCount() {
+            const len = bioInput.value.length;
+            bioCount.textContent = len;
+            if (len > 270) {
+                bioCount.classList.add('text-red-500');
+                bioCount.classList.remove('text-gray-400');
+            } else {
+                bioCount.classList.remove('text-red-500');
+                bioCount.classList.add('text-gray-400');
+            }
+        }
+
+        bioInput.addEventListener('input', updateBioCount);
+
+        // ============================================================
+        // UPLOAD AVATAR
+        // ============================================================
+        document.getElementById('uploadAvatarBtn').addEventListener('click', () => {
+            openCloudinaryUpload({
+                folder: 'tentor/profiles',
+                cropping: true,
+                croppingAspectRatio: 1,
+                onSuccess: (url) => {
+                    document.getElementById('foto').value = url;
+                    const avatarImg = document.getElementById('avatarImg');
+                    avatarImg.src = optimizeCloudinaryUrl(url, { width: 240, height: 240, crop: 'fill' });
+                    showMessage('success', '✅ Foto berhasil diupload. Jangan lupa klik Simpan.');
+                },
+                onError: (err) => {
+                    showMessage('error', '❌ Upload gagal: ' + err.message);
+                }
+            });
+        });
+
+        // ============================================================
+        // SUBMIT FORM
+        // ============================================================
+        document.getElementById('profilForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const messageEl = document.getElementById('formMessage');
+
+            const nama = document.getElementById('nama').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const bio = document.getElementById('bio').value.trim();
+            const foto = document.getElementById('foto').value.trim();
+
+            // Validasi
+            if (!nama) {
+                showMessage('error', '❌ Nama wajib diisi.');
+                return;
+            }
+
+            if (!whatsapp) {
+                showMessage('error', '❌ No. WhatsApp wajib diisi.');
+                return;
+            }
+
+            const waDigits = whatsapp.replace(/\D/g, '');
+            if (waDigits.length < 10 || waDigits.length > 15) {
+                showMessage('error', '❌ No. WhatsApp tidak valid (10-15 digit).');
+                return;
+            }
+
+            // Validasi keahlian
+            const keahlianValues = getKeahlianValues();
+            if (keahlianValues.length === 0) {
+                showMessage('error', '❌ Keahlian wajib diisi minimal 1.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            messageEl.innerHTML = '';
+
+            try {
+                const updateData = {
+                    nama: nama,
+                    whatsapp: whatsapp,
+                    bio: bio,
+                    foto: foto,
+                    keahlian: keahlianValues,
+                    updatedAt: new Date().toISOString()
+                };
+
+                await updateDoc(doc(db, 'users', currentTentor.uid), updateData);
+                console.log('✅ Profil diupdate dengan keahlian:', keahlianValues);
+
+                // Update info ringkas + sidebar brand (kalau nama/foto berubah)
+                document.getElementById('displayNama').textContent = nama;
+                document.getElementById('infoUpdatedAt').textContent = new Date().toLocaleString('id-ID');
+                renderSidebarBrand({ ...currentTentor, nama, foto });
+
+                showMessage('success', '✅ Profil berhasil disimpan!');
+
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan`;
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }, 2000);
+
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                let msg = error.message;
+                if (error.code === 'permission-denied') {
+                    msg = 'Firestore Rules menolak update. Hubungi admin.';
+                }
+                showMessage('error', '❌ Gagal menyimpan: ' + msg);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        // ============================================================
+        // HELPER: Tampilkan pesan
+        // ============================================================
+        function showMessage(type, text) {
+            const messageEl = document.getElementById('formMessage');
+            const colorClass = type === 'success' 
+                ? 'bg-green-50 border-green-200 text-green-700' 
+                : 'bg-red-50 border-red-200 text-red-700';
+            messageEl.innerHTML = `
+                <div class="p-3 border rounded-lg ${colorClass}">
+                    <p class="text-sm font-medium">${text}</p>
+                </div>
+            `;
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageEl.innerHTML = '';
+                }, 4000);
+            }
+        }
+    </script>
+
+</body>
+</html>

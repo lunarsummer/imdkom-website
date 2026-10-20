@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tentor | Admin IMDKOM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        .stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(26, 60, 94, 0.1); }
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            font-size: 0.75rem; font-weight: 600;
+            padding: 0.25rem 0.625rem; border-radius: 999px;
+        }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        .keahlian-chip {
+            display: inline-flex; align-items: center;
+            background: rgba(26, 60, 94, 0.08); color: #1a3c5e;
+            font-size: 0.75rem; font-weight: 600;
+            padding: 0.25rem 0.625rem; border-radius: 999px;
+        }
+
+        .sesi-badge {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            font-size: 0.65rem; font-weight: 700;
+            padding: 0.2rem 0.5rem; border-radius: 999px;
+            text-transform: uppercase; letter-spacing: 0.02em;
+        }
+        .sesi-belum { background: #f3f4f6; color: #4b5563; }
+        .sesi-selesai { background: #d1fae5; color: #065f46; }
+        .sesi-off { background: #fee2e2; color: #991b1b; }
+        .sesi-batal { background: #fce7f3; color: #9f1239; }
+
+        .nav-group { margin: 0; }
+        .nav-group-toggle {
+            display: flex; align-items: center; width: 100%;
+            text-align: left; background: none; border: none;
+            cursor: pointer; font: inherit; color: inherit;
+        }
+        .nav-group-toggle .nav-chevron { transition: transform 0.25s ease; opacity: 0.6; }
+        .nav-group-toggle.open .nav-chevron { transform: rotate(180deg); opacity: 1; }
+        .nav-group-toggle.open { background: rgba(255, 255, 255, 0.08); }
+        .nav-submenu {
+            display: flex; flex-direction: column; gap: 0.25rem;
+            padding: 0.25rem 0 0.5rem 0; margin-left: 0.5rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            animation: submenuSlide 0.25s ease;
+        }
+        .nav-submenu.hidden { display: none; }
+        @keyframes submenuSlide {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-submenu-link {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 0.75rem; font-size: 0.8rem;
+            color: #d1d5db; text-decoration: none;
+            border-radius: 0.375rem; transition: all 0.2s ease;
+            margin-left: 0.25rem;
+        }
+        .nav-submenu-link:hover { background: rgba(255, 255, 255, 0.08); color: white; }
+        .nav-submenu-link.active { background: rgba(255, 255, 255, 0.15); color: white; font-weight: 600; }
+        .nav-submenu-link i { opacity: 0.7; flex-shrink: 0; }
+        .nav-submenu-link.active i { opacity: 1; }
+
+        /* Kalender */
+        .calendar-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 2px; background: #e5e7eb; border: 1px solid #e5e7eb;
+            border-radius: 8px; overflow: hidden;
+        }
+        .calendar-header {
+            background: #f3f4f6; text-align: center;
+            font-size: 0.7rem; font-weight: 700; color: #6b7280;
+            padding: 0.4rem 0; text-transform: uppercase;
+        }
+        .calendar-day {
+            background: white; aspect-ratio: 1;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 500; color: #374151;
+            cursor: pointer; transition: all 0.15s ease;
+            user-select: none; position: relative;
+        }
+        .calendar-day:hover:not(.disabled):not(.empty) { background: #eff6ff; color: #1e40af; }
+        .calendar-day.empty { background: #f9fafb; cursor: default; }
+        .calendar-day.disabled { background: #f9fafb; color: #d1d5db; cursor: not-allowed; }
+        .calendar-day.selected { background: #1a3c5e; color: white; font-weight: 700; }
+        .calendar-day.selected:hover { background: #2a5a7a; }
+        .calendar-day.today { box-shadow: inset 0 0 0 2px #c2410c; }
+        .calendar-day .pertemuan-label {
+            position: absolute; top: 1px; right: 1px;
+            font-size: 0.55rem; font-weight: 800;
+            background: #059669; color: white;
+            padding: 0 3px; border-radius: 3px; line-height: 1.4;
+        }
+        .calendar-day.selected .pertemuan-label { background: #c2410c; }
+    </style>
+</head>
+<body>
+
+    <!-- MOBILE HEADER -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Tentor</span>
+        <div class="w-8"></div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- SIDEBAR ADMIN -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+
+            <div class="nav-group">
+                <button type="button" class="nav-link nav-group-toggle w-full justify-between" data-target="submenu-program">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        Program Kursus
+                    </span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform nav-chevron"></i>
+                </button>
+                <div id="submenu-program" class="nav-submenu hidden">
+                    <a href="programs.html" class="nav-submenu-link">
+                        <i data-lucide="list" class="w-3.5 h-3.5"></i>
+                        Daftar Program
+                    </a>
+                    <a href="program-submissions.html" class="nav-submenu-link">
+                        <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                        Review Usulan
+                    </a>
+                    <a href="tentors.html" class="nav-submenu-link active">
+                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+                        Tentor
+                    </a>
+                </div>
+            </div>
+
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pc-components.html" class="nav-link">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                PC Components
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+        
+        <div class="page-header">
+            <div>
+                <h2>Tentor</h2>
+                <p class="text-gray-500 text-sm mt-1">Kelola pendaftaran & akun tentor</p>
+            </div>
+        </div>
+
+        <!-- STATISTIK -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Total Tentor</p>
+                        <p class="text-2xl font-bold text-brand mt-1" id="statTotal">-</p>
+                    </div>
+                    <div class="w-12 h-12 bg-brand/10 rounded-lg flex items-center justify-center">
+                        <i data-lucide="users" class="w-6 h-6 text-brand"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Menunggu Acc</p>
+                        <p class="text-2xl font-bold text-yellow-600 mt-1" id="statPending">-</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="clock" class="w-6 h-6 text-yellow-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Aktif</p>
+                        <p class="text-2xl font-bold text-green-600 mt-1" id="statActive">-</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER -->
+        <div class="admin-card mb-4">
+            <div class="flex flex-wrap items-center gap-3">
+                <label class="text-sm font-medium text-gray-700">Filter Status:</label>
+                <select id="filterStatus" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm">
+                    <option value="active">Aktif</option>
+                    <option value="pending">Menunggu Acc (Pending)</option>
+                    <option value="rejected">Ditolak</option>
+                    <option value="all">Semua</option>
+                </select>
+                <button id="refreshBtn" 
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    Refresh
+                </button>
+                <div id="filterInfo" class="text-xs text-gray-500 ml-auto"></div>
+            </div>
+        </div>
+
+        <!-- TABEL -->
+        <div class="admin-card" style="padding: 0; overflow: hidden;">
+            <div class="overflow-x-auto">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Keahlian</th>
+                            <th>Tanggal Daftar</th>
+                            <th>Status</th>
+                            <th style="width: 280px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tentorsList">
+                        <tr>
+                            <td colspan="5" class="text-center text-gray-500 py-12">
+                                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                                <p class="mt-3 text-sm">Memuat tentor...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    MODAL DETAIL TENTOR
+    ============================================================ -->
+    <div id="detailModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeDetailModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between p-5 border-b border-gray-200 sticky top-0 bg-white rounded-t-2xl z-10">
+                    <h3 class="text-lg font-bold text-brand">Detail Tentor</h3>
+                    <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-5" id="detailContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MODAL REJECT
+    ============================================================ -->
+    <div id="rejectModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeRejectModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full">
+                <div class="flex items-center justify-between p-5 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-brand">Tolak Pendaftaran</h3>
+                    <button onclick="closeRejectModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <p class="text-sm text-gray-600 mb-4">
+                        Tolak pendaftaran <strong id="rejectName">-</strong>?
+                    </p>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Alasan (opsional)</label>
+                    <textarea id="rejectReason" rows="3"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                              placeholder="Contoh: Data tidak lengkap..."></textarea>
+                </div>
+                <div class="flex gap-3 p-5 pt-0">
+                    <button onclick="closeRejectModal()" 
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                        Batal
+                    </button>
+                    <button id="confirmRejectBtn" 
+                            class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium">
+                        Tolak
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MODAL JADWAL — MULTI PESERTA + KALENDER
+    ============================================================ -->
+    <div id="jadwalModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeJadwalModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+            <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between p-5 border-b border-gray-200 sticky top-0 bg-white rounded-t-2xl z-10">
+                    <div>
+                        <h3 class="text-lg font-bold text-brand">Jadwalkan Mengajar</h3>
+                        <p class="text-xs text-gray-500 mt-0.5" id="jadwalTentorName">-</p>
+                    </div>
+                    <button onclick="closeJadwalModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <form id="jadwalForm" class="p-5">
+                    <input type="hidden" id="jadwalTentorId" />
+                    <input type="hidden" id="jadwalTentorNama" />
+
+                    <div id="jadwalRows" class="space-y-4 mb-4"></div>
+
+                    <button type="button" id="addJadwalRowBtn"
+                            class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 text-sm text-brand border-2 border-dashed border-brand/30 rounded-xl hover:bg-brand/5 transition-colors mb-4">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        Tambah Peserta Lain
+                    </button>
+
+                    <div class="flex gap-3 pt-4 border-t border-gray-200">
+                        <button type="button" onclick="closeJadwalModal()" 
+                                class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                            Batal
+                        </button>
+                        <button type="submit" id="jadwalSubmitBtn"
+                                class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand hover:bg-brand-light text-white rounded-lg transition-colors text-sm font-medium">
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                            <span id="jadwalSubmitText">Simpan Jadwal</span>
+                        </button>
+                    </div>
+
+                    <div id="jadwalMessage" class="mt-3 text-sm"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MODAL TAMBAH SESI (tanggal pengganti)
+    ============================================================ -->
+    <div id="tambahSesiModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeTambahSesiModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full">
+                <div class="flex items-center justify-between p-5 border-b border-gray-200">
+                    <div>
+                        <h3 class="text-lg font-bold text-brand">Tambah Sesi Baru</h3>
+                        <p class="text-xs text-gray-500 mt-0.5" id="tambahSesiSubtitle">-</p>
+                    </div>
+                    <button onclick="closeTambahSesiModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form id="tambahSesiForm" class="p-5 space-y-3">
+                    <input type="hidden" id="tambahSesiScheduleId" />
+
+                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-xs text-blue-800">
+                            <i data-lucide="info" class="w-3 h-3 inline"></i>
+                            Sesi baru akan ditambahkan sebagai <strong>pertemuan berikutnya</strong>. Tanggal harus setelah sesi terakhir atau di tanggal kosong.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal <span class="text-red-500">*</span></label>
+                        <input type="date" id="tambahSesiTanggal" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan (opsional)</label>
+                        <input type="text" id="tambahSesiKeterangan"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               placeholder="Contoh: Pengganti pertemuan yang off" />
+                    </div>
+
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="closeTambahSesiModal()"
+                                class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                            Batal
+                        </button>
+                        <button type="submit" id="tambahSesiSubmitBtn"
+                                class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium">
+                            Tambah Sesi
+                        </button>
+                    </div>
+
+                    <div id="tambahSesiMessage" class="text-sm"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script type="module">
+        import { 
+            auth, signOut, 
+            db, collection, getDocs, query, where, orderBy, doc, updateDoc, addDoc 
+        } from '../assets/js/firebase.js';
+        import { protectPage } from '../assets/js/auth.js';
+        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let currentAdmin = null;
+        let allTentors = [];
+        let allPrograms = [];
+        let tentorSchedules = {};
+
+        const BULAN_NAMA = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const HARI_SINGKAT = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        protectPage({
+            allowedRoles: ['admin'],
+            requireActive: true,
+            onAuthorized: async (profile) => {
+                currentAdmin = profile;
+                await loadPrograms();
+                await loadTentors();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = '../login.html';
+        });
+
+        // ============================================================
+        // LOAD PROGRAMS
+        // ============================================================
+        async function loadPrograms() {
+            try {
+                const q = query(
+                    collection(db, 'programs'),
+                    where('aktif', '==', true),
+                    orderBy('order', 'asc')
+                );
+                const snapshot = await getDocs(q);
+                allPrograms = [];
+                snapshot.forEach(docSnap => {
+                    allPrograms.push({ id: docSnap.id, ...docSnap.data() });
+                });
+            } catch (error) {
+                console.error('Error loading programs:', error);
+            }
+        }
+
+        // ============================================================
+        // LOAD TENTORS + SCHEDULES
+        // ============================================================
+        async function loadTentors() {
+            const container = document.getElementById('tentorsList');
+            const filterStatus = document.getElementById('filterStatus').value;
+
+            try {
+                const q = query(
+                    collection(db, 'users'),
+                    where('role', '==', 'tentor'),
+                    orderBy('createdAt', 'desc')
+                );
+                const snapshot = await getDocs(q);
+
+                allTentors = [];
+                snapshot.forEach((docSnap) => {
+                    allTentors.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                await loadAllSchedules();
+                updateStats(allTentors);
+
+                let filtered = allTentors;
+                if (filterStatus !== 'all') {
+                    filtered = allTentors.filter(t => t.status === filterStatus);
+                }
+
+                const infoEl = document.getElementById('filterInfo');
+                if (infoEl) {
+                    infoEl.textContent = `Menampilkan ${filtered.length} dari ${allTentors.length} tentor`;
+                }
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-12">
+                                <i data-lucide="inbox" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                                <p class="text-gray-500">Tidak ada tentor dengan status <strong>${filterStatus}</strong>.</p>
+                            </td>
+                        </tr>
+                    `;
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach((tentor) => {
+                    html += renderTentorRow(tentor);
+                });
+                container.innerHTML = html;
+
+                attachRowListeners();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            } catch (error) {
+                console.error('Error loading tentors:', error);
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-12">
+                            <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-red-300 mb-3"></i>
+                            <p class="text-red-600 font-medium">Gagal memuat tentor</p>
+                            <p class="text-gray-500 text-xs mt-1">${error.message}</p>
+                        </td>
+                    </tr>
+                `;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        async function loadAllSchedules() {
+            tentorSchedules = {};
+            try {
+                const q = query(collection(db, 'schedules'));
+                const snapshot = await getDocs(q);
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const tid = data.tentorId;
+                    if (!tid) return;
+                    if (!tentorSchedules[tid]) tentorSchedules[tid] = [];
+                    tentorSchedules[tid].push({ id: docSnap.id, ...data });
+                });
+            } catch (error) {
+                console.error('Error loading schedules:', error);
+            }
+        }
+
+        // ============================================================
+        // RENDER ROW
+        // ============================================================
+        function renderTentorRow(tentor) {
+            const statusBadge = getStatusBadge(tentor.status);
+            const createdAt = tentor.createdAt 
+                ? new Date(tentor.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+                : '-';
+
+            const keahlian = Array.isArray(tentor.keahlian) ? tentor.keahlian : [];
+            let keahlianHtml = '<span class="text-xs text-gray-400 italic">Belum diisi</span>';
+            if (keahlian.length > 0) {
+                const shown = keahlian.slice(0, 2);
+                const remaining = keahlian.length - 2;
+                keahlianHtml = shown.map(k => 
+                    `<span class="keahlian-chip">${escapeHtml(k)}</span>`
+                ).join(' ');
+                if (remaining > 0) {
+                    keahlianHtml += ` <span class="keahlian-chip bg-gray-100 text-gray-600">+${remaining}</span>`;
+                }
+            }
+
+            let actionButtons = '';
+            if (tentor.status === 'pending') {
+                actionButtons = `
+                    <button class="acc-btn inline-flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
+                            data-id="${tentor.id}" data-name="${escapeHtml(tentor.nama || '')}">
+                        <i data-lucide="check" class="w-3.5 h-3.5"></i> Acc
+                    </button>
+                    <button class="reject-btn inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-medium rounded-lg border border-red-200 transition-colors"
+                            data-id="${tentor.id}" data-name="${escapeHtml(tentor.nama || '')}">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i> Tolak
+                    </button>
+                `;
+            } else if (tentor.status === 'active') {
+                actionButtons = `
+                    <button class="reject-btn inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-medium rounded-lg border border-red-200 transition-colors"
+                            data-id="${tentor.id}" data-name="${escapeHtml(tentor.nama || '')}">
+                        <i data-lucide="user-x" class="w-3.5 h-3.5"></i> Nonaktifkan
+                    </button>
+                `;
+            } else if (tentor.status === 'rejected') {
+                actionButtons = `
+                    <button class="acc-btn inline-flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
+                            data-id="${tentor.id}" data-name="${escapeHtml(tentor.nama || '')}">
+                        <i data-lucide="check" class="w-3.5 h-3.5"></i> Aktifkan
+                    </button>
+                `;
+            }
+
+            return `
+                <tr>
+                    <td data-label="Nama">
+                        <div class="flex items-center gap-2">
+                            ${tentor.foto 
+                                ? `<img src="${optimizeCloudinaryUrl(tentor.foto, { width: 64, height: 64, crop: 'fill' })}" class="w-8 h-8 rounded-full object-cover flex-shrink-0" alt="" />`
+                                : `<div class="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center flex-shrink-0">
+                                     <i data-lucide="user" class="w-4 h-4 text-brand"></i>
+                                   </div>`
+                            }
+                            <div>
+                                <div class="font-medium text-gray-800">${escapeHtml(tentor.nama || 'Tanpa nama')}</div>
+                                <div class="text-xs text-gray-400">${escapeHtml(tentor.email || '')}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-label="Keahlian">
+                        <div class="flex flex-wrap gap-1 max-w-xs">${keahlianHtml}</div>
+                    </td>
+                    <td data-label="Tanggal Daftar">
+                        <span class="text-sm text-gray-600">${createdAt}</span>
+                    </td>
+                    <td data-label="Status">
+                        ${statusBadge}
+                    </td>
+                    <td data-label="Aksi">
+                        <div class="flex flex-wrap gap-2">
+                            <button class="detail-btn inline-flex items-center gap-1 px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand text-xs font-medium rounded-lg transition-colors"
+                                    data-id="${tentor.id}">
+                                <i data-lucide="eye" class="w-3.5 h-3.5"></i> Detail
+                            </button>
+                            <button class="jadwal-btn inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
+                                    data-id="${tentor.id}" data-name="${escapeHtml(tentor.nama || '')}">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Jadwal
+                            </button>
+                            ${actionButtons}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        function getStatusBadge(status) {
+            const labels = { 'pending': 'Menunggu', 'active': 'Aktif', 'rejected': 'Ditolak' };
+            const icons = { 'pending': 'clock', 'active': 'check-circle', 'rejected': 'x-circle' };
+            return `
+                <span class="status-badge status-${status}">
+                    <i data-lucide="${icons[status] || 'circle'}" class="w-3 h-3"></i>
+                    ${labels[status] || status}
+                </span>
+            `;
+        }
+
+        function updateStats(tentors) {
+            document.getElementById('statTotal').textContent = tentors.length;
+            document.getElementById('statPending').textContent = tentors.filter(t => t.status === 'pending').length;
+            document.getElementById('statActive').textContent = tentors.filter(t => t.status === 'active').length;
+        }
+
+        function attachRowListeners() {
+            document.querySelectorAll('.detail-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const tentor = allTentors.find(t => t.id === id);
+                    if (tentor) openDetailModal(tentor);
+                });
+            });
+
+            document.querySelectorAll('.jadwal-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    openJadwalModal(btn.dataset.id, btn.dataset.name);
+                });
+            });
+
+            document.querySelectorAll('.acc-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (confirm(`Aktifkan akun tentor "${btn.dataset.name}"?`)) {
+                        await updateStatus(btn.dataset.id, 'active');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.reject-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    openRejectModal(btn.dataset.id, btn.dataset.name);
+                });
+            });
+        }
+
+        async function updateStatus(uid, newStatus, reason = null) {
+            try {
+                const updateData = {
+                    status: newStatus,
+                    updatedAt: new Date().toISOString()
+                };
+                if (reason) updateData.rejectReason = reason;
+                if (newStatus === 'active') updateData.approvedAt = new Date().toISOString();
+                if (newStatus === 'rejected') updateData.rejectedAt = new Date().toISOString();
+
+                await updateDoc(doc(db, 'users', uid), updateData);
+                await loadTentors();
+            } catch (error) {
+                alert('Gagal update status: ' + error.message);
+            }
+        }
+
+        // ============================================================
+        // DETAIL MODAL
+        // ============================================================
+        window.openDetailModal = function(tentor) {
+            const content = document.getElementById('detailContent');
+            const createdAt = tentor.createdAt 
+                ? new Date(tentor.createdAt).toLocaleString('id-ID') : '-';
+            const approvedAt = tentor.approvedAt 
+                ? new Date(tentor.approvedAt).toLocaleString('id-ID') : null;
+
+            const keahlian = Array.isArray(tentor.keahlian) ? tentor.keahlian : [];
+            const keahlianHtml = keahlian.length > 0
+                ? `<div class="flex flex-wrap gap-1.5">${keahlian.map(k => 
+                    `<span class="keahlian-chip">${escapeHtml(k)}</span>`
+                  ).join('')}</div>`
+                : '<span class="text-sm text-gray-400 italic">Belum diisi</span>';
+
+            const avatarHtml = tentor.foto
+                ? `<img src="${optimizeCloudinaryUrl(tentor.foto, { width: 160, height: 160, crop: 'fill' })}" 
+                        class="w-20 h-20 rounded-full object-cover mx-auto mb-3 border-2 border-gray-200" alt="" />`
+                : `<div class="w-20 h-20 rounded-full bg-brand/10 flex items-center justify-center mx-auto mb-3">
+                     <i data-lucide="user" class="w-10 h-10 text-brand"></i>
+                   </div>`;
+
+            const bioHtml = tentor.bio 
+                ? `<div>
+                     <p class="text-xs text-gray-500 mb-1">Bio</p>
+                     <p class="text-sm text-gray-700 bg-gray-50 p-2 rounded">${escapeHtml(tentor.bio)}</p>
+                   </div>` : '';
+
+            // Jadwal peserta
+            const schedules = tentorSchedules[tentor.id] || [];
+            let jadwalHtml = '<p class="text-sm text-gray-400 italic">Belum ada jadwal peserta</p>';
+            if (schedules.length > 0) {
+                jadwalHtml = '<div class="space-y-2">';
+                schedules.forEach(s => {
+                    const sesi = Array.isArray(s.sesi) ? s.sesi : [];
+                    const selesaiCount = sesi.filter(x => x.status === 'selesai').length;
+                    const offCount = sesi.filter(x => x.status === 'off').length;
+                    const totalAktif = sesi.filter(x => x.status !== 'off').length;
+
+                    let nilaiHtml = '';
+                    if (s.penilaian && s.penilaian.rataRata) {
+                        nilaiHtml = `
+                            <div class="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded">
+                                <i data-lucide="award" class="w-3 h-3"></i>
+                                Nilai: ${s.penilaian.rataRata}
+                            </div>
+                        `;
+                    }
+
+                    let offInfo = '';
+                    if (offCount > 0) {
+                        offInfo = `<span class="text-xs text-red-600 font-semibold ml-2">${offCount} sesi OFF</span>`;
+                    }
+
+                    jadwalHtml += `
+                        <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-semibold text-gray-800">${escapeHtml(s.pesertaNama || 'Peserta')}</p>
+                                    <p class="text-xs text-gray-500">${escapeHtml(s.programNama || '')} • ${escapeHtml(s.kelas || '')}</p>
+                                    <p class="text-xs text-gray-400 mt-1">
+                                        <i data-lucide="check-circle" class="w-3 h-3 inline"></i>
+                                        ${selesaiCount} / ${totalAktif} pertemuan selesai
+                                        ${offInfo}
+                                    </p>
+                                    ${nilaiHtml}
+                                </div>
+                                <div class="flex flex-col gap-1 items-end flex-shrink-0">
+                                    <button class="tambah-sesi-btn inline-flex items-center gap-1 px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-semibold rounded-lg transition-colors"
+                                            data-schedule-id="${s.id}" data-peserta="${escapeHtml(s.pesertaNama || '')}">
+                                        <i data-lucide="plus" class="w-3 h-3"></i>
+                                        Tambah Sesi
+                                    </button>
+                                    <a href="penilaian.html?scheduleId=${s.id}" 
+                                     class="inline-flex items-center gap-1 px-2 py-1 bg-brand/10 hover:bg-brand/20 text-brand text-xs font-semibold rounded-lg transition-colors">
+                                     <i data-lucide="award" class="w-3 h-3"></i>
+                                     Lihat Nilai
+                                   </a>
+                                </div>
+                            </div>
+
+                            <!-- Daftar sesi -->
+                            <div class="mt-2 pt-2 border-t border-gray-200 space-y-1">
+                                ${sesi.map(x => {
+                                    const tgl = x.tanggal ? new Date(x.tanggal + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : '-';
+                                    let badge = '';
+                                    if (x.status === 'belum') badge = `<span class="sesi-badge sesi-belum">Belum</span>`;
+                                    else if (x.status === 'selesai') badge = `<span class="sesi-badge sesi-selesai">Selesai</span>`;
+                                    else if (x.status === 'off') badge = `<span class="sesi-badge sesi-off">OFF</span>`;
+                                    else if (x.status === 'batal') badge = `<span class="sesi-badge sesi-batal">Batal</span>`;
+
+                                    return `
+                                        <div class="flex items-center justify-between text-xs py-0.5">
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-mono text-gray-400">#${x.pertemuan}</span>
+                                                <span class="text-gray-700">${tgl}</span>
+                                                ${badge}
+                                            </div>
+                                            ${x.status === 'off' && x.alasanOff ? `
+                                                <span class="text-red-600 text-[10px] italic truncate max-w-[150px]" title="${escapeHtml(x.alasanOff)}">${escapeHtml(x.alasanOff)}</span>
+                                            ` : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                jadwalHtml += '</div>';
+            }
+
+            content.innerHTML = `
+                <div class="text-center mb-4">
+                    ${avatarHtml}
+                    <h4 class="font-bold text-gray-800 text-lg">${escapeHtml(tentor.nama || '-')}</h4>
+                    <p class="text-sm text-gray-500">${escapeHtml(tentor.email || '-')}</p>
+                    <div class="mt-2">${getStatusBadge(tentor.status)}</div>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs text-gray-500">WhatsApp</p>
+                        <p class="font-medium text-gray-800">${escapeHtml(tentor.whatsapp || '-')}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1.5">Keahlian</p>
+                        ${keahlianHtml}
+                    </div>
+                    ${bioHtml}
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1.5">Jadwal Peserta (${schedules.length})</p>
+                        ${jadwalHtml}
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Tanggal Daftar</p>
+                        <p class="font-medium text-gray-800">${createdAt}</p>
+                    </div>
+                    ${approvedAt ? `
+                        <div>
+                            <p class="text-xs text-gray-500">Tanggal Diaktifkan</p>
+                            <p class="font-medium text-gray-800">${approvedAt}</p>
+                        </div>
+                    ` : ''}
+                    ${tentor.rejectReason ? `
+                        <div>
+                            <p class="text-xs text-gray-500">Alasan Ditolak</p>
+                            <p class="text-sm text-red-600 bg-red-50 p-2 rounded">${escapeHtml(tentor.rejectReason)}</p>
+                        </div>
+                    ` : ''}
+                    <div>
+                        <p class="text-xs text-gray-500">UID</p>
+                        <p class="text-xs font-mono text-gray-400 break-all">${tentor.id}</p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            // Attach tambah sesi
+            content.querySelectorAll('.tambah-sesi-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    openTambahSesiModal(btn.dataset.scheduleId, btn.dataset.peserta);
+                });
+            });
+        };
+
+        window.closeDetailModal = function() {
+            document.getElementById('detailModal').classList.add('hidden');
+        };
+
+        // ============================================================
+        // TAMBAH SESI
+        // ============================================================
+        window.openTambahSesiModal = function(scheduleId, pesertaNama) {
+            document.getElementById('tambahSesiScheduleId').value = scheduleId;
+            document.getElementById('tambahSesiSubtitle').textContent = pesertaNama || '-';
+            document.getElementById('tambahSesiTanggal').value = '';
+            document.getElementById('tambahSesiKeterangan').value = '';
+            document.getElementById('tambahSesiMessage').innerHTML = '';
+
+            document.getElementById('tambahSesiModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.closeTambahSesiModal = function() {
+            document.getElementById('tambahSesiModal').classList.add('hidden');
+        };
+
+        document.getElementById('tambahSesiForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const scheduleId = document.getElementById('tambahSesiScheduleId').value;
+            const tanggal = document.getElementById('tambahSesiTanggal').value;
+            const keterangan = document.getElementById('tambahSesiKeterangan').value.trim();
+            const btn = document.getElementById('tambahSesiSubmitBtn');
+            const messageEl = document.getElementById('tambahSesiMessage');
+
+            if (!tanggal) {
+                messageEl.innerHTML = `<p class="text-red-600">Tanggal wajib diisi.</p>`;
+                return;
+            }
+
+            // Cari schedule
+            let schedule = null;
+            Object.values(tentorSchedules).forEach(list => {
+                const found = list.find(s => s.id === scheduleId);
+                if (found) schedule = found;
+            });
+            if (!schedule) {
+                messageEl.innerHTML = `<p class="text-red-600">Jadwal tidak ditemukan.</p>`;
+                return;
+            }
+
+            const sesi = schedule.sesi || [];
+
+            // Cek duplikat tanggal
+            if (sesi.some(x => x.tanggal === tanggal && x.status !== 'off')) {
+                messageEl.innerHTML = `<p class="text-red-600">Tanggal sudah dipakai sesi lain.</p>`;
+                return;
+            }
+
+            // Pertemuan baru = max pertemuan + 1
+            const maxPertemuan = sesi.length > 0 ? Math.max(...sesi.map(x => x.pertemuan || 0)) : 0;
+            const newPertemuan = maxPertemuan + 1;
+
+            // Tambah sesi baru
+            sesi.push({
+                pertemuan: newPertemuan,
+                tanggal: tanggal,
+                status: 'belum',
+                keterangan: keterangan
+            });
+
+            // Total pertemuan bertambah
+            const newTotal = sesi.filter(x => x.status !== 'off').length;
+
+            btn.disabled = true;
+            btn.textContent = 'Menambah...';
+
+            try {
+                await updateDoc(doc(db, 'schedules', scheduleId), {
+                    sesi: sesi,
+                    totalPertemuan: newTotal,
+                    updatedAt: new Date().toISOString()
+                });
+
+                alert(`✅ Sesi baru (pertemuan ${newPertemuan}) berhasil ditambahkan.`);
+                closeTambahSesiModal();
+                closeDetailModal();
+                await loadTentors();
+
+            } catch (error) {
+                messageEl.innerHTML = `<p class="text-red-600">❌ ${error.message}</p>`;
+                btn.disabled = false;
+                btn.textContent = 'Tambah Sesi';
+            }
+        });
+
+        // ============================================================
+        // REJECT MODAL
+        // ============================================================
+        let rejectTargetId = null;
+
+        window.openRejectModal = function(id, name) {
+            rejectTargetId = id;
+            document.getElementById('rejectName').textContent = name || 'tentor ini';
+            document.getElementById('rejectReason').value = '';
+            document.getElementById('rejectModal').classList.remove('hidden');
+        };
+
+        window.closeRejectModal = function() {
+            rejectTargetId = null;
+            document.getElementById('rejectModal').classList.add('hidden');
+        };
+
+        document.getElementById('confirmRejectBtn').addEventListener('click', async () => {
+            if (!rejectTargetId) return;
+            const reason = document.getElementById('rejectReason').value.trim();
+            const btn = document.getElementById('confirmRejectBtn');
+            btn.disabled = true;
+            btn.textContent = 'Memproses...';
+            await updateStatus(rejectTargetId, 'rejected', reason);
+            closeRejectModal();
+            btn.disabled = false;
+            btn.textContent = 'Tolak';
+        });
+
+        // ============================================================
+        // JADWAL MODAL — MULTI PESERTA + KALENDER
+        // ============================================================
+        let jadwalTentorId = null;
+        let jadwalRowCounter = 0;
+        const calendarState = {};
+
+        function toDateStr(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function formatTanggal(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr + 'T00:00:00');
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function createCalendarHTML(rowId) {
+            const state = calendarState[rowId];
+            if (!state) return '';
+
+            const { month, year, selectedDates, totalPertemuan } = state;
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const offset = (firstDay + 6) % 7;
+
+            let gridHtml = '';
+            HARI_SINGKAT.forEach(h => {
+                gridHtml += `<div class="calendar-header">${h}</div>`;
+            });
+
+            for (let i = 0; i < offset; i++) {
+                gridHtml += `<div class="calendar-day empty"></div>`;
+            }
+
+            const today = new Date();
+            const todayStr = toDateStr(today);
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const isSelected = selectedDates.has(dateStr);
+                const isToday = dateStr === todayStr;
+                const isDisabled = selectedDates.size >= totalPertemuan && !isSelected;
+                const pertemuanNum = isSelected 
+                    ? Array.from(selectedDates).sort().indexOf(dateStr) + 1 
+                    : 0;
+
+                gridHtml += `
+                    <div class="calendar-day ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''} ${isDisabled ? 'disabled' : ''}" 
+                         data-date="${dateStr}" data-row-id="${rowId}"
+                         ${isDisabled ? 'title="Sudah mencapai ' + totalPertemuan + ' pertemuan"' : ''}>
+                        ${d}
+                        ${isSelected ? `<span class="pertemuan-label">${pertemuanNum}</span>` : ''}
+                    </div>
+                `;
+            }
+
+            const selectedArr = Array.from(selectedDates).sort();
+            const previewHtml = selectedArr.length > 0
+                ? selectedArr.map((d, i) => `${i+1}. ${formatTanggal(d)}`).join(' • ')
+                : '<span class="text-gray-400 italic">Belum ada tanggal dipilih</span>';
+
+            return `
+                <div class="calendar-wrapper" data-row-id="${rowId}">
+                    <div class="flex items-center justify-between mb-2">
+                        <button type="button" class="cal-prev px-2 py-1 text-gray-500 hover:text-brand hover:bg-gray-100 rounded-lg transition-colors">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <div class="font-bold text-sm text-brand">
+                            ${BULAN_NAMA[month]} ${year}
+                        </div>
+                        <button type="button" class="cal-next px-2 py-1 text-gray-500 hover:text-brand hover:bg-gray-100 rounded-lg transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-grid mb-2">${gridHtml}</div>
+                    <div class="p-2 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-xs text-blue-800">
+                            <strong>Pertemuan dipilih (${selectedDates.size}/${totalPertemuan}):</strong>
+                            ${previewHtml}
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createJadwalRowHTML(rowId) {
+            const kelasOpts = ['Reguler', 'Privat'].map(k => `<option value="${k}">${k}</option>`).join('');
+
+            let programOpts = '<option value="">— Pilih program —</option>';
+            allPrograms.forEach(p => {
+                programOpts += `<option value="${p.id}" data-nama="${escapeHtml(p.nama || '')}" data-total="${p.totalPertemuan || 1}">${escapeHtml(p.nama || '')}</option>`;
+            });
+
+            return `
+                <div class="jadwal-row bg-gray-50 border border-gray-200 rounded-xl p-4" data-row-id="${rowId}">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold text-gray-600 uppercase tracking-wide">Peserta #<span class="row-number">1</span></span>
+                        <button type="button" class="remove-row-btn text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-lg transition-colors" title="Hapus">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Nama Peserta <span class="text-red-500">*</span></label>
+                            <input type="text" class="row-peserta w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white"
+                                   placeholder="Contoh: Andi" required />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Program <span class="text-red-500">*</span></label>
+                            <select class="row-program w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white" required>
+                                ${programOpts}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Kelas <span class="text-red-500">*</span></label>
+                            <select class="row-kelas w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white" required>
+                                ${kelasOpts}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Total Pertemuan <span class="text-red-500">*</span></label>
+                            <input type="number" class="row-total w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white" min="1" value="1" required />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Ruang</label>
+                            <input type="text" class="row-ruang w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white"
+                                   placeholder="Ruang 1" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block text-xs font-medium text-gray-600 mb-1.5">Pilih Tanggal <span class="text-red-500">*</span></label>
+                        <div class="calendar-container"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Jam Mulai <span class="text-red-500">*</span></label>
+                            <input type="time" class="row-jam-mulai w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white" required />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Jam Selesai <span class="text-red-500">*</span></label>
+                            <input type="time" class="row-jam-selesai w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white" required />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Durasi</label>
+                            <input type="text" class="row-durasi w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 outline-none text-sm cursor-not-allowed" readonly />
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Catatan (opsional)</label>
+                        <input type="text" class="row-catatan w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white"
+                               placeholder="Catatan tambahan..." />
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCalendar(rowId) {
+            const row = document.querySelector(`.jadwal-row[data-row-id="${rowId}"]`);
+            if (!row) return;
+            const container = row.querySelector('.calendar-container');
+            container.innerHTML = createCalendarHTML(rowId);
+
+            container.querySelectorAll('.calendar-day:not(.empty):not(.disabled)').forEach(dayEl => {
+                dayEl.addEventListener('click', () => {
+                    const dateStr = dayEl.dataset.date;
+                    const state = calendarState[rowId];
+                    if (state.selectedDates.has(dateStr)) {
+                        state.selectedDates.delete(dateStr);
+                    } else {
+                        if (state.selectedDates.size >= state.totalPertemuan) {
+                            alert(`Maksimal ${state.totalPertemuan} pertemuan.`);
+                            return;
+                        }
+                        state.selectedDates.add(dateStr);
+                    }
+                    renderCalendar(rowId);
+                });
+            });
+
+            const prevBtn = container.querySelector('.cal-prev');
+            const nextBtn = container.querySelector('.cal-next');
+            if (prevBtn) prevBtn.addEventListener('click', () => {
+                const state = calendarState[rowId];
+                state.month--;
+                if (state.month < 0) { state.month = 11; state.year--; }
+                renderCalendar(rowId);
+            });
+            if (nextBtn) nextBtn.addEventListener('click', () => {
+                const state = calendarState[rowId];
+                state.month++;
+                if (state.month > 11) { state.month = 0; state.year++; }
+                renderCalendar(rowId);
+            });
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function addJadwalRow() {
+            const container = document.getElementById('jadwalRows');
+            const rowId = ++jadwalRowCounter;
+
+            calendarState[rowId] = {
+                month: new Date().getMonth(),
+                year: new Date().getFullYear(),
+                selectedDates: new Set(),
+                totalPertemuan: 1
+            };
+
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = createJadwalRowHTML(rowId);
+            const row = wrapper.firstElementChild;
+            container.appendChild(row);
+
+            renderCalendar(rowId);
+
+            row.querySelector('.remove-row-btn').addEventListener('click', () => {
+                const rows = container.querySelectorAll('.jadwal-row');
+                if (rows.length <= 1) { alert('Minimal 1 peserta.'); return; }
+                delete calendarState[rowId];
+                row.remove();
+                renumberJadwalRows();
+            });
+
+            const programSelect = row.querySelector('.row-program');
+            const totalInput = row.querySelector('.row-total');
+            programSelect.addEventListener('change', () => {
+                const opt = programSelect.selectedOptions[0];
+                const def = parseInt(opt?.dataset?.total) || 1;
+                totalInput.value = def;
+                calendarState[rowId].totalPertemuan = def;
+                const sel = calendarState[rowId].selectedDates;
+                const arr = Array.from(sel).sort();
+                if (arr.length > def) {
+                    calendarState[rowId].selectedDates = new Set(arr.slice(0, def));
+                }
+                renderCalendar(rowId);
+            });
+
+            totalInput.addEventListener('input', () => {
+                const v = parseInt(totalInput.value) || 1;
+                calendarState[rowId].totalPertemuan = v;
+                const arr = Array.from(calendarState[rowId].selectedDates).sort();
+                if (arr.length > v) {
+                    calendarState[rowId].selectedDates = new Set(arr.slice(0, v));
+                }
+                renderCalendar(rowId);
+            });
+
+            const jamMulai = row.querySelector('.row-jam-mulai');
+            const jamSelesai = row.querySelector('.row-jam-selesai');
+            const durasi = row.querySelector('.row-durasi');
+            function hitungDurasi() {
+                if (jamMulai.value && jamSelesai.value) {
+                    const [h1, m1] = jamMulai.value.split(':').map(Number);
+                    const [h2, m2] = jamSelesai.value.split(':').map(Number);
+                    let menit = (h2 * 60 + m2) - (h1 * 60 + m1);
+                    if (menit < 0) menit = 0;
+                    const j = Math.floor(menit / 60);
+                    const s = menit % 60;
+                    durasi.value = s > 0 ? `${j} jam ${s} mnt` : `${j} jam`;
+                } else durasi.value = '';
+            }
+            jamMulai.addEventListener('input', hitungDurasi);
+            jamSelesai.addEventListener('input', hitungDurasi);
+
+            renumberJadwalRows();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function renumberJadwalRows() {
+            document.querySelectorAll('#jadwalRows .jadwal-row').forEach((row, idx) => {
+                const numEl = row.querySelector('.row-number');
+                if (numEl) numEl.textContent = idx + 1;
+            });
+            updateSubmitButtonText();
+        }
+
+        function updateSubmitButtonText() {
+            const count = document.querySelectorAll('#jadwalRows .jadwal-row').length;
+            const el = document.getElementById('jadwalSubmitText');
+            if (el) el.textContent = `Simpan ${count} Jadwal`;
+        }
+
+        window.openJadwalModal = function(tentorId, tentorName) {
+            jadwalTentorId = tentorId;
+            document.getElementById('jadwalTentorId').value = tentorId;
+            document.getElementById('jadwalTentorNama').value = tentorName || '';
+            document.getElementById('jadwalTentorName').textContent = tentorName || '-';
+            document.getElementById('jadwalMessage').innerHTML = '';
+            document.getElementById('jadwalRows').innerHTML = '';
+            jadwalRowCounter = 0;
+            Object.keys(calendarState).forEach(k => delete calendarState[k]);
+            addJadwalRow();
+            document.getElementById('jadwalModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.closeJadwalModal = function() {
+            jadwalTentorId = null;
+            document.getElementById('jadwalModal').classList.add('hidden');
+        };
+
+        document.getElementById('addJadwalRowBtn').addEventListener('click', addJadwalRow);
+
+        // SUBMIT JADWAL
+        document.getElementById('jadwalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('jadwalSubmitBtn');
+            const messageEl = document.getElementById('jadwalMessage');
+
+            const tentorId = document.getElementById('jadwalTentorId').value;
+            const tentorNama = document.getElementById('jadwalTentorNama').value;
+
+            const rows = document.querySelectorAll('#jadwalRows .jadwal-row');
+            const jadwalList = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const rowId = parseInt(row.dataset.rowId);
+                const peserta = row.querySelector('.row-peserta').value.trim();
+                const programId = row.querySelector('.row-program').value;
+                const programNama = programId
+                    ? row.querySelector('.row-program').selectedOptions[0]?.dataset?.nama || ''
+                    : '';
+                const kelas = row.querySelector('.row-kelas').value;
+                const totalPertemuan = parseInt(row.querySelector('.row-total').value) || 1;
+                const ruang = row.querySelector('.row-ruang').value.trim();
+                const jamMulai = row.querySelector('.row-jam-mulai').value;
+                const jamSelesai = row.querySelector('.row-jam-selesai').value;
+                const catatan = row.querySelector('.row-catatan').value.trim();
+
+                const state = calendarState[rowId];
+                const tanggalList = state ? Array.from(state.selectedDates).sort() : [];
+
+                if (!peserta) {
+                    messageEl.innerHTML = `<p class="text-red-600">❌ Peserta #${i+1}: nama wajib diisi.</p>`;
+                    return;
+                }
+                if (!programId) {
+                    messageEl.innerHTML = `<p class="text-red-600">❌ Peserta #${i+1}: program wajib dipilih.</p>`;
+                    return;
+                }
+                if (tanggalList.length === 0) {
+                    messageEl.innerHTML = `<p class="text-red-600">❌ Peserta #${i+1}: pilih minimal 1 tanggal.</p>`;
+                    return;
+                }
+                if (tanggalList.length > totalPertemuan) {
+                    messageEl.innerHTML = `<p class="text-red-600">❌ Peserta #${i+1}: tanggal melebihi total pertemuan (${totalPertemuan}).</p>`;
+                    return;
+                }
+                if (!jamMulai || !jamSelesai || jamMulai >= jamSelesai) {
+                    messageEl.innerHTML = `<p class="text-red-600">❌ Peserta #${i+1}: jam tidak valid.</p>`;
+                    return;
+                }
+
+                const [h1, m1] = jamMulai.split(':').map(Number);
+                const [h2, m2] = jamSelesai.split(':').map(Number);
+                const durasiMenit = (h2 * 60 + m2) - (h1 * 60 + m1);
+
+                const sesi = tanggalList.map((tgl, idx) => ({
+                    pertemuan: idx + 1,
+                    tanggal: tgl,
+                    status: 'belum',
+                    keterangan: ''
+                }));
+
+                jadwalList.push({
+                    tentorId,
+                    tentorNama,
+                    pesertaNama: peserta,
+                    programId,
+                    programNama,
+                    kelas,
+                    totalPertemuan,
+                    jamMulai,
+                    jamSelesai,
+                    durasiMenit,
+                    ruang,
+                    catatan,
+                    sesi,
+                    penilaian: null,
+                    status: 'aktif'
+                });
+            }
+
+            if (jadwalList.length === 0) {
+                messageEl.innerHTML = `<p class="text-red-600">❌ Tidak ada jadwal.</p>`;
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            messageEl.innerHTML = '';
+
+            try {
+                const now = new Date().toISOString();
+                let saved = 0;
+                const errors = [];
+
+                for (const jadwal of jadwalList) {
+                    try {
+                        await addDoc(collection(db, 'schedules'), {
+                            ...jadwal,
+                            createdAt: now,
+                            updatedAt: now,
+                            createdBy: currentAdmin.uid
+                        });
+                        saved++;
+                    } catch (err) {
+                        errors.push(err.message);
+                    }
+                }
+
+                if (saved > 0) {
+                    messageEl.innerHTML = `<p class="text-green-600 font-medium">✅ ${saved} jadwal tersimpan!</p>`;
+                    setTimeout(() => { closeJadwalModal(); }, 1500);
+                } else {
+                    messageEl.innerHTML = `<p class="text-red-600">❌ Gagal: ${errors[0] || 'Unknown'}</p>`;
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> <span id="jadwalSubmitText">Simpan Jadwal</span>`;
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }
+
+            } catch (error) {
+                messageEl.innerHTML = `<p class="text-red-600">❌ ${error.message}</p>`;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> <span id="jadwalSubmitText">Simpan Jadwal</span>`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        // FILTER
+        document.getElementById('filterStatus').addEventListener('change', loadTentors);
+        document.getElementById('refreshBtn').addEventListener('click', loadTentors);
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // NAV SUBMENU
+        document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.dataset.target;
+                const submenu = document.getElementById(targetId);
+                if (!submenu) return;
+                const isOpen = !submenu.classList.contains('hidden');
+                if (isOpen) {
+                    submenu.classList.add('hidden');
+                    toggle.classList.remove('open');
+                } else {
+                    submenu.classList.remove('hidden');
+                    toggle.classList.add('open');
+                }
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        });
+        document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
+            const submenu = activeLink.closest('.nav-submenu');
+            if (submenu) {
+                submenu.classList.remove('hidden');
+                const toggle = document.querySelector(`.nav-group-toggle[data-target="${submenu.id}"]`);
+                if (toggle) toggle.classList.add('open');
+            }
+        });
+    </script>
+
+</body>
+</html>

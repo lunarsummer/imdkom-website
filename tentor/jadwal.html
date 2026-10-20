@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jadwal Mengajar | IMDKOM Tentor</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    
+    <style>
+        .stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(26, 60, 94, 0.1); }
+
+        .tentor-brand {
+            display: flex !important; align-items: center;
+            gap: 0.75rem; padding: 1rem 1.25rem !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .tentor-avatar-wrapper {
+            position: relative; flex-shrink: 0;
+            width: 40px; height: 40px; border-radius: 50%;
+            overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.2);
+            background: #2a5a7a;
+        }
+        .tentor-avatar {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+        }
+        .tentor-avatar-default {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background: #2a5a7a;
+        }
+        .tentor-info { flex: 1; min-width: 0; }
+        .tentor-name {
+            font-weight: 700; color: white; font-size: 0.95rem;
+            line-height: 1.2; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+        .tentor-label {
+            font-size: 0.7rem; color: rgba(255, 255, 255, 0.6);
+            font-weight: 500; text-transform: uppercase;
+            letter-spacing: 0.05em; margin-top: 0.15rem;
+        }
+
+        /* Card peserta */
+        .peserta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        @media (min-width: 1024px) {
+            .peserta-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        }
+
+        .peserta-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex; flex-direction: column;
+        }
+        .peserta-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(26, 60, 94, 0.12);
+        }
+
+        .progress-bar {
+            width: 100%; height: 6px;
+            background: #e5e7eb; border-radius: 999px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; background: #059669;
+            border-radius: 999px; transition: width 0.3s ease;
+        }
+
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            font-size: 0.65rem; font-weight: 700;
+            padding: 0.2rem 0.5rem; border-radius: 999px;
+            text-transform: uppercase; letter-spacing: 0.02em;
+        }
+        .status-belum { background: #f3f4f6; color: #4b5563; }
+        .status-selesai { background: #d1fae5; color: #065f46; }
+        .status-ganti_jadwal { background: #fef3c7; color: #92400e; }
+        .status-batal { background: #fee2e2; color: #991b1b; }
+
+        .nav-group { margin: 0; }
+        .nav-group-toggle {
+            display: flex; align-items: center; width: 100%;
+            text-align: left; background: none; border: none;
+            cursor: pointer; font: inherit; color: inherit;
+        }
+        .nav-group-toggle .nav-chevron { transition: transform 0.25s ease; opacity: 0.6; }
+        .nav-group-toggle.open .nav-chevron { transform: rotate(180deg); opacity: 1; }
+        .nav-group-toggle.open { background: rgba(255, 255, 255, 0.08); }
+        .nav-submenu {
+            display: flex; flex-direction: column; gap: 0.25rem;
+            padding: 0.25rem 0 0.5rem 0; margin-left: 0.5rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            animation: submenuSlide 0.25s ease;
+        }
+        .nav-submenu.hidden { display: none; }
+        @keyframes submenuSlide {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-submenu-link {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 0.75rem; font-size: 0.8rem;
+            color: #d1d5db; text-decoration: none;
+            border-radius: 0.375rem; transition: all 0.2s ease;
+            margin-left: 0.25rem;
+        }
+        .nav-submenu-link:hover { background: rgba(255, 255, 255, 0.08); color: white; }
+        .nav-submenu-link.active { background: rgba(255, 255, 255, 0.15); color: white; font-weight: 600; }
+        .nav-submenu-link i { opacity: 0.7; flex-shrink: 0; }
+        .nav-submenu-link.active i { opacity: 1; }
+
+        .status-off { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+    <!-- MOBILE HEADER -->
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Jadwal Mengajar</span>
+        <div class="w-8"></div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- SIDEBAR TENTOR -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand tentor-brand">
+            <div class="tentor-avatar-wrapper">
+                <img id="sidebarAvatar" 
+                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%232a5a7a'/%3E%3C/svg%3E" 
+                     alt="Avatar" 
+                     class="tentor-avatar hidden" />
+                <div id="sidebarAvatarDefault" class="tentor-avatar-default">
+                    <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+            <div class="tentor-info">
+                <div class="tentor-name" id="sidebarTentorName">Memuat...</div>
+                <div class="tentor-label">Tentor</div>
+            </div>
+        </div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="program-submissions.html" class="nav-link">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                Usulan Program
+            </a>
+            <a href="jadwal.html" class="nav-link active">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                Jadwal Mengajar
+            </a>
+            <a href="profil.html" class="nav-link">
+                <i data-lucide="user" class="w-4 h-4"></i>
+                Profil
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+        
+        <div class="page-header">
+            <div>
+                <h2>Jadwal Mengajar</h2>
+                <p class="text-gray-500 text-sm mt-1">Peserta yang Anda ajar</p>
+            </div>
+        </div>
+
+        <!-- STATISTIK -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Total Peserta</p>
+                        <p class="text-2xl font-bold text-brand mt-1" id="statPeserta">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-brand/10 rounded-lg flex items-center justify-center">
+                        <i data-lucide="users" class="w-6 h-6 text-brand"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Sesi Selesai</p>
+                        <p class="text-2xl font-bold text-green-600 mt-1" id="statSelesai">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Hari Ini</p>
+                        <p class="text-2xl font-bold text-blue-600 mt-1" id="statHariIni">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="calendar" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Ganti Jadwal</p>
+                        <p class="text-2xl font-bold text-orange-600 mt-1" id="statGanti">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="alert-circle" class="w-6 h-6 text-orange-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LIST PESERTA -->
+        <div id="pesertaContainer">
+            <div class="text-center py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm text-gray-500">Memuat peserta...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+    MODAL DETAIL SESI
+    ============================================================ -->
+    <div id="sesiModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeSesiModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between p-5 border-b border-gray-200 sticky top-0 bg-white rounded-t-2xl z-10">
+                    <div>
+                        <h3 class="text-lg font-bold text-brand">Detail Jadwal</h3>
+                        <p class="text-xs text-gray-500 mt-0.5" id="sesiSubtitle">-</p>
+                    </div>
+                    <button onclick="closeSesiModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-5" id="sesiContent"></div>
+            </div>
+        </div>
+    </div>
+
+   <!-- ============================================================
+MODAL TANDAI OFF
+============================================================ -->
+<div id="offModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closeOffModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full">
+            <div class="flex items-center justify-between p-5 border-b border-gray-200">
+                <h3 class="text-lg font-bold text-brand">Tandai Sesi Off</h3>
+                <button onclick="closeOffModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="offForm" class="p-5 space-y-3">
+                <input type="hidden" id="offScheduleId" />
+                <input type="hidden" id="offPertemuan" />
+
+                <div>
+                    <p class="text-xs text-gray-500">Pertemuan</p>
+                    <p class="font-medium text-gray-800" id="offPertemuanLabel">-</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Tanggal</p>
+                    <p class="font-medium text-gray-800" id="offTanggalLabel">-</p>
+                </div>
+                <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <p class="text-xs text-yellow-800">
+                        <i data-lucide="info" class="w-3 h-3 inline"></i>
+                        Sesi ini akan ditandai <strong>OFF</strong> (tidak ada kelas). Admin akan membuatkan jadwal pengganti.
+                    </p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Alasan <span class="text-red-500">*</span></label>
+                    <textarea id="offAlasan" rows="3" required
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
+                              placeholder="Contoh: Sakit, ada acara keluarga, dsb."></textarea>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeOffModal()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                        Batal
+                    </button>
+                    <button type="submit" id="offSubmitBtn"
+                            class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium">
+                        Tandai OFF
+                    </button>
+                </div>
+                <div id="offMessage" class="text-sm"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- ============================================================
+MODAL PENILAIAN — PER ASPEK
+============================================================ -->
+<div id="nilaiModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closeNilaiModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between p-5 border-b border-gray-200 sticky top-0 bg-white rounded-t-2xl z-10">
+                <div>
+                    <h3 class="text-lg font-bold text-brand">Beri Penilaian</h3>
+                    <p class="text-xs text-gray-500 mt-0.5" id="nilaiSubtitle">-</p>
+                </div>
+                <button onclick="closeNilaiModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="nilaiForm" class="p-5">
+                <input type="hidden" id="nilaiScheduleId" />
+
+                <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                    <p class="text-xs text-gray-500">Peserta</p>
+                    <p class="font-bold text-gray-800 text-lg" id="nilaiPesertaLabel">-</p>
+                    <p class="text-xs text-gray-500" id="nilaiProgramLabel">-</p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Aspek Penilaian</label>
+                    <div id="aspekList" class="space-y-2"></div>
+                    <button type="button" id="addAspekBtn"
+                            class="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm text-brand border border-brand/30 rounded-lg hover:bg-brand/5 transition-colors">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Tambah Aspek
+                    </button>
+                </div>
+
+                <div class="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-blue-900">Rata-rata Nilai</p>
+                        <p class="text-2xl font-bold text-blue-900" id="rataRataLabel">-</p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Catatan Umum (opsional)</label>
+                    <textarea id="nilaiCatatanUmum" rows="2"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm resize-none"
+                              placeholder="Catatan keseluruhan tentang peserta..."></textarea>
+                </div>
+
+                <div class="flex gap-3 pt-4 border-t border-gray-200">
+                    <button type="button" onclick="closeNilaiModal()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+                        Batal
+                    </button>
+                    <button type="submit" id="nilaiSubmitBtn"
+                            class="flex-1 px-4 py-2 bg-brand hover:bg-brand-light text-white rounded-lg transition-colors text-sm font-medium">
+                        Simpan Penilaian
+                    </button>
+                </div>
+                <div id="nilaiMessage" class="mt-3 text-sm"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- JAVASCRIPT -->
+    <script type="module">
+        import { 
+            auth, signOut, 
+            db, collection, getDocs, query, where, doc, updateDoc 
+        } from '../assets/js/firebase.js';
+        import { protectPage } from '../assets/js/auth.js';
+        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+
+        // MOBILE SIDEBAR
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // STATE
+        let currentTentor = null;
+        let allSchedules = [];
+        let allProgramsCache = {};
+
+        // AUTH
+        protectPage({
+            allowedRoles: ['tentor'],
+            requireActive: true,
+            onAuthorized: async (profile) => {
+                currentTentor = profile;
+                renderSidebarBrand(profile);
+                await loadProgramsCache();
+                await loadSchedules();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = '../login.html';
+        });
+
+        async function loadProgramsCache() {
+    try {
+        const q = query(collection(db, 'programs'), where('aktif', '==', true));
+        const snapshot = await getDocs(q);
+        allProgramsCache = {};
+        snapshot.forEach(d => {
+            allProgramsCache[d.id] = d.data();
+        });
+    } catch (error) {
+        console.error('Error loading programs cache:', error);
+    }
+}
+
+        function renderSidebarBrand(profile) {
+            const nameEl = document.getElementById('sidebarTentorName');
+            const avatarEl = document.getElementById('sidebarAvatar');
+            const defaultEl = document.getElementById('sidebarAvatarDefault');
+            if (!nameEl) return;
+            nameEl.textContent = profile.nama || 'Tentor';
+            if (profile.foto) {
+                avatarEl.src = optimizeCloudinaryUrl(profile.foto, { width: 80, height: 80, crop: 'fill' });
+                avatarEl.classList.remove('hidden');
+                defaultEl.classList.add('hidden');
+            } else {
+                avatarEl.classList.add('hidden');
+                defaultEl.classList.remove('hidden');
+            }
+        }
+
+        // LOAD SCHEDULES
+        async function loadSchedules() {
+            const container = document.getElementById('pesertaContainer');
+            try {
+                const q = query(
+                    collection(db, 'schedules'),
+                    where('tentorId', '==', currentTentor.uid)
+                );
+                const snapshot = await getDocs(q);
+                allSchedules = [];
+                snapshot.forEach(d => {
+                    allSchedules.push({ id: d.id, ...d.data() });
+                });
+
+                // Sort by pesertaNama
+                allSchedules.sort((a, b) => 
+                    (a.pesertaNama || '').localeCompare(b.pesertaNama || '')
+                );
+
+                updateStats();
+                renderPesertaList();
+
+            } catch (error) {
+                console.error('Error loading schedules:', error);
+                container.innerHTML = `
+                    <div class="admin-card text-center py-12">
+                        <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-red-300 mb-3"></i>
+                        <p class="text-red-600 font-medium">Gagal memuat jadwal</p>
+                        <p class="text-gray-500 text-xs mt-1">${error.message}</p>
+                    </div>
+                `;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('statPeserta').textContent = allSchedules.length;
+
+            let selesaiCount = 0;
+            let gantiCount = 0;
+            const todayStr = new Date().toISOString().split('T')[0];
+            let hariIniCount = 0;
+
+            allSchedules.forEach(s => {
+                const sesi = s.sesi || [];
+                sesi.forEach(x => {
+                    if (x.status === 'selesai') selesaiCount++;
+                    if (x.status === 'ganti_jadwal' && !x.approvedGanti) gantiCount++;
+                    if (x.tanggal === todayStr && x.status === 'belum') hariIniCount++;
+                });
+            });
+
+            document.getElementById('statSelesai').textContent = selesaiCount;
+            document.getElementById('statGanti').textContent = gantiCount;
+            document.getElementById('statHariIni').textContent = hariIniCount;
+        }
+
+        function renderPesertaList() {
+            const container = document.getElementById('pesertaContainer');
+
+            if (allSchedules.length === 0) {
+                container.innerHTML = `
+                    <div class="admin-card text-center py-12">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="users" class="w-8 h-8 text-gray-300"></i>
+                        </div>
+                        <p class="text-gray-500 font-medium">Belum ada peserta</p>
+                        <p class="text-sm text-gray-400 mt-1">Admin akan menambahkan jadwal mengajar Anda.</p>
+                    </div>
+                `;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                return;
+            }
+
+            let html = '<div class="peserta-grid">';
+            allSchedules.forEach(s => {
+                const sesi = s.sesi || [];
+                const total = s.totalPertemuan || sesi.length;
+                const selesai = sesi.filter(x => x.status === 'selesai').length;
+                const batal = sesi.filter(x => x.status === 'batal').length;
+                const gantiPending = sesi.filter(x => x.status === 'ganti_jadwal' && !x.approvedGanti).length;
+                const progress = total > 0 ? Math.round(((selesai + batal) / total) * 100) : 0;
+
+                const isPrivat = (s.kelas || '').toLowerCase() === 'privat';
+
+                let nilaiHtml = '';
+if (s.penilaian && s.penilaian.rataRata) {
+    nilaiHtml = `
+        <div class="mt-2 inline-flex items-center gap-1 text-xs font-bold text-yellow-700 bg-yellow-100 px-2 py-1 rounded-full">
+            <i data-lucide="award" class="w-3 h-3"></i>
+            Nilai: ${s.penilaian.rataRata}
+        </div>
+    `;
+}
+
+                html += `
+                    <div class="peserta-card">
+                        <div class="p-4 flex-1">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="font-bold text-gray-800 text-base leading-tight truncate">${escapeHtml(s.pesertaNama || 'Peserta')}</h4>
+                                    <p class="text-xs text-gray-500 mt-0.5 truncate">${escapeHtml(s.programNama || '')}</p>
+                                </div>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isPrivat ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'} flex-shrink-0 ml-2">
+                                    ${escapeHtml(s.kelas || '')}
+                                </span>
+                            </div>
+
+                            <div class="mt-3">
+                                <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+                                    <span>Progress</span>
+                                    <span class="font-semibold">${selesai + batal} / ${total}</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+
+                            ${gantiPending > 0 ? `
+                                <div class="mt-2 text-xs text-orange-600 font-semibold flex items-center gap-1">
+                                    <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                                    ${gantiPending} ganti jadwal pending
+                                </div>
+                            ` : ''}
+
+                            ${nilaiHtml}
+                        </div>
+
+                        <div class="px-4 pb-4 flex flex-col gap-2">
+                            <button class="lihat-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors"
+        data-id="${s.id}">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                Lihat Jadwal
+                            </button>
+                            <button class="nilai-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 border border-yellow-200 text-xs font-semibold rounded-lg transition-colors"
+                                    data-id="${s.id}">
+                                <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                                ${s.penilaian ? 'Edit Penilaian' : 'Beri Penilaian'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            // Attach listeners
+            container.querySelectorAll('.lihat-btn').forEach(btn => {
+                btn.addEventListener('click', () => openSesiModal(btn.dataset.id));
+            });
+            container.querySelectorAll('.nilai-btn').forEach(btn => {
+                btn.addEventListener('click', () => openNilaiModal(btn.dataset.id));
+            });
+        }
+
+                // ============================================================
+        // MODAL SESI
+        // ============================================================
+        function openSesiModal(scheduleId) {
+            const s = allSchedules.find(x => x.id === scheduleId);
+            if (!s) return;
+
+            document.getElementById('sesiSubtitle').textContent = 
+                `${s.pesertaNama || ''} • ${s.programNama || ''}`;
+
+            const sesi = s.sesi || [];
+            let html = `
+                <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <p class="text-gray-500">Kelas</p>
+                            <p class="font-semibold text-gray-800">${escapeHtml(s.kelas || '-')}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Ruang</p>
+                            <p class="font-semibold text-gray-800">${escapeHtml(s.ruang || '-')}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Jam</p>
+                            <p class="font-semibold text-gray-800">${escapeHtml(s.jamMulai || '-')} – ${escapeHtml(s.jamSelesai || '-')}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Total Pertemuan</p>
+                            <p class="font-semibold text-gray-800">${s.totalPertemuan || sesi.length}</p>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="font-bold text-gray-800 mb-2">Daftar Pertemuan</h4>
+                <div class="space-y-2">
+            `;
+
+            sesi.forEach((x, idx) => {
+                const tanggalFormatted = x.tanggal 
+                    ? new Date(x.tanggal + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })
+                    : '-';
+
+                let statusBadge = '';
+                let actionButtons = '';
+                let keteranganHtml = '';
+
+                if (x.status === 'belum') {
+                    statusBadge = `<span class="status-badge status-belum">Belum</span>`;
+                    actionButtons = `
+                        <button class="mark-selesai-btn px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold rounded transition-colors"
+                                data-schedule-id="${s.id}" data-pertemuan="${x.pertemuan}">
+                            Selesai
+                        </button>
+                        <button class="mark-off-btn px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-bold rounded border border-red-200 transition-colors"
+                                data-schedule-id="${s.id}" data-pertemuan="${x.pertemuan}">
+                            Off
+                        </button>
+                    `;
+                } else if (x.status === 'selesai') {
+                    statusBadge = `<span class="status-badge status-selesai">Selesai</span>`;
+                } else if (x.status === 'off') {
+                    statusBadge = `<span class="status-badge status-off">OFF</span>`;
+                    if (x.alasanOff) {
+                        keteranganHtml = `<p class="text-xs text-red-600 mt-1"><strong>Alasan:</strong> ${escapeHtml(x.alasanOff)}</p>`;
+                    }
+                } else if (x.status === 'batal') {
+                    statusBadge = `<span class="status-badge status-batal">Batal</span>`;
+                }
+
+                if (x.keterangan) {
+                    keteranganHtml += `<p class="text-xs text-gray-500 italic mt-1">"${escapeHtml(x.keterangan)}"</p>`;
+                }
+
+                html += `
+                    <div class="p-3 border border-gray-200 rounded-lg">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="text-xs font-bold text-brand">Pertemuan ${x.pertemuan}</span>
+                                    ${statusBadge}
+                                </div>
+                                <p class="text-sm text-gray-700 mt-1">${tanggalFormatted}</p>
+                                ${keteranganHtml}
+                            </div>
+                            <div class="flex gap-1 flex-shrink-0">
+                                ${actionButtons}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            document.getElementById('sesiContent').innerHTML = html;
+            document.getElementById('sesiModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            document.querySelectorAll('.mark-selesai-btn').forEach(btn => {
+                btn.addEventListener('click', () => markSelesai(btn.dataset.scheduleId, parseInt(btn.dataset.pertemuan)));
+            });
+            document.querySelectorAll('.mark-off-btn').forEach(btn => {
+                btn.addEventListener('click', () => openOffModal(btn.dataset.scheduleId, parseInt(btn.dataset.pertemuan)));
+            });
+        }
+
+        window.closeSesiModal = function() {
+            document.getElementById('sesiModal').classList.add('hidden');
+        };
+
+        // ============================================================
+        // MARK SELESAI
+        // ============================================================
+        async function markSelesai(scheduleId, pertemuan) {
+            const s = allSchedules.find(x => x.id === scheduleId);
+            if (!s) return;
+
+            const sesi = s.sesi || [];
+            const idx = sesi.findIndex(x => x.pertemuan === pertemuan);
+            if (idx === -1) return;
+
+            sesi[idx].status = 'selesai';
+
+            const allDone = sesi.every(x => x.status === 'selesai' || x.status === 'off' || x.status === 'batal');
+            const newStatus = allDone ? 'selesai' : 'aktif';
+
+            try {
+                await updateDoc(doc(db, 'schedules', scheduleId), {
+                    sesi: sesi,
+                    status: newStatus,
+                    updatedAt: new Date().toISOString()
+                });
+                await loadSchedules();
+                openSesiModal(scheduleId);
+            } catch (error) {
+                alert('Gagal: ' + error.message);
+            }
+        }
+
+        // ============================================================
+        // MODAL OFF
+        // ============================================================
+        function openOffModal(scheduleId, pertemuan) {
+            const s = allSchedules.find(x => x.id === scheduleId);
+            if (!s) return;
+            const sesi = s.sesi || [];
+            const x = sesi.find(y => y.pertemuan === pertemuan);
+            if (!x) return;
+
+            document.getElementById('offScheduleId').value = scheduleId;
+            document.getElementById('offPertemuan').value = pertemuan;
+            document.getElementById('offPertemuanLabel').textContent = `Pertemuan ${pertemuan}`;
+            document.getElementById('offTanggalLabel').textContent = x.tanggal 
+                ? new Date(x.tanggal + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+                : '-';
+            document.getElementById('offAlasan').value = '';
+            document.getElementById('offMessage').innerHTML = '';
+
+            closeSesiModal();
+            document.getElementById('offModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        window.closeOffModal = function() {
+            document.getElementById('offModal').classList.add('hidden');
+        };
+
+        document.getElementById('offForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const scheduleId = document.getElementById('offScheduleId').value;
+            const pertemuan = parseInt(document.getElementById('offPertemuan').value);
+            const alasan = document.getElementById('offAlasan').value.trim();
+            const btn = document.getElementById('offSubmitBtn');
+            const messageEl = document.getElementById('offMessage');
+
+            if (!alasan) {
+                messageEl.innerHTML = `<p class="text-red-600">Alasan wajib diisi.</p>`;
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Memproses...';
+
+            try {
+                const s = allSchedules.find(x => x.id === scheduleId);
+                const sesi = s.sesi || [];
+                const idx = sesi.findIndex(x => x.pertemuan === pertemuan);
+                if (idx === -1) throw new Error('Sesi tidak ditemukan');
+
+                sesi[idx].status = 'off';
+                sesi[idx].alasanOff = alasan;
+
+                await updateDoc(doc(db, 'schedules', scheduleId), {
+                    sesi: sesi,
+                    updatedAt: new Date().toISOString()
+                });
+
+                alert('✅ Sesi ditandai OFF. Admin akan membuatkan jadwal pengganti.');
+                closeOffModal();
+                await loadSchedules();
+
+            } catch (error) {
+                messageEl.innerHTML = `<p class="text-red-600">❌ ${error.message}</p>`;
+                btn.disabled = false;
+                btn.textContent = 'Tandai OFF';
+            }
+        });
+
+        // ============================================================
+        // MODAL PENILAIAN — PER ASPEK
+        // ============================================================
+        let aspekCounter = 0;
+
+        function createAspekRowHTML(nama = '', nilai = '', catatan = '') {
+            const id = ++aspekCounter;
+            return `
+                <div class="aspek-row flex flex-col gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg" data-aspek-id="${id}">
+                    <div class="flex gap-2 items-start">
+                        <div class="flex-1 min-w-0">
+                            <input type="text" class="aspek-nama w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white"
+                                   placeholder="Nama aspek (mis. Microsoft Word)" value="${escapeHtml(nama)}" required />
+                        </div>
+                        <div class="w-24 flex-shrink-0">
+                            <input type="number" class="aspek-nilai w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white text-center font-bold"
+                                   placeholder="0-100" min="0" max="100" value="${nilai}" required />
+                        </div>
+                        <button type="button" class="remove-aspek p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0" title="Hapus aspek">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <input type="text" class="aspek-catatan w-full px-3 py-1.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-xs bg-white"
+                           placeholder="Catatan aspek (opsional)" value="${escapeHtml(catatan)}" />
+                </div>
+            `;
+        }
+
+        function addAspekRow(nama = '', nilai = '', catatan = '') {
+            const container = document.getElementById('aspekList');
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = createAspekRowHTML(nama, nilai, catatan);
+            const row = wrapper.firstElementChild;
+            container.appendChild(row);
+
+            row.querySelector('.remove-aspek').addEventListener('click', () => {
+                const rows = container.querySelectorAll('.aspek-row');
+                if (rows.length <= 1) {
+                    alert('Minimal 1 aspek.');
+                    return;
+                }
+                row.remove();
+                hitungRataRata();
+            });
+
+            row.querySelector('.aspek-nilai').addEventListener('input', hitungRataRata);
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            hitungRataRata();
+        }
+
+        function hitungRataRata() {
+            const rows = document.querySelectorAll('#aspekList .aspek-row');
+            let total = 0;
+            let count = 0;
+
+            rows.forEach(row => {
+                const val = parseFloat(row.querySelector('.aspek-nilai').value);
+                if (!isNaN(val) && val >= 0 && val <= 100) {
+                    total += val;
+                    count++;
+                }
+            });
+
+            const avg = count > 0 ? (total / count).toFixed(1) : '-';
+            document.getElementById('rataRataLabel').textContent = avg;
+        }
+
+        function openNilaiModal(scheduleId) {
+            const s = allSchedules.find(x => x.id === scheduleId);
+            if (!s) return;
+
+            const sesi = s.sesi || [];
+            const selesaiCount = sesi.filter(x => x.status === 'selesai').length;
+            if (selesaiCount === 0) {
+                alert('Minimal 1 pertemuan harus selesai sebelum memberi penilaian.');
+                return;
+            }
+
+            document.getElementById('nilaiScheduleId').value = scheduleId;
+            document.getElementById('nilaiSubtitle').textContent = 
+                `${s.pesertaNama || ''} • ${s.programNama || ''}`;
+            document.getElementById('nilaiPesertaLabel').textContent = s.pesertaNama || 'Peserta';
+            document.getElementById('nilaiProgramLabel').textContent = s.programNama || '';
+
+            // Reset aspek
+            document.getElementById('aspekList').innerHTML = '';
+            aspekCounter = 0;
+
+            // Kalau sudah ada penilaian → load
+            if (s.penilaian && Array.isArray(s.penilaian.aspek) && s.penilaian.aspek.length > 0) {
+                s.penilaian.aspek.forEach(a => {
+                    addAspekRow(a.nama, a.nilai, a.catatan || '');
+                });
+                document.getElementById('nilaiCatatanUmum').value = s.penilaian.catatanUmum || '';
+            } else {
+                // Default aspek dari programs.materi
+                const program = allProgramsCache[s.programId];
+                if (program && Array.isArray(program.materi) && program.materi.length > 0) {
+                    program.materi.forEach(m => addAspekRow(m, '', ''));
+                } else {
+                    addAspekRow('', '', '');
+                }
+                document.getElementById('nilaiCatatanUmum').value = '';
+            }
+
+            document.getElementById('nilaiMessage').innerHTML = '';
+            document.getElementById('nilaiModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            hitungRataRata();
+        }
+
+        window.closeNilaiModal = function() {
+            document.getElementById('nilaiModal').classList.add('hidden');
+        };
+
+        document.getElementById('addAspekBtn').addEventListener('click', () => addAspekRow('', '', ''));
+
+        document.getElementById('nilaiForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const scheduleId = document.getElementById('nilaiScheduleId').value;
+            const catatanUmum = document.getElementById('nilaiCatatanUmum').value.trim();
+            const btn = document.getElementById('nilaiSubmitBtn');
+            const messageEl = document.getElementById('nilaiMessage');
+
+            // Kumpulkan aspek
+            const rows = document.querySelectorAll('#aspekList .aspek-row');
+            const aspekList = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const nama = row.querySelector('.aspek-nama').value.trim();
+                const nilaiStr = row.querySelector('.aspek-nilai').value.trim();
+                const catatan = row.querySelector('.aspek-catatan').value.trim();
+
+                if (!nama) {
+                    messageEl.innerHTML = `<p class="text-red-600">Aspek #${i+1}: nama wajib diisi.</p>`;
+                    return;
+                }
+                const nilai = parseFloat(nilaiStr);
+                if (isNaN(nilai) || nilai < 0 || nilai > 100) {
+                    messageEl.innerHTML = `<p class="text-red-600">Aspek #${i+1}: nilai harus 0-100.</p>`;
+                    return;
+                }
+
+                aspekList.push({ nama, nilai, catatan });
+            }
+
+            if (aspekList.length === 0) {
+                messageEl.innerHTML = `<p class="text-red-600">Minimal 1 aspek.</p>`;
+                return;
+            }
+
+            // Hitung rata-rata
+            const total = aspekList.reduce((sum, a) => sum + a.nilai, 0);
+            const rataRata = parseFloat((total / aspekList.length).toFixed(1));
+
+            btn.disabled = true;
+            btn.textContent = 'Menyimpan...';
+
+            try {
+                await updateDoc(doc(db, 'schedules', scheduleId), {
+                    penilaian: {
+                        aspek: aspekList,
+                        rataRata: rataRata,
+                        catatanUmum: catatanUmum,
+                        tanggal: new Date().toISOString()
+                    },
+                    updatedAt: new Date().toISOString()
+                });
+
+                alert('✅ Penilaian tersimpan!');
+                closeNilaiModal();
+                await loadSchedules();
+
+            } catch (error) {
+                messageEl.innerHTML = `<p class="text-red-600">❌ ${error.message}</p>`;
+                btn.disabled = false;
+                btn.textContent = 'Simpan Penilaian';
+            }
+        });
+
+        // ============================================================
+        // HELPER
+        // ============================================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // NAV SUBMENU
+        document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.dataset.target;
+                const submenu = document.getElementById(targetId);
+                if (!submenu) return;
+                const isOpen = !submenu.classList.contains('hidden');
+                if (isOpen) {
+                    submenu.classList.add('hidden');
+                    toggle.classList.remove('open');
+                } else {
+                    submenu.classList.remove('hidden');
+                    toggle.classList.add('open');
+                }
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        });
+        document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
+            const submenu = activeLink.closest('.nav-submenu');
+            if (submenu) {
+                submenu.classList.remove('hidden');
+                const toggle = document.querySelector(`.nav-group-toggle[data-target="${submenu.id}"]`);
+                if (toggle) toggle.classList.add('open');
+            }
+        });
+    </script>
+
+</body>
+</html>

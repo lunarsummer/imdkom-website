@@ -9,11 +9,55 @@ import { optimizeCloudinaryUrl } from './cloudinary.js';
 import { openWhatsAppProgram, openWhatsAppService, openWhatsAppGeneric } from './whatsapp.js';
 
 // ============================================================
+// CACHE PROGRAM — untuk filter client-side
+// ============================================================
+let __programsCache = [];
+
+// ============================================================
 // HELPER: Build image URL dengan fallback
 // ============================================================
 function buildImageUrl(gambarPath, options, fallback) {
     if (!gambarPath) return fallback;
     return optimizeCloudinaryUrl(gambarPath, options) || fallback;
+}
+
+// ============================================================
+// HELPER: Parse harga promo & label
+// ============================================================
+function getPromoInfo(data) {
+    const hasPromo = data.hargaPromo && String(data.hargaPromo).trim() !== '';
+    return {
+        hasPromo,
+        label: hasPromo ? (data.labelPromo?.trim() || 'PROMO') : '',
+        hargaAsli: data.harga || '',
+        hargaPromo: hasPromo ? data.hargaPromo : ''
+    };
+}
+
+// ============================================================
+// HELPER: Render harga (dengan/tanpa promo)
+// ============================================================
+function renderHarga(data, options = {}) {
+    const { size = 'md', align = 'left' } = options;
+    const promo = getPromoInfo(data);
+
+    const sizeClasses = {
+        sm: { asli: 'text-xs', promo: 'text-sm', normal: 'text-sm' },
+        md: { asli: 'text-sm', promo: 'text-base', normal: 'text-base' },
+        lg: { asli: 'text-base', promo: 'text-2xl', normal: 'text-2xl' }
+    };
+    const s = sizeClasses[size] || sizeClasses.md;
+    const alignClass = align === 'right' ? 'text-right' : '';
+
+    if (promo.hasPromo) {
+        return `
+            <div class="${alignClass}">
+                <div class="${s.asli} text-gray-400 line-through">${formatRupiah(promo.hargaAsli)}</div>
+                <div class="${s.promo} font-bold text-brand">${formatRupiah(promo.hargaPromo)}</div>
+            </div>
+        `;
+    }
+    return `<div class="${alignClass} ${s.normal} font-bold text-brand">${formatRupiah(promo.hargaAsli)}</div>`;
 }
 
 // ============================================================
@@ -89,6 +133,7 @@ export async function loadCoursePreview() {
                 { width: 600, height: 750, crop: 'fill' },
                 'assets/images/programs/default.jpg'
             );
+            const promo = getPromoInfo(data);
             
             html += `
     <a href="program-detail.html?id=${docSnap.id}" class="course-item block cursor-pointer hover:opacity-95 transition-opacity">
@@ -97,6 +142,11 @@ export async function loadCoursePreview() {
                  alt="${escapeHtml(data.nama || 'Program')}" 
                  class="w-full h-full object-cover"
                  loading="lazy" />
+            ${promo.hasPromo ? `
+                <span class="absolute top-3 left-3 bg-brand-dark text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md">
+                    ${escapeHtml(promo.label)}
+                </span>
+            ` : ''}
         </div>
         
         <div class="flex flex-col flex-1">
@@ -112,9 +162,9 @@ export async function loadCoursePreview() {
                 ${escapeHtml(data.deskripsiSingkat || data.deskripsi || '')}
             </p>
             
-            <p class="font-bold text-brand mt-3 text-base">
-                ${formatRupiah(data.harga)}
-            </p>
+            <div class="mt-3">
+                ${renderHarga(data, { size: 'md' })}
+            </div>
             
             <div class="flex flex-wrap gap-3 mt-2">
                 <span class="text-brand font-medium text-xs border-b border-brand">
@@ -127,7 +177,7 @@ export async function loadCoursePreview() {
                         data-program-name="${escapeHtml(data.nama || 'Program')}"
                         data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382..."/>
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                     </svg>
                     Bagikan
                 </button>
@@ -365,13 +415,10 @@ export async function loadLandingPageContent() {
         
         const data = docSnap.data();
         
-        // ============================================================
         // HERO
-        // ============================================================
         if (data.hero) {
             const hero = data.hero;
             
-            // --- TEKS: Mobile ---
             const heroHeading = document.getElementById('heroHeading');
             const heroSubheading = document.getElementById('heroSubheading');
             const heroDescription = document.getElementById('heroDescription');
@@ -384,7 +431,6 @@ export async function loadLandingPageContent() {
             if (heroSubtext && hero.subtext) heroSubtext.textContent = hero.subtext;
             if (heroCtaPrimaryMobile && hero.ctaText) heroCtaPrimaryMobile.textContent = hero.ctaText;
             
-            // --- TEKS: Desktop ---
             const heroHeadingDesktop = document.getElementById('heroHeadingDesktop');
             const heroSubheadingDesktop = document.getElementById('heroSubheadingDesktop');
             const heroDescriptionDesktop = document.getElementById('heroDescriptionDesktop');
@@ -397,23 +443,18 @@ export async function loadLandingPageContent() {
             if (heroSubtextDesktop && hero.subtext) heroSubtextDesktop.textContent = hero.subtext;
             if (heroCtaPrimary && hero.ctaText) heroCtaPrimary.textContent = hero.ctaText;
             
-            // --- GAMBAR: Mobile + Desktop ---
             if (hero.gambar) {
                 const heroOptimized = optimizeCloudinaryUrl(hero.gambar, { width: 1600, crop: 'limit' });
 
-                // Mobile hero image (alt mengandung "IMDKOM")
                 const mobileImg = document.querySelector('#heroSection img[alt*="IMDKOM"]');
                 if (mobileImg) mobileImg.src = heroOptimized;
 
-                // Desktop hero image (full-background) — pakai id
                 const desktopImg = document.getElementById('heroImageDesktop');
                 if (desktopImg) desktopImg.src = heroOptimized;
             }
         }
         
-        // ============================================================
         // ABOUT
-        // ============================================================
         if (data.about) {
             const about = data.about;
             const aboutTitle = document.getElementById('aboutTitle');
@@ -428,9 +469,7 @@ export async function loadLandingPageContent() {
             }
         }
         
-        // ============================================================
         // CONTACT
-        // ============================================================
         if (data.contact) {
             const contact = data.contact;
             if (contact.whatsapp) {
@@ -443,9 +482,7 @@ export async function loadLandingPageContent() {
             }
         }
         
-        // ============================================================
         // FOOTER
-        // ============================================================
         if (data.footer && data.footer.copyright) {
             const footerCopy = document.getElementById('footerCopyright');
             if (footerCopy) footerCopy.textContent = data.footer.copyright;
@@ -457,7 +494,23 @@ export async function loadLandingPageContent() {
 }
 
 // ============================================================
-// LOAD SINGLE PROGRAM (Detail) — 4:5 hero + meta OG dinamis
+// HELPER: Ikon benefit berdasarkan kata kunci
+// ============================================================
+function getBenefitIcon(text) {
+    const t = String(text).toLowerCase();
+    if (t.includes('sertifikat')) return 'award';
+    if (t.includes('modul') || t.includes('materi')) return 'book-open';
+    if (t.includes('online') || t.includes('akses')) return 'globe';
+    if (t.includes('konsultasi') || t.includes('bimbingan')) return 'message-circle';
+    if (t.includes('kerja') || t.includes('karir')) return 'briefcase';
+    if (t.includes('garansi')) return 'shield-check';
+    if (t.includes('fleksibel') || t.includes('jadwal')) return 'calendar';
+    if (t.includes('custom') || t.includes('disesuaikan')) return 'sliders';
+    return 'check-circle';
+}
+
+// ============================================================
+// LOAD SINGLE PROGRAM (Detail)
 // ============================================================
 export async function loadProgramDetail() {
     const container = document.getElementById('programDetailContainer');
@@ -478,7 +531,8 @@ export async function loadProgramDetail() {
         }
 
         const data = docSnap.data();
-        
+        const promo = getPromoInfo(data);
+
         const imageUrl = buildImageUrl(
             data.gambar,
             { width: 1200, height: 1500, crop: 'fill' },
@@ -487,7 +541,7 @@ export async function loadProgramDetail() {
 
         const pageTitle = `${data.nama || 'Program'} | IMDKOM Yogyakarta`;
         const pageDesc = truncateText(data.deskripsiSingkat || data.deskripsi || 'Program pelatihan komputer di IMDKOM Yogyakarta.', 160);
-        
+
         const ogImageUrl = data.gambar
             ? optimizeCloudinaryUrl(data.gambar, { width: 1200, height: 630, crop: 'fill' })
             : 'https://imdkom.com/assets/images/logo/imdkom.svg';
@@ -519,94 +573,211 @@ export async function loadProgramDetail() {
         setMetaProperty('og:image', ogImageUrl);
         setMetaProperty('og:url', window.location.href);
         setMetaProperty('og:type', 'article');
-
+        setMetaName('description', pageDesc);
         setMetaName('twitter:card', 'summary_large_image');
         setMetaName('twitter:title', data.nama || 'Program Kursus');
         setMetaName('twitter:description', pageDesc);
         setMetaName('twitter:image', ogImageUrl);
 
         let materiHtml = '';
-        if (data.materi && Array.isArray(data.materi)) {
-            materiHtml = '<ul class="list-disc list-inside space-y-1 text-gray-600">';
+        if (data.materi && Array.isArray(data.materi) && data.materi.length > 0) {
+            materiHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">';
             data.materi.forEach(item => {
-                materiHtml += `<li>${escapeHtml(item)}</li>`;
+                materiHtml += `
+                    <div class="flex items-start gap-2 text-gray-700 text-sm">
+                        <svg class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>${escapeHtml(item)}</span>
+                    </div>
+                `;
             });
-            materiHtml += '</ul>';
+            materiHtml += '</div>';
         }
-        
+
         let benefitHtml = '';
-        if (data.benefit && Array.isArray(data.benefit)) {
-            benefitHtml = '<ul class="list-disc list-inside space-y-1 text-gray-600">';
+        if (data.benefit && Array.isArray(data.benefit) && data.benefit.length > 0) {
+            benefitHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">';
             data.benefit.forEach(item => {
-                benefitHtml += `<li>${escapeHtml(item)}</li>`;
+                const icon = getBenefitIcon(item);
+                benefitHtml += `
+                    <div class="flex items-start gap-3 bg-white border border-gray-200 rounded-xl p-4">
+                        <div class="w-9 h-9 rounded-lg bg-brand/10 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="${icon}" class="w-4 h-4 text-brand"></i>
+                        </div>
+                        <span class="text-sm text-gray-700 leading-snug">${escapeHtml(item)}</span>
+                    </div>
+                `;
             });
-            benefitHtml += '</ul>';
+            benefitHtml += '</div>';
+        }
+
+        const totalPertemuan = parseInt(data.totalPertemuan) || 0;
+        const jamPerSesi = parseFloat(data.jamPerSesi) || 0;
+        const totalJam = totalPertemuan * jamPerSesi;
+
+        let durasiSesiHtml = '';
+        if (totalPertemuan > 0 || jamPerSesi > 0 || data.durasi) {
+            durasiSesiHtml = `
+                <div class="grid grid-cols-2 gap-3 mt-4">
+                    ${data.durasi ? `
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                <span>Durasi</span>
+                            </div>
+                            <p class="font-semibold text-gray-800 text-sm">${escapeHtml(data.durasi)}</p>
+                        </div>
+                    ` : ''}
+                    ${totalPertemuan > 0 ? `
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                                <i data-lucide="calendar-days" class="w-3.5 h-3.5"></i>
+                                <span>Pertemuan</span>
+                            </div>
+                            <p class="font-semibold text-gray-800 text-sm">${totalPertemuan}x</p>
+                        </div>
+                    ` : ''}
+                    ${jamPerSesi > 0 ? `
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                                <i data-lucide="timer" class="w-3.5 h-3.5"></i>
+                                <span>Jam / Sesi</span>
+                            </div>
+                            <p class="font-semibold text-gray-800 text-sm">${jamPerSesi} jam</p>
+                        </div>
+                    ` : ''}
+                    ${totalJam > 0 ? `
+                        <div class="bg-brand/5 rounded-lg p-3 border border-brand/20">
+                            <div class="flex items-center gap-1.5 text-xs text-brand/70 mb-1">
+                                <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
+                                <span>Total Jam</span>
+                            </div>
+                            <p class="font-bold text-brand text-sm">${totalJam} jam</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        let levelHtml = '';
+        if (data.level) {
+            const levelColors = {
+                'Pemula': 'bg-green-100 text-green-700',
+                'Menengah': 'bg-yellow-100 text-yellow-700',
+                'Mahir': 'bg-purple-100 text-purple-700'
+            };
+            const colorClass = levelColors[data.level] || 'bg-gray-100 text-gray-700';
+            levelHtml = `
+                <span class="inline-flex items-center gap-1 ${colorClass} text-xs font-semibold px-2.5 py-1 rounded-full mt-2">
+                    <i data-lucide="signal" class="w-3 h-3"></i>
+                    Level: ${escapeHtml(data.level)}
+                </span>
+            `;
+        }
+
+        let hargaSectionHtml = '';
+        if (promo.hasPromo) {
+            hargaSectionHtml = `
+                <div class="border border-brand-dark/20 bg-brand-dark/5 rounded-xl p-4 mt-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i data-lucide="tag" class="w-4 h-4 text-brand-dark"></i>
+                        <span class="text-xs font-bold text-brand-dark">${escapeHtml(promo.label)}</span>
+                    </div>
+                    <div class="text-sm text-gray-400 line-through">${formatRupiah(promo.hargaAsli)}</div>
+                    <div class="text-2xl font-bold text-brand">${formatRupiah(promo.hargaPromo)}</div>
+                </div>
+            `;
+        } else {
+            hargaSectionHtml = `
+                <div class="bg-gray-50 rounded-xl p-4 mt-4">
+                    <p class="text-xs text-gray-500 mb-1">Harga Program</p>
+                    <p class="text-2xl font-bold text-brand">${formatRupiah(promo.hargaAsli)}</p>
+                </div>
+            `;
         }
 
         container.innerHTML = `
             <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
                 <div class="lg:w-1/2">
-                    <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
-                         class="w-full aspect-[4/5] object-cover rounded-lg shadow-sm detail-image" loading="lazy" />
+                    <div class="relative">
+                        <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
+                             class="w-full aspect-[4/5] object-cover rounded-lg shadow-sm" loading="lazy" />
+                        ${promo.hasPromo ? `
+                            <span class="absolute top-4 left-4 bg-brand-dark text-white text-xs font-black px-3 py-1.5 rounded-full shadow-lg">
+                                ${escapeHtml(promo.label)}
+                            </span>
+                        ` : ''}
+                    </div>
                 </div>
                 <div class="lg:w-1/2">
-                    <h1 class="text-3xl md:text-4xl font-bold text-brand">${escapeHtml(data.nama || 'Program')}</h1>
-                    <p class="text-gray-500">${escapeHtml(data.kategori || '')}</p>
+                    <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
+                    <h1 class="text-3xl md:text-4xl font-bold text-brand mt-1">${escapeHtml(data.nama || 'Program')}</h1>
+                    ${levelHtml}
+                    <p class="text-gray-600 mt-4">${escapeHtml(data.deskripsiSingkat || '')}</p>
                     
-                    <div class="border-b border-gray-200 py-4">
-                        <h5 class="font-semibold text-gray-700">Deskripsi</h5>
-                        <p class="text-gray-600 mt-1">${escapeHtml(data.deskripsi || '')}</p>
-                    </div>
-                    
-                    <div class="border-b border-gray-200 py-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <h6 class="text-sm text-gray-500">Harga</h6>
-                                <p class="font-semibold text-brand">${formatRupiah(data.harga)}</p>
-                            </div>
-                            <div>
-                                <h6 class="text-sm text-gray-500">Durasi</h6>
-                                <p class="text-gray-800">${escapeHtml(data.durasi || '-')}</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ${materiHtml ? `
-                        <div class="border-b border-gray-200 py-4">
-                            <h5 class="font-semibold text-gray-700">Materi</h5>
-                            ${materiHtml}
-                        </div>
-                    ` : ''}
-                    
-                    ${benefitHtml ? `
-                        <div class="border-b border-gray-200 py-4">
-                            <h5 class="font-semibold text-gray-700">Benefit</h5>
-                            ${benefitHtml}
-                        </div>
-                    ` : ''}
+                    ${hargaSectionHtml}
+                    ${durasiSesiHtml}
                     
                     <div class="mt-6 flex flex-wrap gap-3">
-                        <button class="wa-program-btn bg-brand hover:bg-brand-light text-white font-medium px-8 py-3 rounded transition-colors" 
+                        <button class="wa-program-btn bg-brand hover:bg-brand-light text-white font-medium px-8 py-3 rounded transition-colors inline-flex items-center gap-2" 
                                 data-program="${escapeHtml(data.nama || 'Program')}">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
                             Tanya Program Ini
                         </button>
-                        <button class="share-detail-btn bg-[#25d366] hover:bg-[#1da851] text-white font-medium px-6 py-3 rounded transition-colors inline-flex items-center gap-2"
-                                data-program-id="${docSnap.id}"
+                        <button class="share-detail-btn border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-6 py-3 rounded transition-colors inline-flex items-center gap-2"
                                 data-program-name="${escapeHtml(data.nama || 'Program')}"
                                 data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
                             </svg>
                             Bagikan
                         </button>
                     </div>
                 </div>
             </div>
+
+            ${materiHtml ? `
+                <div class="mt-10 border-t border-gray-200 pt-8">
+                    <h2 class="text-xl font-bold text-brand flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                        Materi Pembelajaran
+                    </h2>
+                    ${materiHtml}
+                </div>
+            ` : ''}
+
+            ${benefitHtml ? `
+                <div class="mt-10 border-t border-gray-200 pt-8">
+                    <h2 class="text-xl font-bold text-brand flex items-center gap-2">
+                        <i data-lucide="gift" class="w-5 h-5"></i>
+                        Yang Anda Dapatkan
+                    </h2>
+                    ${benefitHtml}
+                </div>
+            ` : ''}
+
+            ${data.deskripsi ? `
+                <div class="mt-10 border-t border-gray-200 pt-8">
+                    <h2 class="text-xl font-bold text-brand flex items-center gap-2">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                        Tentang Program Ini
+                    </h2>
+                    <p class="text-gray-700 mt-3 leading-relaxed whitespace-pre-line">${escapeHtml(data.deskripsi)}</p>
+                </div>
+            ` : ''}
         `;
 
-        container.querySelector('.wa-program-btn').addEventListener('click', function() {
-            openWhatsAppProgram(this.dataset.program);
-        });
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        const waBtn = container.querySelector('.wa-program-btn');
+        if (waBtn) {
+            waBtn.addEventListener('click', function() {
+                openWhatsAppProgram(this.dataset.program);
+            });
+        }
 
         const shareBtn = container.querySelector('.share-detail-btn');
         if (shareBtn) {
@@ -618,21 +789,18 @@ export async function loadProgramDetail() {
                 
                 if (navigator.share) {
                     try {
-                        await navigator.share({
-                            title: programName,
-                            text: `Program Kursus IMDKOM: ${programName}`,
-                            url: shareUrl
-                        });
+                        await navigator.share({ title: programName, text: `Program Kursus IMDKOM: ${programName}`, url: shareUrl });
                         return;
                     } catch (err) {
                         if (err.name === 'AbortError') return;
                     }
                 }
-                
                 const waText = `*${programName}*\n\n${programDesc}\n\nDetail: ${shareUrl}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, '_blank', 'noopener,noreferrer');
             });
         }
+
+        await loadRecommendations(id, data.kategori);
 
     } catch (error) {
         console.error('Error loading program detail:', error);
@@ -641,7 +809,86 @@ export async function loadProgramDetail() {
 }
 
 // ============================================================
-// LOAD ALL PROGRAMS (Halaman Kursus) — 3:4 card
+// LOAD REKOMENDASI PROGRAM LAIN
+// ============================================================
+async function loadRecommendations(currentId, currentKategori) {
+    const section = document.getElementById('recommendationSection');
+    const container = document.getElementById('recommendationContainer');
+    if (!section || !container) return;
+
+    try {
+        const q = query(
+            collection(db, 'programs'),
+            where('aktif', '==', true),
+            orderBy('order', 'asc'),
+            limit(10)
+        );
+        const snapshot = await getDocs(q);
+
+        const others = [];
+        snapshot.forEach(docSnap => {
+            if (docSnap.id === currentId) return;
+            others.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        others.sort((a, b) => {
+            const aMatch = a.kategori === currentKategori ? 0 : 1;
+            const bMatch = b.kategori === currentKategori ? 0 : 1;
+            return aMatch - bMatch;
+        });
+
+        const recommendations = others.slice(0, 3);
+
+        if (recommendations.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = 'block';
+
+        let html = '';
+        recommendations.forEach((prog) => {
+            const imageUrl = buildImageUrl(
+                prog.gambar,
+                { width: 600, height: 750, crop: 'fill' },
+                'assets/images/programs/default.jpg'
+            );
+            const promo = getPromoInfo(prog);
+
+            html += `
+                <a href="program-detail.html?id=${prog.id}" class="course-item block cursor-pointer hover:opacity-95 transition-opacity">
+                    <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3">
+                        <img src="${imageUrl}" alt="${escapeHtml(prog.nama || 'Program')}" 
+                             class="w-full h-full object-cover" loading="lazy" />
+                        ${promo.hasPromo ? `
+                            <span class="absolute top-3 left-3 bg-brand-dark text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md">
+                                ${escapeHtml(promo.label)}
+                            </span>
+                        ` : ''}
+                    </div>
+                    <h5 class="text-base font-semibold text-brand line-clamp-1 leading-tight">
+                        ${escapeHtml(prog.nama || 'Program')}
+                    </h5>
+                    <p class="text-xs text-gray-500 mt-1 line-clamp-1">${escapeHtml(prog.kategori || '')}</p>
+                    <p class="text-sm text-gray-600 mt-2 line-clamp-2 leading-snug">
+                        ${escapeHtml(prog.deskripsiSingkat || prog.deskripsi || '')}
+                    </p>
+                    <div class="mt-2">${renderHarga(prog, { size: 'md' })}</div>
+                    <p class="text-brand font-medium text-xs mt-2">Lihat Detail →</p>
+                </a>
+            `;
+        });
+        container.innerHTML = html;
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    } catch (error) {
+        console.error('Error loading recommendations:', error);
+        section.style.display = 'none';
+    }
+}
+
+// ============================================================
+// LOAD ALL PROGRAMS (Halaman Kursus) — MARKETPLACE CARD
 // ============================================================
 export async function loadAllPrograms() {
     const container = document.getElementById('allProgramsContainer');
@@ -657,70 +904,206 @@ export async function loadAllPrograms() {
         
         if (snapshot.empty) {
             container.innerHTML = `
-                <div class="col-span-full text-center text-gray-500 py-12">
-                    <h4 class="text-xl font-medium">Belum ada program tersedia</h4>
-                    <p class="mt-1">Silakan cek kembali nanti.</p>
+                <div class="col-span-full text-center text-gray-500 py-16">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="book-open" class="w-10 h-10 text-gray-300"></i>
+                    </div>
+                    <h4 class="text-xl font-medium text-gray-700">Belum ada program tersedia</h4>
+                    <p class="mt-1 text-sm">Silakan cek kembali nanti.</p>
                 </div>
             `;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
             return;
         }
 
-        let html = '';
+        // Simpan ke cache
+        __programsCache = [];
         snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            const imageUrl = buildImageUrl(
-                data.gambar,
-                { width: 600, height: 800, crop: 'fill' },
-                'assets/images/programs/default.jpg'
-            );
-            
-            html += `
-                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
-                    <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
-                         class="w-full aspect-[3/4] object-cover rounded-lg bg-gray-100 mb-3" loading="lazy" />
-                    <h5 class="text-lg font-semibold text-brand">${escapeHtml(data.nama || 'Program')}</h5>
-                    <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
-                    <p class="text-gray-600 text-sm mt-1">${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}</p>
-                    <p class="font-semibold text-brand mt-1">${formatRupiah(data.harga)}</p>
-                    <div class="flex flex-wrap gap-2 mt-3">
-                        <a href="program-detail.html?id=${docSnap.id}" class="text-brand hover:text-brand-light font-medium text-sm border-b-2 border-brand hover:border-brand-light transition-colors">
-                            Lihat Detail →
-                        </a>
-                        <button class="wa-program-btn text-[#25d366] hover:text-[#1da851] font-medium text-sm border-b-2 border-[#25d366] hover:border-[#1da851] transition-colors" 
-                                data-program="${escapeHtml(data.nama || 'Program')}">
-                            Tanya WhatsApp
-                        </button>
-                        <button class="share-program-btn text-[#3b82f6] hover:text-[#2563eb] font-medium text-sm border-b-2 border-[#3b82f6] hover:border-[#2563eb] transition-colors inline-flex items-center gap-1"
-                                data-program-id="${docSnap.id}"
-                                data-program-name="${escapeHtml(data.nama || 'Program')}"
-                                data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
-                            </svg>
-                            Bagikan
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-
-        container.querySelectorAll('.wa-program-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                openWhatsAppProgram(this.dataset.program);
-            });
+            __programsCache.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        attachShareHandler(container);
+        // Render
+        renderProgramCards(__programsCache);
 
     } catch (error) {
         console.error('Error loading all programs:', error);
         container.innerHTML = `
             <div class="col-span-full text-center text-red-600 py-12">
-                Gagal memuat program. Silakan refresh halaman.
+                <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-red-300 mb-3"></i>
+                <p class="font-medium">Gagal memuat program</p>
+                <p class="text-gray-500 text-xs mt-1">${error.message}</p>
             </div>
         `;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
+}
+
+// ============================================================
+// RENDER PROGRAM CARDS — Marketplace Style
+// ============================================================
+function renderProgramCards(programs) {
+    const container = document.getElementById('allProgramsContainer');
+    if (!container) return;
+
+    if (programs.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full text-center text-gray-500 py-16">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="search-x" class="w-10 h-10 text-gray-300"></i>
+                </div>
+                <h4 class="text-xl font-medium text-gray-700">Tidak ada program yang cocok</h4>
+                <p class="mt-1 text-sm">Coba ubah kata kunci atau filter kategori.</p>
+            </div>
+        `;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        return;
+    }
+
+    let html = '';
+    programs.forEach((data) => {
+        const imageUrl = buildImageUrl(
+            data.gambar,
+            { width: 600, height: 750, crop: 'fill' },
+            'assets/images/programs/default.jpg'
+        );
+        const promo = getPromoInfo(data);
+
+        // Durasi & pertemuan
+        const totalPertemuan = parseInt(data.totalPertemuan) || 0;
+        const durasi = data.durasi || '';
+        const infoParts = [];
+        if (durasi) infoParts.push(`<i data-lucide="clock" class="w-3 h-3 inline"></i> ${escapeHtml(durasi)}`);
+        if (totalPertemuan > 0) infoParts.push(`<i data-lucide="calendar-days" class="w-3 h-3 inline"></i> ${totalPertemuan}x`);
+
+        html += `
+            <div class="program-card">
+                <!-- Image -->
+                <div class="program-image-wrapper">
+                    <img src="${imageUrl}" 
+                         alt="${escapeHtml(data.nama || 'Program')}" 
+                         loading="lazy" />
+                    ${promo.hasPromo ? `
+                        <span class="badge-promo">${escapeHtml(promo.label)}</span>
+                    ` : ''}
+                    ${data.kategori ? `
+                        <span class="badge-kategori">${escapeHtml(data.kategori)}</span>
+                    ` : ''}
+                </div>
+
+                <!-- Content -->
+                <div class="p-3 flex flex-col flex-1">
+                    <h5 class="text-sm sm:text-base font-bold text-brand line-clamp-2 leading-tight mb-1">
+                        ${escapeHtml(data.nama || 'Program')}
+                    </h5>
+                    
+                    ${data.kategori ? `
+                        <p class="text-[11px] text-gray-500 line-clamp-1 mb-2">${escapeHtml(data.kategori)}</p>
+                    ` : ''}
+                    
+                    <div class="mt-auto">
+                        ${renderHarga(data, { size: 'md' })}
+                    </div>
+                    
+                    ${infoParts.length > 0 ? `
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-500 mt-2">
+                            ${infoParts.join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Actions -->
+                    <div class="mt-3 space-y-1.5">
+                        <a href="program-detail.html?id=${data.id}" 
+                           class="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors">
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            Lihat Detail
+                        </a>
+                        
+                        <div class="grid grid-cols-2 gap-1.5">
+                            <button class="wa-program-btn inline-flex items-center justify-center gap-1 px-2 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors"
+                                    data-program="${escapeHtml(data.nama || 'Program')}">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                                WA
+                            </button>
+                            
+                            <button class="share-program-btn inline-flex items-center justify-center gap-1 px-2 py-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-colors"
+                                    data-program-id="${data.id}"
+                                    data-program-name="${escapeHtml(data.nama || 'Program')}"
+                                    data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
+                                <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                                Bagikan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+
+    // Attach WA listener
+    container.querySelectorAll('.wa-program-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            openWhatsAppProgram(this.dataset.program);
+        });
+    });
+
+    // Attach Share listener
+    attachShareHandler(container);
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+// ============================================================
+// FILTER PROGRAMS — Search + Kategori (client-side)
+// ============================================================
+export function filterPrograms() {
+    const searchInput = document.getElementById('searchInput');
+    const filterKategori = document.getElementById('filterKategori');
+    const filterInfo = document.getElementById('filterInfo');
+
+    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    const kategori = filterKategori ? filterKategori.value : '';
+
+    let filtered = __programsCache;
+
+    if (kategori) {
+        filtered = filtered.filter(p => p.kategori === kategori);
+    }
+
+    if (searchTerm) {
+        filtered = filtered.filter(p => {
+            const nama = (p.nama || '').toLowerCase();
+            const desk = (p.deskripsiSingkat || p.deskripsi || '').toLowerCase();
+            const kat = (p.kategori || '').toLowerCase();
+            return nama.includes(searchTerm) || desk.includes(searchTerm) || kat.includes(searchTerm);
+        });
+    }
+
+    // Info
+    if (filterInfo) {
+        if (searchTerm || kategori) {
+            filterInfo.textContent = `Menampilkan ${filtered.length} dari ${__programsCache.length} program`;
+        } else {
+            filterInfo.textContent = '';
+        }
+    }
+
+    renderProgramCards(filtered);
+}
+
+// ============================================================
+// GET CATEGORIES — Daftar kategori unik dari program
+// ============================================================
+export function getCategories() {
+    const set = new Set();
+    __programsCache.forEach(p => {
+        if (p.kategori && p.kategori.trim()) {
+            set.add(p.kategori.trim());
+        }
+    });
+    return Array.from(set).sort();
 }
 
 // ============================================================

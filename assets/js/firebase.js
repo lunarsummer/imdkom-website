@@ -13,11 +13,12 @@ import {
     getAuth, 
     signInWithEmailAndPassword, 
     onAuthStateChanged, 
-    signOut 
+    signOut,
+    createUserWithEmailAndPassword   // ← TAMBAH
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
 // ============================================================
-// KONFIGURASI FIREBASE BARU
+// KONFIGURASI FIREBASE
 // ============================================================
 const firebaseConfig = {
     apiKey: "AIzaSyAhtv22cqn4wrfqOSFSeG77grPl-dgvKSw",
@@ -38,5 +39,6 @@ export {
     collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, setDoc,
     query, where, orderBy, limit,
     writeBatch,
-    signInWithEmailAndPassword, onAuthStateChanged, signOut
+    signInWithEmailAndPassword, onAuthStateChanged, signOut,
+    createUserWithEmailAndPassword   // ← TAMBAH
 };
