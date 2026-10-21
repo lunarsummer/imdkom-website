@@ -700,16 +700,16 @@ export async function loadProgramDetail() {
         container.innerHTML = `
             <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
                 <div class="lg:w-1/2">
-                    <div class="relative">
-                        <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
-                             class="w-full aspect-[4/5] object-cover rounded-lg shadow-sm" loading="lazy" />
-                        ${promo.hasPromo ? `
-                            <span class="absolute top-4 left-4 bg-brand-dark text-white text-xs font-black px-3 py-1.5 rounded-full shadow-lg">
-                                ${escapeHtml(promo.label)}
-                            </span>
-                        ` : ''}
-                    </div>
-                </div>
+    <div class="relative">
+        <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
+             class="w-full aspect-[4/5] object-cover rounded-lg shadow-sm" loading="lazy" />
+        ${promo.hasPromo ? `
+            <span class="badge-promo badge-promo-lg">
+                <span>${escapeHtml(promo.label)}</span>
+            </span>
+        ` : ''}
+    </div>
+</div>
                 <div class="lg:w-1/2">
                     <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
                     <h1 class="text-3xl md:text-4xl font-bold text-brand mt-1">${escapeHtml(data.nama || 'Program')}</h1>
@@ -800,7 +800,7 @@ export async function loadProgramDetail() {
             });
         }
 
-        await loadRecommendations(id, data.kategori);
+        await loadRecommendations(id);
 
     } catch (error) {
         console.error('Error loading program detail:', error);
@@ -810,8 +810,12 @@ export async function loadProgramDetail() {
 
 // ============================================================
 // LOAD REKOMENDASI PROGRAM LAIN
+// - Prioritas: program PROMO (hargaPromo terisi), urut `order` admin
+// - Sisa slot: diisi program non-promo (urut `order` admin)
+// - Total: 4 card
+// - Program yang sedang dibuka BOLEH muncul lagi (duplikat diizinkan)
 // ============================================================
-async function loadRecommendations(currentId, currentKategori) {
+async function loadRecommendations(currentId) {
     const section = document.getElementById('recommendationSection');
     const container = document.getElementById('recommendationContainer');
     if (!section || !container) return;
@@ -820,24 +824,39 @@ async function loadRecommendations(currentId, currentKategori) {
         const q = query(
             collection(db, 'programs'),
             where('aktif', '==', true),
-            orderBy('order', 'asc'),
-            limit(10)
+            orderBy('order', 'asc')
         );
         const snapshot = await getDocs(q);
 
+        // Pisahkan program promo & non-promo (semua, termasuk yang sedang dibuka)
+        const promos = [];
         const others = [];
+
         snapshot.forEach(docSnap => {
-            if (docSnap.id === currentId) return;
-            others.push({ id: docSnap.id, ...docSnap.data() });
+            const data = docSnap.data();
+            const hasPromo = data.hargaPromo && String(data.hargaPromo).trim() !== '';
+            const item = { id: docSnap.id, ...data };
+
+            if (hasPromo) {
+                promos.push(item);
+            } else {
+                others.push(item);
+            }
         });
 
-        others.sort((a, b) => {
-            const aMatch = a.kategori === currentKategori ? 0 : 1;
-            const bMatch = b.kategori === currentKategori ? 0 : 1;
-            return aMatch - bMatch;
-        });
+        // Ambil 4 rekomendasi:
+        // 1) Semua promo dulu (maks 4)
+        // 2) Kalau kurang, isi dari non-promo (filter duplikat ID)
+        let recommendations = promos.slice(0, 4);
 
-        const recommendations = others.slice(0, 3);
+        if (recommendations.length < 4) {
+            const sisaSlot = 4 - recommendations.length;
+            const existingIds = new Set(recommendations.map(p => p.id));
+            const nonPromoFill = others
+                .filter(p => !existingIds.has(p.id))
+                .slice(0, sisaSlot);
+            recommendations = recommendations.concat(nonPromoFill);
+        }
 
         if (recommendations.length === 0) {
             section.style.display = 'none';
@@ -861,8 +880,8 @@ async function loadRecommendations(currentId, currentKategori) {
                         <img src="${imageUrl}" alt="${escapeHtml(prog.nama || 'Program')}" 
                              class="w-full h-full object-cover" loading="lazy" />
                         ${promo.hasPromo ? `
-                            <span class="absolute top-3 left-3 bg-brand-dark text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md">
-                                ${escapeHtml(promo.label)}
+                            <span class="badge-promo">
+                                <span>${escapeHtml(promo.label)}</span>
                             </span>
                         ` : ''}
                     </div>
@@ -976,25 +995,32 @@ function renderProgramCards(programs) {
         if (totalPertemuan > 0) infoParts.push(`<i data-lucide="calendar-days" class="w-3 h-3 inline"></i> ${totalPertemuan}x`);
 
         html += `
-            <div class="program-card">
-                <!-- Image -->
-                <div class="program-image-wrapper">
-                    <img src="${imageUrl}" 
-                         alt="${escapeHtml(data.nama || 'Program')}" 
-                         loading="lazy" />
-                    ${promo.hasPromo ? `
-                        <span class="badge-promo">${escapeHtml(promo.label)}</span>
-                    ` : ''}
-                    ${data.kategori ? `
-                        <span class="badge-kategori">${escapeHtml(data.kategori)}</span>
-                    ` : ''}
-                </div>
+    <div class="program-card">
+        <!-- Image — dibungkus <a> -->
+        <a href="program-detail.html?id=${data.id}" 
+           class="block program-image-link"
+           aria-label="Lihat detail ${escapeHtml(data.nama || 'Program')}">
+            <div class="program-image-wrapper">
+                <img src="${imageUrl}" 
+                     alt="${escapeHtml(data.nama || 'Program')}" 
+                     loading="lazy" />
+                ${promo.hasPromo ? `
+                    <span class="badge-promo">${escapeHtml(promo.label)}</span>
+                ` : ''}
+                ${data.kategori ? `
+                    <span class="badge-kategori">${escapeHtml(data.kategori)}</span>
+                ` : ''}
+            </div>
+        </a>
 
-                <!-- Content -->
-                <div class="p-3 flex flex-col flex-1">
-                    <h5 class="text-sm sm:text-base font-bold text-brand line-clamp-2 leading-tight mb-1">
-                        ${escapeHtml(data.nama || 'Program')}
-                    </h5>
+        <!-- Content -->
+        <div class="p-3 flex flex-col flex-1">
+            <a href="program-detail.html?id=${data.id}" 
+               class="block group">
+                <h5 class="text-sm sm:text-base font-bold text-brand line-clamp-2 leading-tight mb-1 group-hover:text-brand-light transition-colors">
+                    ${escapeHtml(data.nama || 'Program')}
+                </h5>
+            </a>
                     
                     ${data.kategori ? `
                         <p class="text-[11px] text-gray-500 line-clamp-1 mb-2">${escapeHtml(data.kategori)}</p>

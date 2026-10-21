@@ -186,22 +186,91 @@
         .program-card:hover .program-image-wrapper img {
             transform: scale(1.05);
         }
+/* Link pembungkus gambar — pastikan block & cursor pointer */
+.program-image-link {
+    display: block;
+    cursor: pointer;
+}
+.program-image-link:hover {
+    opacity: 0.97;
+}
+    .badge-promo {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: #bbff00;
+    color: rgb(0, 89, 255);
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(65, 64, 64, 0.3);
+    z-index: 2;
 
-        .badge-promo {
-            position: absolute;
-            top: 0.5rem;
-            left: 0.5rem;
-            background: #c2410c;
-            color: white;
-            font-size: 0.6rem;
-            font-weight: 800;
-            padding: 0.2rem 0.5rem;
-            border-radius: 999px;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-            box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
-            z-index: 2;
-        }
+    /* SHINE EFFECT */
+    overflow: hidden;
+    isolation: isolate;
+    animation: badge-pulse 2.5s ease-in-out infinite;
+}
+
+/* Kilau bergerak dari kiri ke kanan */
+.badge-promo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.9) 50%,
+        transparent 70%
+    );
+    animation: badge-shine 2.5s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Pastikan teks badge di atas shine */
+.badge-promo > * {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes badge-shine {
+    0% {
+        left: -100%;
+    }
+    40%, 100% {
+        left: 100%;
+    }
+}
+
+/* Denyut glow oranye lembut */
+@keyframes badge-pulse {
+    0%, 100% {
+        box-shadow: 0 2px 6px rgba(53, 53, 53, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 2px 6px rgba(41, 41, 41, 0.3),
+            0 0 12px rgba(80, 79, 79, 0.5);
+    }
+}
+
+/* Hormati prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    .badge-promo {
+        animation: none;
+    }
+    .badge-promo::before {
+        animation: none;
+        display: none;
+    }
+}
 
         .badge-kategori {
             position: absolute;

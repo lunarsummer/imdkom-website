@@ -253,6 +253,148 @@
                 grid-template-columns: repeat(3, 1fr);
             }
         }
+
+        /* ============================================================
+   BADGE PROMO — dengan shine effect
+   ============================================================ */
+.badge-promo {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: #bbff00;
+    color: rgb(0, 89, 255);
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(65, 64, 64, 0.3);
+    z-index: 2;
+    overflow: hidden;
+    isolation: isolate;
+    animation: badge-pulse 2.5s ease-in-out infinite;
+}
+
+.badge-promo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.9) 50%,
+        transparent 70%
+    );
+    animation: badge-shine 2.5s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.badge-promo > * {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes badge-shine {
+    0% { left: -100%; }
+    40%, 100% { left: 100%; }
+}
+
+@keyframes badge-pulse {
+    0%, 100% {
+        box-shadow: 0 2px 6px rgba(53, 53, 53, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 2px 6px rgba(41, 41, 41, 0.3),
+            0 0 12px rgba(80, 79, 79, 0.5);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .badge-promo {
+        animation: none;
+    }
+    .badge-promo::before {
+        animation: none;
+        display: none;
+    }
+}
+
+/* Varian untuk badge di gambar utama (lebih besar) */
+.badge-promo.badge-promo-lg {
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+}
+
+/* ============================================================
+   REKOMENDASI GRID — 4 kolom desktop
+   Mobile: swipe horizontal | Tablet: 2 kolom | Desktop: 4 kolom
+   ============================================================ */
+.recommendation-grid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 0 1rem 0;
+}
+.recommendation-grid::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+.recommendation-grid > .course-item {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: white;
+    border-radius: 12px;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(26, 60, 94, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.recommendation-grid > .course-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(26, 60, 94, 0.1);
+}
+
+/* Tablet: 2 kolom */
+@media (min-width: 768px) {
+    .recommendation-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        overflow: visible;
+        padding: 0;
+        align-items: stretch;
+    }
+    .recommendation-grid > .course-item {
+        flex: none;
+        width: auto;
+        height: 100%;
+    }
+}
+
+/* Desktop: 4 kolom (1 baris) */
+@media (min-width: 1024px) {
+    .recommendation-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
     </style>
 </head>
 <body class="font-sans">
@@ -345,9 +487,9 @@
                 <h2 class="text-2xl sm:text-3xl font-bold text-brand">Program Lain yang Mungkin Anda Minati</h2>
                 <p class="text-sm text-gray-500 mt-1">Jelajahi program lain yang relevan dengan minat Anda.</p>
             </div>
-            <div class="course-grid reveal-stagger" id="recommendationContainer">
-                <!-- Diisi oleh loadRecommendations() di app.js -->
-            </div>
+            <div class="recommendation-grid reveal-stagger" id="recommendationContainer">
+    <!-- Diisi oleh loadRecommendations() di app.js -->
+</div>
         </div>
     </section>
 
