@@ -444,30 +444,93 @@ export async function loadLandingPageContent() {
             if (heroCtaPrimary && hero.ctaText) heroCtaPrimary.textContent = hero.ctaText;
             
             if (hero.gambar) {
-                const heroOptimized = optimizeCloudinaryUrl(hero.gambar, { width: 1600, crop: 'limit' });
+    const heroOptimized = optimizeCloudinaryUrl(hero.gambar, { width: 1600, crop: 'limit' });
+    const mobileImg = document.querySelector('#heroSection img[alt*="IMDKOM"]');
+    if (mobileImg) mobileImg.src = heroOptimized;
+    const desktopImg = document.getElementById('heroImageDesktop');
+    if (desktopImg) desktopImg.src = heroOptimized;
+}
+}
 
-                const mobileImg = document.querySelector('#heroSection img[alt*="IMDKOM"]');
-                if (mobileImg) mobileImg.src = heroOptimized;
+// HERO STICKERS — render sticker dekoratif di hero desktop
+if (Array.isArray(data.heroStickers) && data.heroStickers.length > 0) {
+    const stickerLayer = document.getElementById('heroStickerLayer');
+    if (stickerLayer) {
+        const activeStickers = data.heroStickers
+            .filter(s => s.aktif !== false && s.gambar)
+            .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-                const desktopImg = document.getElementById('heroImageDesktop');
-                if (desktopImg) desktopImg.src = heroOptimized;
-            }
+        stickerLayer.innerHTML = activeStickers.map((s, idx) => {
+            const stickerId = `sticker-${idx}-${(s.gambar || '').slice(-20).replace(/[^a-z0-9]/gi, '')}`;
+            return `
+                <div class="hero-sticker"
+                     data-sticker-id="${stickerId}"
+                     data-sticker-index="${idx}"
+                     style="
+                         left: ${s.posisiX ?? 10}%;
+                         top: ${s.posisiY ?? 60}%;
+                         width: ${s.ukuran ?? 15}%;
+                         transform: rotate(${s.rotasi ?? 0}deg);
+                         z-index: ${10 + (s.order || 0)};
+                     ">
+                    <img src="${escapeHtml(s.gambar)}" 
+                         alt="Sticker dekoratif" 
+                         draggable="false" 
+                         loading="lazy" />
+                </div>
+            `;
+        }).join('');
+
+        // Init drag behavior setelah render
+        if (typeof window.initHeroStickerDrag === 'function') {
+            window.initHeroStickerDrag();
         }
+    }
+}
         
         // ABOUT
-        if (data.about) {
-            const about = data.about;
-            const aboutTitle = document.getElementById('aboutTitle');
-            const aboutDescription = document.getElementById('aboutDescription');
-            
-            if (aboutTitle && about.judul) aboutTitle.textContent = about.judul;
-            if (aboutDescription && about.deskripsi) aboutDescription.textContent = about.deskripsi;
-            
-            if (about.gambar) {
-                const img = document.getElementById('aboutImage');
-                if (img) img.src = optimizeCloudinaryUrl(about.gambar, { width: 800, crop: 'limit' });
-            }
+if (data.about) {
+    const about = data.about;
+    const aboutTitle = document.getElementById('aboutTitle');
+    const aboutDescription = document.getElementById('aboutDescription');
+    
+    if (aboutTitle && about.judul) aboutTitle.textContent = about.judul;
+    if (aboutDescription && about.deskripsi) aboutDescription.textContent = about.deskripsi;
+}
+
+// ABOUT HIGHLIGHTS — card layanan
+if (Array.isArray(data.aboutHighlights) && data.aboutHighlights.length > 0) {
+    const container = document.getElementById('aboutHighlightsContainer');
+    if (container) {
+        const sorted = [...data.aboutHighlights].sort((a, b) => (a.order || 0) - (b.order || 0));
+        container.innerHTML = sorted.map(h => `
+            <div class="about-highlight-card reveal-item">
+                <div class="about-highlight-icon">
+                    <i data-lucide="${escapeHtml(h.icon || 'star')}" class="w-6 h-6"></i>
+                </div>
+                <div class="about-highlight-content">
+                    <h3 class="about-highlight-title">${escapeHtml(h.judul || '')}</h3>
+                    <p class="about-highlight-desc">${escapeHtml(h.deskripsi || '')}</p>
+                </div>
+            </div>
+        `).join('');
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        const newItems = container.querySelectorAll('.reveal-item');
+        if (newItems.length > 0 && typeof IntersectionObserver !== 'undefined') {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+            newItems.forEach(el => observer.observe(el));
         }
+    }
+}
         
         // CONTACT
         if (data.contact) {
