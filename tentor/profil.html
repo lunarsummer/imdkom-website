@@ -7,7 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
     
     <style>
         .profile-avatar {
@@ -356,9 +356,9 @@
     JAVASCRIPT
     ============================================================ -->
     <script type="module">
-        import { auth, db, signOut, doc, getDoc, updateDoc } from '../assets/js/firebase.js';
-        import { protectPage } from '../assets/js/auth.js';
-        import { openCloudinaryUpload, optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+        import { auth, db, signOut, doc, getDoc, updateDoc } from './assets/js/firebase.js';
+        import { protectPage } from './assets/js/auth.js';
+        import { openCloudinaryUpload, optimizeCloudinaryUrl } from './assets/js/cloudinary.js';
 
         // ============================================================
         // MOBILE SIDEBAR
@@ -403,7 +403,7 @@
         // ============================================================
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = '../login.html';
+            window.location.href = './index.html';
         });
 
         // ============================================================

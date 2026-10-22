@@ -7,7 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
     <style>/* NAV GROUP / SUBMENU */
 .nav-group { margin: 0; }
 
@@ -412,7 +412,7 @@
             auth, onAuthStateChanged, signOut, 
             db, doc, getDoc, addDoc, updateDoc, collection, 
             getDocs, query, where, orderBy 
-        } from '../assets/js/firebase.js';
+        } from './assets/js/firebase.js';
 
         // ============================================================
         // VARIABEL GLOBAL
@@ -444,7 +444,7 @@
         // ============================================================
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
             } else {
                 checkEditMode();
                 lucide.createIcons();
@@ -453,7 +453,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         });
 
         // ============================================================

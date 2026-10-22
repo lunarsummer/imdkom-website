@@ -7,7 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
     
     <style>
         .form-section {
@@ -639,7 +639,7 @@
         import { 
             auth, onAuthStateChanged, signOut, 
             db, doc, getDoc, setDoc, updateDoc 
-        } from '../assets/js/firebase.js';
+        } from './assets/js/firebase.js';
 
         // ============================================================
         // SIDEBAR
@@ -665,7 +665,7 @@
         // AUTH
         // ============================================================
         onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = 'login.html';
+            if (!user) window.location.href = 'index.html';
             else {
                 checkEditMode();
                 lucide.createIcons();
@@ -674,7 +674,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         });
 
         // ============================================================

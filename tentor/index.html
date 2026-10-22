@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Tentor | IMDKOM</title>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+
+    <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-brand">IMDKOM</h1>
+        <p class="text-gray-500 text-sm mb-6">Login Tentor</p>
+
+        <!-- SESI AKTIF -->
+        <div id="activeSessionBox" class="hidden mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p class="text-sm text-blue-800 mb-2">
+                Anda sudah login sebagai <strong id="activeSessionEmail">-</strong>.
+            </p>
+            <div class="flex gap-2">
+                <button id="continueSessionBtn" 
+                        class="flex-1 bg-brand hover:bg-brand-light text-white text-sm font-medium py-2 rounded-lg transition-colors">
+                    Lanjutkan
+                </button>
+                <button id="logoutSessionBtn" 
+                        class="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 text-sm font-medium py-2 rounded-lg transition-colors">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- FORM LOGIN -->
+        <div id="loginFormWrapper">
+            <div id="loadingIndicator" class="hidden text-center py-4">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="text-sm text-gray-500 mt-2">Memproses...</p>
+            </div>
+
+            <form id="loginForm" autocomplete="off">
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                           id="email" 
+                           placeholder="nama@email.com" 
+                           autocomplete="off"
+                           required />
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
+                           id="password" 
+                           placeholder="Password" 
+                           autocomplete="new-password"
+                           required />
+                </div>
+                <button type="submit" id="submitBtn" 
+                        class="w-full bg-brand hover:bg-brand-light text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    Login
+                </button>
+                <div id="loginError" class="text-red-600 text-sm mt-3 hidden"></div>
+                <div id="loginInfo" class="text-blue-600 text-sm mt-3 hidden"></div>
+            </form>
+
+            <!-- Link register tentor -->
+            <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+                <p class="text-sm text-gray-500">
+                    Belum punya akun tentor?
+                    <a href="register.html" class="text-brand hover:text-brand-light font-medium">Daftar di sini</a>
+                </p>
+            </div>
+        </div>
+
+        <a href="https://imdkomyogyakarta.netlify.app" class="block text-center text-gray-400 text-sm mt-4 hover:text-gray-600 transition-colors">
+            ← Kembali ke Beranda
+        </a>
+    </div>
+
+    <script type="module">
+        import { auth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from './assets/js/firebase.js';
+        import { getUserProfile } from './assets/js/auth.js';
+
+        const form = document.getElementById('loginForm');
+        const errorEl = document.getElementById('loginError');
+        const infoEl = document.getElementById('loginInfo');
+        const loadingEl = document.getElementById('loadingIndicator');
+        const submitBtn = document.getElementById('submitBtn');
+        const formWrapper = document.getElementById('loginFormWrapper');
+        const activeSessionBox = document.getElementById('activeSessionBox');
+        const activeSessionEmail = document.getElementById('activeSessionEmail');
+        const continueSessionBtn = document.getElementById('continueSessionBtn');
+        const logoutSessionBtn = document.getElementById('logoutSessionBtn');
+
+        let currentUser = null;
+        let isProcessing = false;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const skipAutoRedirect = urlParams.get('fresh') === '1';
+
+        // ============================================================
+        // CEK SESI — TENTOR ONLY
+        // ============================================================
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+
+            if (user && !skipAutoRedirect) {
+                const profile = await getUserProfile(user.uid);
+                
+                if (!profile || profile.role !== 'tentor') {
+                    await signOut(auth);
+                    activeSessionBox.classList.add('hidden');
+                    formWrapper.classList.remove('hidden');
+                    if (profile && profile.role === 'admin') {
+                        errorEl.textContent = 'Akun ini adalah admin. Silakan login di portal admin.';
+                        errorEl.classList.remove('hidden');
+                    }
+                    return;
+                }
+                
+                // Cek status tentor
+                if (profile.status === 'pending') {
+                    window.location.href = 'https://imdkomputer.id/pending-approval.html';
+                    return;
+                }
+                
+                activeSessionEmail.textContent = user.email;
+                activeSessionBox.classList.remove('hidden');
+                formWrapper.classList.add('hidden');
+            } else {
+                activeSessionBox.classList.add('hidden');
+                formWrapper.classList.remove('hidden');
+            }
+        });
+
+        // ============================================================
+        // LANJUTKAN SESI
+        // ============================================================
+        continueSessionBtn?.addEventListener('click', async () => {
+            if (!currentUser) return;
+
+            continueSessionBtn.disabled = true;
+            continueSessionBtn.textContent = 'Memeriksa...';
+
+            const profile = await getUserProfile(currentUser.uid);
+
+            if (!profile || profile.role !== 'tentor') {
+                await signOut(auth);
+                activeSessionBox.classList.add('hidden');
+                formWrapper.classList.remove('hidden');
+                errorEl.textContent = 'Bukan akun tentor. Silakan login ulang.';
+                errorEl.classList.remove('hidden');
+                continueSessionBtn.disabled = false;
+                continueSessionBtn.textContent = 'Lanjutkan';
+                return;
+            }
+
+            if (profile.status === 'pending') {
+                window.location.href = 'https://imdkomputer.id/pending-approval.html';
+                return;
+            }
+
+            if (profile.status !== 'active') {
+                await signOut(auth);
+                errorEl.textContent = 'Status akun tidak valid. Hubungi admin.';
+                errorEl.classList.remove('hidden');
+                continueSessionBtn.disabled = false;
+                continueSessionBtn.textContent = 'Lanjutkan';
+                return;
+            }
+
+            // Tentor aktif → redirect ke dashboard tentor
+            window.location.href = 'dashboard.html';
+        });
+
+        // ============================================================
+        // LOGOUT SESI
+        // ============================================================
+        logoutSessionBtn?.addEventListener('click', async () => {
+            await signOut(auth);
+            activeSessionBox.classList.add('hidden');
+            formWrapper.classList.remove('hidden');
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('email').focus();
+        });
+
+        // ============================================================
+        // SUBMIT LOGIN
+        // ============================================================
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (isProcessing) return;
+            isProcessing = true;
+
+            errorEl.classList.add('hidden');
+            infoEl.classList.add('hidden');
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                errorEl.textContent = 'Email dan password wajib diisi.';
+                errorEl.classList.remove('hidden');
+                isProcessing = false;
+                return;
+            }
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Login...';
+
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log('✅ Login berhasil:', userCredential.user.email);
+
+                loadingEl.classList.remove('hidden');
+                infoEl.textContent = 'Memeriksa akun...';
+                infoEl.classList.remove('hidden');
+
+                const profile = await getUserProfile(userCredential.user.uid);
+
+                if (!profile) {
+                    await signOut(auth);
+                    loadingEl.classList.add('hidden');
+                    infoEl.classList.add('hidden');
+                    errorEl.textContent = 'Profil tidak ditemukan. Hubungi admin.';
+                    errorEl.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    isProcessing = false;
+                    return;
+                }
+
+                // Cek role — hanya tentor
+                if (profile.role !== 'tentor') {
+                    await signOut(auth);
+                    loadingEl.classList.add('hidden');
+                    infoEl.classList.add('hidden');
+                    
+                    if (profile.role === 'admin') {
+                        errorEl.innerHTML = 'Akun ini adalah <strong>admin</strong>. Silakan login di <a href="https://admin.imdkomputer.id" class="underline">portal admin</a>.';
+                    } else {
+                        errorEl.textContent = 'Anda tidak punya akses ke portal tentor.';
+                    }
+                    errorEl.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    isProcessing = false;
+                    return;
+                }
+
+                // Cek status
+                if (profile.status === 'pending') {
+                    infoEl.textContent = 'Akun menunggu verifikasi admin...';
+                    setTimeout(() => {
+                        window.location.href = 'https://imdkomputer.id/pending-approval.html';
+                    }, 800);
+                    return;
+                }
+
+                if (profile.status === 'rejected') {
+                    await signOut(auth);
+                    loadingEl.classList.add('hidden');
+                    infoEl.classList.add('hidden');
+                    errorEl.textContent = 'Pendaftaran Anda ditolak. Hubungi admin.';
+                    errorEl.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    isProcessing = false;
+                    return;
+                }
+
+                if (profile.status !== 'active') {
+                    await signOut(auth);
+                    loadingEl.classList.add('hidden');
+                    infoEl.classList.add('hidden');
+                    errorEl.textContent = 'Status akun tidak valid. Hubungi admin.';
+                    errorEl.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    isProcessing = false;
+                    return;
+                }
+
+                // Redirect ke dashboard tentor
+                infoEl.textContent = '✅ Berhasil! Mengarahkan...';
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 600);
+
+            } catch (error) {
+                console.error('Login error:', error);
+                loadingEl.classList.add('hidden');
+                infoEl.classList.add('hidden');
+
+                if (error.code === 'auth/user-not-found') {
+                    errorEl.textContent = 'Email tidak terdaftar.';
+                } else if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    errorEl.textContent = 'Email atau password salah.';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorEl.textContent = 'Terlalu banyak percobaan. Tunggu beberapa menit.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorEl.textContent = 'Format email tidak valid.';
+                } else {
+                    errorEl.textContent = error.message || 'Login gagal. Coba lagi.';
+                }
+                errorEl.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+                isProcessing = false;
+            }
+        });
+
+        // Cegah auto-submit dari autofill
+        let userInteracted = false;
+        document.getElementById('email').addEventListener('input', () => { userInteracted = true; });
+        document.getElementById('password').addEventListener('input', () => { userInteracted = true; });
+        submitBtn.addEventListener('click', () => { userInteracted = true; });
+
+        form.addEventListener('submit', (e) => {
+            if (!userInteracted) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }, true);
+    </script>
+
+</body>
+</html>

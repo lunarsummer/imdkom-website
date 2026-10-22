@@ -41,11 +41,11 @@
         </div>
 
         <div class="space-y-2">
-            <a href="login.html" 
+            <a href="index.html" 
                class="block w-full bg-brand hover:bg-brand-light text-white font-medium py-2 rounded-lg transition-colors text-sm">
                 Login Ulang
             </a>
-            <a href="index.html" 
+            <a href="#" id="btnBeranda"
                class="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 rounded-lg transition-colors text-sm">
                 Kembali ke Beranda
             </a>
@@ -56,35 +56,65 @@
     </div>
 
     <script type="module">
-        import { auth, onAuthStateChanged, signOut } from './assets/js/firebase.js';
-        import { getUserProfile, getDashboardUrl } from './assets/js/auth.js';
+        import { auth, db, doc, getDoc, onAuthStateChanged, signOut } from './assets/js/firebase.js';
 
         // ============================================================
-        // CEK STATUS — kalau sudah login & status active, redirect
+        // KONFIGURASI URL PUBLIC (auto-detect)
+        // ============================================================
+        const isLocal = window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1';
+
+        const PUBLIC_URL = isLocal 
+            ? window.location.origin + '/public'
+            : 'https://imdkomyogyakarta.netlify.app';
+
+        // Set link "Kembali ke Beranda"
+        const btnBeranda = document.getElementById('btnBeranda');
+        if (btnBeranda) btnBeranda.href = PUBLIC_URL;
+
+        // ============================================================
+        // AMBIL PROFIL DARI FIRESTORE (inline)
+        // ============================================================
+        async function getUserProfile(uid) {
+            try {
+                const docSnap = await getDoc(doc(db, 'users', uid));
+                if (!docSnap.exists()) return null;
+                return { uid, ...docSnap.data() };
+            } catch (error) {
+                console.error('Error getting user profile:', error);
+                return null;
+            }
+        }
+
+        // ============================================================
+        // CEK STATUS
         // ============================================================
         onAuthStateChanged(auth, async (user) => {
-            if (!user) return; // belum login — biarkan halaman tampil
+            if (!user) return;
 
             const profile = await getUserProfile(user.uid);
             if (!profile) return;
 
-            // Kalau sudah active → redirect ke dashboard
+            // Kalau sudah active → redirect ke dashboard tentor
             if (profile.status === 'active') {
-                window.location.href = getDashboardUrl(profile.role);
+                window.location.href = 'dashboard.html';
                 return;
             }
 
-            // Kalau rejected → logout + redirect ke login
+            // Kalau rejected → logout + redirect ke login tentor
             if (profile.status === 'rejected') {
                 await signOut(auth);
-                window.location.href = 'login.html?error=account_inactive';
+                window.location.href = 'index.html?error=account_inactive';
                 return;
             }
 
             // Kalau masih pending → tampilkan info
             const statusInfo = document.getElementById('statusInfo');
             if (statusInfo) {
-                statusInfo.textContent = `Status: ${profile.status} • Terdaftar: ${new Date(profile.createdAt).toLocaleDateString('id-ID')}`;
+                const tgl = profile.createdAt 
+                    ? new Date(profile.createdAt).toLocaleDateString('id-ID') 
+                    : '-';
+                statusInfo.textContent = `Status: ${profile.status} • Terdaftar: ${tgl}`;
                 statusInfo.classList.remove('hidden');
             }
         });

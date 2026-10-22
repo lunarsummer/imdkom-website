@@ -1,9 +1,18 @@
 // ============================================================
-// Auth Helper — IMDKOM
+// Auth Helper — IMDKOM (ADMIN)
 // Cek role, proteksi halaman, redirect berdasarkan role
 // ============================================================
 
 import { auth, db, onAuthStateChanged, signOut, doc, getDoc } from './firebase.js';
+
+// ============================================================
+// KONFIGURASI DOMAIN
+// ============================================================
+const DOMAIN_CONFIG = {
+    public: 'https://imdkomputer.id',
+    admin: 'https://admin.imdkomputer.id',
+    tentor: 'https://tentor.imdkomputer.id'
+};
 
 // ============================================================
 // AMBIL PROFIL USER DARI FIRESTORE
@@ -24,32 +33,26 @@ export async function getUserProfile(uid) {
 // ============================================================
 export function getDashboardUrl(role) {
     switch (role) {
-        case 'admin': return '/admin/dashboard.html';
-        case 'tentor': return '/tentor/dashboard.html';
-        case 'siswa': return '/siswa/dashboard.html';
-        default: return '/login.html';
+        case 'admin': return `${DOMAIN_CONFIG.admin}/dashboard.html`;
+        case 'tentor': return `${DOMAIN_CONFIG.tentor}/dashboard.html`;
+        default: return `${DOMAIN_CONFIG.public}/`;
     }
 }
 
 // ============================================================
-// PROTEKSI HALAMAN
-// Panggil di awal setiap halaman yang butuh login.
-// @param {Object} options
-//   - allowedRoles: array role yang boleh akses (mis. ['admin'])
-//   - requireActive: boolean (default true) — cek status 'active'
-//   - onAuthorized: function(profile) — dipanggil kalau lolos
+// PROTEKSI HALAMAN (ADMIN ONLY)
 // ============================================================
 export function protectPage(options = {}) {
     const {
-        allowedRoles = [],
+        allowedRoles = ['admin'],   // default: hanya admin
         requireActive = true,
         onAuthorized = () => {}
     } = options;
 
     onAuthStateChanged(auth, async (user) => {
-        // Belum login → redirect ke login
+        // Belum login → redirect ke login admin
         if (!user) {
-            window.location.href = '/login.html';
+            window.location.href = './index.html';
             return;
         }
 
@@ -60,27 +63,25 @@ export function protectPage(options = {}) {
         if (!profile) {
             console.error('Profil user tidak ditemukan');
             await signOut(auth);
-            window.location.href = '/login.html';
+            window.location.href = './index.html';
             return;
         }
 
         // Cek status aktif
         if (requireActive && profile.status !== 'active') {
-            // Tentor pending → halaman pending approval
-            if (profile.role === 'tentor' && profile.status === 'pending') {
-                window.location.href = '/pending-approval.html';
-                return;
-            }
-            // Status lain (rejected) → logout
             await signOut(auth);
-            window.location.href = '/login.html?error=account_inactive';
+            window.location.href = './index.html?error=account_inactive';
             return;
         }
 
         // Cek role
         if (allowedRoles.length > 0 && !allowedRoles.includes(profile.role)) {
-            // Role tidak diizinkan → redirect ke dashboard-nya sendiri
-            window.location.href = getDashboardUrl(profile.role);
+            // Role tidak diizinkan → redirect ke portal yang sesuai
+            if (profile.role === 'tentor') {
+                window.location.href = `${DOMAIN_CONFIG.tentor}/`;
+            } else {
+                window.location.href = './index.html';
+            }
             return;
         }
 
@@ -94,5 +95,5 @@ export function protectPage(options = {}) {
 // ============================================================
 export async function logout() {
     await signOut(auth);
-    window.location.href = '/login.html';
+    window.location.href = './index.html';
 }

@@ -7,7 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
     
     <style>
         .stat-card {
@@ -399,9 +399,9 @@
         import { 
             auth, db, signOut, 
             collection, getDocs, query, where, orderBy, doc, updateDoc, getDoc 
-        } from '../assets/js/firebase.js';
-        import { protectPage } from '../assets/js/auth.js';
-        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+        } from './assets/js/firebase.js';
+        import { protectPage } from './assets/js/auth.js';
+        import { optimizeCloudinaryUrl } from './assets/js/cloudinary.js';
 
         // MOBILE SIDEBAR
         const sidebar = document.getElementById('sidebar');

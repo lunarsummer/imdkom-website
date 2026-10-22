@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login | IMDKOM</title>
+    <title>Login Admin | IMDKOM</title>
     
-    <!-- Hapus Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -33,11 +32,9 @@
 
     <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full">
         <h1 class="text-2xl font-bold text-brand">IMDKOM</h1>
-        <p class="text-gray-500 text-sm mb-6">Login Admin / Tentor</p>
+        <p class="text-gray-500 text-sm mb-6">Login Admin</p>
 
-        <!-- ============================================================ -->
-        <!-- SESI AKTIF — tampil kalau ada user yang sudah login          -->
-        <!-- ============================================================ -->
+        <!-- SESI AKTIF -->
         <div id="activeSessionBox" class="hidden mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <p class="text-sm text-blue-800 mb-2">
                 Anda sudah login sebagai <strong id="activeSessionEmail">-</strong>.
@@ -54,11 +51,8 @@
             </div>
         </div>
 
-        <!-- ============================================================ -->
-        <!-- FORM LOGIN                                                    -->
-        <!-- ============================================================ -->
+        <!-- FORM LOGIN -->
         <div id="loginFormWrapper">
-            <!-- Loading indicator -->
             <div id="loadingIndicator" class="hidden text-center py-4">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
                 <p class="text-sm text-gray-500 mt-2">Memproses...</p>
@@ -90,17 +84,9 @@
                 <div id="loginError" class="text-red-600 text-sm mt-3 hidden"></div>
                 <div id="loginInfo" class="text-blue-600 text-sm mt-3 hidden"></div>
             </form>
-
-            <!-- Link register tentor -->
-            <div class="mt-4 pt-4 border-t border-gray-200 text-center">
-                <p class="text-sm text-gray-500">
-                    Belum punya akun tentor?
-                    <a href="register-tentor.html" class="text-brand hover:text-brand-light font-medium">Daftar di sini</a>
-                </p>
-            </div>
         </div>
 
-        <a href="index.html" class="block text-center text-gray-400 text-sm mt-4 hover:text-gray-600 transition-colors">
+        <a href="https://imdkomputer.id" class="block text-center text-gray-400 text-sm mt-4 hover:text-gray-600 transition-colors">
             ← Kembali ke Beranda
         </a>
     </div>
@@ -123,34 +109,43 @@
         let currentUser = null;
         let isProcessing = false;
 
-        // ============================================================
-        // FLAG: kalau user baru datang dari halaman register/logout,
-        // jangan auto-redirect. Biarkan mereka lihat form login.
-        // ============================================================
         const urlParams = new URLSearchParams(window.location.search);
-        const skipAutoRedirect = urlParams.get('fresh') === '1' || urlParams.get('from') === 'register';
+        const skipAutoRedirect = urlParams.get('fresh') === '1';
 
         // ============================================================
         // CEK SESI — kalau ada user login, tampilkan pilihan
-        // JANGAN auto-redirect. Biarkan user pilih lanjut atau logout.
+        // ADMIN ONLY: kalau user bukan admin, logout otomatis
         // ============================================================
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
 
             if (user && !skipAutoRedirect) {
-                // Ada sesi aktif → tampilkan kotak "sudah login"
+                // Cek role — hanya admin yang boleh lanjut
+                const profile = await getUserProfile(user.uid);
+                
+                if (!profile || profile.role !== 'admin') {
+                    // Bukan admin — logout otomatis
+                    await signOut(auth);
+                    activeSessionBox.classList.add('hidden');
+                    formWrapper.classList.remove('hidden');
+                    if (profile && profile.role === 'tentor') {
+                        errorEl.textContent = 'Akun ini adalah tentor. Silakan login di portal tentor.';
+                        errorEl.classList.remove('hidden');
+                    }
+                    return;
+                }
+                
                 activeSessionEmail.textContent = user.email;
                 activeSessionBox.classList.remove('hidden');
                 formWrapper.classList.add('hidden');
             } else {
-                // Tidak ada sesi → tampilkan form login
                 activeSessionBox.classList.add('hidden');
                 formWrapper.classList.remove('hidden');
             }
         });
 
         // ============================================================
-        // LANJUTKAN SESI — redirect sesuai role
+        // LANJUTKAN SESI
         // ============================================================
         continueSessionBtn?.addEventListener('click', async () => {
             if (!currentUser) return;
@@ -160,26 +155,11 @@
 
             const profile = await getUserProfile(currentUser.uid);
 
-            if (!profile) {
+            if (!profile || profile.role !== 'admin') {
                 await signOut(auth);
                 activeSessionBox.classList.add('hidden');
                 formWrapper.classList.remove('hidden');
-                errorEl.textContent = 'Profil tidak ditemukan. Hubungi admin.';
-                errorEl.classList.remove('hidden');
-                continueSessionBtn.disabled = false;
-                continueSessionBtn.textContent = 'Lanjutkan';
-                return;
-            }
-
-            // Cek status
-            if (profile.status === 'pending') {
-                window.location.href = 'pending-approval.html';
-                return;
-            }
-
-            if (profile.status === 'rejected') {
-                await signOut(auth);
-                errorEl.textContent = 'Pendaftaran Anda ditolak. Hubungi admin.';
+                errorEl.textContent = 'Bukan akun admin. Silakan login ulang.';
                 errorEl.classList.remove('hidden');
                 continueSessionBtn.disabled = false;
                 continueSessionBtn.textContent = 'Lanjutkan';
@@ -188,15 +168,15 @@
 
             if (profile.status !== 'active') {
                 await signOut(auth);
-                errorEl.textContent = 'Status akun tidak valid. Hubungi admin.';
+                errorEl.textContent = 'Status akun tidak valid. Hubungi super admin.';
                 errorEl.classList.remove('hidden');
                 continueSessionBtn.disabled = false;
                 continueSessionBtn.textContent = 'Lanjutkan';
                 return;
             }
 
-            // Redirect ke dashboard
-            window.location.href = getDashboardUrl(profile.role);
+            // Admin aktif → redirect ke dashboard
+            window.location.href = 'dashboard.html';
         });
 
         // ============================================================
@@ -217,7 +197,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Cegah double-submit
             if (isProcessing) return;
             isProcessing = true;
 
@@ -262,7 +241,25 @@
                     return;
                 }
 
-                // 4. Cek status
+                // 4. Cek role — hanya admin
+                if (profile.role !== 'admin') {
+                    await signOut(auth);
+                    loadingEl.classList.add('hidden');
+                    infoEl.classList.add('hidden');
+                    
+                    if (profile.role === 'tentor') {
+                        errorEl.innerHTML = 'Akun ini adalah <strong>tentor</strong>. Silakan login di <a href="https://tentor.imdkomputer.id" class="underline">portal tentor</a>.';
+                    } else {
+                        errorEl.textContent = 'Anda tidak punya akses ke panel admin.';
+                    }
+                    errorEl.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    isProcessing = false;
+                    return;
+                }
+
+                // 5. Cek status
                 if (profile.status === 'pending') {
                     infoEl.textContent = 'Akun menunggu verifikasi admin...';
                     setTimeout(() => {
@@ -275,7 +272,7 @@
                     await signOut(auth);
                     loadingEl.classList.add('hidden');
                     infoEl.classList.add('hidden');
-                    errorEl.textContent = 'Pendaftaran Anda ditolak. Hubungi admin.';
+                    errorEl.textContent = 'Akun Anda ditolak. Hubungi super admin.';
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Login';
@@ -287,7 +284,7 @@
                     await signOut(auth);
                     loadingEl.classList.add('hidden');
                     infoEl.classList.add('hidden');
-                    errorEl.textContent = 'Status akun tidak valid. Hubungi admin.';
+                    errorEl.textContent = 'Status akun tidak valid. Hubungi super admin.';
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Login';
@@ -295,11 +292,10 @@
                     return;
                 }
 
-                // 5. Redirect
+                // 6. Redirect ke dashboard admin
                 infoEl.textContent = '✅ Berhasil! Mengarahkan...';
-                const dashboardUrl = getDashboardUrl(profile.role);
                 setTimeout(() => {
-                    window.location.href = dashboardUrl;
+                    window.location.href = 'dashboard.html';
                 }, 600);
 
             } catch (error) {
@@ -325,14 +321,8 @@
             }
         });
 
-        // ============================================================
-        // CEGAH AUTO-SUBMIT dari browser autofill
-        // ============================================================
-        // Beberapa browser (Chrome) memicu 'submit' otomatis setelah
-        // autofill. Kita "kunci" form sampai user benar-benar klik
-        // tombol atau tekan Enter.
+        // Cegah auto-submit dari autofill
         let userInteracted = false;
-
         document.getElementById('email').addEventListener('input', () => { userInteracted = true; });
         document.getElementById('password').addEventListener('input', () => { userInteracted = true; });
         submitBtn.addEventListener('click', () => { userInteracted = true; });
@@ -341,10 +331,9 @@
             if (!userInteracted) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('⏭️ Auto-submit dari autofill dicegah');
                 return false;
             }
-        }, true); // capture phase — jalan sebelum handler utama
+        }, true);
     </script>
 
 </body>

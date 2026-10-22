@@ -21,7 +21,7 @@
         }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
     
     <style>
         .form-preview-img {
@@ -412,7 +412,7 @@
                 <h2>Landing Page</h2>
                 <p class="text-gray-500 text-sm mt-1">Kelola konten halaman utama website</p>
             </div>
-            <a href="../index.html" target="_blank" class="btn-secondary">
+            <a href="https://imdkomyogyakarta.netlify.app/" target="_blank" class="btn-secondary">
                 <i data-lucide="external-link" class="w-4 h-4"></i>
                 Lihat Website
             </a>
@@ -655,8 +655,9 @@
     </main>
 
     <script type="module">
-        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from '../assets/js/firebase.js';
-        import { setupImageUploadField } from '../assets/js/cloudinary.js';
+        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from './assets/js/firebase.js';
+        import { setupImageUploadField } from './assets/js/cloudinary.js';
+        
 
         // ============================================================
         // CLOUDINARY CONFIG — HERO
@@ -1107,7 +1108,7 @@
         // ============================================================
         async function uploadStickerImage(idx) {
             try {
-                const { openCloudinaryUpload } = await import('../assets/js/cloudinary.js');
+                const { openCloudinaryUpload } = await import('./assets/js/cloudinary.js');
 
                 openCloudinaryUpload({
                     folder: 'landing/stickers',
@@ -1152,7 +1153,7 @@
         // ============================================================
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
             } else {
                 setupImageUploadField(HERO_GAMBAR_CONFIG);
                 loadContent();
@@ -1162,7 +1163,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         });
 
         // ============================================================

@@ -7,7 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
 
     <style>
     /* ============================================================
@@ -261,9 +261,9 @@
     JAVASCRIPT
     ============================================================ -->
     <script type="module">
-        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from '../assets/js/firebase.js';
-        import { PLACEHOLDER_IMAGE } from '../assets/js/placeholder.js';
-        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from './assets/js/firebase.js';
+        import { PLACEHOLDER_IMAGE } from './assets/js/placeholder.js';
+        import { optimizeCloudinaryUrl } from './assets/js/cloudinary.js';
 
         // ============================================================
         // MOBILE SIDEBAR
@@ -287,7 +287,7 @@
         // ============================================================
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
             } else {
                 loadPrograms();
                 lucide.createIcons();
@@ -296,7 +296,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         });
 
         // ============================================================

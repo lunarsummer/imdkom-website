@@ -7,7 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
     
     <style>
         .stats-grid {
@@ -301,7 +301,7 @@
     </main>
 
     <script type="module">
-        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, where } from '../assets/js/firebase.js';
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, where } from './assets/js/firebase.js';
 
         // Mobile sidebar
         const sidebar = document.getElementById('sidebar');
@@ -316,7 +316,7 @@
         });
 
         onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = 'login.html';
+            if (!user) window.location.href = 'index.html';
             else {
                 document.getElementById('adminEmail').textContent = user.email;
                 loadStats();
@@ -326,7 +326,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         });
 
 async function loadStats() {

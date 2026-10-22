@@ -7,7 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
     
     <style>
         .stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
@@ -283,9 +283,9 @@
         import { 
             auth, signOut, 
             db, collection, query, where, getDocs 
-        } from '../assets/js/firebase.js';
-        import { protectPage } from '../assets/js/auth.js';
-        import { optimizeCloudinaryUrl } from '../assets/js/cloudinary.js';
+        } from './assets/js/firebase.js';
+        import { protectPage } from './assets/js/auth.js';
+        import { optimizeCloudinaryUrl } from './assets/js/cloudinary.js';
 
         // MOBILE SIDEBAR
         const sidebar = document.getElementById('sidebar');
@@ -320,7 +320,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
-            window.location.href = '../login.html';
+            window.location.href = './index.html';
         });
 
         // RENDER SIDEBAR BRAND
