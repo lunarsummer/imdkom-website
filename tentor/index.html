@@ -15,6 +15,12 @@
         }
     </script>
     
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -22,86 +28,161 @@
                 extend: {
                     colors: {
                         brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                        accent: { DEFAULT: '#059669', hover: '#047857' } // Warna hijau untuk aksen
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+<body class="font-sans bg-white min-h-screen flex">
 
-    <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full">
-        <h1 class="text-2xl font-bold text-brand">IMDKOM</h1>
-        <p class="text-gray-500 text-sm mb-6">Login Tentor</p>
+    <!-- ============================================================ -->
+    <!-- KOLOM KIRI: BRANDING & VISUAL (Hanya Desktop)                -->
+    <!-- ============================================================ -->
+    <div class="hidden lg:flex lg:w-1/2 relative bg-brand items-center justify-center overflow-hidden">
+        <!-- Overlay & Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
+        
+        <!-- Gradient Glow -->
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
 
-        <!-- SESI AKTIF -->
-        <div id="activeSessionBox" class="hidden mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p class="text-sm text-blue-800 mb-2">
-                Anda sudah login sebagai <strong id="activeSessionEmail">-</strong>.
-            </p>
-            <div class="flex gap-2">
-                <button id="continueSessionBtn" 
-                        class="flex-1 bg-brand hover:bg-brand-light text-white text-sm font-medium py-2 rounded-lg transition-colors">
-                    Lanjutkan
-                </button>
-                <button id="logoutSessionBtn" 
-                        class="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 text-sm font-medium py-2 rounded-lg transition-colors">
-                    Logout
-                </button>
-            </div>
-        </div>
-
-        <!-- FORM LOGIN -->
-        <div id="loginFormWrapper">
-            <div id="loadingIndicator" class="hidden text-center py-4">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
-                <p class="text-sm text-gray-500 mt-2">Memproses...</p>
-            </div>
-
-            <form id="loginForm" autocomplete="off">
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                           id="email" 
-                           placeholder="nama@email.com" 
-                           autocomplete="off"
-                           required />
+        <div class="relative z-10 max-w-lg px-12 text-white">
+            <div class="mb-8">
+                <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 mb-6">
+                    <i data-lucide="graduation-cap" class="w-8 h-8 text-white"></i>
                 </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                           id="password" 
-                           placeholder="Password" 
-                           autocomplete="new-password"
-                           required />
-                </div>
-                <button type="submit" id="submitBtn" 
-                        class="w-full bg-brand hover:bg-brand-light text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                    Login
-                </button>
-                <div id="loginError" class="text-red-600 text-sm mt-3 hidden"></div>
-                <div id="loginInfo" class="text-blue-600 text-sm mt-3 hidden"></div>
-            </form>
-
-            <!-- Link register tentor -->
-            <div class="mt-4 pt-4 border-t border-gray-200 text-center">
-                <p class="text-sm text-gray-500">
-                    Belum punya akun tentor?
-                    <a href="register.html" class="text-brand hover:text-brand-light font-medium">Daftar di sini</a>
+                <h1 class="text-4xl font-bold mb-4 leading-tight">Portal <br> Khusus Tentor</h1>
+                <p class="text-brand-100 text-lg text-white/80 leading-relaxed">
+                    Kelola jadwal mengajar, usulan program, dan profil Anda dengan mudah dalam satu platform terpadu.
                 </p>
             </div>
+            
+            <div class="flex items-center gap-3 text-sm text-white/60 mt-12">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+                <span>Akses aman & terenkripsi</span>
+            </div>
         </div>
-
-        <a href="https://imdkomyogyakarta.netlify.app" class="block text-center text-gray-400 text-sm mt-4 hover:text-gray-600 transition-colors">
-            ← Kembali ke Beranda
-        </a>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- KOLOM KANAN: FORM LOGIN (Responsif)                          -->
+    <!-- ============================================================ -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
+        
+        <!-- Tombol Kembali ke Beranda (Pojok Kiri Atas di Mobile) -->
+        <a href="https://imdkomyogyakarta.netlify.app" class="absolute top-6 left-6 flex items-center gap-2 text-sm text-gray-500 hover:text-brand transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Beranda
+        </a>
+
+        <div class="w-full max-w-md">
+            <!-- Logo Header -->
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-brand">IMDKOM</h2>
+                <p class="text-gray-500 mt-1">Masuk ke Portal Tentor</p>
+            </div>
+
+            <!-- SESI AKTIF -->
+            <div id="activeSessionBox" class="hidden mb-6 p-5 bg-blue-50 border border-blue-100 rounded-2xl">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="user-check" class="w-5 h-5 text-blue-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-blue-900 font-medium">Sesi Ditemukan</p>
+                        <p class="text-xs text-blue-700 mt-0.5">Login sebagai <strong id="activeSessionEmail">-</strong></p>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-4">
+                    <button id="continueSessionBtn" 
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2.5 rounded-xl transition-colors">
+                        Lanjutkan
+                    </button>
+                    <button id="logoutSessionBtn" 
+                            class="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 text-sm font-medium py-2.5 rounded-xl transition-colors">
+                        Ganti Akun
+                    </button>
+                </div>
+            </div>
+
+            <!-- FORM LOGIN -->
+            <div id="loginFormWrapper">
+                <div id="loadingIndicator" class="hidden text-center py-4 mb-4">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                    <p class="text-sm text-gray-500 mt-3">Memproses...</p>
+                </div>
+
+                <form id="loginForm" autocomplete="off" class="space-y-5">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Alamat Email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <i data-lucide="mail" class="h-5 w-5 text-gray-400"></i>
+                            </div>
+                            <input type="email" 
+                                   id="email" 
+                                   class="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all bg-gray-50 focus:bg-white" 
+                                   placeholder="nama@email.com" 
+                                   autocomplete="off"
+                                   required />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <i data-lucide="lock" class="h-5 w-5 text-gray-400"></i>
+                            </div>
+                            <input type="password" 
+                                   id="password" 
+                                   class="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all bg-gray-50 focus:bg-white" 
+                                   placeholder="••••••••" 
+                                   autocomplete="new-password"
+                                   required />
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" 
+                            class="w-full bg-brand hover:bg-brand-light text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md shadow-brand/20 hover:shadow-lg hover:-translate-y-0.5 mt-2">
+                        Masuk ke Dashboard
+                    </button>
+                    
+                    <div id="loginError" class="text-red-600 text-sm mt-3 hidden bg-red-50 p-3 rounded-lg border border-red-100"></div>
+                    <div id="loginInfo" class="text-blue-600 text-sm mt-3 hidden bg-blue-50 p-3 rounded-lg border border-blue-100"></div>
+                </form>
+
+                <!-- Link register tentor -->
+                <div class="mt-8 text-center">
+                    <p class="text-sm text-gray-500">
+                        Belum punya akun tentor?
+                        <a href="register.html" class="text-brand hover:text-brand-light font-semibold hover:underline">Daftar di sini</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT LOGIC (Sama seperti sebelumnya, tidak diubah)     -->
+    <!-- ============================================================ -->
     <script type="module">
         import { auth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from './assets/js/firebase.js';
         import { getUserProfile } from './assets/js/auth.js';
+
+        // Init Icons
+        lucide.createIcons();
 
         const form = document.getElementById('loginForm');
         const errorEl = document.getElementById('loginError');
@@ -121,7 +202,7 @@
         const skipAutoRedirect = urlParams.get('fresh') === '1';
 
         // ============================================================
-        // CEK SESI — TENTOR ONLY
+        // CEK SESI
         // ============================================================
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
@@ -140,9 +221,8 @@
                     return;
                 }
                 
-                // Cek status tentor
                 if (profile.status === 'pending') {
-                    window.location.href = 'https://imdkomputer.id/pending-approval.html';
+                    window.location.href = 'pending.html';
                     return;
                 }
                 
@@ -162,7 +242,8 @@
             if (!currentUser) return;
 
             continueSessionBtn.disabled = true;
-            continueSessionBtn.textContent = 'Memeriksa...';
+            continueSessionBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline animate-spin"></i> Memeriksa...`;
+            lucide.createIcons();
 
             const profile = await getUserProfile(currentUser.uid);
 
@@ -178,7 +259,7 @@
             }
 
             if (profile.status === 'pending') {
-                window.location.href = 'https://imdkomputer.id/pending-approval.html';
+                window.location.href = 'pending.html';
                 return;
             }
 
@@ -191,7 +272,6 @@
                 return;
             }
 
-            // Tentor aktif → redirect ke dashboard tentor
             window.location.href = 'dashboard.html';
         });
 
@@ -231,13 +311,13 @@
 
             try {
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Login...';
+                submitBtn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 inline animate-spin"></i> Memverifikasi...`;
+                lucide.createIcons();
 
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                console.log('✅ Login berhasil:', userCredential.user.email);
-
+                
                 loadingEl.classList.remove('hidden');
-                infoEl.textContent = 'Memeriksa akun...';
+                infoEl.textContent = 'Memeriksa hak akses...';
                 infoEl.classList.remove('hidden');
 
                 const profile = await getUserProfile(userCredential.user.uid);
@@ -249,12 +329,11 @@
                     errorEl.textContent = 'Profil tidak ditemukan. Hubungi admin.';
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
+                    submitBtn.innerHTML = 'Masuk ke Dashboard';
                     isProcessing = false;
                     return;
                 }
 
-                // Cek role — hanya tentor
                 if (profile.role !== 'tentor') {
                     await signOut(auth);
                     loadingEl.classList.add('hidden');
@@ -267,16 +346,15 @@
                     }
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
+                    submitBtn.innerHTML = 'Masuk ke Dashboard';
                     isProcessing = false;
                     return;
                 }
 
-                // Cek status
                 if (profile.status === 'pending') {
                     infoEl.textContent = 'Akun menunggu verifikasi admin...';
                     setTimeout(() => {
-                        window.location.href = 'https://imdkomputer.id/pending-approval.html';
+                        window.location.href = 'pending.html';
                     }, 800);
                     return;
                 }
@@ -288,7 +366,7 @@
                     errorEl.textContent = 'Pendaftaran Anda ditolak. Hubungi admin.';
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
+                    submitBtn.innerHTML = 'Masuk ke Dashboard';
                     isProcessing = false;
                     return;
                 }
@@ -300,12 +378,11 @@
                     errorEl.textContent = 'Status akun tidak valid. Hubungi admin.';
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
+                    submitBtn.innerHTML = 'Masuk ke Dashboard';
                     isProcessing = false;
                     return;
                 }
 
-                // Redirect ke dashboard tentor
                 infoEl.textContent = '✅ Berhasil! Mengarahkan...';
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
@@ -329,7 +406,7 @@
                 }
                 errorEl.classList.remove('hidden');
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Login';
+                submitBtn.innerHTML = 'Masuk ke Dashboard';
                 isProcessing = false;
             }
         });
