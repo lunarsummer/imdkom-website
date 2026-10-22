@@ -15,6 +15,12 @@
         }
     </script>
     
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -22,78 +28,153 @@
                 extend: {
                     colors: {
                         brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#0f2a42' },
+                        adminAccent: { DEFAULT: '#4f46e5', hover: '#4338ca' } // Warna Indigo untuk Admin
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+<body class="font-sans bg-white min-h-screen flex">
 
-    <div class="bg-white border border-gray-200 rounded-lg p-8 max-w-md w-full">
-        <h1 class="text-2xl font-bold text-brand">IMDKOM</h1>
-        <p class="text-gray-500 text-sm mb-6">Login Admin</p>
+    <!-- ============================================================ -->
+    <!-- KOLOM KIRI: BRANDING & VISUAL (Hanya Desktop)                -->
+    <!-- ============================================================ -->
+    <div class="hidden lg:flex lg:w-1/2 relative bg-slate-900 items-center justify-center overflow-hidden">
+        <!-- Overlay & Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
+        
+        <!-- Gradient Glow -->
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-brand-dark rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
 
-        <!-- SESI AKTIF -->
-        <div id="activeSessionBox" class="hidden mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p class="text-sm text-blue-800 mb-2">
-                Anda sudah login sebagai <strong id="activeSessionEmail">-</strong>.
-            </p>
-            <div class="flex gap-2">
-                <button id="continueSessionBtn" 
-                        class="flex-1 bg-brand hover:bg-brand-light text-white text-sm font-medium py-2 rounded-lg transition-colors">
-                    Lanjutkan
-                </button>
-                <button id="logoutSessionBtn" 
-                        class="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 text-sm font-medium py-2 rounded-lg transition-colors">
-                    Logout
-                </button>
+        <div class="relative z-10 max-w-lg px-12 text-white">
+            <div class="mb-8">
+                <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 mb-6">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-indigo-400"></i>
+                </div>
+                <h1 class="text-4xl font-bold mb-4 leading-tight">Pusat <br> Kendali Admin</h1>
+                <p class="text-slate-300 text-lg leading-relaxed">
+                    Kelola seluruh konten website, program, layanan, dan data pengguna IMDKOM dari satu dasbor terpusat.
+                </p>
+            </div>
+            
+            <div class="flex items-center gap-3 text-sm text-slate-400 mt-12 bg-white/5 p-4 rounded-xl border border-white/10 w-fit backdrop-blur-sm">
+                <i data-lucide="lock" class="w-5 h-5 text-indigo-400"></i>
+                <span>Otorisasi Tingkat Tinggi</span>
             </div>
         </div>
-
-        <!-- FORM LOGIN -->
-        <div id="loginFormWrapper">
-            <div id="loadingIndicator" class="hidden text-center py-4">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
-                <p class="text-sm text-gray-500 mt-2">Memproses...</p>
-            </div>
-
-            <form id="loginForm" autocomplete="off">
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                           id="email" 
-                           placeholder="nama@email.com" 
-                           autocomplete="off"
-                           required />
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none" 
-                           id="password" 
-                           placeholder="Password" 
-                           autocomplete="new-password"
-                           required />
-                </div>
-                <button type="submit" id="submitBtn" 
-                        class="w-full bg-brand hover:bg-brand-light text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                    Login
-                </button>
-                <div id="loginError" class="text-red-600 text-sm mt-3 hidden"></div>
-                <div id="loginInfo" class="text-blue-600 text-sm mt-3 hidden"></div>
-            </form>
-        </div>
-
-        <a href="https://imdkomputer.id" class="block text-center text-gray-400 text-sm mt-4 hover:text-gray-600 transition-colors">
-            ← Kembali ke Beranda
-        </a>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- KOLOM KANAN: FORM LOGIN (Responsif)                          -->
+    <!-- ============================================================ -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
+        
+        <!-- Tombol Kembali ke Beranda -->
+        <a href="https://imdkomputer.id" class="absolute top-6 left-6 flex items-center gap-2 text-sm text-gray-500 hover:text-slate-800 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Beranda
+        </a>
+
+        <div class="w-full max-w-md">
+            <!-- Logo Header -->
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-slate-800">IMDKOM</h2>
+                <p class="text-slate-500 mt-1">Area Terbatas Administrator</p>
+            </div>
+
+            <!-- SESI AKTIF -->
+            <div id="activeSessionBox" class="hidden mb-6 p-5 bg-indigo-50 border border-indigo-100 rounded-2xl">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="shield" class="w-5 h-5 text-indigo-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-indigo-900 font-medium">Sesi Admin Ditemukan</p>
+                        <p class="text-xs text-indigo-700 mt-0.5">Login sebagai <strong id="activeSessionEmail">-</strong></p>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-4">
+                    <button id="continueSessionBtn" 
+                            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2.5 rounded-xl transition-colors">
+                        Lanjutkan
+                    </button>
+                    <button id="logoutSessionBtn" 
+                            class="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 text-sm font-medium py-2.5 rounded-xl transition-colors">
+                        Ganti Akun
+                    </button>
+                </div>
+            </div>
+
+            <!-- FORM LOGIN -->
+            <div id="loginFormWrapper">
+                <div id="loadingIndicator" class="hidden text-center py-4 mb-4">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-slate-800 border-t-transparent"></div>
+                    <p class="text-sm text-gray-500 mt-3">Memproses...</p>
+                </div>
+
+                <form id="loginForm" autocomplete="off" class="space-y-5">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Email Administrator</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <i data-lucide="mail" class="h-5 w-5 text-gray-400"></i>
+                            </div>
+                            <input type="email" 
+                                   id="email" 
+                                   class="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-slate-800 focus:border-slate-800 outline-none transition-all bg-gray-50 focus:bg-white" 
+                                   placeholder="admin@email.com" 
+                                   autocomplete="off"
+                                   required />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="password" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <i data-lucide="key" class="h-5 w-5 text-gray-400"></i>
+                            </div>
+                            <input type="password" 
+                                   id="password" 
+                                   class="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-slate-800 focus:border-slate-800 outline-none transition-all bg-gray-50 focus:bg-white" 
+                                   placeholder="••••••••" 
+                                   autocomplete="new-password"
+                                   required />
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" 
+                            class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md shadow-slate-800/20 hover:shadow-lg hover:-translate-y-0.5 mt-2">
+                        Akses Dasbor Admin
+                    </button>
+                    
+                    <div id="loginError" class="text-red-600 text-sm mt-3 hidden bg-red-50 p-3 rounded-lg border border-red-100"></div>
+                    <div id="loginInfo" class="text-indigo-600 text-sm mt-3 hidden bg-indigo-50 p-3 rounded-lg border border-indigo-100"></div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT LOGIC (Logika Asli Tetap Dipertahankan)           -->
+    <!-- ============================================================ -->
     <script type="module">
         import { auth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from './assets/js/firebase.js';
         import { getUserProfile, getDashboardUrl } from './assets/js/auth.js';
+
+        // Init Icons
+        lucide.createIcons();
 
         const form = document.getElementById('loginForm');
         const errorEl = document.getElementById('loginError');
@@ -113,18 +194,15 @@
         const skipAutoRedirect = urlParams.get('fresh') === '1';
 
         // ============================================================
-        // CEK SESI — kalau ada user login, tampilkan pilihan
-        // ADMIN ONLY: kalau user bukan admin, logout otomatis
+        // CEK SESI — ADMIN ONLY
         // ============================================================
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
 
             if (user && !skipAutoRedirect) {
-                // Cek role — hanya admin yang boleh lanjut
                 const profile = await getUserProfile(user.uid);
                 
                 if (!profile || profile.role !== 'admin') {
-                    // Bukan admin — logout otomatis
                     await signOut(auth);
                     activeSessionBox.classList.add('hidden');
                     formWrapper.classList.remove('hidden');
@@ -151,7 +229,8 @@
             if (!currentUser) return;
 
             continueSessionBtn.disabled = true;
-            continueSessionBtn.textContent = 'Memeriksa...';
+            continueSessionBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline animate-spin"></i> Memeriksa...`;
+            lucide.createIcons();
 
             const profile = await getUserProfile(currentUser.uid);
 
@@ -175,7 +254,6 @@
                 return;
             }
 
-            // Admin aktif → redirect ke dashboard
             window.location.href = 'dashboard.html';
         });
 
@@ -215,18 +293,15 @@
 
             try {
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Login...';
+                submitBtn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 inline animate-spin"></i> Memverifikasi...`;
+                lucide.createIcons();
 
-                // 1. Login ke Firebase
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                console.log('✅ Login berhasil:', userCredential.user.email);
-
-                // 2. Tampilkan loading
+                
                 loadingEl.classList.remove('hidden');
-                infoEl.textContent = 'Memeriksa akun...';
+                infoEl.textContent = 'Memeriksa hak akses...';
                 infoEl.classList.remove('hidden');
 
-                // 3. Ambil profil
                 const profile = await getUserProfile(userCredential.user.uid);
 
                 if (!profile) {
@@ -236,12 +311,11 @@
                     errorEl.textContent = 'Profil tidak ditemukan. Hubungi admin.';
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
+                    submitBtn.innerHTML = 'Akses Dasbor Admin';
                     isProcessing = false;
                     return;
                 }
 
-                // 4. Cek role — hanya admin
                 if (profile.role !== 'admin') {
                     await signOut(auth);
                     loadingEl.classList.add('hidden');
@@ -254,12 +328,11 @@
                     }
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
+                    submitBtn.innerHTML = 'Akses Dasbor Admin';
                     isProcessing = false;
                     return;
                 }
 
-                // 5. Cek status
                 if (profile.status === 'pending') {
                     infoEl.textContent = 'Akun menunggu verifikasi admin...';
                     setTimeout(() => {
@@ -275,7 +348,7 @@
                     errorEl.textContent = 'Akun Anda ditolak. Hubungi super admin.';
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
+                    submitBtn.innerHTML = 'Akses Dasbor Admin';
                     isProcessing = false;
                     return;
                 }
@@ -287,12 +360,11 @@
                     errorEl.textContent = 'Status akun tidak valid. Hubungi super admin.';
                     errorEl.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
+                    submitBtn.innerHTML = 'Akses Dasbor Admin';
                     isProcessing = false;
                     return;
                 }
 
-                // 6. Redirect ke dashboard admin
                 infoEl.textContent = '✅ Berhasil! Mengarahkan...';
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
@@ -316,7 +388,7 @@
                 }
                 errorEl.classList.remove('hidden');
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Login';
+                submitBtn.innerHTML = 'Akses Dasbor Admin';
                 isProcessing = false;
             }
         });
