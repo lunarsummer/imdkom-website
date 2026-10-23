@@ -153,15 +153,15 @@
         }
         
         .step-nav-item.done {
-    background: transparent;
-    box-shadow: none;
-}
+            background: transparent;
+            box-shadow: none;
+        }
 
-.step-nav-item.done .step-nav-icon {
-    background: #059669;
-    color: white;
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
-}
+        .step-nav-item.done .step-nav-icon {
+            background: #059669;
+            color: white;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+        }
         
         .step-nav-icon {
             display: flex;
@@ -240,92 +240,88 @@
             margin-top: 0.25rem;
         }
         
-/* ============================================================
-   BOTTLENECK STATE DI STICKY NAV — 2 level (warning + danger)
-   ============================================================ */
+        /* ============================================================
+           BOTTLENECK STATE DI STICKY NAV — 2 level (warning + danger)
+           ============================================================ */
+        .step-nav-item.bottleneck-danger .step-nav-icon {
+            background: #dc2626 !important;
+            color: white !important;
+            box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+            animation: nav-danger-pulse 1.4s ease-in-out infinite;
+        }
 
-/* Level DANGER (merah, pulse kuat) */
-.step-nav-item.bottleneck-danger .step-nav-icon {
-    background: #dc2626 !important;
-    color: white !important;
-    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
-    animation: nav-danger-pulse 1.4s ease-in-out infinite;
-}
+        .step-nav-item.bottleneck-danger {
+            background: rgba(220, 38, 38, 0.1) !important;
+            border-color: rgba(220, 38, 38, 0.4) !important;
+            color: #dc2626 !important;
+        }
 
-.step-nav-item.bottleneck-danger {
-    background: rgba(220, 38, 38, 0.1) !important;
-    border-color: rgba(220, 38, 38, 0.4) !important;
-    color: #dc2626 !important;
-}
+        @keyframes nav-danger-pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+                transform: scale(1.08);
+            }
+        }
 
-@keyframes nav-danger-pulse {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
-        transform: scale(1);
-    }
-    50% {
-        box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
-        transform: scale(1.08);
-    }
-}
+        .step-nav-item.bottleneck-warning .step-nav-icon {
+            background: #f59e0b !important;
+            color: white !important;
+            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+            animation: nav-warning-pulse 2s ease-in-out infinite;
+        }
 
-/* Level WARNING (kuning/orange, pulse halus) */
-.step-nav-item.bottleneck-warning .step-nav-icon {
-    background: #f59e0b !important;
-    color: white !important;
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
-    animation: nav-warning-pulse 2s ease-in-out infinite;
-}
+        .step-nav-item.bottleneck-warning {
+            background: rgba(245, 158, 11, 0.1) !important;
+            border-color: rgba(245, 158, 11, 0.4) !important;
+            color: #d97706 !important;
+        }
 
-.step-nav-item.bottleneck-warning {
-    background: rgba(245, 158, 11, 0.1) !important;
-    border-color: rgba(245, 158, 11, 0.4) !important;
-    color: #d97706 !important;
-}
+        @keyframes nav-warning-pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+                transform: scale(1.05);
+            }
+        }
 
-@keyframes nav-warning-pulse {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
-        transform: scale(1);
-    }
-    50% {
-        box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
-        transform: scale(1.05);
-    }
-}
+        @media (max-width: 767px) {
+            .step-nav-item.bottleneck-danger .step-nav-icon {
+                background: #dc2626 !important;
+            }
+            .step-nav-item.bottleneck-warning .step-nav-icon {
+                background: #f59e0b !important;
+            }
+        }
 
-/* Mobile override */
-@media (max-width: 767px) {
-    .step-nav-item.bottleneck-danger .step-nav-icon {
-        background: #dc2626 !important;
-    }
-    .step-nav-item.bottleneck-warning .step-nav-icon {
-        background: #f59e0b !important;
-    }
-}
+        @media (prefers-reduced-motion: reduce) {
+            .step-nav-item.bottleneck-danger .step-nav-icon,
+            .step-nav-item.bottleneck-warning .step-nav-icon {
+                animation: none !important;
+            }
+            .step-nav-item.bottleneck-danger .step-nav-icon {
+                box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3);
+            }
+            .step-nav-item.bottleneck-warning .step-nav-icon {
+                box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3);
+            }
+        }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-    .step-nav-item.bottleneck-danger .step-nav-icon,
-    .step-nav-item.bottleneck-warning .step-nav-icon {
-        animation: none !important;
-    }
-    .step-nav-item.bottleneck-danger .step-nav-icon {
-        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3);
-    }
-    .step-nav-item.bottleneck-warning .step-nav-icon {
-        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3);
-    }
-}
         .step-progress-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background: linear-gradient(90deg, #059669, #10b981);
-    border-radius: 999px;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #059669, #10b981);
+            border-radius: 999px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         
         .step-progress-info {
             display: flex;
@@ -823,127 +819,127 @@
         }
 
         /* ============================================================
-   CPU USE CASE GUIDE
-   ============================================================ */
-.use-case-guide {
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.6);
-    border: 1.5px solid rgba(26, 60, 94, 0.1);
-    border-radius: 14px;
-    animation: fadeInUp 0.4s ease-out;
-}
+           CPU USE CASE GUIDE
+           ============================================================ */
+        .use-case-guide {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1.5px solid rgba(26, 60, 94, 0.1);
+            border-radius: 14px;
+            animation: fadeInUp 0.4s ease-out;
+        }
 
-.use-case-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0.875rem 0.5rem;
-    border-radius: 12px;
-    background: white;
-    border: 1.5px solid rgba(26, 60, 94, 0.1);
-    cursor: pointer;
-    transition: all 0.25s ease;
-    text-align: center;
-    min-height: 95px;
-    position: relative;
-    overflow: hidden;
-}
+        .use-case-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 0.5rem;
+            border-radius: 12px;
+            background: white;
+            border: 1.5px solid rgba(26, 60, 94, 0.1);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            min-height: 95px;
+            position: relative;
+            overflow: hidden;
+        }
 
-.use-case-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--uc-color);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
+        .use-case-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--uc-color);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
 
-.use-case-card:hover {
-    border-color: var(--uc-color);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(26, 60, 94, 0.12);
-    background: rgba(26, 60, 94, 0.03);
-}
+        .use-case-card:hover {
+            border-color: var(--uc-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(26, 60, 94, 0.12);
+            background: rgba(26, 60, 94, 0.03);
+        }
 
-.use-case-card:hover::before {
-    opacity: 1;
-}
+        .use-case-card:hover::before {
+            opacity: 1;
+        }
 
-.use-case-card:active {
-    transform: translateY(-1px);
-}
+        .use-case-card:active {
+            transform: translateY(-1px);
+        }
 
-.use-case-card i {
-    transition: transform 0.25s ease;
-}
+        .use-case-card i {
+            transition: transform 0.25s ease;
+        }
 
-.use-case-card:hover i {
-    transform: scale(1.15);
-}
+        .use-case-card:hover i {
+            transform: scale(1.15);
+        }
 
-@media (max-width: 640px) {
-    .use-case-guide {
-        padding: 0.75rem;
-    }
-    
-    .use-case-card {
-        min-height: 85px;
-        padding: 0.625rem 0.375rem;
-    }
-    
-    .use-case-card .font-bold {
-        font-size: 11px;
-    }
-    
-    .use-case-card .text-\[10px\] {
-        font-size: 9px;
-        line-height: 1.2;
-    }
-    
-    .use-case-card i {
-        width: 1rem;
-        height: 1rem;
-    }
-}
+        @media (max-width: 640px) {
+            .use-case-guide {
+                padding: 0.75rem;
+            }
+            
+            .use-case-card {
+                min-height: 85px;
+                padding: 0.625rem 0.375rem;
+            }
+            
+            .use-case-card .font-bold {
+                font-size: 11px;
+            }
+            
+            .use-case-card .text-\[10px\] {
+                font-size: 9px;
+                line-height: 1.2;
+            }
+            
+            .use-case-card i {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
 
-/* ============================================================
-   USE CASE BADGE (untuk step selain CPU)
-   ============================================================ */
-.use-case-badge {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 0.875rem;
-    border-radius: 10px;
-    font-weight: 500;
-    animation: fadeInUp 0.3s ease-out;
-}
+        /* ============================================================
+           USE CASE BADGE (untuk step selain CPU)
+           ============================================================ */
+        .use-case-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 0.875rem;
+            border-radius: 10px;
+            font-weight: 500;
+            animation: fadeInUp 0.3s ease-out;
+        }
 
-/* ============================================================
-   VGA DISABLED STATE (untuk Office)
-   ============================================================ */
-.vga-disabled-box {
-    padding: 1.25rem;
-    background: rgba(255, 255, 255, 0.6);
-    border: 1.5px dashed rgba(26, 60, 94, 0.15);
-    border-radius: 14px;
-    animation: fadeInUp 0.3s ease-out;
-}
+        /* ============================================================
+           VGA DISABLED STATE (untuk Office)
+           ============================================================ */
+        .vga-disabled-box {
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1.5px dashed rgba(26, 60, 94, 0.15);
+            border-radius: 14px;
+            animation: fadeInUp 0.3s ease-out;
+        }
 
-.vga-disabled-box button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.1);
-}
+        .vga-disabled-box button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.1);
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
 
 <!-- ============================================================ -->
-<!-- NAVIGATION (Rakit Komputer)                                  -->
+<!-- NAVIGATION (Rakit Komputer Aktif)                            -->
 <!-- ============================================================ -->
 <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
     <div class="container mx-auto px-4 flex items-center justify-between">
@@ -960,8 +956,7 @@
                 <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
             <a href="kursus.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                Kursus &amp; Pelatihan
-                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                Kursus &amp; Pelatihan                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
             <a href="service.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
                 Computer Service
@@ -986,6 +981,7 @@
         </div>
     </div>
         
+        <!-- Mobile Menu -->
         <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
             <div class="container mx-auto px-4 flex flex-col gap-2">
                 <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
@@ -993,14 +989,15 @@
                 <a href="service.html" class="text-gray-600 hover:text-brand py-1.5">Computer Service</a>
                 <a href="rakit-komputer.html" class="text-brand font-semibold py-1.5">Rakit Komputer</a>
                 <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="karir.html" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
                 <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
             </div>
         </div>
     </nav>
 
-    <!-- ============================================================
-    HERO (compact)
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- HERO (compact)                                               -->
+    <!-- ============================================================ -->
     <section class="pt-20 pb-3 no-print">
         <div class="container mx-auto px-4">
             <div class="text-center mb-4">
@@ -1018,9 +1015,9 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    STICKY STEP NAVIGATION
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- STICKY STEP NAVIGATION                                       -->
+    <!-- ============================================================ -->
     <div class="sticky-step-nav no-print" id="stickyStepNav">
         <div class="container mx-auto px-4">
             <div class="step-nav-inner" id="stepNavInner">
@@ -1036,9 +1033,9 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    MAIN CONTENT
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- MAIN CONTENT                                                 -->
+    <!-- ============================================================ -->
     <section class="pb-24 pt-4">
         <div class="container mx-auto px-4">
             <div class="flex flex-col lg:flex-row gap-6">
@@ -1063,9 +1060,9 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    MOBILE: FLOATING BUTTON + BOTTOM SHEET
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- MOBILE: FLOATING BUTTON + BOTTOM SHEET                       -->
+    <!-- ============================================================ -->
     <button id="mobileSummaryBtn" 
             class="lg:hidden fixed bottom-5 right-4 z-40 bg-brand text-white rounded-full px-4 py-2.5 shadow-2xl flex items-center gap-2 font-semibold text-xs no-print">
         <i data-lucide="clipboard-list" class="w-4 h-4"></i>
@@ -1089,9 +1086,9 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    JAVASCRIPT
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT                                                   -->
+    <!-- ============================================================ -->
 <script type="module">
     import { initPcBuilder } from './assets/js/pc-builder.js';
     import { openWhatsApp } from './assets/js/whatsapp.js';
@@ -1109,20 +1106,15 @@
             console.error('Failed to init PC Builder:', error);
         }
         
-        // Mobile Menu
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('mobileNav').classList.toggle('hidden');
-        });
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                document.getElementById('mobileNav').classList.toggle('hidden');
+            });
+        }
         
-        // Navbar shadow on scroll
-        const navbar = document.getElementById('mainNavbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 10) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        }, { passive: true });
+        // (Kode Navbar scroll shadow yang error sudah dihapus)
     });
 </script>
 </body>
