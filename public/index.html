@@ -58,30 +58,20 @@
             border-radius: 6px;
             padding: 2px 4px;
         }
-        
         .logo-shine::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.75) 50%,
-                transparent 70%
-            );
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.75) 50%, transparent 70%);
             animation: shine-sweep 3s infinite;
             z-index: 2;
             pointer-events: none;
         }
-        
         @keyframes shine-sweep {
             0% { left: -100%; }
             50%, 100% { left: 100%; }
         }
-        
         .logo-shine img {
             position: relative;
             z-index: 1;
@@ -89,7 +79,6 @@
             filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
             transition: filter 0.3s ease;
         }
-        
         .logo-shine:hover img {
             filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
         }
@@ -117,129 +106,80 @@
             overflow: hidden;
             text-decoration: none;
             font-weight: 600;
-            background: linear-gradient(
-                135deg,
-                rgba(26, 60, 94, 0.12) 0%,
-                rgba(26, 60, 94, 0.06) 50%,
-                rgba(26, 60, 94, 0.12) 100%
-            );
+            background: linear-gradient(135deg, rgba(26, 60, 94, 0.12) 0%, rgba(26, 60, 94, 0.06) 50%, rgba(26, 60, 94, 0.12) 100%);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(26, 60, 94, 0.25);
-            box-shadow: 
-                0 4px 20px rgba(26, 60, 94, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 20px rgba(26, 60, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
             color: #1a3c5e !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             animation: highlight-pulse 3s ease-in-out infinite;
         }
-
         .mobile-menu-highlight::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.7) 50%,
-                transparent 70%
-            );
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.7) 50%, transparent 70%);
             animation: mobile-shine 3.5s infinite;
             z-index: 1;
             pointer-events: none;
         }
-
         @keyframes mobile-shine {
             0% { left: -100%; }
             50%, 100% { left: 100%; }
         }
-
-        .mobile-menu-highlight > * {
-            position: relative;
-            z-index: 2;
-        }
-
+        .mobile-menu-highlight > * { position: relative; z-index: 2; }
         .mobile-menu-highlight .menu-icon-wrap {
             display: flex;
             align-items: center;
             gap: 0.6rem;
         }
-
         .mobile-menu-highlight .menu-icon-wrap i {
             filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
             transition: filter 0.3s ease;
         }
-
         .mobile-menu-highlight .menu-arrow {
-            width: 1rem;
-            height: 1rem;
+            width: 1rem; height: 1rem;
             opacity: 0.6;
             transition: all 0.3s ease;
         }
-
         .mobile-menu-highlight:hover,
         .mobile-menu-highlight:active {
             transform: translateX(4px) scale(1.01);
-            background: linear-gradient(
-                135deg,
-                rgba(26, 60, 94, 0.18) 0%,
-                rgba(26, 60, 94, 0.1) 50%,
-                rgba(26, 60, 94, 0.18) 100%
-            );
+            background: linear-gradient(135deg, rgba(26,60,94,0.18) 0%, rgba(26,60,94,0.1) 50%, rgba(26,60,94,0.18) 100%);
             border-color: rgba(26, 60, 94, 0.4);
-            box-shadow: 
-                0 6px 24px rgba(26, 60, 94, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            box-shadow: 0 6px 24px rgba(26,60,94,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
         }
-
         .mobile-menu-highlight:hover .menu-arrow,
         .mobile-menu-highlight:active .menu-arrow {
             opacity: 1;
             transform: translateX(4px);
         }
-
         .mobile-menu-highlight:hover .menu-icon-wrap i {
             filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
         }
-
         @keyframes highlight-pulse {
-            0%, 100% {
-                box-shadow: 
-                    0 4px 20px rgba(26, 60, 94, 0.08),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            }
-            50% {
-                box-shadow: 
-                    0 4px 24px rgba(26, 60, 94, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-                    0 0 20px rgba(26, 60, 94, 0.15);
-            }
+            0%, 100% { box-shadow: 0 4px 20px rgba(26,60,94,0.08), inset 0 1px 0 rgba(255,255,255,0.5); }
+            50% { box-shadow: 0 4px 24px rgba(26,60,94,0.2), inset 0 1px 0 rgba(255,255,255,0.5), 0 0 20px rgba(26,60,94,0.15); }
         }
 
         /* ============================================================
            REVEAL ON SCROLL — Animasi Fade In + Slide Up
            ============================================================ */
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         .reveal-item {
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
-
         .reveal-item.revealed {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Stagger delay untuk multiple items */
         .reveal-stagger > .reveal-item:nth-child(1) { transition-delay: 0s; }
         .reveal-stagger > .reveal-item:nth-child(2) { transition-delay: 0.1s; }
         .reveal-stagger > .reveal-item:nth-child(3) { transition-delay: 0.2s; }
@@ -247,44 +187,17 @@
         .reveal-stagger > .reveal-item:nth-child(5) { transition-delay: 0.4s; }
         .reveal-stagger > .reveal-item:nth-child(6) { transition-delay: 0.5s; }
 
-        /* Prefers-reduced-motion — hormati setting user */
         @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
-            }
-            .reveal-item {
-                transition: none;
-                opacity: 1;
-                transform: none;
-            }
+            html { scroll-behavior: auto; }
+            .reveal-item { transition: none; opacity: 1; transform: none; }
         }
 
         /* ============================================================
            LINE CLAMP — Truncate text dengan ellipsis
            ============================================================ */
-        .line-clamp-1 {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .line-clamp-3 {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
 
         /* ============================================================
            ABOUT HIGHLIGHTS — Card layanan dengan animasi
@@ -295,10 +208,7 @@
             gap: 0.875rem;
         }
         @media (min-width: 640px) {
-            .about-highlights-wrapper {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
+            .about-highlights-wrapper { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         }
 
         .about-highlight-card {
@@ -312,131 +222,66 @@
             border-radius: 14px;
             box-shadow: 0 2px 8px rgba(26, 60, 94, 0.04);
             overflow: hidden;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                        box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                        border-color 0.3s ease;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
         }
-
-        /* Gradient border tipis di kiri saat hover */
         .about-highlight-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
             background: linear-gradient(180deg, #1a3c5e, #2a5a7a, #c2410c);
             opacity: 0;
             transition: opacity 0.35s ease;
         }
-
         .about-highlight-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 28px rgba(26, 60, 94, 0.14);
             border-color: rgba(26, 60, 94, 0.25);
         }
+        .about-highlight-card:hover::before { opacity: 1; }
 
-        .about-highlight-card:hover::before {
-            opacity: 1;
-        }
-
-        /* Icon wrapper — animasi float + rotate saat hover */
         .about-highlight-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
+            width: 44px; height: 44px;
             flex-shrink: 0;
             border-radius: 12px;
             background: linear-gradient(135deg, rgba(26, 60, 94, 0.12), rgba(194, 65, 12, 0.08));
             color: #1a3c5e;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                        background 0.4s ease,
-                        color 0.4s ease;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, color 0.4s ease;
         }
-
         .about-highlight-card:hover .about-highlight-icon {
             transform: scale(1.08) rotate(-6deg);
             background: linear-gradient(135deg, #1a3c5e, #2a5a7a);
             color: white;
         }
+        .about-highlight-content { flex: 1; min-width: 0; }
+        .about-highlight-title { font-size: 0.95rem; font-weight: 700; color: #1a3c5e; line-height: 1.25; margin-bottom: 0.25rem; }
+        .about-highlight-desc { font-size: 0.8rem; color: #6b7280; line-height: 1.45; }
 
-        .about-highlight-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .about-highlight-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #1a3c5e;
-            line-height: 1.25;
-            margin-bottom: 0.25rem;
-        }
-
-        .about-highlight-desc {
-            font-size: 0.8rem;
-            color: #6b7280;
-            line-height: 1.45;
-        }
-
-        /* Shine sweep saat hover (kilau halus) */
         .about-highlight-card::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
             background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
             transition: left 0.7s ease;
             pointer-events: none;
             z-index: 1;
         }
-        .about-highlight-card:hover::after {
-            left: 100%;
-        }
+        .about-highlight-card:hover::after { left: 100%; }
 
-        /* Stagger animation saat revealed */
-        .about-highlight-card.reveal-item.revealed {
-            animation: highlight-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-        }
-        .about-highlight-card.reveal-item:nth-child(1).revealed { animation-delay: 0s; }
-        .about-highlight-card.reveal-item:nth-child(2).revealed { animation-delay: 0.1s; }
-        .about-highlight-card.reveal-item:nth-child(3).revealed { animation-delay: 0.2s; }
-        .about-highlight-card.reveal-item:nth-child(4).revealed { animation-delay: 0.3s; }
-        .about-highlight-card.reveal-item:nth-child(5).revealed { animation-delay: 0.4s; }
-        .about-highlight-card.reveal-item:nth-child(6).revealed { animation-delay: 0.5s; }
-
-        @keyframes highlight-in {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .about-highlight-card,
-            .about-highlight-card::after,
-            .about-highlight-icon {
-                transition: none;
-                animation: none;
-            }
+        /* ============================================================
+           STATS COUNTER
+           ============================================================ */
+        .stat-counter {
+            font-variant-numeric: tabular-nums;
         }
 
         /* ============================================================
            COURSE / SERVICE GRID
-           - Mobile: swipe horizontal (scroll snap)
-           - Tablet: grid 2 kolom
-           - Desktop: grid 4 kolom
            ============================================================ */
-
-        /* MOBILE: Horizontal scroll dengan snap */
         .course-grid {
             display: flex;
             gap: 1rem;
@@ -448,14 +293,8 @@
             -ms-overflow-style: none;
             padding: 0 0 1rem 0;
         }
+        .course-grid::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
-        .course-grid::-webkit-scrollbar {
-            display: none;
-            width: 0;
-            height: 0;
-        }
-
-        /* Setiap card — 78% lebar container */
         .course-grid > .course-item {
             flex: 0 0 78%;
             scroll-snap-align: start;
@@ -470,13 +309,11 @@
             box-shadow: 0 2px 8px rgba(26, 60, 94, 0.04);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
         .course-grid > .course-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(26, 60, 94, 0.1);
         }
 
-        /* Tablet: grid 2 kolom */
         @media (min-width: 768px) {
             .course-grid {
                 display: grid;
@@ -486,24 +323,12 @@
                 padding: 0;
                 align-items: stretch;
             }
-            
-            .course-grid > .course-item {
-                flex: none;
-                width: auto;
-                height: 100%;
-            }
+            .course-grid > .course-item { flex: none; width: auto; height: 100%; }
         }
-
-        /* Desktop: grid 4 kolom */
         @media (min-width: 1024px) {
-            .course-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+            .course-grid { grid-template-columns: repeat(4, 1fr); }
         }
 
-        /* ============================================================
-           LOADING / EMPTY STATE — agar tidak terkena style card 78%
-           ============================================================ */
         .course-grid > .w-full {
             flex: 0 0 100% !important;
             width: 100% !important;
@@ -511,137 +336,98 @@
             border: none;
             box-shadow: none;
         }
-
         @media (min-width: 768px) {
-            .course-grid > .w-full {
-                grid-column: 1 / -1;
-            }
+            .course-grid > .w-full { grid-column: 1 / -1; }
         }
 
         /* ============================================================
-   HERO STICKERS — Drag & Drop dekoratif
-   ============================================================ */
-.hero-sticker-layer {
-    position: absolute;
-    inset: 0;
-    pointer-events: none; /* Layer tidak menangkap klik, hanya sticker */
-    z-index: 5; /* Di atas overlay gradient, di bawah content */
-    overflow: hidden;
-}
+           HERO STICKERS — Drag & Drop dekoratif
+           ============================================================ */
+        .hero-sticker-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+        @media (max-width: 1023px) {
+            .hero-sticker-layer { display: none !important; }
+        }
+        .hero-sticker {
+            position: absolute;
+            pointer-events: auto;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            transform-origin: center center;
+            will-change: transform, left, top;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
+            transition: filter 0.3s ease;
+            animation: sticker-float 6s ease-in-out infinite;
+        }
+        .hero-sticker img {
+            width: 100%; height: auto; display: block;
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+        .hero-sticker:hover { filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4)); }
+        .hero-sticker.dragging {
+            cursor: grabbing;
+            z-index: 9999 !important;
+            animation: none;
+            filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.5));
+            transform: scale(1.1) rotate(var(--current-rotation, 0deg)) !important;
+        }
+        .hero-sticker.dragging img { opacity: 0.95; }
 
-/* Sembunyikan di mobile/tablet */
-@media (max-width: 1023px) {
-    .hero-sticker-layer {
-        display: none !important;
-    }
-}
+        @keyframes sticker-float {
+            0%, 100% { transform: translateY(0) rotate(var(--sticker-rotation, 0deg)); }
+            50% { transform: translateY(-10px) rotate(var(--sticker-rotation, 0deg)); }
+        }
+        .hero-sticker:nth-child(1) { animation-delay: 0s; }
+        .hero-sticker:nth-child(2) { animation-delay: 1.2s; }
+        .hero-sticker:nth-child(3) { animation-delay: 2.4s; }
+        .hero-sticker:nth-child(4) { animation-delay: 3.6s; }
+        .hero-sticker:nth-child(5) { animation-delay: 4.8s; }
 
-.hero-sticker {
-    position: absolute;
-    pointer-events: auto;
-    cursor: grab;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: none;
-    transform-origin: center center;
-    will-change: transform, left, top;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
-    transition: filter 0.3s ease;
-    animation: sticker-float 6s ease-in-out infinite;
-}
+        .hero-sticker-reset {
+            position: absolute;
+            bottom: 1rem; right: 1rem;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        .hero-sticker-reset:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-2px); }
+        .hero-sticker-reset.visible { display: inline-flex; }
 
-.hero-sticker img {
-    width: 100%;
-    height: auto;
-    display: block;
-    pointer-events: none;
-    -webkit-user-drag: none;
-    user-select: none;
-}
-
-.hero-sticker:hover {
-    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4));
-}
-
-.hero-sticker.dragging {
-    cursor: grabbing;
-    z-index: 9999 !important;
-    animation: none;
-    filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.5));
-    transform: scale(1.1) rotate(var(--current-rotation, 0deg)) !important;
-}
-
-.hero-sticker.dragging img {
-    opacity: 0.95;
-}
-
-/* Float animation — offset berbeda per sticker agar natural */
-@keyframes sticker-float {
-    0%, 100% { 
-        transform: translateY(0) rotate(var(--sticker-rotation, 0deg)); 
-    }
-    50% { 
-        transform: translateY(-10px) rotate(var(--sticker-rotation, 0deg)); 
-    }
-}
-
-/* Delay float agar tidak sinkron semua */
-.hero-sticker:nth-child(1) { animation-delay: 0s; }
-.hero-sticker:nth-child(2) { animation-delay: 1.2s; }
-.hero-sticker:nth-child(3) { animation-delay: 2.4s; }
-.hero-sticker:nth-child(4) { animation-delay: 3.6s; }
-.hero-sticker:nth-child(5) { animation-delay: 4.8s; }
-
-/* Tombol reset posisi */
-.hero-sticker-reset {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 20;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: none;
-    align-items: center;
-    gap: 0.4rem;
-    transition: all 0.2s ease;
-}
-
-.hero-sticker-reset:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
-}
-
-.hero-sticker-reset.visible {
-    display: inline-flex;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero-sticker {
-        animation: none;
-    }
-}
+        @media (prefers-reduced-motion: reduce) {
+            .hero-sticker { animation: none; }
+        }
     </style>
 </head>
 <body class="font-sans">
 
-    <!-- ============================================================
-    NAVIGATION
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- NAVIGATION                                                   -->
+    <!-- ============================================================ -->
     <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 logo-shine">
-                <img src="assets/images/logo/imdkom.svg" 
-                     alt="Logo IMDKOM" 
-                     class="h-4 w-auto" 
-                     loading="eager" />
+                <img src="assets/images/logo/imdkom.svg" alt="Logo IMDKOM" class="h-4 w-auto" loading="eager" />
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
             </a>
             
@@ -651,20 +437,42 @@
                 </svg>
             </button>
             
-            <div id="mainNav" class="hidden md:flex items-center gap-6">
-                <a href="index.html" class="text-brand font-semibold">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-gray-600 hover:text-brand">Computer Service</a>
-                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand">Rakit Komputer</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
+            <div id="mainNav" class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="relative text-sm font-semibold text-brand py-1 group">
+                    Beranda
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="kursus.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Kursus &amp; Pelatihan
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="service.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Computer Service
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="rakit-komputer.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Rakit Komputer
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="tentang.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Tentang
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="karir.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Karir
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="kontak.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Kontak
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
             </div>
         </div>
         
         <!-- Mobile Menu -->
         <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
             <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+                <a href="index.html" class="text-brand font-semibold py-1.5">Beranda</a>
                 <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
                 
                 <a href="service.html" class="mobile-menu-highlight">
@@ -674,16 +482,18 @@
                     </span>
                     <i data-lucide="arrow-right" class="menu-arrow"></i>
                 </a>
+                
                 <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
                 <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="karir.html" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
                 <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
             </div>
         </div>
     </nav>
 
-    <!-- ============================================================
-    HERO SECTION
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- HERO SECTION                                                 -->
+    <!-- ============================================================ -->
     <section class="relative" id="heroSection">
 
         <!-- MOBILE VERSION -->
@@ -712,19 +522,13 @@
                 </p>
                 
                 <div class="flex flex-wrap gap-2 mt-5 reveal-item">
-                    <a href="kursus.html" 
-                       class="bg-brand hover:bg-brand-light text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" 
-                       id="heroCtaPrimaryMobile">
+                    <a href="kursus.html" class="bg-brand hover:bg-brand-light text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" id="heroCtaPrimaryMobile">
                         Lihat Program
                     </a>
-                    <a href="service.html" 
-                       class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" 
-                       id="heroCtaServiceMobile">
+                    <a href="service.html" class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" id="heroCtaServiceMobile">
                         Computer Services
                     </a>
-                    <a href="#" 
-                       class="border border-white/60 hover:border-white text-white font-medium px-5 py-2.5 rounded transition-colors text-sm backdrop-blur-sm bg-white/10" 
-                       id="heroWhatsAppMobile">
+                    <a href="#" class="border border-white/60 hover:border-white text-white font-medium px-5 py-2.5 rounded transition-colors text-sm backdrop-blur-sm bg-white/10" id="heroWhatsAppMobile">
                         Konsultasi WhatsApp
                     </a>
                 </div>
@@ -732,87 +536,97 @@
         </div>
 
         <!-- DESKTOP VERSION — FULL BACKGROUND -->
-<div class="hidden md:block relative">
-       <!-- Background Image -->
-    <img id="heroImageDesktop"
-         src="assets/images/hero/hero-default.png" 
-         alt="IMDKOM - Kursus dan Computer Service" 
-         class="w-full object-cover" 
-         style="height: 100vh; min-height: 600px; max-height: 900px;"
-         loading="eager" />
-    
-    <!-- Overlay Gradient -->
-<div class="absolute inset-0"
-     style="background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.1) 100%);"></div>
+        <div class="hidden md:block relative">
+            <img id="heroImageDesktop"
+                 src="assets/images/hero/hero-default.png" 
+                 alt="IMDKOM - Kursus dan Computer Service" 
+                 class="w-full object-cover" 
+                 style="height: 100vh; min-height: 600px; max-height: 900px;"
+                 loading="eager" />
+            
+            <div class="absolute inset-0"
+                 style="background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.1) 100%);"></div>
 
-<!-- Sticker Layer (diisi oleh app.js) -->
-<div id="heroStickerLayer" class="hero-sticker-layer">
-    <!-- Diisi oleh loadLandingPageContent() di app.js -->
-</div>
+            <!-- Sticker Layer (diisi oleh app.js) -->
+            <div id="heroStickerLayer" class="hero-sticker-layer">
+                <!-- Diisi oleh loadLandingPageContent() di app.js -->
+            </div>
 
-<!-- Tombol Reset Posisi Sticker -->
-<button id="heroStickerReset" class="hero-sticker-reset" title="Kembalikan posisi sticker">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-        <path d="M3 3v5h5"></path>
-    </svg>
-    Reset Posisi
-</button>
+            <!-- Tombol Reset Posisi Sticker -->
+            <button id="heroStickerReset" class="hero-sticker-reset" title="Kembalikan posisi sticker">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                </svg>
+                Reset Posisi
+            </button>
 
-<!-- Content Overlay -->
-<div class="absolute inset-0 flex items-center">
-        <div class="container mx-auto px-4">
-            <div class="max-w-2xl reveal-stagger">
-                <h1 class="text-5xl lg:text-6xl font-extrabold text-white leading-tight reveal-item" id="heroHeadingDesktop">
-                    IMDKOM YOGYAKARTA
-                </h1>
-                <p class="text-xl text-gray-200 mt-3 reveal-item" id="heroSubheadingDesktop">
-                    Kursus &amp; Pelatihan • Computer Service
-                </p>
-                <p class="text-2xl font-medium text-white mt-6 leading-snug reveal-item" id="heroDescriptionDesktop">
-                    Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
-                </p>
-                <p class="text-base text-gray-300 max-w-xl mt-4 leading-relaxed reveal-item" id="heroSubtextDesktop">
-                    IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
-                </p>
-                
-                <div class="flex flex-wrap gap-3 mt-8 reveal-item">
-                    <a href="kursus.html" 
-   class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3.5 rounded transition-colors text-base inline-flex items-center gap-2" 
-   id="heroCtaPrimary">
-    <i data-lucide="book-open" class="w-4 h-4"></i>
-    Lihat Program
-</a>
-                    <a href="service.html" 
-   class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-7 py-3.5 rounded transition-colors text-base inline-flex items-center gap-2" 
-   id="heroCtaService">
-    <i data-lucide="wrench" class="w-4 h-4"></i>
-    Computer Services
-</a>
-                    <a href="#" 
-                       class="border border-white/70 hover:border-white text-white font-medium px-7 py-3.5 rounded transition-colors text-base backdrop-blur-sm bg-white/10" 
-                       id="heroWhatsApp">
-                        Konsultasi WhatsApp
-                    </a>
+            <!-- Content Overlay -->
+            <div class="absolute inset-0 flex items-center">
+                <div class="container mx-auto px-4">
+                    <div class="max-w-2xl reveal-stagger">
+                        <h1 class="text-5xl lg:text-6xl font-extrabold text-white leading-tight reveal-item" id="heroHeadingDesktop">
+                            IMDKOM YOGYAKARTA
+                        </h1>
+                        <p class="text-xl text-gray-200 mt-3 reveal-item" id="heroSubheadingDesktop">
+                            Kursus &amp; Pelatihan • Computer Service
+                        </p>
+                        <p class="text-2xl font-medium text-white mt-6 leading-snug reveal-item" id="heroDescriptionDesktop">
+                            Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
+                        </p>
+                        <p class="text-base text-gray-300 max-w-xl mt-4 leading-relaxed reveal-item" id="heroSubtextDesktop">
+                            IMDKOM adalah lembaga kursus dan pelatihan komputer yang juga menyediakan layanan perbaikan laptop, PC, dan printer.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-3 mt-8 reveal-item">
+                            <a href="kursus.html" class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3.5 rounded transition-colors text-base inline-flex items-center gap-2" id="heroCtaPrimary">
+                                <i data-lucide="book-open" class="w-4 h-4"></i>
+                                Lihat Program
+                            </a>
+                            <a href="service.html" class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-7 py-3.5 rounded transition-colors text-base inline-flex items-center gap-2" id="heroCtaService">
+                                <i data-lucide="wrench" class="w-4 h-4"></i>
+                                Computer Services
+                            </a>
+                            <a href="#" class="border border-white/70 hover:border-white text-white font-medium px-7 py-3.5 rounded transition-colors text-base backdrop-blur-sm bg-white/10" id="heroWhatsApp">
+                                Konsultasi WhatsApp
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
     </section>
 
-    <!-- ============================================================
-    TENTANG SINGKAT — dengan Card Highlight
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- TENTANG SINGKAT — dengan Card Highlight & Statistik Animasi  -->
+    <!-- ============================================================ -->
     <section class="py-12 sm:py-16 md:py-20 bg-gray-50" id="aboutSection">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center gap-8 sm:gap-10 md:gap-14">
+                <!-- Kiri: Teks & Statistik -->
                 <div class="md:w-1/2 w-full reveal-stagger">
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand reveal-item" id="aboutTitle">Tentang IMDKOM</h2>
                     <p class="text-sm sm:text-base text-gray-600 mt-4 leading-relaxed reveal-item" id="aboutDescription">
                         IMDKOM adalah lembaga kursus dan pelatihan komputer yang telah berpengalaman dalam membantu masyarakat mengembangkan keterampilan digital. Kami juga menyediakan layanan computer service untuk perbaikan laptop, PC, dan printer.
                     </p>
-                    <p class="text-sm sm:text-base text-gray-600 mt-3 reveal-item">
+                    
+                    <!-- ⭐ STATISTIK ANIMASI (COUNT UP) -->
+                    <div class="grid grid-cols-3 gap-3 sm:gap-6 mt-8 mb-6 reveal-item">
+                        <div>
+                            <div class="text-3xl sm:text-4xl font-extrabold text-brand stat-counter" data-target="25" data-suffix="+">0</div>
+                            <div class="text-xs sm:text-sm text-gray-500 mt-1 uppercase tracking-wider font-medium">Tahun</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl sm:text-4xl font-extrabold text-brand stat-counter" data-target="1000" data-suffix="+">0</div>
+                            <div class="text-xs sm:text-sm text-gray-500 mt-1 uppercase tracking-wider font-medium">Alumni</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl sm:text-4xl font-extrabold text-brand stat-counter" data-target="5000" data-suffix="+">0</div>
+                            <div class="text-xs sm:text-sm text-gray-500 mt-1 uppercase tracking-wider font-medium">Servis</div>
+                        </div>
+                    </div>
+
+                    <p class="text-sm sm:text-base text-gray-600 mt-2 reveal-item">
                         <strong>Izin Dinas Pendidikan:</strong> 098/Kpts/2021<br />
                         <strong>NPSN:</strong> K0560748
                     </p>
@@ -820,6 +634,8 @@
                         Selengkapnya →
                     </a>
                 </div>
+
+                <!-- Kanan: Card Highlight (Dari Admin) -->
                 <div class="md:w-1/2 w-full">
                     <div id="aboutHighlightsContainer" class="about-highlights-wrapper">
                         <!-- Diisi oleh loadLandingPageContent() di app.js -->
@@ -829,9 +645,9 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    KURSUS & PELATIHAN — PREVIEW
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- KURSUS & PELATIHAN — PREVIEW                                 -->
+    <!-- ============================================================ -->
     <section class="py-12 sm:py-16 md:py-20" id="courseSection">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Kursus &amp; Pelatihan</h2>
@@ -852,9 +668,9 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    COMPUTER SERVICE — PREVIEW
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- COMPUTER SERVICE — PREVIEW                                   -->
+    <!-- ============================================================ -->
     <section class="py-12 sm:py-16 md:py-20 bg-gray-50" id="serviceSection">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Computer Service</h2>
@@ -875,9 +691,9 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    TESTIMONI
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- TESTIMONI                                                    -->
+    <!-- ============================================================ -->
     <section class="py-12 sm:py-16 md:py-20" id="testimonialsSection" style="display:none;">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Testimoni</h2>
@@ -886,9 +702,9 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    FAQ
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- FAQ                                                          -->
+    <!-- ============================================================ -->
     <section class="py-12 sm:py-16 md:py-20 bg-gray-50" id="faqSection" style="display:none;">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Pertanyaan Umum</h2>
@@ -897,9 +713,9 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    FOOTER
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- FOOTER                                                       -->
+    <!-- ============================================================ -->
     <footer class="py-8 sm:py-10 border-t border-gray-200">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -919,18 +735,18 @@
         </div>
     </footer>
 
-    <!-- ============================================================
-    FLOATING WHATSAPP BUTTON
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- FLOATING WHATSAPP BUTTON                                     -->
+    <!-- ============================================================ -->
     <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
     </a>
 
-    <!-- ============================================================
-    JAVASCRIPT
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT                                                   -->
+    <!-- ============================================================ -->
     <script type="module" src="assets/js/firebase.js"></script>
     <script type="module" src="assets/js/utils.js"></script>
     <script type="module" src="assets/js/whatsapp.js"></script>
@@ -940,7 +756,6 @@
     <script type="module">
         import { initDatabase } from './assets/js/init-db.js';
         
-        // ✅ Auto-init database saat halaman dibuka
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('🚀 Memulai init database...');
             try {
@@ -950,36 +765,26 @@
                 console.error('❌ Init error:', error);
             }
             
-            // Init Lucide icons
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
 
-            // ✅ Init reveal animation
             setTimeout(initLandingReveal, 100);
         });
 
-        // Fallback init sticker drag (kalau app.js belum trigger)
-setTimeout(() => {
-    if (typeof window.initHeroStickerDrag === 'function') {
-        window.initHeroStickerDrag();
-    }
-}, 1500);
+        setTimeout(() => {
+            if (typeof window.initHeroStickerDrag === 'function') {
+                window.initHeroStickerDrag();
+            }
+        }, 1500);
         
-        // Mobile Menu Toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mobileNav').classList.toggle('hidden');
         });
 
-        // ============================================================
-        // LANDING PAGE — REVEAL ANIMATION
-        // ============================================================
         function initLandingReveal() {
             const revealItems = document.querySelectorAll('.reveal-item');
-            
             if (revealItems.length === 0) return;
-            
-            console.log(`✨ Reveal animation aktif untuk ${revealItems.length} elemen`);
             
             const revealObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -988,10 +793,7 @@ setTimeout(() => {
                         revealObserver.unobserve(entry.target);
                     }
                 });
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -50px 0px'
-            });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
             
             revealItems.forEach(el => {
                 revealObserver.observe(el);
@@ -999,157 +801,176 @@ setTimeout(() => {
         }
 
         // ============================================================
-// HERO STICKER DRAG BEHAVIOR
-// ============================================================
-window.initHeroStickerDrag = function() {
-    const heroSection = document.querySelector('.hidden.md\\:block.relative');
-    if (!heroSection) return;
-    
-    const stickers = document.querySelectorAll('.hero-sticker');
-    if (stickers.length === 0) return;
+        // HERO STICKER DRAG BEHAVIOR
+        // ============================================================
+        window.initHeroStickerDrag = function() {
+            const heroSection = document.querySelector('.hidden.md\\:block.relative');
+            if (!heroSection) return;
+            
+            const stickers = document.querySelectorAll('.hero-sticker');
+            if (stickers.length === 0) return;
 
-    const STORAGE_KEY = 'imdkom_hero_sticker_positions';
-    const resetBtn = document.getElementById('heroStickerReset');
+            const STORAGE_KEY = 'imdkom_hero_sticker_positions';
+            const resetBtn = document.getElementById('heroStickerReset');
 
-    // Load saved positions dari localStorage
-    let savedPositions = {};
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) savedPositions = JSON.parse(raw);
-    } catch (e) {
-        console.warn('Gagal load sticker positions:', e);
-    }
-
-    let hasCustomPositions = Object.keys(savedPositions).length > 0;
-
-    // Update tombol reset visibility
-    function updateResetBtn() {
-        if (!resetBtn) return;
-        if (hasCustomPositions) {
-            resetBtn.classList.add('visible');
-        } else {
-            resetBtn.classList.remove('visible');
-        }
-    }
-
-    // Apply saved position
-    stickers.forEach(sticker => {
-        const id = sticker.dataset.stickerId;
-        const saved = savedPositions[id];
-        if (saved) {
-            sticker.style.left = saved.x + '%';
-            sticker.style.top = saved.y + '%';
-        }
-
-        // Set rotation CSS var untuk float animation
-        const currentRot = sticker.style.transform.match(/rotate\(([-\d.]+)deg\)/);
-        if (currentRot) {
-            sticker.style.setProperty('--sticker-rotation', currentRot[1] + 'deg');
-            sticker.style.setProperty('--current-rotation', currentRot[1] + 'deg');
-        }
-
-        // Make draggable
-        makeDraggable(sticker);
-    });
-
-    updateResetBtn();
-
-    function makeDraggable(el) {
-        let isDragging = false;
-        let startX, startY, startLeft, startTop;
-        let heroRect;
-
-        el.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            isDragging = true;
-            el.classList.add('dragging');
-
-            heroRect = heroSection.getBoundingClientRect();
-            startX = e.clientX;
-            startY = e.clientY;
-            startLeft = el.offsetLeft;
-            startTop = el.offsetTop;
-
-            // Naikkan z-index ke paling atas
-            document.querySelectorAll('.hero-sticker').forEach(s => {
-                if (s !== el) {
-                    s.style.zIndex = Math.min(parseInt(s.style.zIndex) || 10, 50);
-                }
-            });
-            el.style.zIndex = '9999';
-
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('mouseup', onUp);
-        });
-
-        function onMove(e) {
-            if (!isDragging) return;
-
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-
-            // Hitung posisi baru dalam pixel
-            let newLeftPx = startLeft + dx;
-            let newTopPx = startTop + dy;
-
-            // Batasi dalam area hero
-            const stickerW = el.offsetWidth;
-            const stickerH = el.offsetHeight;
-            const heroW = heroSection.offsetWidth;
-            const heroH = heroSection.offsetHeight;
-
-            newLeftPx = Math.max(0, Math.min(newLeftPx, heroW - stickerW));
-            newTopPx = Math.max(0, Math.min(newTopPx, heroH - stickerH));
-
-            // Convert ke persen
-            const leftPct = (newLeftPx / heroW) * 100;
-            const topPct = (newTopPx / heroH) * 100;
-
-            el.style.left = leftPct + '%';
-            el.style.top = topPct + '%';
-        }
-
-        function onUp() {
-            if (!isDragging) return;
-            isDragging = false;
-            el.classList.remove('dragging');
-
-            document.removeEventListener('mousemove', onMove);
-            document.removeEventListener('mouseup', onUp);
-
-            // Simpan ke localStorage
-            const id = el.dataset.stickerId;
-            const leftPct = parseFloat(el.style.left) || 0;
-            const topPct = parseFloat(el.style.top) || 0;
-
-            savedPositions[id] = { x: leftPct, y: topPct };
+            let savedPositions = {};
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(savedPositions));
-                hasCustomPositions = true;
-                updateResetBtn();
-            } catch (err) {
-                console.warn('Gagal simpan sticker position:', err);
-            }
-        }
-    }
-
-    // Tombol reset
-    if (resetBtn) {
-        // Remove old listener (kalau re-init)
-        const newResetBtn = resetBtn.cloneNode(true);
-        resetBtn.parentNode.replaceChild(newResetBtn, resetBtn);
-        newResetBtn.addEventListener('click', () => {
-            try {
-                localStorage.removeItem(STORAGE_KEY);
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) savedPositions = JSON.parse(raw);
             } catch (e) {}
-            savedPositions = {};
-            hasCustomPositions = false;
+
+            let hasCustomPositions = Object.keys(savedPositions).length > 0;
+
+            function updateResetBtn() {
+                if (!resetBtn) return;
+                if (hasCustomPositions) resetBtn.classList.add('visible');
+                else resetBtn.classList.remove('visible');
+            }
+
+            stickers.forEach(sticker => {
+                const id = sticker.dataset.stickerId;
+                const saved = savedPositions[id];
+                if (saved) {
+                    sticker.style.left = saved.x + '%';
+                    sticker.style.top = saved.y + '%';
+                }
+
+                const currentRot = sticker.style.transform.match(/rotate\(([-\d.]+)deg\)/);
+                if (currentRot) {
+                    sticker.style.setProperty('--sticker-rotation', currentRot[1] + 'deg');
+                    sticker.style.setProperty('--current-rotation', currentRot[1] + 'deg');
+                }
+                makeDraggable(sticker);
+            });
+
             updateResetBtn();
-            // Reload posisi dari Firestore (panggil ulang loadLandingPageContent atau reload)
-            window.location.reload();
+
+            function makeDraggable(el) {
+                let isDragging = false;
+                let startX, startY, startLeft, startTop;
+                let heroRect;
+
+                el.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    isDragging = true;
+                    el.classList.add('dragging');
+
+                    heroRect = heroSection.getBoundingClientRect();
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startLeft = el.offsetLeft;
+                    startTop = el.offsetTop;
+
+                    document.querySelectorAll('.hero-sticker').forEach(s => {
+                        if (s !== el) s.style.zIndex = Math.min(parseInt(s.style.zIndex) || 10, 50);
+                    });
+                    el.style.zIndex = '9999';
+
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onUp);
+                });
+
+                function onMove(e) {
+                    if (!isDragging) return;
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    let newLeftPx = startLeft + dx;
+                    let newTopPx = startTop + dy;
+
+                    const stickerW = el.offsetWidth;
+                    const stickerH = el.offsetHeight;
+                    const heroW = heroSection.offsetWidth;
+                    const heroH = heroSection.offsetHeight;
+
+                    newLeftPx = Math.max(0, Math.min(newLeftPx, heroW - stickerW));
+                    newTopPx = Math.max(0, Math.min(newTopPx, heroH - stickerH));
+
+                    const leftPct = (newLeftPx / heroW) * 100;
+                    const topPct = (newTopPx / heroH) * 100;
+
+                    el.style.left = leftPct + '%';
+                    el.style.top = topPct + '%';
+                }
+
+                function onUp() {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    el.classList.remove('dragging');
+
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+
+                    const id = el.dataset.stickerId;
+                    const leftPct = parseFloat(el.style.left) || 0;
+                    const topPct = parseFloat(el.style.top) || 0;
+
+                    savedPositions[id] = { x: leftPct, y: topPct };
+                    try {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedPositions));
+                        hasCustomPositions = true;
+                        updateResetBtn();
+                    } catch (err) {}
+                }
+            }
+
+            if (resetBtn) {
+                const newResetBtn = resetBtn.cloneNode(true);
+                resetBtn.parentNode.replaceChild(newResetBtn, resetBtn);
+                newResetBtn.addEventListener('click', () => {
+                    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+                    savedPositions = {};
+                    hasCustomPositions = false;
+                    updateResetBtn();
+                    window.location.reload();
+                });
+            }
+        };
+
+        // ============================================================
+        // ANIMASI COUNTING ANGKA STATISTIK
+        // ============================================================
+        document.addEventListener("DOMContentLoaded", () => {
+            const counters = document.querySelectorAll('.stat-counter');
+            
+            const animateCounter = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                const suffix = counter.getAttribute('data-suffix') || '';
+                const duration = 2000; // Durasi animasi 2 detik
+                const startTime = performance.now();
+                
+                const updateCount = (currentTime) => {
+                    const elapsedTime = currentTime - startTime;
+                    const progress = Math.min(elapsedTime / duration, 1);
+                    
+                    // Easing function (easeOutQuart) agar melambat di akhir
+                    const easeOutProgress = 1 - Math.pow(1 - progress, 4);
+                    const currentCount = Math.floor(easeOutProgress * target);
+                    
+                    counter.innerText = currentCount.toLocaleString('id-ID') + suffix;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        counter.innerText = target.toLocaleString('id-ID') + suffix;
+                    }
+                };
+                
+                requestAnimationFrame(updateCount);
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, { threshold: 0.5 }); 
+
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
         });
-    }
-};
     </script>
     
     <!-- Hide Netlify Badge -->

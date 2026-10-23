@@ -373,31 +373,51 @@
 </head>
 <body class="font-sans page-bg">
 
-    <!-- ============================================================
-    NAVIGATION
-    ============================================================ -->
-    <nav class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 sticky top-0 z-40">
-        <div class="container mx-auto px-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3 logo-shine">
-                <img src="assets/images/logo/imd.svg" 
-                     alt="Logo IMDKOM" 
-                     class="h-7 w-auto" />
-                <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
+<!-- ============================================================ -->
+<!-- NAVIGATION (Service.html)                                    -->
+<!-- ============================================================ -->
+<nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
+    <div class="container mx-auto px-4 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-3 logo-shine">
+            <img src="assets/images/logo/imdkom.svg" alt="Logo IMDKOM" class="h-4 w-auto" loading="eager" />
+            <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
+        </a>
+        <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <div id="mainNav" class="hidden md:flex items-center gap-8">
+            <a href="index.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                Beranda
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
-            
-            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-            
-            <div id="mainNav" class="hidden md:flex items-center gap-6">
-                <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-brand font-semibold">Computer Service</a>
-                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand">Rakit Komputer</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
-            </div>
+            <a href="kursus.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                Kursus &amp; Pelatihan
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+            </a>
+            <a href="service.html" class="relative text-sm font-semibold text-brand py-1 group">
+                Computer Service
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-100 transition-transform duration-300 origin-left"></span>
+            </a>
+            <a href="rakit-komputer.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                Rakit Komputer
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+            </a>
+            <a href="tentang.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                Tentang
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+            </a>
+            <a href="karir.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                Karir
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+            </a>
+            <a href="kontak.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                Kontak
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+            </a>
         </div>
+    </div>
+    
+
         
         <!-- Mobile Menu -->
         <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">

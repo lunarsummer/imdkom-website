@@ -12,6 +12,8 @@ import { openWhatsAppProgram, openWhatsAppService, openWhatsAppGeneric } from '.
 // CACHE PROGRAM — untuk filter client-side
 // ============================================================
 let __programsCache = [];
+let __displayLimit = 8;       // ⭐ Default tampil 8 program (2 baris di desktop)
+let __filteredPrograms = [];  // ⭐ Menyimpan data yang sedang ditampilkan (untuk filter)
 
 // ============================================================
 // HELPER: Build image URL dengan fallback
@@ -1004,8 +1006,14 @@ export async function loadAllPrograms() {
             __programsCache.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        // Render
-        renderProgramCards(__programsCache);
+        // ⭐ Setel ulang limit ke 8 setiap kali halaman dimuat
+        __displayLimit = 8;
+        
+        // ⭐ Simpan ke filtered cache
+        __filteredPrograms = __programsCache;
+        
+        // ⭐ Render awal
+        renderProgramCards(__filteredPrograms, true);
 
     } catch (error) {
         console.error('Error loading all programs:', error);
@@ -1023,8 +1031,9 @@ export async function loadAllPrograms() {
 // ============================================================
 // RENDER PROGRAM CARDS — Marketplace Style
 // ============================================================
-function renderProgramCards(programs) {
+function renderProgramCards(programs, isInitialLoad = false) {
     const container = document.getElementById('allProgramsContainer');
+    const loadMoreWrapper = document.getElementById('loadMoreWrapper'); // ⭐ Tambahkan ini
     if (!container) return;
 
     if (programs.length === 0) {
@@ -1038,11 +1047,15 @@ function renderProgramCards(programs) {
             </div>
         `;
         if (typeof lucide !== 'undefined') lucide.createIcons();
+        if (loadMoreWrapper) loadMoreWrapper.style.display = 'none'; // ⭐ Sembunyikan tombol
         return;
     }
 
+    // ⭐ POTONG ARRAY SESUAI LIMIT
+    const programsToRender = programs.slice(0, __displayLimit);
+
     let html = '';
-    programs.forEach((data) => {
+    programsToRender.forEach((data) => { // ⭐ Ganti 'programs' menjadi 'programsToRender'
         const imageUrl = buildImageUrl(
             data.gambar,
             { width: 600, height: 750, crop: 'fill' },
@@ -1142,6 +1155,29 @@ function renderProgramCards(programs) {
     attachShareHandler(container);
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // ⭐ ATUR TAMPILAN TOMBOL LOAD MORE
+    if (loadMoreWrapper) {
+        if (programs.length > __displayLimit) {
+            loadMoreWrapper.style.display = 'block'; // Masih ada sisa program
+        } else {
+            loadMoreWrapper.style.display = 'none';  // Sudah tampil semua
+        }
+    }
+}
+
+// ============================================================
+// LOAD MORE PROGRAMS — Fungsi untuk tombol "Tampilkan Lebih Banyak"
+// ============================================================
+export function loadMorePrograms() {
+    __displayLimit += 8; // Tambah 8 program (2 baris) setiap klik
+    renderProgramCards(__filteredPrograms);
+    
+    // Update info filter
+    const filterInfo = document.getElementById('filterInfo');
+    if (filterInfo && filterInfo.textContent) {
+        filterInfo.textContent = `Menampilkan ${Math.min(__filteredPrograms.length, __displayLimit)} dari ${__filteredPrograms.length} program`;
+    }
 }
 
 // ============================================================
@@ -1170,16 +1206,21 @@ export function filterPrograms() {
         });
     }
 
+    // ⭐ SETEL ULANG LIMIT SAAT FILTER DIUBAH
+    __displayLimit = 8;
+    __filteredPrograms = filtered;
+
     // Info
     if (filterInfo) {
         if (searchTerm || kategori) {
-            filterInfo.textContent = `Menampilkan ${filtered.length} dari ${__programsCache.length} program`;
+            filterInfo.textContent = `Menampilkan ${Math.min(filtered.length, __displayLimit)} dari ${filtered.length} program`;
         } else {
             filterInfo.textContent = '';
         }
     }
 
-    renderProgramCards(filtered);
+    // Render dari awal
+    renderProgramCards(__filteredPrograms, true);
 }
 
 // ============================================================

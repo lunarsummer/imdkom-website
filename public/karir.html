@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karir | IMDKOM Yogyakarta</title>
+    <meta name="description" content="Informasi karir dan lowongan kerja di IMDKOM Yogyakarta." />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#1a3c5e', light: '#2a5a7a', dark: '#c2410c' },
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Logo Shine Effect */
+        .logo-shine {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 6px;
+            padding: 2px 4px;
+        }
+        .logo-shine::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 50%, transparent 70%);
+            animation: shine-sweep 3s infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        .logo-shine img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
+            transition: filter 0.3s ease;
+        }
+        .logo-shine:hover img {
+            filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
+        }
+
+        /* Mobile Menu Highlight */
+        .mobile-menu-highlight {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            margin: 0.35rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            font-weight: 600;
+            background: linear-gradient(135deg, rgba(26,60,94,0.12) 0%, rgba(26,60,94,0.06) 50%, rgba(26,60,94,0.12) 100%);
+            border: 1px solid rgba(26, 60, 94, 0.25);
+            color: #1a3c5e !important;
+            transition: all 0.3s ease;
+        }
+        .mobile-menu-highlight:hover {
+            transform: translateX(4px);
+            background: rgba(26, 60, 94, 0.15);
+        }
+
+        /* Desain khusus untuk teks pemberitahuan */
+        .text-gradient {
+            background: linear-gradient(to right, #1a3c5e, #2a5a7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- ============================================================ -->
+    <!-- NAVIGATION (Karir Aktif)                                     -->
+    <!-- ============================================================ -->
+    <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 logo-shine">
+                <img src="assets/images/logo/imdkom.svg" alt="Logo IMDKOM" class="h-4 w-auto" loading="eager" />
+                <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
+            </a>
+            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div id="mainNav" class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Beranda
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="kursus.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Kursus &amp; Pelatihan
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="service.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Computer Service
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="rakit-komputer.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Rakit Komputer
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="tentang.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Tentang
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="karir.html" class="relative text-sm font-semibold text-brand py-1 group">
+                    Karir
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="kontak.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Kontak
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- MOBILE MENU -->
+        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="mobile-menu-highlight">
+                    <span class="menu-icon-wrap flex items-center gap-2">
+                        <i data-lucide="wrench" class="w-4 h-4"></i> Computer Service
+                    </span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 opacity-60"></i>
+                </a>
+                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
+                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="karir.html" class="text-brand font-semibold py-1.5">Karir</a>
+                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- KONTEN UTAMA (PEMBERITAHUAN)                                 -->
+    <!-- ============================================================ -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+        
+        <!-- Ornamen Latar Belakang -->
+        <div class="absolute top-10 left-10 w-72 h-72 bg-brand/5 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-brand-dark/5 rounded-full blur-3xl -z-10"></div>
+
+        <!-- Card Pemberitahuan -->
+        <div class="bg-white border border-gray-100 shadow-xl shadow-brand/5 rounded-3xl max-w-2xl w-full p-8 sm:p-12 text-center animate-fade-in-up relative z-10">
+            
+            <!-- Ikon Animasi -->
+            <div class="relative w-24 h-24 mx-auto mb-6">
+                <div class="absolute inset-0 bg-brand/10 rounded-full animate-pulse-slow"></div>
+                <div class="absolute inset-2 bg-brand/20 rounded-full animate-pulse-slow" style="animation-delay: 0.5s;"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-brand">
+                    <i data-lucide="briefcase" class="w-10 h-10"></i>
+                </div>
+            </div>
+
+            <!-- Teks Pemberitahuan -->
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-brand mb-4 tracking-tight">
+                Halaman Karir <span class="text-gradient">Segera Hadir</span>
+            </h1>
+            
+            <p class="text-gray-600 text-base sm:text-lg leading-relaxed mb-8 max-w-lg mx-auto">
+                Saat ini kami sedang mempersiapkan halaman khusus untuk informasi lowongan pekerjaan dan karier di IMDKOM. 
+                Nantikan kesempatan untuk bergabung dengan tim kami!
+            </p>
+
+            <!-- Badge Info -->
+            <div class="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-4 py-2 rounded-full text-sm font-medium border border-yellow-200 mb-8">
+                <i data-lucide="hammer" class="w-4 h-4"></i>
+                Sedang dalam tahap pengembangan
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="index.html" 
+                   class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-brand hover:bg-brand-light text-white font-semibold rounded-xl transition-all shadow-md shadow-brand/20 hover:shadow-lg hover:-translate-y-0.5">
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    Kembali ke Beranda
+                </a>
+                <a href="kontak.html" 
+                   class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                    Hubungi Kami
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER (Sederhana)                                           -->
+    <!-- ============================================================ -->
+    <footer class="py-6 border-t border-gray-200 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400 text-sm">
+                &copy; 2026 IMDKOM Yogyakarta. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT                                                   -->
+    <!-- ============================================================ -->
+    <script>
+        // Init Icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mobileNav').classList.toggle('hidden');
+        });
+    </script>
+
+</body>
+</html>

@@ -186,91 +186,91 @@
         .program-card:hover .program-image-wrapper img {
             transform: scale(1.05);
         }
-/* Link pembungkus gambar — pastikan block & cursor pointer */
-.program-image-link {
-    display: block;
-    cursor: pointer;
-}
-.program-image-link:hover {
-    opacity: 0.97;
-}
-    .badge-promo {
-    position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
-    background: hwb(0 0% 0%);
-    color: #fafbfc;
-    font-size: 0.6rem;
-    font-weight: 800;
-    padding: 0.2rem 0.5rem;
-    border-radius: 999px;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    box-shadow: 0 2px 6px rgba(65, 64, 64, 0.3);
-    z-index: 2;
+        /* Link pembungkus gambar — pastikan block & cursor pointer */
+        .program-image-link {
+            display: block;
+            cursor: pointer;
+        }
+        .program-image-link:hover {
+            opacity: 0.97;
+        }
+        .badge-promo {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: hwb(0 0% 0%);
+            color: #fafbfc;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(65, 64, 64, 0.3);
+            z-index: 2;
 
-    /* SHINE EFFECT */
-    overflow: hidden;
-    isolation: isolate;
-    animation: badge-pulse 2.5s ease-in-out infinite;
-}
+            /* SHINE EFFECT */
+            overflow: hidden;
+            isolation: isolate;
+            animation: badge-pulse 2.5s ease-in-out infinite;
+        }
 
-/* Kilau bergerak dari kiri ke kanan */
-.badge-promo::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.9) 50%,
-        transparent 70%
-    );
-    animation: badge-shine 2.5s ease-in-out infinite;
-    z-index: 1;
-    pointer-events: none;
-}
+        /* Kilau bergerak dari kiri ke kanan */
+        .badge-promo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.9) 50%,
+                transparent 70%
+            );
+            animation: badge-shine 2.5s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-/* Pastikan teks badge di atas shine */
-.badge-promo > * {
-    position: relative;
-    z-index: 2;
-}
+        /* Pastikan teks badge di atas shine */
+        .badge-promo > * {
+            position: relative;
+            z-index: 2;
+        }
 
-@keyframes badge-shine {
-    0% {
-        left: -100%;
-    }
-    40%, 100% {
-        left: 100%;
-    }
-}
+        @keyframes badge-shine {
+            0% {
+                left: -100%;
+            }
+            40%, 100% {
+                left: 100%;
+            }
+        }
 
-/* Denyut glow oranye lembut */
-@keyframes badge-pulse {
-    0%, 100% {
-        box-shadow: 0 2px 6px rgba(53, 53, 53, 0.3);
-    }
-    50% {
-        box-shadow: 
-            0 2px 6px rgba(41, 41, 41, 0.3),
-            0 0 12px rgba(80, 79, 79, 0.5);
-    }
-}
+        /* Denyut glow oranye lembut */
+        @keyframes badge-pulse {
+            0%, 100% {
+                box-shadow: 0 2px 6px rgba(53, 53, 53, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 2px 6px rgba(41, 41, 41, 0.3),
+                    0 0 12px rgba(80, 79, 79, 0.5);
+            }
+        }
 
-/* Hormati prefers-reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-    .badge-promo {
-        animation: none;
-    }
-    .badge-promo::before {
-        animation: none;
-        display: none;
-    }
-}
+        /* Hormati prefers-reduced-motion */
+        @media (prefers-reduced-motion: reduce) {
+            .badge-promo {
+                animation: none;
+            }
+            .badge-promo::before {
+                animation: none;
+                display: none;
+            }
+        }
 
         .badge-kategori {
             position: absolute;
@@ -301,11 +301,13 @@
 </head>
 <body class="font-sans bg-gray-50">
 
-    <!-- ============================================================
-    NAVIGATION
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- NAVIGATION (Kursus.html)                                     -->
+    <!-- ============================================================ -->
     <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
+            
+            <!-- KIRI: LOGO -->
             <a href="index.html" class="flex items-center gap-3 logo-shine">
                 <img src="assets/images/logo/imdkom.svg" 
                      alt="Logo IMDKOM" 
@@ -314,28 +316,64 @@
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
             </a>
             
+            <!-- TOMBOL MOBILE -->
             <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
             
-            <div id="mainNav" class="hidden md:flex items-center gap-6">
-                <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
-                <a href="kursus.html" class="text-brand font-semibold">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-gray-600 hover:text-brand">Computer Service</a>
-                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand">Rakit Komputer</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
+            <!-- KANAN: MENU DESKTOP -->
+            <div id="mainNav" class="hidden md:flex items-center gap-8">
+                <!-- Beranda -->
+                <a href="index.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Beranda
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                
+                <!-- Kursus (AKTIF) -->
+                <a href="kursus.html" class="relative text-sm font-semibold text-brand py-1 group">
+                    Kursus &amp; Pelatihan
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                
+                <!-- Service -->
+                <a href="service.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Computer Service
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                
+                <!-- Rakit Komputer -->
+                <a href="rakit-komputer.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Rakit Komputer
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                
+                <!-- Tentang -->
+                <a href="tentang.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Tentang
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+
+                <!-- Karir -->
+                <a href="karir.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Karir
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                
+                <!-- Kontak -->
+                <a href="kontak.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
+                    Kontak
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
             </div>
         </div>
         
-        <!-- Mobile Menu -->
+        <!-- MOBILE MENU -->
         <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
             <div class="container mx-auto px-4 flex flex-col gap-2">
                 <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-                
+                <a href="kursus.html" class="text-brand font-semibold py-1.5">Kursus &amp; Pelatihan</a>
                 <a href="service.html" class="mobile-menu-highlight">
                     <span class="menu-icon-wrap">
                         <i data-lucide="wrench" class="w-4 h-4"></i>
@@ -343,9 +381,9 @@
                     </span>
                     <i data-lucide="arrow-right" class="menu-arrow"></i>
                 </a>
-                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand">Rakit Komputer</a>
-
+                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
                 <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="karir.html" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
                 <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
             </div>
         </div>
@@ -400,6 +438,14 @@
                 <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
             </div>
 
+                       <!-- TOMBOL TAMPILKAN LEBIH BANYAK -->
+            <div class="text-center mt-10" id="loadMoreWrapper" style="display: none;">
+                <button id="loadMoreBtn" class="group inline-flex items-center gap-2 bg-white border-2 border-brand text-brand hover:bg-brand hover:text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
+                    <i data-lucide="chevron-down" class="w-5 h-5 group-hover:text-white transition-colors"></i>
+                    <span class="group-hover:text-white transition-colors">Tampilkan Lebih Banyak</span>
+                </button>
+            </div>
+
         </div>
     </section>
 
@@ -426,7 +472,8 @@
     ============================================================ -->
     <script type="module">
         import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
-        import { loadAllPrograms, filterPrograms, getCategories } from './assets/js/app.js';
+        // ⭐ Tambahkan loadMorePrograms di import
+        import { loadAllPrograms, filterPrograms, getCategories, loadMorePrograms } from './assets/js/app.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Load program
@@ -448,6 +495,9 @@
             // Event search & filter
             document.getElementById('searchInput').addEventListener('input', filterPrograms);
             document.getElementById('filterKategori').addEventListener('change', filterPrograms);
+
+            // ⭐ Event listener untuk tombol Load More
+            document.getElementById('loadMoreBtn').addEventListener('click', loadMorePrograms);
 
             // Floating WhatsApp
             document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
