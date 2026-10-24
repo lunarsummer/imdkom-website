@@ -4,30 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Computer Service | IMDKOM Yogyakarta</title>
-    <meta name="description" content="Layanan computer service profesional dari IMDKOM Yogyakarta. Service laptop, PC, printer, dan lainnya." />
-    
+    <meta name="description" content="Layanan computer service profesional dari IMDKOM Yogyakarta. Service laptop, PC, printer, service panggil, dan sparepart." />
+
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
-    
-    <!-- Google Fonts: Poppins -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- 🎨 THEME CSS -->
     <link rel="stylesheet" href="assets/css/theme.css">
-    
-    <!-- Tailwind CSS -->
     <link rel="stylesheet" href="assets/css/output.css">
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    
 
     <style>
-        /* ============================================================
-           GLASSMORPHISM STYLES
-           ============================================================ */
         .glass {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
@@ -35,37 +24,27 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
         }
-        
         .glass-dark {
             background: rgba(26, 60, 94, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
-        
         .page-bg {
-            background: 
+            background:
                 radial-gradient(circle at 20% 10%, rgba(26, 60, 94, 0.08) 0%, transparent 40%),
                 radial-gradient(circle at 80% 90%, rgba(194, 65, 12, 0.08) 0%, transparent 40%),
                 linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             min-height: 100vh;
         }
-        
         @keyframes pulse-wa {
             0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
             50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
         }
-        
-        .floating-wa {
-            animation: pulse-wa 2s infinite;
-        }
-        
+        .floating-wa { animation: pulse-wa 2s infinite; }
         html { scroll-behavior: smooth; }
         [data-lucide] { stroke-width: 2; }
 
-        /* ============================================================
-           LOGO SHINE EFFECT
-           ============================================================ */
         .logo-shine {
             position: relative;
             display: inline-flex;
@@ -74,30 +53,20 @@
             border-radius: 6px;
             padding: 2px 4px;
         }
-        
         .logo-shine::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.75) 50%,
-                transparent 70%
-            );
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 50%, transparent 70%);
             animation: shine-sweep 3s infinite;
             z-index: 2;
             pointer-events: none;
         }
-        
         @keyframes shine-sweep {
             0% { left: -100%; }
             50%, 100% { left: 100%; }
         }
-        
         .logo-shine img {
             position: relative;
             z-index: 1;
@@ -105,50 +74,10 @@
             filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
             transition: filter 0.3s ease;
         }
-        
         .logo-shine:hover img {
             filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
         }
 
-        /* ============================================================
-           SERVICE MENU CARD — SIMPLE & ELEGANT
-           ============================================================ */
-        .service-menu-card {
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            cursor: pointer;
-        }
-        
-        .service-menu-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(26, 60, 94, 0.12);
-            border-color: rgba(26, 60, 94, 0.2);
-        }
-        
-        .service-menu-card .menu-icon {
-            transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
-        }
-        
-        .service-menu-card:hover .menu-icon {
-            transform: scale(1.05);
-            background-color: #1a3c5e;
-            color: white;
-        }
-        
-        /* Icon warna berbeda untuk tiap card */
-        .icon-brand .menu-icon { background: rgba(26, 60, 94, 0.1); color: #1a3c5e; }
-        .icon-brand:hover .menu-icon { background: #1a3c5e; color: white; }
-        
-        .icon-success .menu-icon { background: rgba(5, 150, 105, 0.1); color: #059669; }
-        .icon-success:hover .menu-icon { background: #059669; color: white; }
-        
-        .icon-orange .menu-icon { background: rgba(194, 65, 12, 0.1); color: #c2410c; }
-        .icon-orange:hover .menu-icon { background: #c2410c; color: white; }
-
-        /* ============================================================
-           MOBILE MENU — HIGHLIGHT COMPUTER SERVICE
-           ============================================================ */
         .mobile-menu-highlight {
             position: relative;
             display: flex;
@@ -160,208 +89,213 @@
             overflow: hidden;
             text-decoration: none;
             font-weight: 600;
-            
-            background: linear-gradient(
-                135deg,
-                rgba(26, 60, 94, 0.12) 0%,
-                rgba(26, 60, 94, 0.06) 50%,
-                rgba(26, 60, 94, 0.12) 100%
-            );
+            background: linear-gradient(135deg, rgba(26,60,94,0.12) 0%, rgba(26,60,94,0.06) 50%, rgba(26,60,94,0.12) 100%);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(26, 60, 94, 0.25);
-            box-shadow: 
-                0 4px 20px rgba(26, 60, 94, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            
+            box-shadow: 0 4px 20px rgba(26, 60, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
             color: #1a3c5e !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: highlight-pulse 3s ease-in-out infinite;
         }
-
         .mobile-menu-highlight::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.7) 50%,
-                transparent 70%
-            );
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.7) 50%, transparent 70%);
             animation: mobile-shine 3.5s infinite;
             z-index: 1;
             pointer-events: none;
         }
-
         @keyframes mobile-shine {
             0% { left: -100%; }
             50%, 100% { left: 100%; }
         }
-
-        .mobile-menu-highlight > * {
-            position: relative;
-            z-index: 2;
-        }
-
-        .mobile-menu-highlight .menu-icon-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .mobile-menu-highlight .menu-icon-wrap i {
-            filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
-            transition: filter 0.3s ease;
-        }
-
+        .mobile-menu-highlight > * { position: relative; z-index: 2; }
+        .mobile-menu-highlight .menu-icon-wrap { display: flex; align-items: center; gap: 0.6rem; }
         .mobile-menu-highlight .menu-arrow {
-            width: 1rem;
-            height: 1rem;
+            width: 1rem; height: 1rem;
             opacity: 0.6;
             transition: all 0.3s ease;
         }
-
         .mobile-menu-highlight:hover,
         .mobile-menu-highlight:active {
             transform: translateX(4px) scale(1.01);
-            background: linear-gradient(
-                135deg,
-                rgba(26, 60, 94, 0.18) 0%,
-                rgba(26, 60, 94, 0.1) 50%,
-                rgba(26, 60, 94, 0.18) 100%
-            );
+            background: linear-gradient(135deg, rgba(26,60,94,0.18) 0%, rgba(26,60,94,0.1) 50%, rgba(26,60,94,0.18) 100%);
             border-color: rgba(26, 60, 94, 0.4);
-            box-shadow: 
-                0 6px 24px rgba(26, 60, 94, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
         }
-
         .mobile-menu-highlight:hover .menu-arrow,
         .mobile-menu-highlight:active .menu-arrow {
-            opacity: 1;
-            transform: translateX(4px);
-        }
-
-        .mobile-menu-highlight:hover .menu-icon-wrap i {
-            filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
-        }
-
-        @keyframes highlight-pulse {
-            0%, 100% {
-                box-shadow: 
-                    0 4px 20px rgba(26, 60, 94, 0.08),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            }
-            50% {
-                box-shadow: 
-                    0 4px 24px rgba(26, 60, 94, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-                    0 0 20px rgba(26, 60, 94, 0.15);
-            }
+            opacity: 1; transform: translateX(4px);
         }
 
         /* ============================================================
-           REVEAL ANIMATION — Card muncul saat halaman dibuka
+           PROGRAM GRID — KATALOG KONTEN
            ============================================================ */
-        .reveal-item {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, transform;
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        @media (min-width: 640px) {
+            .program-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        }
+        @media (min-width: 1024px) {
+            .program-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
         }
 
-        .reveal-item.revealed {
-            opacity: 1;
-            transform: translateY(0);
+        .program-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
-
-        /* Stagger delay per card */
-        #servicesSection .service-menu-card:nth-child(1) { transition-delay: 0s; }
-        #servicesSection .service-menu-card:nth-child(2) { transition-delay: 0.08s; }
-        #servicesSection .service-menu-card:nth-child(3) { transition-delay: 0.16s; }
-        #servicesSection .service-menu-card:nth-child(4) { transition-delay: 0.24s; }
-        #servicesSection .service-menu-card:nth-child(5) { transition-delay: 0.32s; }
-        #servicesSection .service-menu-card:nth-child(6) { transition-delay: 0.40s; }
-
-        /* ============================================================
-           PROGRESS BAR — Muncul saat card diklik
-           ============================================================ */
-        .card-progress {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: rgba(26, 60, 94, 0.08);
-            opacity: 0;
-            transition: opacity 0.2s ease;
-            pointer-events: none;
-            border-radius: 0 0 16px 16px;
+        .program-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(26, 60, 94, 0.12);
+        }
+        .program-image-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            background: #f3f4f6;
             overflow: hidden;
         }
-
-        /* Tampilkan saat loading */
-        .service-menu-card.loading .card-progress {
-            opacity: 1;
+        .program-image-wrapper img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
         }
+        .program-card:hover .program-image-wrapper img {
+            transform: scale(1.05);
+        }
+        .program-image-link { display: block; cursor: pointer; }
+        .program-image-link:hover { opacity: 0.97; }
 
-        /* Progress bar fill */
-        .card-progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #1a3c5e 0%, #2a5a7a 100%);
+        .badge-kategori {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(26, 60, 94, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
             border-radius: 999px;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
         }
 
-        /* Progress bar untuk card dengan bg dark (Service Panggil) */
-        .service-menu-card.bg-brand-dark .card-progress {
-            background: rgba(255, 255, 255, 0.15);
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .service-menu-card.bg-brand-dark .card-progress-bar {
-            background: linear-gradient(90deg, #ffffff 0%, #fbbf24 100%);
+        .skeleton {
+            background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+        }
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
-        /* Card saat loading — efek "dimmed" */
-        .service-menu-card.loading {
-            pointer-events: none;
-            transform: scale(0.98);
+        @keyframes toastIn {
+            from { opacity: 0; transform: translate(-50%, 20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; transform: translate(-50%, 0); }
+            to { opacity: 0; transform: translate(-50%, 20px); }
         }
 
-        .service-menu-card.loading .menu-icon {
-            opacity: 0.6;
+        /* ============================================================
+           ACTION BUTTONS — Responsive
+           Mobile: Detail full-width, WA + Share 2 kolom
+           Desktop: 3 tombol sejajar
+           ============================================================ */
+        .program-card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.375rem;
+            margin-top: 0.75rem;
+        }
+        .program-card-actions .btn-detail {
+            grid-column: 1 / -1;
+        }
+        .program-card-actions .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+            padding: 0.5rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            min-width: 0;
+            line-height: 1.2;
+        }
+        .program-card-actions .btn-action i {
+            flex-shrink: 0;
+            width: 0.875rem;
+            height: 0.875rem;
         }
 
-        /* Efek fade-out halaman saat pindah */
-        body.page-transition {
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-
-        /* Prefers reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            .reveal-item {
-                transition: none;
-                opacity: 1;
-                transform: none;
+        @media (min-width: 640px) {
+            .program-card-actions {
+                grid-template-columns: 1fr 1fr 1fr;
             }
-            .card-progress-bar {
-                transition: none;
+            .program-card-actions .btn-detail {
+                grid-column: auto;
+            }
+            .program-card-actions .btn-action {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.25rem;
+            }
+        }
+
+        /* ============================================================
+           MOBILE OPTIMIZATION — Card lebih compact
+           ============================================================ */
+        @media (max-width: 639px) {
+            .program-card .card-content {
+                padding: 0.625rem;
+            }
+            .program-card h3 {
+                font-size: 0.8125rem;
+            }
+            .program-card .card-desc {
+                font-size: 0.6875rem;
+            }
+            .program-card .card-price {
+                font-size: 0.6875rem;
+            }
+            .program-card .card-price strong {
+                font-size: 0.8125rem;
+            }
+            .badge-kategori {
+                font-size: 0.55rem;
+                padding: 0.15rem 0.4rem;
+                top: 0.375rem;
+                right: 0.375rem;
             }
         }
     </style>
 </head>
 <body class="font-sans page-bg">
 
-<!-- ============================================================ -->
-<!-- NAVIGATION (Service.html)                                    -->
-<!-- ============================================================ -->
+<!-- NAVIGATION -->
 <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
     <div class="container mx-auto px-4 flex items-center justify-between">
         <a href="index.html" class="flex items-center gap-3 logo-shine">
@@ -402,406 +336,276 @@
             </a>
         </div>
     </div>
-    
 
-        
-        <!-- Mobile Menu -->
-        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-            <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-                
-                <a href="service.html" class="mobile-menu-highlight">
-                    <span class="menu-icon-wrap">
-                        <i data-lucide="wrench" class="w-4 h-4"></i>
-                        Computer Service
-                    </span>
-                    <i data-lucide="arrow-right" class="menu-arrow"></i>
-                </a>
-                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand">Rakit Komputer</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+    <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+        <div class="container mx-auto px-4 flex flex-col gap-2">
+            <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+            <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+            <a href="service.html" class="mobile-menu-highlight">
+                <span class="menu-icon-wrap">
+                    <i data-lucide="wrench" class="w-4 h-4"></i> Computer Service
+                </span>
+                <i data-lucide="arrow-right" class="menu-arrow"></i>
+            </a>
+            <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
+            <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+            <a href="karir.html" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
+            <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- HEADER + KATALOG                                              -->
+<!-- ============================================================ -->
+<section class="py-8 sm:py-12">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Computer Service</h1>
+            <p class="text-sm sm:text-base text-gray-500 mt-2">Layanan perbaikan perangkat komputer profesional di Yogyakarta.</p>
+        </div>
+
+        <div class="max-w-6xl mx-auto">
+            <!-- Search + Filter -->
+            <div class="max-w-3xl mx-auto mb-6">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="text"
+                               id="searchInput"
+                               placeholder="Cari layanan service..."
+                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                    </div>
+                    <select id="filterKategori"
+                            class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white">
+                        <option value="">Semua Kategori</option>
+                    </select>
+                </div>
+                <div id="filterInfo" class="text-xs text-gray-500 mt-2 text-center"></div>
+            </div>
+
+            <!-- Grid Katalog -->
+            <div class="program-grid" id="servicesCatalogContainer">
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+            </div>
+
+            <!-- Load More -->
+            <div class="text-center mt-10" id="loadMoreWrapper" style="display: none;">
+                <button id="loadMoreBtn" class="group inline-flex items-center gap-2 bg-white border-2 border-brand text-brand hover:bg-brand hover:text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
+                    <i data-lucide="chevron-down" class="w-5 h-5 group-hover:text-white transition-colors"></i>
+                    <span class="group-hover:text-white transition-colors">Tampilkan Lebih Banyak</span>
+                </button>
             </div>
         </div>
-    </nav>
+    </div>
+</section>
 
-    <!-- ============================================================
-    MENU GRID — KATALOG LAYANAN
-    ============================================================ -->
-    <section class="py-8 sm:py-12" id="servicesSection">
-        <div class="container mx-auto px-4">
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
-                
-                <!-- Menu 1: Service Laptop -->
-                <a href="service-laptop.html" 
-                   class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item"
-                   data-loading="true">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="laptop" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
-                    </div>
-                    <h3 class="font-bold text-brand text-base sm:text-lg">Service Laptop</h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Perbaikan semua merek laptop</p>
-                    
-                    <div class="card-progress">
-                        <div class="card-progress-bar"></div>
-                    </div>
-                </a>
-                
-                <!-- Menu 2: Service PC -->
-                <a href="service-pc.html" 
-                   class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item"
-                   data-loading="true">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="monitor" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
-                    </div>
-                    <h3 class="font-bold text-brand text-base sm:text-lg">Service PC</h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Desktop & komputer rakitan</p>
-                    
-                    <div class="card-progress">
-                        <div class="card-progress-bar"></div>
-                    </div>
-                </a>
-                
-                <!-- Menu 3: Service Printer -->
-                <a href="service-printer.html" 
-                   class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item"
-                   data-loading="true">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="printer" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
-                    </div>
-                    <h3 class="font-bold text-brand text-base sm:text-lg">Service Printer</h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Semua merek printer</p>
-                    
-                    <div class="card-progress">
-                        <div class="card-progress-bar"></div>
-                    </div>
-                </a>
-                
-                <!-- Menu 4: Service Panggil (Highlight) -->
-                <a href="service-panggil.html" 
-                   class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 relative overflow-hidden shadow-lg reveal-item"
-                   data-loading="true">
-                    <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full z-10">POPULER</span>
-                    
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white transition-transform">
-                            <i data-lucide="home" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/70"></i>
-                    </div>
-                    <h3 class="font-bold text-white text-base sm:text-lg">Service Panggil</h3>
-                    <p class="text-xs sm:text-sm text-white/80 mt-1">Teknisi datang ke lokasi</p>
-                    
-                    <div class="card-progress">
-                        <div class="card-progress-bar"></div>
-                    </div>
-                </a>
-                
-                <!-- Menu 5: Sparepart -->
-                <a href="sparepart.html" 
-                   class="service-menu-card glass icon-success rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item"
-                   data-loading="true">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="cpu" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-success/30"></i>
-                    </div>
-                    <h3 class="font-bold text-brand text-base sm:text-lg">Sparepart</h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Suku cadang berkualitas</p>
-                    
-                    <div class="card-progress">
-                        <div class="card-progress-bar"></div>
-                    </div>
-                </a>
-                
-                <!-- Menu 6: Konsultasi (CTA WhatsApp — TANPA progress bar) -->
-                <a href="#" 
-                   onclick="openWhatsAppConsultation(); return false;" 
-                   class="service-menu-card glass icon-orange rounded-2xl p-5 sm:p-6 border border-white/40 reveal-item">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="message-circle" class="w-7 h-7"></i>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand-dark/30"></i>
-                    </div>
-                    <h3 class="font-bold text-brand text-base sm:text-lg">Konsultasi</h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Chat via WhatsApp</p>
-                </a>
-                
-            </div>
-            
+<!-- ============================================================ -->
+<!-- KEUNGGULAN                                                    -->
+<!-- ============================================================ -->
+<section class="py-12 sm:py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">
+                Keunggulan <span class="text-brand-dark">Layanan</span> Kami
+            </h2>
+            <p class="text-sm sm:text-base text-gray-500 mt-2">Kami berkomitmen memberikan layanan terbaik.</p>
         </div>
-    </section>
-
-    <!-- ============================================================
-    KEUNGGULAN
-    ============================================================ -->
-    <section class="py-12 sm:py-16">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">
-                    Keunggulan <span class="text-brand-dark">Layanan</span> Kami
-                </h2>
-                <p class="text-sm sm:text-base text-gray-500 mt-2">Kami berkomitmen memberikan layanan terbaik.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
+            <div class="glass rounded-2xl p-5 text-center">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-success/10 rounded-xl mb-3">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-success"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800 text-sm">Bergaransi</h3>
+                <p class="text-xs text-gray-500 mt-1">Garansi service 2 bulan</p>
             </div>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
-                
-                <!-- Keunggulan 1 -->
-                <div class="glass rounded-2xl p-5 text-center">
-                    <div class="inline-flex items-center justify-center w-12 h-12 bg-success/10 rounded-xl mb-3">
-                        <i data-lucide="shield-check" class="w-6 h-6 text-success"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 text-sm">Bergaransi</h3>
-                    <p class="text-xs text-gray-500 mt-1">Garansi service 2 bulan</p>
+            <div class="glass rounded-2xl p-5 text-center">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
+                    <i data-lucide="zap" class="w-6 h-6 text-brand"></i>
                 </div>
-                
-                <!-- Keunggulan 2 -->
-                <div class="glass rounded-2xl p-5 text-center">
-                    <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-                        <i data-lucide="zap" class="w-6 h-6 text-brand"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 text-sm">Proses Cepat</h3>
-                    <p class="text-xs text-gray-500 mt-1">Estimasi waktu jelas</p>
+                <h3 class="font-semibold text-gray-800 text-sm">Proses Cepat</h3>
+                <p class="text-xs text-gray-500 mt-1">Estimasi waktu jelas</p>
+            </div>
+            <div class="glass rounded-2xl p-5 text-center">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
+                    <i data-lucide="wallet" class="w-6 h-6 text-brand"></i>
                 </div>
-                
-                <!-- Keunggulan 3 -->
-                <div class="glass rounded-2xl p-5 text-center">
-                    <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-                        <i data-lucide="wallet" class="w-6 h-6 text-brand"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 text-sm">Harga Transparan</h3>
-                    <p class="text-xs text-gray-500 mt-1">Tanpa biaya tersembunyi</p>
+                <h3 class="font-semibold text-gray-800 text-sm">Harga Transparan</h3>
+                <p class="text-xs text-gray-500 mt-1">Tanpa biaya tersembunyi</p>
+            </div>
+            <div class="glass rounded-2xl p-5 text-center">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
+                    <i data-lucide="users" class="w-6 h-6 text-brand"></i>
                 </div>
-                
-                <!-- Keunggulan 4 -->
-                <div class="glass rounded-2xl p-5 text-center">
-                    <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-                        <i data-lucide="users" class="w-6 h-6 text-brand"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 text-sm">Teknisi Ahli</h3>
-                    <p class="text-xs text-gray-500 mt-1">Berpengalaman</p>
-                </div>
-                
+                <h3 class="font-semibold text-gray-800 text-sm">Teknisi Ahli</h3>
+                <p class="text-xs text-gray-500 mt-1">Berpengalaman</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- ============================================================
-    CARA KERJA
-    ============================================================ -->
-    <section class="py-12 sm:py-16 bg-white/40 backdrop-blur-sm">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Cara Kerja</h2>
-                <p class="text-sm sm:text-base text-gray-500 mt-2">Cepat, aman, bergaransi</p>
+<!-- ============================================================ -->
+<!-- CARA KERJA                                                    -->
+<!-- ============================================================ -->
+<section class="py-12 sm:py-16 bg-white/40 backdrop-blur-sm">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Cara Kerja</h2>
+            <p class="text-sm sm:text-base text-gray-500 mt-2">Cepat, aman, bergaransi</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
+                    <i data-lucide="mouse-pointer-click" class="w-6 h-6 text-brand"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800">Pilih Layanan</h3>
+                <p class="text-sm text-gray-500 mt-2">Pilih layanan dari katalog di atas</p>
             </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
-                <!-- Step 1 -->
-                <div class="text-center">
-                    <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
-                        <i data-lucide="mouse-pointer-click" class="w-6 h-6 text-brand"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800">Pilih Layanan</h3>
-                    <p class="text-sm text-gray-500 mt-2">Pilih layanan dari menu di atas</p>
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
+                    <i data-lucide="message-circle" class="w-6 h-6 text-brand"></i>
                 </div>
-                
-                <!-- Step 2 -->
-                <div class="text-center">
-                    <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
-                        <i data-lucide="message-circle" class="w-6 h-6 text-brand"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800">Konsultasi</h3>
-                    <p class="text-sm text-gray-500 mt-2">Chat WhatsApp untuk konsultasi gratis</p>
+                <h3 class="font-semibold text-gray-800">Konsultasi</h3>
+                <p class="text-sm text-gray-500 mt-2">Chat WhatsApp untuk konsultasi gratis</p>
+            </div>
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
+                    <i data-lucide="check-circle-2" class="w-6 h-6 text-brand"></i>
                 </div>
-                
-                <!-- Step 3 -->
-                <div class="text-center">
-                    <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
-                        <i data-lucide="check-circle-2" class="w-6 h-6 text-brand"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800">Selesai</h3>
-                    <p class="text-sm text-gray-500 mt-2">Perangkat normal & bergaransi</p>
-                </div>
+                <h3 class="font-semibold text-gray-800">Selesai</h3>
+                <p class="text-sm text-gray-500 mt-2">Perangkat normal & bergaransi</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- ============================================================
-    CTA SECTION
-    ============================================================ -->
-    <section class="py-12 sm:py-16">
-        <div class="container mx-auto px-4">
-            <div class="glass-dark rounded-3xl p-8 sm:p-12 text-center max-w-3xl mx-auto relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
-                
-                <div class="relative">
-                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-                        Butuh Bantuan Cepat?
-                    </h2>
-                    <p class="text-white/80 mt-3 max-w-lg mx-auto text-sm sm:text-base">
-                        Konsultasikan masalah perangkat Anda langsung via WhatsApp.
-                    </p>
-                    <button onclick="openWhatsAppConsultation()" 
-                            class="mt-6 inline-flex items-center gap-2 bg-white text-brand hover:bg-gray-100 font-medium px-6 py-3 rounded-xl transition-all">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i>
-                        Konsultasi Gratis
-                    </button>
-                </div>
+<!-- ============================================================ -->
+<!-- CTA — KONSULTASI                                              -->
+<!-- ============================================================ -->
+<section class="py-12 sm:py-16">
+    <div class="container mx-auto px-4">
+        <div class="glass-dark rounded-3xl p-8 sm:p-12 text-center max-w-3xl mx-auto relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+            <div class="relative">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Butuh Bantuan Cepat?</h2>
+                <p class="text-white/80 mt-3 max-w-lg mx-auto text-sm sm:text-base">
+                    Konsultasikan masalah perangkat Anda langsung via WhatsApp. Gratis, tanpa komitmen.
+                </p>
+                <button id="ctaKonsultasiBtn" class="mt-6 inline-flex items-center gap-2 bg-white text-brand hover:bg-gray-100 font-medium px-6 py-3 rounded-xl transition-all">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    Konsultasi Gratis
+                </button>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- ============================================================
-    FOOTER
-    ============================================================ -->
-    <footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-center md:text-left">
-                    <span class="text-xl font-bold text-brand">IMDKOM</span>
-                    <p class="text-gray-500 text-xs mt-1">Kursus &amp; Pelatihan • Computer Service</p>
-                </div>
-                <div class="text-center text-xs text-gray-500">
-                    <p>&copy; 2026 IMDKOM. All rights reserved.</p>
-                </div>
+<!-- ============================================================ -->
+<!-- GALERI KEGIATAN                                               -->
+<!-- ============================================================ -->
+<section class="py-12 sm:py-16 bg-white/40 backdrop-blur-sm">
+    <div class="container mx-auto px-4 max-w-5xl">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Galeri Kegiatan</h2>
+            <p class="text-sm sm:text-base text-gray-500 mt-2">Dokumentasi kegiatan service kami</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4" id="galeriContainer">
+            <div class="col-span-full text-center text-gray-500 py-8">
+                <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-2 text-sm">Memuat galeri...</p>
             </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-    <!-- ============================================================
-    FLOATING WHATSAPP BUTTON
-    ============================================================ -->
-    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-50" aria-label="Hubungi via WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-    </a>
+<!-- ============================================================ -->
+<!-- FOOTER                                                        -->
+<!-- ============================================================ -->
+<footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <span class="text-xl font-bold text-brand">IMDKOM</span>
+                <p class="text-gray-500 text-xs mt-1">Kursus &amp; Pelatihan • Computer Service</p>
+            </div>
+            <div class="text-center text-xs text-gray-500">
+                <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
 
-    <!-- ============================================================
-    JAVASCRIPT
-    ============================================================ -->
-    <script type="module">
-        import { openWhatsAppGeneric, openWhatsApp } from './assets/js/whatsapp.js';
+<!-- ============================================================ -->
+<!-- FLOATING WHATSAPP                                             -->
+<!-- ============================================================ -->
+<a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-50" aria-label="Hubungi via WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
 
-        // Konsultasi WhatsApp
-        window.openWhatsAppConsultation = function() {
-            const message = 'Halo IMDKOM, saya ingin konsultasi mengenai service perangkat komputer saya.';
-            openWhatsApp(message);
-        };
+<!-- ============================================================ -->
+<!-- LIGHTBOX                                                      -->
+<!-- ============================================================ -->
+<div id="imageLightbox" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeLightbox()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4 overflow-hidden pointer-events-none">
+        <div class="max-w-4xl w-full relative pointer-events-auto">
+            <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-white bg-black/50 hover:bg-black/70 w-10 h-10 rounded-full flex items-center justify-center z-10">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <img id="imageLightboxImg" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl" />
+            <p id="imageLightboxCaption" class="text-white text-center mt-4 text-sm"></p>
+        </div>
+    </div>
+</div>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-            
-            document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
-                e.preventDefault();
-                openWhatsAppGeneric();
-            });
+<!-- ============================================================ -->
+<!-- JAVASCRIPT                                                    -->
+<!-- ============================================================ -->
+<script type="module">
+    import {
+        loadServicesKatalog,
+        filterServices,
+        loadMoreServices,
+        loadGaleri,
+        closeLightbox
+    } from './assets/js/services-katalog.js';
+    import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
 
-            // ✅ Init reveal animation untuk cards
-            initCardReveal();
-            
-            // ✅ Init click progress
-            initCardClickProgress();
+    window.closeLightbox = closeLightbox;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+            document.getElementById('mobileNav')?.classList.toggle('hidden');
         });
 
-        // ============================================================
-        // 1. REVEAL ANIMATION — Card muncul saat halaman dibuka
-        // ============================================================
-        function initCardReveal() {
-            const cards = document.querySelectorAll('.service-menu-card.reveal-item');
-            if (cards.length === 0) return;
-            
-            // Trigger reveal setelah 100ms
-            setTimeout(() => {
-                cards.forEach(card => card.classList.add('revealed'));
-            }, 100);
-        }
+        await loadServicesKatalog();
+        await loadGaleri();
 
-        // ============================================================
-        // 2. CLICK PROGRESS — Progress bar saat card diklik
-        // ============================================================
-        function initCardClickProgress() {
-            const cards = document.querySelectorAll('.service-menu-card[data-loading="true"]');
-            
-            cards.forEach(card => {
-                card.addEventListener('click', function(e) {
-                    const href = card.getAttribute('href');
-                    
-                    // Skip kalau bukan link internal
-                    if (!href || href === '#' || card.hasAttribute('onclick')) return;
-                    
-                    // Skip kalau sudah loading
-                    if (card.classList.contains('loading')) {
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    e.preventDefault();
-                    
-                    // Mulai loading state
-                    card.classList.add('loading');
-                    
-                    const progressBar = card.querySelector('.card-progress-bar');
-                    
-                    // Animasi progress: 0% → 40% → 75% → 100%
-                    setTimeout(() => {
-                        if (progressBar) progressBar.style.width = '40%';
-                    }, 50);
-                    
-                    setTimeout(() => {
-                        if (progressBar) progressBar.style.width = '75%';
-                    }, 250);
-                    
-                    setTimeout(() => {
-                        if (progressBar) progressBar.style.width = '100%';
-                    }, 450);
-                    
-                    // Setelah selesai → fade-out + pindah halaman
-                    setTimeout(() => {
-                        document.body.classList.add('page-transition');
-                        
-                        setTimeout(() => {
-                            window.location.href = href;
-                        }, 300);
-                    }, 700);
-                });
-            });
-        }
-    </script>
-    
-    <!-- Mobile Menu Toggle -->
-    <script>
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('mobileNav').classList.toggle('hidden');
-        });
-    </script>
+        if (typeof lucide !== 'undefined') lucide.createIcons();
 
-    <!-- Hide Netlify Badge -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const netlifyBadge = document.querySelector('a[href*="netlify.com"]');
-            if (netlifyBadge && netlifyBadge.textContent.includes('Powered by')) {
-                netlifyBadge.style.display = 'none';
-            }
-            const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
-            badges.forEach(badge => badge.remove());
+        document.getElementById('searchInput')?.addEventListener('input', filterServices);
+        document.getElementById('filterKategori')?.addEventListener('change', filterServices);
+        document.getElementById('loadMoreBtn')?.addEventListener('click', loadMoreServices);
+
+        document.getElementById('ctaKonsultasiBtn')?.addEventListener('click', () => {
+            openWhatsAppGeneric('Halo IMDKOM, saya ingin konsultasi mengenai service perangkat saya.');
         });
-    </script>
+
+        document.getElementById('floatingWhatsApp')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            openWhatsAppGeneric();
+        });
+    });
+</script>
 
 </body>
 </html>

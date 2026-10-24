@@ -6,3 +6,22 @@
 [build]
   base = "public"
   publish = "."
+
+# ============================================================
+# EDGE FUNCTIONS
+# ============================================================
+[[edge_functions]]
+  path = "/program-detail.html"
+  function = "program-detail"
+
+[[edge_functions]]
+  path = "/program-detail"
+  function = "program-detail"
+
+[[edge_functions]]
+  path = "/service-detail.html"
+  function = "service-detail"
+
+[[edge_functions]]
+  path = "/service-detail"
+  function = "service-detail"
