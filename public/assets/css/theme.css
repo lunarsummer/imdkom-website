@@ -12,17 +12,17 @@
 
 :root {
     /* ============================================
-       🎨 WARNA BRAND UTAMA — GANTI DI SINI
+        WARNA BRAND UTAMA — GANTI DI SINI
        ============================================ */
-    --color-brand: #0057ad;          /* Warna utama (tombol, heading) */
-    --color-brand-light: #ff8800;    /* Warna hover (lebih terang) */
+    --color-brand: #0059ff;          /* Warna utama (tombol, heading) */
+    --color-brand-light: #2f78ff;    /* Warna hover (lebih terang) */
     --color-brand-dark: #f14400;     /* Warna aksen (orange tua) */
     
     /* ============================================
        WARNA TEXT
        ============================================ */
-    --color-text-primary: #1a1a1a;
-    --color-text-secondary: #6c757d;
+    --color-text-primary: #0c0c0c;
+    --color-text-secondary: #202020;
     --color-text-white: #ffffff;
     
     /* ============================================
@@ -193,6 +193,71 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-brand);
+}
+
+/* ============================================================
+   HEADING FONT — ANTON
+   ============================================================ */
+h1, h2 {
+    font-family: 'Anton', 'Poppins', sans-serif;
+    letter-spacing: 0.02em;
+    font-weight: 400; /* Anton hanya punya 1 weight, jangan bold */
+}
+
+/* Optional: sesuaikan line-height karena Anton lebih tinggi */
+h1 {
+    line-height: 1.1;
+}
+
+h2 {
+    line-height: 1.2;
+}
+
+/* ============================================================
+   HEADING — FONT, SIZE, SPACING
+   ============================================================ */
+h1, h2 {
+    font-family: 'Anton', 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+/* H1 — 36px mobile / 48px tablet / 60px desktop */
+h1 {
+    font-size: 2.25rem;        /* 36px */
+    line-height: 1.1;
+    letter-spacing: -0.01em;   /* rapat — Anton sudah lebar */
+    word-spacing: 0.02em;      /* jarak antar kata normal */
+}
+
+/* H2 — 30px mobile / 36px tablet / 48px desktop */
+h2 {
+    font-size: 1.875rem;       /* 30px */
+    line-height: 1.2;
+    letter-spacing: 0.01em;    /* netral */
+    word-spacing: 0.02em;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+    h1 {
+        font-size: 3rem;       /* 48px */
+        letter-spacing: -0.015em;
+    }
+    h2 {
+        font-size: 2.25rem;    /* 36px */
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    h1 {
+        font-size: 4.75rem;    /* 60px */
+        letter-spacing: -0.01em;
+    }
+    h2 {
+        font-size: 3rem;       /* 48px — koreksi dari 2rem */
+        letter-spacing: 0.001em;
+    }
 }
 
 /* ============================================================

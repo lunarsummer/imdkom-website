@@ -59,39 +59,63 @@
             <form id="serviceForm">
                 <input type="hidden" id="serviceId" />
 
+                <!-- ============================================================ -->
+                <!-- BARIS 1: NAMA + SLUG (DROPDOWN)                             -->
+                <!-- ============================================================ -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Layanan *</label>
-                        <input type="text" id="nama" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                        <input type="text" id="nama" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               placeholder="Contoh: Ganti Keyboard Laptop" />
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
-                        <input type="text" id="slug" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="laptop, pc, printer" />
-                        <p class="text-xs text-gray-500 mt-1">Digunakan untuk URL: service-{slug}.html</p>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Slug (Kategori Halaman) *</label>
+                        <select id="slug" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white">
+                            <option value="">Pilih slug</option>
+                            <option value="laptop">laptop → service-laptop.html</option>
+                            <option value="pc">pc → service-pc.html</option>
+                            <option value="printer">printer → service-printer.html</option>
+                            <option value="panggil">panggil → service-panggil.html</option>
+                            <option value="sparepart">sparepart → sparepart.html</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Menentukan halaman pricelist tujuan.</p>
                     </div>
                 </div>
 
+                <!-- ============================================================ -->
+                <!-- BARIS 2: KATEGORI (DROPDOWN OTOMATIS DARI SLUG) + ICON        -->
+                <!-- ============================================================ -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                        <input type="text" id="kategori" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="Contoh: Service Laptop" />
-                        <p class="text-xs text-gray-500 mt-1">Dipakai untuk filter & badge di halaman publik.</p>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
+                        <select id="kategori" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white">
+                            <option value="">Pilih kategori</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Otomatis mengikuti slug. Dipakai untuk filter & badge.</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Icon (Lucide)</label>
-                        <input type="text" id="icon" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="laptop, monitor, printer" />
+                        <input type="text" id="icon"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               placeholder="laptop, monitor, printer" />
                         <p class="text-xs text-gray-500 mt-1">Fallback jika gambar kosong. Default: wrench.</p>
                     </div>
                 </div>
 
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                    <textarea id="deskripsi" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"></textarea>
+                    <textarea id="deskripsi" rows="3"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"></textarea>
                 </div>
 
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat</label>
-                    <input type="text" id="deskripsiSingkat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="Tampil di card katalog & OG description" />
+                    <input type="text" id="deskripsiSingkat"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                           placeholder="Tampil di card katalog & OG description" />
                 </div>
 
                 <!-- ============================================================ -->
@@ -99,21 +123,32 @@
                 <!-- ============================================================ -->
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">URL Pricelist (Opsional)</label>
-                    <input type="text" id="pricelistUrl" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="service-laptop.html" />
+                    <input type="text" id="pricelistUrl"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                           placeholder="service-laptop.html" />
                     <p class="text-xs text-gray-500 mt-1">
-                        Kosongkan untuk auto-generate: <code class="bg-gray-100 px-1 rounded">service-{slug}.html</code>.
-                        Isi manual jika halaman pricelist punya nama file berbeda.
+                        Kosongkan untuk auto-generate dari slug. Isi manual jika halaman pricelist berbeda.
                     </p>
                 </div>
 
+                <!-- ============================================================ -->
+                <!-- HARGA MULAI (AUTO FORMAT RUPIAH) + URUTAN                    -->
+                <!-- ============================================================ -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Harga Mulai</label>
-                        <input type="text" id="hargaMulai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="Rp 100.000" />
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium pointer-events-none">Rp</span>
+                            <input type="text" id="hargaMulai" inputmode="numeric"
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                                   placeholder="100.000" />
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Ketik angka, otomatis diformat.</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Urutan</label>
-                        <input type="number" id="order" value="1" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
+                        <input type="number" id="order" value="1" min="1"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
                     </div>
                 </div>
 
@@ -128,9 +163,8 @@
                     </div>
 
                     <div class="flex flex-wrap gap-2 mb-3">
-                        <!-- Tombol Upload (Hijau) -->
-                        <button type="button" 
-                                id="uploadGambarBtn" 
+                        <button type="button"
+                                id="uploadGambarBtn"
                                 class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold shadow-md shadow-emerald-200 transition-all hover:-translate-y-0.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
@@ -138,9 +172,8 @@
                             <span id="uploadGambarText">Upload Gambar</span>
                         </button>
 
-                        <!-- Tombol Gunakan Link (Biru) -->
-                        <button type="button" 
-                                id="linkGambarBtn" 
+                        <button type="button"
+                                id="linkGambarBtn"
                                 class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 transition-all hover:-translate-y-0.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
@@ -148,9 +181,8 @@
                             Gunakan Link
                         </button>
 
-                        <!-- Tombol Hapus (Merah) -->
-                        <button type="button" 
-                                id="removeGambarBtn" 
+                        <button type="button"
+                                id="removeGambarBtn"
                                 class="hidden inline-flex items-center gap-2 px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-sm font-semibold border border-red-200 transition-all hover:-translate-y-0.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -159,15 +191,14 @@
                         </button>
                     </div>
 
-                    <!-- Input Link URL (Muncul saat tombol Biru diklik) -->
                     <div id="linkInputWrapper" class="hidden mb-3 p-3 bg-blue-50 border border-blue-200 rounded-xl">
                         <div class="flex gap-2">
-                            <input type="url" 
-                                   id="gambarLinkInput" 
-                                   class="flex-1 px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm" 
+                            <input type="url"
+                                   id="gambarLinkInput"
+                                   class="flex-1 px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
                                    placeholder="https://example.com/gambar.jpg" />
-                            <button type="button" 
-                                    id="applyLinkBtn" 
+                            <button type="button"
+                                    id="applyLinkBtn"
                                     class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold shadow-md transition-all">
                                 Terapkan
                             </button>
@@ -194,7 +225,7 @@
     </main>
 
     <script type="module">
-        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, addDoc, updateDoc, collection } from './assets/js/firebase.js';
+        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc, collection } from './assets/js/firebase.js';
         import { setupImageUploadField, setExistingImagePreview } from './assets/js/cloudinary.js';
 
         // ============================================================
@@ -209,6 +240,17 @@
             previewImgId: 'gambarPreview',
             folder: 'services',
             previewWidth: 400
+        };
+
+        // ============================================================
+        // MAPPING SLUG → KATEGORI (dropdown kategori auto-sync)
+        // ============================================================
+        const SLUG_TO_KATEGORI = {
+            'laptop': 'Service Laptop',
+            'pc': 'Service PC',
+            'printer': 'Service Printer',
+            'panggil': 'Service Panggil',
+            'sparepart': 'Sparepart'
         };
 
         // ============================================================
@@ -242,13 +284,84 @@
         });
 
         // ============================================================
-        // INIT CLOUDINARY UPLOAD + LINK INPUT
+        // INIT CLOUDINARY + LINK INPUT
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             setupImageUploadField(GAMBAR_FIELD_CONFIG);
             initLinkInput();
+            initSlugKategoriSync();
+            initHargaFormat();
         });
 
+        // ============================================================
+        // SLUG → KATEGORI AUTO-SYNC
+        // ============================================================
+        function initSlugKategoriSync() {
+            const slugSelect = document.getElementById('slug');
+            const kategoriSelect = document.getElementById('kategori');
+
+            function populateKategori(slugValue) {
+                kategoriSelect.innerHTML = '<option value="">Pilih kategori</option>';
+
+                if (!slugValue) return;
+
+                const kategoriName = SLUG_TO_KATEGORI[slugValue];
+                if (kategoriName) {
+                    const opt = document.createElement('option');
+                    opt.value = kategoriName;
+                    opt.textContent = kategoriName;
+                    opt.selected = true;
+                    kategoriSelect.appendChild(opt);
+                }
+            }
+
+            slugSelect.addEventListener('change', function() {
+                populateKategori(this.value);
+            });
+
+            // Kalau edit mode & slug sudah ada, populate saat load
+            if (slugSelect.value) {
+                populateKategori(slugSelect.value);
+            }
+        }
+
+        // ============================================================
+        // HARGA MULAI — AUTO FORMAT RUPIAH
+        // ============================================================
+        function initHargaFormat() {
+            const hargaInput = document.getElementById('hargaMulai');
+            if (!hargaInput) return;
+
+            // Format angka → "100.000"
+            function formatNumber(value) {
+                const digits = String(value).replace(/\D/g, '');
+                if (!digits) return '';
+                return Number(digits).toLocaleString('id-ID');
+            }
+
+            // Unformat "100.000" → "100000"
+            function unformatNumber(value) {
+                return String(value).replace(/\D/g, '');
+            }
+
+            hargaInput.addEventListener('input', function() {
+                const cursorPos = this.selectionStart;
+                const oldValue = this.value;
+                const oldLength = oldValue.length;
+
+                this.value = formatNumber(this.value);
+
+                // Pertahankan posisi cursor kira-kira
+                const newLength = this.value.length;
+                const diff = newLength - oldLength;
+                const newPos = Math.max(0, cursorPos + diff);
+                this.setSelectionRange(newPos, newPos);
+            });
+        }
+
+        // ============================================================
+        // LINK INPUT (GAMBAR)
+        // ============================================================
         function initLinkInput() {
             const linkBtn = document.getElementById('linkGambarBtn');
             const linkInputWrapper = document.getElementById('linkInputWrapper');
@@ -262,7 +375,6 @@
 
             if (!linkBtn) return;
 
-            // Toggle form input link
             linkBtn.addEventListener('click', () => {
                 linkInputWrapper.classList.toggle('hidden');
                 if (!linkInputWrapper.classList.contains('hidden')) {
@@ -270,7 +382,6 @@
                 }
             });
 
-            // Terapkan URL Link ke Preview
             applyLinkBtn.addEventListener('click', () => {
                 const url = gambarLinkInput.value.trim();
                 if (!url) {
@@ -282,10 +393,7 @@
                     return;
                 }
 
-                // Set value ke input hidden
                 gambarHiddenInput.value = url;
-
-                // Tampilkan Preview
                 previewImg.src = url;
                 previewImg.onerror = function() {
                     alert('Gambar tidak dapat dimuat. Pastikan URL valid.');
@@ -295,7 +403,6 @@
                 removeBtn.classList.remove('hidden');
                 uploadText.textContent = 'Ganti Gambar';
 
-                // Sembunyikan input link
                 linkInputWrapper.classList.add('hidden');
                 gambarLinkInput.value = '';
             });
@@ -324,17 +431,58 @@
                 }
                 const data = docSnap.data();
                 document.getElementById('nama').value = data.nama || '';
-                document.getElementById('slug').value = data.slug || '';
-                document.getElementById('kategori').value = data.kategori || '';
+
+                // Slug
+                const slugSelect = document.getElementById('slug');
+                if (data.slug) {
+                    // Cek apakah slug ada di option
+                    const exists = Array.from(slugSelect.options).some(opt => opt.value === data.slug);
+                    if (exists) {
+                        slugSelect.value = data.slug;
+                    } else {
+                        // Tambah option baru (data lama custom)
+                        const opt = document.createElement('option');
+                        opt.value = data.slug;
+                        opt.textContent = `${data.slug} (data lama)`;
+                        slugSelect.appendChild(opt);
+                        slugSelect.value = data.slug;
+                    }
+                    // Sync kategori dropdown
+                    slugSelect.dispatchEvent(new Event('change'));
+                }
+
+                // Kategori (set setelah sync, untuk handle custom)
+                const kategoriSelect = document.getElementById('kategori');
+                if (data.kategori) {
+                    const exists = Array.from(kategoriSelect.options).some(opt => opt.value === data.kategori);
+                    if (exists) {
+                        kategoriSelect.value = data.kategori;
+                    } else {
+                        const opt = document.createElement('option');
+                        opt.value = data.kategori;
+                        opt.textContent = `${data.kategori} (data lama)`;
+                        kategoriSelect.appendChild(opt);
+                        kategoriSelect.value = data.kategori;
+                    }
+                }
+
                 document.getElementById('icon').value = data.icon || '';
                 document.getElementById('deskripsi').value = data.deskripsi || '';
                 document.getElementById('deskripsiSingkat').value = data.deskripsiSingkat || '';
                 document.getElementById('pricelistUrl').value = data.pricelistUrl || '';
-                document.getElementById('hargaMulai').value = data.hargaMulai || '';
+
+                // Harga — strip "Rp" & format
+                const harga = String(data.hargaMulai || '').replace(/[^\d]/g, '');
+                if (harga) {
+                    document.getElementById('hargaMulai').value = Number(harga).toLocaleString('id-ID');
+                } else {
+                    document.getElementById('hargaMulai').value = '';
+                }
+
                 document.getElementById('order').value = data.order || 1;
                 document.getElementById('aktif').checked = data.aktif !== false;
 
-                // Set gambar & preview
+                // Gambar
                 document.getElementById('gambar').value = data.gambar || '';
                 if (data.gambar) {
                     setExistingImagePreview(GAMBAR_FIELD_CONFIG, data.gambar);
@@ -345,17 +493,23 @@
         }
 
         // ============================================================
-        // SUBMIT
+        // SUBMIT — pakai setDoc + merge untuk hindari "Document already exists"
         // ============================================================
         document.getElementById('serviceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+
             const id = document.getElementById('serviceId').value;
             const submitBtn = this.querySelector('button[type="submit"]');
             const messageEl = document.getElementById('formMessage');
 
+            // Disable tombol segera (cegah double submit)
             submitBtn.disabled = true;
             submitBtn.textContent = 'Menyimpan...';
             messageEl.innerHTML = '';
+
+            // Harga — strip format, simpan sebagai "Rp 100.000"
+            const hargaRaw = document.getElementById('hargaMulai').value.replace(/\D/g, '');
+            const hargaFormatted = hargaRaw ? `Rp ${Number(hargaRaw).toLocaleString('id-ID')}` : '';
 
             const data = {
                 nama: document.getElementById('nama').value.trim(),
@@ -365,7 +519,7 @@
                 deskripsi: document.getElementById('deskripsi').value.trim(),
                 deskripsiSingkat: document.getElementById('deskripsiSingkat').value.trim(),
                 pricelistUrl: document.getElementById('pricelistUrl').value.trim(),
-                hargaMulai: document.getElementById('hargaMulai').value.trim(),
+                hargaMulai: hargaFormatted,
                 gambar: document.getElementById('gambar').value.trim(),
                 order: parseInt(document.getElementById('order').value) || 1,
                 aktif: document.getElementById('aktif').checked,
@@ -374,13 +528,17 @@
 
             try {
                 if (id) {
-                    await updateDoc(doc(db, 'services', id), data);
+                    // Mode EDIT — update dokumen yang ada
+                    await setDoc(doc(db, 'services', id), data, { merge: true });
                     messageEl.innerHTML = `<p class="text-green-600 text-sm">✅ Berhasil diupdate!</p>`;
                 } else {
+                    // Mode TAMBAH — setDoc ke ID baru (otomatis)
+                    const newDocRef = doc(collection(db, 'services'));
                     data.createdAt = new Date().toISOString();
-                    await addDoc(collection(db, 'services'), data);
+                    await setDoc(newDocRef, data);
                     messageEl.innerHTML = `<p class="text-green-600 text-sm">✅ Berhasil ditambahkan!</p>`;
                     this.reset();
+                    document.getElementById('kategori').innerHTML = '<option value="">Pilih kategori</option>';
                     document.getElementById('gambarPreviewWrapper').classList.add('hidden');
                     document.getElementById('removeGambarBtn').classList.add('hidden');
                     document.getElementById('uploadGambarText').textContent = 'Upload Gambar';

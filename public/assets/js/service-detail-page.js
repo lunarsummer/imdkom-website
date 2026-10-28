@@ -194,6 +194,9 @@ export async function loadServiceDetail() {
         // Attach events
         attachDetailEvents(data, nama, deskripsiSingkat || deskripsi, pricelistUrl);
 
+        // Load rekomendasi layanan lain
+        await loadRecommendations(docSnap.id);
+
     } catch (error) {
         console.error('Error loading service detail:', error);
         container.innerHTML = `
@@ -586,6 +589,111 @@ function showToast(message) {
     toast.textContent = message;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2500);
+}
+
+// ============================================================
+// LOAD REKOMENDASI LAYANAN LAIN
+// - Prioritas: layanan dengan kategori sama
+// - Sisa slot: layanan lain (urut `order`)
+// - Total: 4 card
+// ============================================================
+export async function loadRecommendations(currentId) {
+    const section = document.getElementById('recommendationSection');
+    const container = document.getElementById('recommendationContainer');
+    if (!section || !container) return;
+
+    try {
+        const q = query(
+            collection(db, 'services'),
+            where('aktif', '==', true),
+            orderBy('order', 'asc')
+        );
+        const snapshot = await getDocs(q);
+
+        const all = [];
+        let currentKategori = '';
+        snapshot.forEach(docSnap => {
+            const data = { id: docSnap.id, ...docSnap.data() };
+            all.push(data);
+            if (docSnap.id === currentId) {
+                currentKategori = data.kategori || '';
+            }
+        });
+
+        const sameKategori = all.filter(s =>
+            s.id !== currentId &&
+            currentKategori &&
+            s.kategori === currentKategori
+        );
+
+        const otherKategori = all.filter(s =>
+            s.id !== currentId &&
+            (!currentKategori || s.kategori !== currentKategori)
+        );
+
+        let recommendations = sameKategori.slice(0, 4);
+        if (recommendations.length < 4) {
+            const existingIds = new Set(recommendations.map(r => r.id));
+            const fill = otherKategori
+                .filter(s => !existingIds.has(s.id))
+                .slice(0, 4 - recommendations.length);
+            recommendations = recommendations.concat(fill);
+        }
+
+        if (recommendations.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = 'block';
+
+        let html = '';
+        recommendations.forEach((service) => {
+            const imageUrl = service.gambar
+                ? optimizeCloudinaryUrl(service.gambar, { width: 600, height: 750, crop: 'fill' })
+                : PLACEHOLDER_IMAGE;
+
+            const detailUrl = `service-detail.html?id=${service.id}`;
+            const nama = service.nama || 'Layanan';
+            const deskripsi = service.deskripsiSingkat || service.deskripsi || '';
+            const harga = service.hargaMulai || '';
+
+            html += `
+                <a href="${escapeHtml(detailUrl)}" class="course-item block cursor-pointer hover:opacity-95 transition-opacity">
+                    <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3">
+                        <img src="${imageUrl}" alt="${escapeHtml(nama)}"
+                             class="w-full h-full object-cover" loading="lazy"
+                             onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';" />
+                        ${service.kategori ? `
+                            <span class="badge-kategori">${escapeHtml(service.kategori)}</span>
+                        ` : ''}
+                    </div>
+                    <h5 class="text-base font-semibold text-brand line-clamp-1 leading-tight">
+                        ${escapeHtml(nama)}
+                    </h5>
+                    <p class="text-xs text-gray-500 mt-1 line-clamp-1">
+                        ${escapeHtml(service.kategori || '')}
+                    </p>
+                    <p class="text-sm text-gray-600 mt-2 line-clamp-2 leading-snug flex-1">
+                        ${escapeHtml(deskripsi)}
+                    </p>
+                    ${harga ? `
+                        <p class="text-xs text-gray-500 mt-2">
+                            Mulai <span class="font-bold text-brand text-sm">${escapeHtml(harga)}</span>
+                        </p>
+                    ` : ''}
+                    <p class="text-brand font-medium text-xs mt-2">Lihat Detail →</p>
+                </a>
+            `;
+        });
+
+        container.innerHTML = html;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    } catch (error) {
+        console.error('Error loading recommendations:', error);
+        section.style.display = 'none';
+    }
 }
 
 // ============================================================
