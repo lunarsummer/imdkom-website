@@ -174,33 +174,93 @@
             text-align: center; padding: 0.15rem 0;
         }
 
-        /* STICKER EDITOR */
+        /* ============================================================
+           STICKER EDITOR — SECTION BASED
+           ============================================================ */
+        .sticker-section-tabs {
+            display: flex; flex-wrap: wrap; gap: 0.375rem;
+            padding: 0.5rem; background: #f3f4f6; border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .sticker-tab {
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            padding: 0.5rem 0.875rem; border-radius: 8px;
+            font-size: 0.8rem; font-weight: 600;
+            background: white; border: 1px solid #e5e7eb;
+            color: #6b7280; cursor: pointer; transition: all 0.2s ease;
+        }
+        .sticker-tab:hover { border-color: #d1d5db; color: #374151; }
+        .sticker-tab.active {
+            background: #1a3c5e; border-color: #1a3c5e;
+            color: white; box-shadow: 0 2px 8px rgba(26, 60, 94, 0.2);
+        }
+        .sticker-tab .tab-count {
+            background: rgba(0,0,0,0.1); padding: 0.125rem 0.4rem;
+            border-radius: 999px; font-size: 0.7rem;
+        }
+        .sticker-tab.active .tab-count { background: rgba(255,255,255,0.2); }
+        .sticker-tab.tab-global { border-color: #fbbf24; }
+        .sticker-tab.tab-global.active { background: #d97706; border-color: #d97706; }
+
         .sticker-editor-preview {
             position: relative;
             width: 100%;
-            aspect-ratio: 16 / 9;
-            background: linear-gradient(to right, #1a3c5e 0%, #2a5a7a 60%, #3a6a8a 100%);
             border-radius: 12px;
             overflow: hidden;
             user-select: none;
             -webkit-user-select: none;
+            background: #f9fafb;
+            border: 2px dashed #d1d5db;
         }
-        .sticker-editor-preview-bg {
-            position: absolute; inset: 0;
-            background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%);
-            pointer-events: none;
+        .sticker-editor-preview-inner {
+            position: relative;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
         .sticker-editor-preview-label {
-            position: absolute; top: 1rem; left: 1rem;
-            color: white; font-size: 0.7rem; font-weight: 700;
+            position: absolute; top: 0.75rem; left: 0.75rem;
+            color: #6b7280; font-size: 0.7rem; font-weight: 700;
             text-transform: uppercase; letter-spacing: 0.1em;
-            opacity: 0.6; pointer-events: none;
+            background: rgba(255,255,255,0.9);
+            padding: 0.25rem 0.5rem; border-radius: 6px;
+            pointer-events: none; z-index: 5;
         }
+        .sticker-editor-preview-hint {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #9ca3af; font-size: 0.8rem; text-align: center;
+            pointer-events: none; padding: 0 1rem;
+        }
+
+        /* Section boundary untuk preview Global */
+        .preview-section-boundary {
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background: rgba(26, 60, 94, 0.2);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .preview-section-boundary::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0.5rem;
+            top: -0.5rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #1a3c5e;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
         .sticker-preview-item {
             position: absolute;
             cursor: grab;
             user-select: none;
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
             transition: filter 0.2s ease;
         }
         .sticker-preview-item:active { cursor: grabbing; }
@@ -216,7 +276,7 @@
             position: absolute; inset: 0;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.5); font-size: 0.85rem; gap: 0.5rem;
+            color: #9ca3af; font-size: 0.85rem; gap: 0.5rem;
             pointer-events: none;
         }
 
@@ -238,23 +298,6 @@
         .sticker-form-item .sticker-thumb img {
             width: 100%; height: 100%; object-fit: contain;
         }
-        .sticker-form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        @media (max-width: 640px) {
-            .sticker-form-grid { grid-template-columns: 1fr; }
-        }
-        .sticker-form-grid input[type="number"] {
-            width: 100%; padding: 0.4rem 0.6rem;
-            border: 1px solid #d1d5db; border-radius: 6px;
-            font-size: 0.8rem; outline: none; background: white;
-        }
-        .sticker-form-grid input[type="number"]:focus {
-            border-color: #1a3c5e; box-shadow: 0 0 0 2px rgba(26, 60, 94, 0.1);
-        }
         .sticker-slider-row {
             display: flex; align-items: center; gap: 0.5rem;
             font-size: 0.75rem; color: #6b7280;
@@ -267,6 +310,21 @@
             font-weight: 600; color: #1a3c5e;
         }
 
+        .sticker-device-toggle {
+            display: flex; gap: 0.375rem; background: #f3f4f6;
+            padding: 0.25rem; border-radius: 8px; margin-bottom: 0.75rem;
+        }
+        .sticker-device-btn {
+            flex: 1; padding: 0.4rem; border-radius: 6px;
+            font-size: 0.75rem; font-weight: 600;
+            background: transparent; border: none; cursor: pointer;
+            color: #6b7280; transition: all 0.2s ease;
+        }
+        .sticker-device-btn.active {
+            background: white; color: #1a3c5e;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
         /* Ikon di tombol action tidak mencuri klik */
         .sticker-form-item button[data-sticker-action] i,
         .sticker-form-item button[data-sticker-action] svg,
@@ -277,9 +335,7 @@
             pointer-events: none;
         }
 
-        /* ============================================================
-           STICKER FORM ITEM — Responsive Mobile
-           ============================================================ */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .sticker-form-item {
                 padding: 0.875rem;
@@ -485,22 +541,65 @@
                 </div>
             </div>
 
-            <!-- SECTION: HERO STICKERS -->
+            <!-- ============================================================ -->
+            <!-- SECTION: STICKER SECTIONS                                    -->
+            <!-- ============================================================ -->
             <div class="form-section">
                 <div class="form-section-header">
                     <div class="form-section-icon" style="background: rgba(251, 191, 36, 0.15); color: #d97706;">
                         <i data-lucide="sparkles" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <div class="form-section-title">Sticker Hero</div>
-                        <div class="form-section-desc">Stiker dekoratif yang bisa di-drag user di hero desktop (maks 5)</div>
+                        <div class="form-section-title">Sticker Sections</div>
+                        <div class="form-section-desc">Stiker dekoratif di 7 section + global (bebas). Maks 5 per section, 10 global.</div>
                     </div>
                 </div>
 
+                <!-- TABS SECTION -->
+                <div class="sticker-section-tabs" id="stickerSectionTabs">
+                    <!-- Diisi via JS -->
+                </div>
+
+                <!-- INFO -->
+                <div class="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p class="text-xs text-blue-800">
+                        📌 <strong>Tips:</strong> Upload <strong>PNG transparan</strong> ukuran 200×200 – 500×500 px, maksimal 2MB. 
+                        Gunakan tab <strong>Desktop</strong> / <strong>Mobile</strong> untuk atur posisi terpisah. 
+                        Centang <strong>"Permanent"</strong> agar sticker tidak bisa digeser user di public.
+                        Pilih <strong>"Global (Bebas)"</strong> untuk sticker yang bisa diletakkan di mana saja di seluruh halaman.
+                    </p>
+                </div>
+
+                <!-- PREVIEW -->
+                <div class="sticker-editor-preview" id="stickerPreview">
+                    <div class="sticker-editor-preview-inner" id="stickerPreviewInner" style="min-height: 400px;">
+                        <div class="sticker-editor-preview-label" id="stickerPreviewLabel">Section: Hero</div>
+                        <div class="sticker-editor-preview-hint" id="stickerPreviewHint">
+                            Preview area — drag sticker untuk atur posisi
+                        </div>
+                        <div id="stickerPreviewLayer" style="position: absolute; inset: 0;">
+                            <!-- Sticker preview di-generate via JS -->
+                        </div>
+                        <div id="stickerPreviewBoundaries" style="position: absolute; inset: 0; pointer-events: none;">
+                            <!-- Section boundaries untuk Global preview -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DEVICE TOGGLE -->
+                <div class="sticker-device-toggle" id="stickerDeviceToggle">
+                    <button type="button" class="sticker-device-btn active" data-device="desktop">
+                        <i data-lucide="monitor" class="w-3.5 h-3.5 inline"></i> Desktop
+                    </button>
+                    <button type="button" class="sticker-device-btn" data-device="mobile">
+                        <i data-lucide="smartphone" class="w-3.5 h-3.5 inline"></i> Mobile
+                    </button>
+                </div>
+
+                <!-- ADD BUTTON -->
                 <div class="mb-3 flex items-center justify-between flex-wrap gap-2">
                     <div>
-                        <p class="text-sm text-gray-600">Seret stiker di preview untuk mengatur posisi awal. Posisi akan di-snap ke grid 5%.</p>
-                        <p class="text-xs text-gray-500 mt-1">📌 <strong>Rekomendasi:</strong> Upload <strong>PNG transparan</strong> ukuran 200×200 – 500×500 px, maksimal 2MB.</p>
+                        <p class="text-sm text-gray-600">Sticker di <strong id="stickerCurrentSectionName">Hero</strong>:</p>
                     </div>
                     <button type="button" id="addStickerBtn"
                             class="inline-flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-light text-white rounded-lg text-sm font-semibold transition-colors">
@@ -509,27 +608,14 @@
                     </button>
                 </div>
 
-                <!-- PREVIEW HERO -->
-                <div class="sticker-editor-preview" id="stickerPreview">
-                    <div class="sticker-editor-preview-bg"></div>
-                    <div class="sticker-editor-preview-label">Preview Hero Desktop</div>
-                    <div id="stickerPreviewLayer" style="position: absolute; inset: 0;">
-                        <!-- Sticker preview di-generate via JS -->
-                    </div>
-                    <div id="stickerPreviewEmpty" class="sticker-preview-empty">
-                        <i data-lucide="image" class="w-10 h-10"></i>
-                        <p>Belum ada sticker</p>
-                    </div>
-                </div>
-
                 <!-- DAFTAR STICKER FORM -->
-                <div id="stickerList" class="mt-4 space-y-3">
+                <div id="stickerList" class="mt-2 space-y-3">
                     <!-- Form sticker di-generate via JS -->
                 </div>
 
-                <div id="stickerEmpty" class="text-center text-gray-400 py-8 border-2 border-dashed border-gray-200 rounded-lg mt-4">
+                <div id="stickerEmpty" class="text-center text-gray-400 py-8 border-2 border-dashed border-gray-200 rounded-lg">
                     <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 text-gray-300"></i>
-                    <p class="text-sm">Belum ada sticker. Klik "Tambah Sticker" untuk mulai (maks 5).</p>
+                    <p class="text-sm">Belum ada sticker di section ini. Klik "Tambah Sticker" untuk mulai.</p>
                 </div>
             </div>
 
@@ -657,7 +743,6 @@
     <script type="module">
         import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from './assets/js/firebase.js';
         import { setupImageUploadField } from './assets/js/cloudinary.js';
-        
 
         // ============================================================
         // CLOUDINARY CONFIG — HERO
@@ -674,13 +759,40 @@
         };
 
         // ============================================================
+        // KONSTANTA SECTION
+        // ============================================================
+        const STICKER_SECTIONS = [
+            { id: 'hero', label: 'Hero', icon: 'layout-template', previewHeight: 400, anchor: 'section', maxStickers: 5 },
+            { id: 'about', label: 'Tentang', icon: 'info', previewHeight: 500, anchor: 'section', maxStickers: 5 },
+            { id: 'course', label: 'Kursus', icon: 'book-open', previewHeight: 500, anchor: 'section', maxStickers: 5 },
+            { id: 'service', label: 'Service', icon: 'wrench', previewHeight: 500, anchor: 'section', maxStickers: 5 },
+            { id: 'testimonial', label: 'Testimoni', icon: 'message-square', previewHeight: 400, anchor: 'section', maxStickers: 5 },
+            { id: 'faq', label: 'FAQ', icon: 'help-circle', previewHeight: 400, anchor: 'section', maxStickers: 5 },
+            { id: 'footer', label: 'Footer', icon: 'panel-bottom', previewHeight: 200, anchor: 'section', maxStickers: 5 },
+            { id: 'global', label: 'Global (Bebas)', icon: 'globe', previewHeight: 500, anchor: 'free', maxStickers: 10 }
+        ];
+
+        // Tinggi section hardcoded (untuk preview Global)
+        const SECTION_HEIGHTS = {
+            hero: 800,
+            about: 600,
+            course: 700,
+            service: 700,
+            testimonial: 500,
+            faq: 400,
+            footer: 200
+        };
+        const TOTAL_HEIGHT = Object.values(SECTION_HEIGHTS).reduce((a, b) => a + b, 0); // 3900px
+
+        const SNAP_PERCENT = 5;
+
+        // ============================================================
         // STATE
         // ============================================================
         let aboutHighlights = [];
-        let heroStickers = [];
-
-        const MAX_STICKERS = 5;
-        const SNAP_PERCENT = 5;
+        let sectionStickers = [];
+        let activeSection = 'hero';
+        let activeDevice = 'desktop';
 
         const HIGHLIGHT_ICONS = [
             { value: 'book-open', label: '📖 book-open (Kursus/Pendidikan)' },
@@ -712,6 +824,743 @@
 
         function snapPercent(v) {
             return Math.round(v / SNAP_PERCENT) * SNAP_PERCENT;
+        }
+
+        function getStickersBySection(section) {
+            return sectionStickers
+                .filter(s => s.section === section)
+                .sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
+
+        function getSectionConfig(sectionId) {
+            return STICKER_SECTIONS.find(x => x.id === sectionId);
+        }
+
+        function getSectionLabel(sectionId) {
+            const s = getSectionConfig(sectionId);
+            return s ? s.label : sectionId;
+        }
+
+        function getSectionPreviewHeight(sectionId) {
+            const s = getSectionConfig(sectionId);
+            return s ? s.previewHeight : 400;
+        }
+
+        function getSectionMaxStickers(sectionId) {
+            const s = getSectionConfig(sectionId);
+            return s ? s.maxStickers : 5;
+        }
+
+        function getSectionAnchor(sectionId) {
+            const s = getSectionConfig(sectionId);
+            return s ? s.anchor : 'section';
+        }
+
+        // ============================================================
+        // RENDER TABS SECTION
+        // ============================================================
+        function renderSectionTabs() {
+            const container = document.getElementById('stickerSectionTabs');
+            if (!container) return;
+
+            container.innerHTML = STICKER_SECTIONS.map(sec => {
+                const count = getStickersBySection(sec.id).length;
+                const isGlobal = sec.id === 'global';
+                return `
+                    <button type="button" 
+                            class="sticker-tab ${activeSection === sec.id ? 'active' : ''} ${isGlobal ? 'tab-global' : ''}" 
+                            data-section="${sec.id}">
+                        <i data-lucide="${sec.icon}" class="w-3.5 h-3.5"></i>
+                        <span>${sec.label}</span>
+                        <span class="tab-count">${count}</span>
+                    </button>
+                `;
+            }).join('');
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            container.querySelectorAll('.sticker-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    activeSection = tab.dataset.section;
+                    activeDevice = 'desktop';
+                    renderSectionTabs();
+                    renderStickerEditor();
+                    updateDeviceToggle();
+                });
+            });
+        }
+
+        // ============================================================
+        // RENDER PREVIEW BOUNDARIES (untuk Global)
+        // ============================================================
+        function renderPreviewBoundaries(isGlobal) {
+            const boundariesContainer = document.getElementById('stickerPreviewBoundaries');
+            if (!boundariesContainer) return;
+
+            if (!isGlobal) {
+                boundariesContainer.innerHTML = '';
+                return;
+            }
+
+            // Hitung posisi kumulatif per section
+            const scale = 100 / TOTAL_HEIGHT;
+            let cumulative = 0;
+            let boundariesHtml = '';
+
+            ['hero', 'about', 'course', 'service', 'testimonial', 'faq', 'footer'].forEach(sectionId => {
+                const height = SECTION_HEIGHTS[sectionId] || 0;
+                cumulative += height;
+                const topPercent = cumulative * scale;
+                const label = getSectionLabel(sectionId);
+                boundariesHtml += `
+                    <div class="preview-section-boundary" 
+                         style="top: ${topPercent}%;" 
+                         data-label="${label}">
+                    </div>
+                `;
+            });
+
+            boundariesContainer.innerHTML = boundariesHtml;
+        }
+
+        // ============================================================
+        // RENDER STICKER EDITOR (untuk section aktif)
+        // ============================================================
+        function renderStickerEditor() {
+            const list = document.getElementById('stickerList');
+            const empty = document.getElementById('stickerEmpty');
+            const previewLayer = document.getElementById('stickerPreviewLayer');
+            const previewInner = document.getElementById('stickerPreviewInner');
+            const previewLabel = document.getElementById('stickerPreviewLabel');
+            const previewHint = document.getElementById('stickerPreviewHint');
+            const addBtn = document.getElementById('addStickerBtn');
+            const currentSectionName = document.getElementById('stickerCurrentSectionName');
+
+            if (!list) return;
+
+            const stickers = getStickersBySection(activeSection);
+            const sectionLabel = getSectionLabel(activeSection);
+            const previewHeight = getSectionPreviewHeight(activeSection);
+            const maxStickers = getSectionMaxStickers(activeSection);
+            const isGlobal = activeSection === 'global';
+
+            // Update label
+            if (previewLabel) previewLabel.textContent = `Section: ${sectionLabel} (${activeDevice})`;
+            if (currentSectionName) currentSectionName.textContent = sectionLabel;
+
+            // Preview height
+            if (previewInner) {
+                previewInner.style.minHeight = previewHeight + 'px';
+            }
+
+            // Render boundaries untuk global
+            renderPreviewBoundaries(isGlobal);
+
+            // Add button
+            if (addBtn) {
+                if (stickers.length >= maxStickers) {
+                    addBtn.disabled = true;
+                    addBtn.style.opacity = '0.5';
+                    addBtn.style.cursor = 'not-allowed';
+                } else {
+                    addBtn.disabled = false;
+                    addBtn.style.opacity = '1';
+                    addBtn.style.cursor = 'pointer';
+                }
+            }
+
+            // Preview
+            if (previewLayer && previewHint) {
+                if (stickers.length === 0) {
+                    previewLayer.innerHTML = '';
+                    previewHint.style.display = 'block';
+                    previewHint.textContent = isGlobal 
+                        ? 'Belum ada sticker global. Drag sticker di area ini untuk atur posisi.' 
+                        : 'Belum ada sticker di section ini';
+                } else {
+                    previewHint.style.display = 'none';
+                    previewLayer.innerHTML = stickers.map((s, idx) => {
+                        if (!s.gambar) return '';
+                        const posX = activeDevice === 'mobile' ? (s.posisiXMobile ?? s.posisiX ?? 10) : (s.posisiX ?? 10);
+                        const posY = activeDevice === 'mobile' ? (s.posisiYMobile ?? s.posisiY ?? 60) : (s.posisiY ?? 60);
+                        const ukuran = activeDevice === 'mobile' ? (s.ukuranMobile ?? s.ukuran ?? 15) : (s.ukuran ?? 15);
+                        const rotasi = activeDevice === 'mobile' ? (s.rotasiMobile ?? s.rotasi ?? 0) : (s.rotasi ?? 0);
+                        
+                        // Shadow di preview (static, tanpa animasi)
+                        const hasShadow = s.shadow !== false;
+                        const shadowOpacity = s.shadowOpacity ?? 0.25;
+                        const shadowStyle = hasShadow 
+                            ? `filter: drop-shadow(0 4px 12px rgba(0,0,0,${shadowOpacity}));` 
+                            : 'filter: none;';
+                        
+                        return `
+                            <div class="sticker-preview-item" 
+                                 data-preview-index="${idx}"
+                                 data-sticker-id="${s.id}"
+                                 style="left: ${posX}%; top: ${posY}%; width: ${ukuran}%; transform: rotate(${rotasi}deg); ${shadowStyle}">
+                                <img src="${escapeHtmlAttr(s.gambar)}" alt="Sticker ${idx + 1}" draggable="false" />
+                            </div>
+                        `;
+                    }).join('');
+                    attachPreviewDrag();
+                }
+            }
+
+            // Form list
+            if (stickers.length === 0) {
+                list.innerHTML = '';
+                if (empty) empty.classList.remove('hidden');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                return;
+            }
+
+            if (empty) empty.classList.add('hidden');
+
+            list.innerHTML = stickers.map((s, idx) => {
+                const posX = activeDevice === 'mobile' ? (s.posisiXMobile ?? s.posisiX ?? 10) : (s.posisiX ?? 10);
+                const posY = activeDevice === 'mobile' ? (s.posisiYMobile ?? s.posisiY ?? 60) : (s.posisiY ?? 60);
+                const ukuran = activeDevice === 'mobile' ? (s.ukuranMobile ?? s.ukuran ?? 15) : (s.ukuran ?? 15);
+                const rotasi = activeDevice === 'mobile' ? (s.rotasiMobile ?? s.rotasi ?? 0) : (s.rotasi ?? 0);
+                const hasShadow = s.shadow !== false;
+                const hasAnimasi = s.animasi !== false;
+                const shadowOpacityPercent = Math.round((s.shadowOpacity ?? 0.25) * 100);
+                
+                return `
+                <div class="sticker-form-item" data-sticker-index="${idx}" data-sticker-id="${s.id}">
+                    <div class="flex items-start gap-3">
+                        <div class="sticker-thumb">
+                            ${s.gambar 
+                                ? `<img src="${escapeHtmlAttr(s.gambar)}" alt="Sticker ${idx + 1}" />` 
+                                : `<i data-lucide="image" class="w-5 h-5 text-gray-400"></i>`}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="font-semibold text-sm text-gray-800">Sticker ${idx + 1}</span>
+                                    ${!s.aktif ? '<span class="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded">Nonaktif</span>' : ''}
+                                    ${s.permanent ? '<span class="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded">Permanent</span>' : ''}
+                                </div>
+                                <div class="flex gap-1">
+                                    <button type="button" data-sticker-action="up" data-index="${idx}" ${idx === 0 ? 'disabled style="opacity:0.3;padding:0.3rem;border-radius:6px;background:#eff6ff;color:#2563eb;border:none"' : 'style="padding:0.3rem;border-radius:6px;background:#eff6ff;color:#2563eb;border:none;cursor:pointer"'} >
+                                        <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    <button type="button" data-sticker-action="down" data-index="${idx}" ${idx === stickers.length - 1 ? 'disabled style="opacity:0.3;padding:0.3rem;border-radius:6px;background:#eff6ff;color:#2563eb;border:none"' : 'style="padding:0.3rem;border-radius:6px;background:#eff6ff;color:#2563eb;border:none;cursor:pointer"'} >
+                                        <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    <button type="button" data-sticker-action="delete" data-index="${idx}" style="padding:0.3rem;border-radius:6px;background:#fef2f2;color:#dc2626;border:none;cursor:pointer">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-2 mt-2">
+                                <button type="button" class="sticker-upload-btn inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold transition-colors" data-index="${idx}">
+                                    <i data-lucide="upload" class="w-3 h-3"></i>
+                                    ${s.gambar ? 'Ganti Gambar' : 'Upload PNG'}
+                                </button>
+                            </div>
+
+                            <div class="mt-2 space-y-1.5">
+                                <div class="sticker-slider-row">
+                                    <span style="min-width: 60px;">Ukuran</span>
+                                    <input type="range" class="sticker-ukuran" data-index="${idx}" min="5" max="40" value="${ukuran}" />
+                                    <span class="sticker-slider-val sticker-ukuran-val" data-index="${idx}">${ukuran}%</span>
+                                </div>
+                                <div class="sticker-slider-row">
+                                    <span style="min-width: 60px;">Posisi X</span>
+                                    <input type="range" class="sticker-posx" data-index="${idx}" min="0" max="100" step="5" value="${posX}" />
+                                    <span class="sticker-slider-val sticker-posx-val" data-index="${idx}">${posX}%</span>
+                                </div>
+                                <div class="sticker-slider-row">
+                                    <span style="min-width: 60px;">Posisi Y</span>
+                                    <input type="range" class="sticker-posy" data-index="${idx}" min="0" max="100" step="5" value="${posY}" />
+                                    <span class="sticker-slider-val sticker-posy-val" data-index="${idx}">${posY}%</span>
+                                </div>
+                                <div class="sticker-slider-row">
+                                    <span style="min-width: 60px;">Rotasi</span>
+                                    <input type="range" class="sticker-rotasi" data-index="${idx}" min="-180" max="180" step="1" value="${rotasi}" />
+                                    <span class="sticker-slider-val sticker-rotasi-val" data-index="${idx}">${rotasi}°</span>
+                                </div>
+                            </div>
+
+                            <!-- CHECKBOX ROW -->
+                            <div class="mt-2 flex flex-wrap gap-3">
+                                <label class="flex items-center gap-2 text-xs cursor-pointer">
+                                    <input type="checkbox" class="sticker-aktif" data-index="${idx}" ${s.aktif !== false ? 'checked' : ''} />
+                                    <span>Aktif</span>
+                                </label>
+                                <label class="flex items-center gap-2 text-xs cursor-pointer">
+                                    <input type="checkbox" class="sticker-permanent" data-index="${idx}" ${s.permanent ? 'checked' : ''} />
+                                    <span>Permanent</span>
+                                </label>
+                                <label class="flex items-center gap-2 text-xs cursor-pointer">
+                                    <input type="checkbox" class="sticker-animasi" data-index="${idx}" ${hasAnimasi ? 'checked' : ''} />
+                                    <span>Animasi</span>
+                                </label>
+                                <label class="flex items-center gap-2 text-xs cursor-pointer">
+                                    <input type="checkbox" class="sticker-shadow" data-index="${idx}" ${hasShadow ? 'checked' : ''} />
+                                    <span>Shadow</span>
+                                </label>
+                            </div>
+
+                            <!-- SHADOW OPACITY (muncul kalau shadow checked) -->
+                            <div class="sticker-slider-row sticker-shadow-opacity-row mt-1.5" style="${hasShadow ? '' : 'display:none;'}">
+                                <span style="min-width: 60px;">Opacity</span>
+                                <input type="range" class="sticker-shadow-opacity" data-index="${idx}" min="0" max="100" step="1" value="${shadowOpacityPercent}" />
+                                <span class="sticker-slider-val sticker-shadow-opacity-val" data-index="${idx}">${shadowOpacityPercent}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            attachStickerFormListeners();
+        }
+
+        // ============================================================
+        // PREVIEW DRAG (di admin)
+        // ============================================================
+        function attachPreviewDrag() {
+            const preview = document.getElementById('stickerPreview');
+            const previewLayer = document.getElementById('stickerPreviewLayer');
+            if (!preview || !previewLayer) return;
+
+            previewLayer.querySelectorAll('.sticker-preview-item').forEach(item => {
+                const stickerId = item.dataset.stickerId;
+
+                let dragging = false;
+                let startX, startY, startLeftPx, startTopPx;
+
+                item.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    dragging = true;
+                    item.style.zIndex = '100';
+                    item.style.outline = '2px solid #fbbf24';
+                    item.style.outlineOffset = '4px';
+
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startLeftPx = item.offsetLeft;
+                    startTopPx = item.offsetTop;
+
+                    document.querySelectorAll('.sticker-form-item').forEach(fi => fi.classList.remove('active'));
+                    const formItem = document.querySelector(`.sticker-form-item[data-sticker-id="${stickerId}"]`);
+                    if (formItem) formItem.classList.add('active');
+
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onUp);
+                });
+
+                function onMove(e) {
+                    if (!dragging) return;
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+
+                    const previewW = preview.offsetWidth;
+                    const previewH = preview.offsetHeight;
+                    const stickerW = item.offsetWidth;
+                    const stickerH = item.offsetHeight;
+
+                    let newLeftPx = startLeftPx + dx;
+                    let newTopPx = startTopPx + dy;
+
+                    newLeftPx = Math.max(0, Math.min(newLeftPx, previewW - stickerW));
+                    newTopPx = Math.max(0, Math.min(newTopPx, previewH - stickerH));
+
+                    let leftPct = snapPercent((newLeftPx / previewW) * 100);
+                    let topPct = snapPercent((newTopPx / previewH) * 100);
+
+                    leftPct = Math.max(0, Math.min(100, leftPct));
+                    topPct = Math.max(0, Math.min(100, topPct));
+
+                    item.style.left = leftPct + '%';
+                    item.style.top = topPct + '%';
+
+                    const sticker = sectionStickers.find(s => s.id === stickerId);
+                    if (sticker) {
+                        if (activeDevice === 'mobile') {
+                            sticker.posisiXMobile = leftPct;
+                            sticker.posisiYMobile = topPct;
+                        } else {
+                            sticker.posisiX = leftPct;
+                            sticker.posisiY = topPct;
+                        }
+
+                        const idx = getStickersBySection(activeSection).findIndex(s => s.id === stickerId);
+                        const posxInput = document.querySelector(`.sticker-posx[data-index="${idx}"]`);
+                        const posyInput = document.querySelector(`.sticker-posy[data-index="${idx}"]`);
+                        const posxVal = document.querySelector(`.sticker-posx-val[data-index="${idx}"]`);
+                        const posyVal = document.querySelector(`.sticker-posy-val[data-index="${idx}"]`);
+
+                        if (posxInput) posxInput.value = leftPct;
+                        if (posyInput) posyInput.value = topPct;
+                        if (posxVal) posxVal.textContent = leftPct + '%';
+                        if (posyVal) posyVal.textContent = topPct + '%';
+                    }
+                }
+
+                function onUp() {
+                    if (!dragging) return;
+                    dragging = false;
+                    item.style.zIndex = '';
+                    item.style.outline = '';
+                    item.style.outlineOffset = '';
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                }
+            });
+        }
+
+        // ============================================================
+        // FORM LISTENERS — EVENT DELEGATION
+        // ============================================================
+        function attachStickerFormListeners() {
+            const list = document.getElementById('stickerList');
+            if (!list) return;
+
+            if (list._stickerInputHandler) {
+                list.removeEventListener('input', list._stickerInputHandler);
+                list.removeEventListener('change', list._stickerChangeHandler);
+                list.removeEventListener('click', list._stickerClickHandler);
+            }
+
+            const inputHandler = (e) => {
+                const t = e.target;
+                const idx = parseInt(t.dataset.index);
+                if (isNaN(idx)) return;
+                const stickers = getStickersBySection(activeSection);
+                const sticker = stickers[idx];
+                if (!sticker) return;
+
+                if (t.classList.contains('sticker-ukuran')) {
+                    const val = parseInt(t.value);
+                    if (activeDevice === 'mobile') sticker.ukuranMobile = val;
+                    else sticker.ukuran = val;
+                    const valEl = list.querySelector(`.sticker-ukuran-val[data-index="${idx}"]`);
+                    if (valEl) valEl.textContent = val + '%';
+                    updatePreviewStickerStyle(sticker);
+                } else if (t.classList.contains('sticker-posx')) {
+                    const val = parseInt(t.value);
+                    if (activeDevice === 'mobile') sticker.posisiXMobile = val;
+                    else sticker.posisiX = val;
+                    const valEl = list.querySelector(`.sticker-posx-val[data-index="${idx}"]`);
+                    if (valEl) valEl.textContent = val + '%';
+                    updatePreviewStickerStyle(sticker);
+                } else if (t.classList.contains('sticker-posy')) {
+                    const val = parseInt(t.value);
+                    if (activeDevice === 'mobile') sticker.posisiYMobile = val;
+                    else sticker.posisiY = val;
+                    const valEl = list.querySelector(`.sticker-posy-val[data-index="${idx}"]`);
+                    if (valEl) valEl.textContent = val + '%';
+                    updatePreviewStickerStyle(sticker);
+                } else if (t.classList.contains('sticker-rotasi')) {
+                    const val = parseInt(t.value);
+                    if (activeDevice === 'mobile') sticker.rotasiMobile = val;
+                    else sticker.rotasi = val;
+                    const valEl = list.querySelector(`.sticker-rotasi-val[data-index="${idx}"]`);
+                    if (valEl) valEl.textContent = val + '°';
+                    updatePreviewStickerStyle(sticker);
+                } else if (t.classList.contains('sticker-shadow-opacity')) {
+                    const val = parseInt(t.value);
+                    sticker.shadowOpacity = val / 100;
+                    const valEl = list.querySelector(`.sticker-shadow-opacity-val[data-index="${idx}"]`);
+                    if (valEl) valEl.textContent = val + '%';
+                    updatePreviewStickerStyle(sticker);
+                }
+            };
+
+            const changeHandler = (e) => {
+                const t = e.target;
+                const idx = parseInt(t.dataset.index);
+                if (isNaN(idx)) return;
+                const stickers = getStickersBySection(activeSection);
+                const sticker = stickers[idx];
+                if (!sticker) return;
+
+                if (t.classList.contains('sticker-aktif')) {
+                    sticker.aktif = t.checked;
+                    renderStickerEditor();
+                } else if (t.classList.contains('sticker-permanent')) {
+                    sticker.permanent = t.checked;
+                    renderStickerEditor();
+                } else if (t.classList.contains('sticker-animasi')) {
+                    sticker.animasi = t.checked;
+                    renderStickerEditor();
+                } else if (t.classList.contains('sticker-shadow')) {
+                    sticker.shadow = t.checked;
+                    renderStickerEditor();
+                }
+            };
+
+            const clickHandler = (e) => {
+                const actionBtn = e.target.closest('button[data-sticker-action]');
+                if (actionBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const idx = parseInt(actionBtn.dataset.index);
+                    const action = actionBtn.dataset.stickerAction;
+                    const stickers = getStickersBySection(activeSection);
+                    const sticker = stickers[idx];
+                    if (!sticker) return;
+
+                    if (action === 'delete') {
+                        if (confirm('Hapus sticker ini?')) {
+                            sectionStickers = sectionStickers.filter(s => s.id !== sticker.id);
+                            renderSectionTabs();
+                            renderStickerEditor();
+                        }
+                    } else if (action === 'up' && idx > 0) {
+                        const prevSticker = stickers[idx - 1];
+                        const tempOrder = sticker.order;
+                        sticker.order = prevSticker.order;
+                        prevSticker.order = tempOrder;
+                        renderStickerEditor();
+                    } else if (action === 'down' && idx < stickers.length - 1) {
+                        const nextSticker = stickers[idx + 1];
+                        const tempOrder = sticker.order;
+                        sticker.order = nextSticker.order;
+                        nextSticker.order = tempOrder;
+                        renderStickerEditor();
+                    }
+                    return;
+                }
+
+                const uploadBtn = e.target.closest('.sticker-upload-btn');
+                if (uploadBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const idx = parseInt(uploadBtn.dataset.index);
+                    const stickers = getStickersBySection(activeSection);
+                    const sticker = stickers[idx];
+                    if (sticker) uploadStickerImage(sticker);
+                    return;
+                }
+            };
+
+            list.addEventListener('input', inputHandler);
+            list.addEventListener('change', changeHandler);
+            list.addEventListener('click', clickHandler);
+
+            list._stickerInputHandler = inputHandler;
+            list._stickerChangeHandler = changeHandler;
+            list._stickerClickHandler = clickHandler;
+        }
+
+        function updatePreviewStickerStyle(sticker) {
+            if (!sticker) return;
+            const previewEl = document.querySelector(`.sticker-preview-item[data-sticker-id="${sticker.id}"]`);
+            if (!previewEl) return;
+            const posX = activeDevice === 'mobile' ? (sticker.posisiXMobile ?? sticker.posisiX ?? 10) : (sticker.posisiX ?? 10);
+            const posY = activeDevice === 'mobile' ? (sticker.posisiYMobile ?? sticker.posisiY ?? 60) : (sticker.posisiY ?? 60);
+            const ukuran = activeDevice === 'mobile' ? (sticker.ukuranMobile ?? sticker.ukuran ?? 15) : (sticker.ukuran ?? 15);
+            const rotasi = activeDevice === 'mobile' ? (sticker.rotasiMobile ?? sticker.rotasi ?? 0) : (sticker.rotasi ?? 0);
+            const hasShadow = sticker.shadow !== false;
+            const shadowOpacity = sticker.shadowOpacity ?? 0.25;
+            
+            previewEl.style.left = posX + '%';
+            previewEl.style.top = posY + '%';
+            previewEl.style.width = ukuran + '%';
+            previewEl.style.transform = `rotate(${rotasi}deg)`;
+            previewEl.style.filter = hasShadow 
+                ? `drop-shadow(0 4px 12px rgba(0,0,0,${shadowOpacity}))` 
+                : 'none';
+        }
+
+        // ============================================================
+        // DEVICE TOGGLE
+        // ============================================================
+        function updateDeviceToggle() {
+            document.querySelectorAll('.sticker-device-btn').forEach(btn => {
+                if (btn.dataset.device === activeDevice) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        }
+
+        document.querySelectorAll('.sticker-device-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                activeDevice = btn.dataset.device;
+                updateDeviceToggle();
+                renderStickerEditor();
+            });
+        });
+
+        // ============================================================
+        // UPLOAD STICKER — via Cloudinary Upload Widget
+        // ============================================================
+        async function uploadStickerImage(sticker) {
+            try {
+                const { openCloudinaryUpload } = await import('./assets/js/cloudinary.js');
+
+                openCloudinaryUpload({
+                    folder: 'landing/stickers',
+                    multiple: false,
+                    cropping: false,
+                    maxFileSize: 2000000,
+                    clientAllowedFormats: ['png', 'jpg', 'jpeg', 'webp'],
+                    onSuccess: (url) => {
+                        sticker.gambar = url;
+                        renderStickerEditor();
+                    },
+                    onError: (err) => {
+                        console.error('Upload error:', err);
+                        alert('Gagal upload: ' + (err?.message || 'Terjadi kesalahan'));
+                    }
+                });
+            } catch (err) {
+                console.error('Import error:', err);
+                alert('Gagal load Cloudinary widget: ' + err.message);
+            }
+        }
+
+        // ============================================================
+        // MOBILE SIDEBAR
+        // ============================================================
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                setupImageUploadField(HERO_GAMBAR_CONFIG);
+                loadContent();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
+
+        // ============================================================
+        // LOAD CONTENT
+        // ============================================================
+        async function loadContent() {
+            try {
+                const docSnap = await getDoc(doc(db, 'landingPage', 'content'));
+                if (!docSnap.exists()) {
+                    renderSectionTabs();
+                    renderStickerEditor();
+                    renderHighlightsEditor();
+                    return;
+                }
+                
+                const data = docSnap.data();
+                
+                if (data.hero) {
+                    document.getElementById('heroHeading').value = data.hero.heading || '';
+                    document.getElementById('heroSubheading').value = data.hero.subheading || '';
+                    document.getElementById('heroDeskripsi').value = data.hero.deskripsi || '';
+                    document.getElementById('heroSubtext').value = data.hero.subtext || '';
+                    document.getElementById('heroCtaText').value = data.hero.ctaText || '';
+
+                    if (data.hero.gambar) {
+                        document.getElementById('heroGambar').value = data.hero.gambar;
+                        const wrapper = document.getElementById('heroGambarPreviewWrapper');
+                        const img = document.getElementById('heroGambarPreview');
+                        if (wrapper && img) {
+                            img.src = data.hero.gambar;
+                            wrapper.classList.remove('hidden');
+                            document.getElementById('removeHeroGambarBtn')?.classList.remove('hidden');
+                        }
+                    }
+                }
+
+                // ============================================================
+                // LOAD sectionStickers (dengan migrasi dari heroStickers)
+                // ============================================================
+                const existingSectionStickers = Array.isArray(data.sectionStickers) ? data.sectionStickers : [];
+                const existingHeroStickers = Array.isArray(data.heroStickers) ? data.heroStickers : [];
+
+                if (existingSectionStickers.length > 0) {
+                    sectionStickers = existingSectionStickers.map((s, idx) => ({
+                        id: s.id || `sticker-${Date.now()}-${idx}`,
+                        section: s.section || 'hero',
+                        anchor: s.anchor || (s.section === 'global' ? 'free' : 'section'),
+                        gambar: s.gambar || '',
+                        posisiX: s.posisiX ?? 10,
+                        posisiY: s.posisiY ?? 60,
+                        ukuran: s.ukuran ?? 15,
+                        rotasi: s.rotasi ?? 0,
+                        posisiXMobile: s.posisiXMobile ?? s.posisiX ?? 10,
+                        posisiYMobile: s.posisiYMobile ?? s.posisiY ?? 60,
+                        ukuranMobile: s.ukuranMobile ?? s.ukuran ?? 15,
+                        rotasiMobile: s.rotasiMobile ?? s.rotasi ?? 0,
+                        permanent: s.permanent === true,
+                        aktif: s.aktif !== false,
+                        order: s.order ?? (idx + 1),
+                        animasi: s.animasi !== false,
+                        shadow: s.shadow !== false,
+                        shadowOpacity: s.shadowOpacity ?? 0.25
+                    }));
+                } else if (existingHeroStickers.length > 0) {
+                    sectionStickers = existingHeroStickers.map((s, idx) => ({
+                        id: `sticker-${Date.now()}-${idx}`,
+                        section: 'hero',
+                        anchor: 'section',
+                        gambar: s.gambar || '',
+                        posisiX: s.posisiX ?? 10,
+                        posisiY: s.posisiY ?? 60,
+                        ukuran: s.ukuran ?? 15,
+                        rotasi: s.rotasi ?? 0,
+                        posisiXMobile: s.posisiX ?? 10,
+                        posisiYMobile: s.posisiY ?? 60,
+                        ukuranMobile: s.ukuran ?? 15,
+                        rotasiMobile: s.rotasi ?? 0,
+                        permanent: false,
+                        aktif: s.aktif !== false,
+                        order: s.order ?? (idx + 1),
+                        animasi: true,
+                        shadow: true,
+                        shadowOpacity: 0.25
+                    }));
+                } else {
+                    sectionStickers = [];
+                }
+
+                renderSectionTabs();
+                renderStickerEditor();
+                
+                if (data.about) {
+                    document.getElementById('aboutTitle').value = data.about.judul || '';
+                    document.getElementById('aboutDeskripsi').value = data.about.deskripsi || '';
+                }
+
+                aboutHighlights = Array.isArray(data.aboutHighlights) ? [...data.aboutHighlights] : [];
+                renderHighlightsEditor();
+                
+                if (data.contact) {
+                    document.getElementById('contactWhatsapp').value = data.contact.whatsapp || '';
+                    document.getElementById('contactInstagram').value = data.contact.instagram || '';
+                    document.getElementById('contactAlamat').value = data.contact.alamat || '';
+                    document.getElementById('contactJam').value = data.contact.jamOperasional || '';
+                    document.getElementById('contactMaps').value = data.contact.googleMaps || '';
+                }
+                
+                if (data.footer) {
+                    document.getElementById('footerCopyright').value = data.footer.copyright || '';
+                }
+                
+            } catch (error) {
+                console.error('Error loading content:', error);
+            }
         }
 
         // ============================================================
@@ -789,445 +1638,6 @@
         }
 
         // ============================================================
-        // RENDER STICKER EDITOR
-        // ============================================================
-        function renderStickerEditor() {
-            const list = document.getElementById('stickerList');
-            const empty = document.getElementById('stickerEmpty');
-            const previewLayer = document.getElementById('stickerPreviewLayer');
-            const previewEmpty = document.getElementById('stickerPreviewEmpty');
-            const addBtn = document.getElementById('addStickerBtn');
-
-            if (!list) return;
-
-            if (addBtn) {
-                if (heroStickers.length >= MAX_STICKERS) {
-                    addBtn.disabled = true;
-                    addBtn.style.opacity = '0.5';
-                    addBtn.style.cursor = 'not-allowed';
-                } else {
-                    addBtn.disabled = false;
-                    addBtn.style.opacity = '1';
-                    addBtn.style.cursor = 'pointer';
-                }
-            }
-
-            if (previewLayer && previewEmpty) {
-                if (heroStickers.length === 0) {
-                    previewLayer.innerHTML = '';
-                    previewEmpty.style.display = 'flex';
-                } else {
-                    previewEmpty.style.display = 'none';
-                    previewLayer.innerHTML = heroStickers.map((s, idx) => {
-                        if (!s.gambar) return '';
-                        return `
-                            <div class="sticker-preview-item" 
-                                 data-preview-index="${idx}"
-                                 style="left: ${s.posisiX ?? 10}%; top: ${s.posisiY ?? 60}%; width: ${s.ukuran ?? 15}%; transform: rotate(${s.rotasi ?? 0}deg);">
-                                <img src="${escapeHtmlAttr(s.gambar)}" alt="Sticker ${idx + 1}" draggable="false" />
-                            </div>
-                        `;
-                    }).join('');
-                    attachPreviewDrag();
-                }
-            }
-
-            if (heroStickers.length === 0) {
-                list.innerHTML = '';
-                if (empty) empty.classList.remove('hidden');
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-                return;
-            }
-
-            if (empty) empty.classList.add('hidden');
-
-            list.innerHTML = heroStickers.map((s, idx) => `
-                <div class="sticker-form-item" data-sticker-index="${idx}">
-                    <div class="flex items-start gap-3">
-                        <div class="sticker-thumb">
-                            ${s.gambar 
-                                ? `<img src="${escapeHtmlAttr(s.gambar)}" alt="Sticker ${idx + 1}" />` 
-                                : `<i data-lucide="image" class="w-5 h-5 text-gray-400"></i>`}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between gap-2">
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <span class="font-semibold text-sm text-gray-800">Sticker ${idx + 1}</span>
-                                    ${!s.aktif ? '<span class="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded">Nonaktif</span>' : ''}
-                                </div>
-                                <div class="flex gap-1">
-                                    <button type="button" data-sticker-action="up" data-index="${idx}" ${idx === 0 ? 'disabled style="opacity:0.3;padding:0.3rem;border-radius:6px;background:#eff6ff;color:#2563eb;border:none"' : 'style="padding:0.3rem;border-radius:6px;background:#eff6ff;color:#2563eb;border:none;cursor:pointer"'} >
-                                        <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
-                                    </button>
-                                    <button type="button" data-sticker-action="down" data-index="${idx}" ${idx === heroStickers.length - 1 ? 'disabled style="opacity:0.3;padding:0.3rem;border-radius:6px;background:#eff6ff;color:#2563eb;border:none"' : 'style="padding:0.3rem;border-radius:6px;background:#eff6ff;color:#2563eb;border:none;cursor:pointer"'} >
-                                        <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
-                                    </button>
-                                    <button type="button" data-sticker-action="delete" data-index="${idx}" style="padding:0.3rem;border-radius:6px;background:#fef2f2;color:#dc2626;border:none;cursor:pointer">
-                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-2 mt-2">
-                                <button type="button" class="sticker-upload-btn inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold transition-colors" data-index="${idx}">
-                                    <i data-lucide="upload" class="w-3 h-3"></i>
-                                    ${s.gambar ? 'Ganti Gambar' : 'Upload PNG'}
-                                </button>
-                            </div>
-
-                            <div class="mt-2 space-y-1.5">
-                                <div class="sticker-slider-row">
-                                    <span style="min-width: 60px;">Ukuran</span>
-                                    <input type="range" class="sticker-ukuran" data-index="${idx}" min="5" max="40" value="${s.ukuran ?? 15}" />
-                                    <span class="sticker-slider-val sticker-ukuran-val">${s.ukuran ?? 15}%</span>
-                                </div>
-                                <div class="sticker-slider-row">
-                                    <span style="min-width: 60px;">Posisi X</span>
-                                    <input type="range" class="sticker-posx" data-index="${idx}" min="0" max="100" step="5" value="${s.posisiX ?? 10}" />
-                                    <span class="sticker-slider-val sticker-posx-val">${s.posisiX ?? 10}%</span>
-                                </div>
-                                <div class="sticker-slider-row">
-                                    <span style="min-width: 60px;">Posisi Y</span>
-                                    <input type="range" class="sticker-posy" data-index="${idx}" min="0" max="100" step="5" value="${s.posisiY ?? 60}" />
-                                    <span class="sticker-slider-val sticker-posy-val">${s.posisiY ?? 60}%</span>
-                                </div>
-                                <div class="sticker-slider-row">
-                                    <span style="min-width: 60px;">Rotasi</span>
-                                    <input type="range" class="sticker-rotasi" data-index="${idx}" min="-180" max="180" step="1" value="${s.rotasi ?? 0}" />
-                                    <span class="sticker-slider-val sticker-rotasi-val">${s.rotasi ?? 0}°</span>
-                                </div>
-                            </div>
-
-                            <label class="flex items-center gap-2 mt-2 text-xs cursor-pointer">
-                                <input type="checkbox" class="sticker-aktif" data-index="${idx}" ${s.aktif !== false ? 'checked' : ''} />
-                                <span>Aktif (tampil di website)</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-            attachStickerFormListeners();
-        }
-
-        // ============================================================
-        // PREVIEW DRAG (di admin)
-        // ============================================================
-        function attachPreviewDrag() {
-            const preview = document.getElementById('stickerPreview');
-            const previewLayer = document.getElementById('stickerPreviewLayer');
-            if (!preview || !previewLayer) return;
-
-            previewLayer.querySelectorAll('.sticker-preview-item').forEach(item => {
-                const idx = parseInt(item.dataset.previewIndex);
-
-                let dragging = false;
-                let startX, startY, startLeftPx, startTopPx;
-                let previewRect;
-
-                item.addEventListener('mousedown', (e) => {
-                    e.preventDefault();
-                    dragging = true;
-                    item.style.zIndex = '100';
-                    item.style.filter = 'drop-shadow(0 8px 24px rgba(0,0,0,0.6))';
-
-                    previewRect = preview.getBoundingClientRect();
-                    startX = e.clientX;
-                    startY = e.clientY;
-                    startLeftPx = item.offsetLeft;
-                    startTopPx = item.offsetTop;
-
-                    document.querySelectorAll('.sticker-form-item').forEach(fi => fi.classList.remove('active'));
-                    const formItem = document.querySelector(`.sticker-form-item[data-sticker-index="${idx}"]`);
-                    if (formItem) formItem.classList.add('active');
-
-                    document.addEventListener('mousemove', onMove);
-                    document.addEventListener('mouseup', onUp);
-                });
-
-                function onMove(e) {
-                    if (!dragging) return;
-                    const dx = e.clientX - startX;
-                    const dy = e.clientY - startY;
-
-                    const previewW = preview.offsetWidth;
-                    const previewH = preview.offsetHeight;
-                    const stickerW = item.offsetWidth;
-                    const stickerH = item.offsetHeight;
-
-                    let newLeftPx = startLeftPx + dx;
-                    let newTopPx = startTopPx + dy;
-
-                    newLeftPx = Math.max(0, Math.min(newLeftPx, previewW - stickerW));
-                    newTopPx = Math.max(0, Math.min(newTopPx, previewH - stickerH));
-
-                    let leftPct = snapPercent((newLeftPx / previewW) * 100);
-                    let topPct = snapPercent((newTopPx / previewH) * 100);
-
-                    leftPct = Math.max(0, Math.min(100, leftPct));
-                    topPct = Math.max(0, Math.min(100, topPct));
-
-                    item.style.left = leftPct + '%';
-                    item.style.top = topPct + '%';
-
-                    heroStickers[idx].posisiX = leftPct;
-                    heroStickers[idx].posisiY = topPct;
-
-                    const posxInput = document.querySelector(`.sticker-posx[data-index="${idx}"]`);
-                    const posyInput = document.querySelector(`.sticker-posy[data-index="${idx}"]`);
-                    const posxVal = document.querySelector(`.sticker-posx-val[data-index="${idx}"]`);
-                    const posyVal = document.querySelector(`.sticker-posy-val[data-index="${idx}"]`);
-
-                    if (posxInput) posxInput.value = leftPct;
-                    if (posyInput) posyInput.value = topPct;
-                    if (posxVal) posxVal.textContent = leftPct + '%';
-                    if (posyVal) posyVal.textContent = topPct + '%';
-                }
-
-                function onUp() {
-                    if (!dragging) return;
-                    dragging = false;
-                    item.style.zIndex = '';
-                    item.style.filter = '';
-                    document.removeEventListener('mousemove', onMove);
-                    document.removeEventListener('mouseup', onUp);
-                }
-            });
-        }
-
-        // ============================================================
-        // FORM LISTENERS — EVENT DELEGATION
-        // ============================================================
-        function attachStickerFormListeners() {
-            const list = document.getElementById('stickerList');
-            if (!list) return;
-
-            // Hapus listener lama (kalau re-render)
-            if (list._stickerInputHandler) {
-                list.removeEventListener('input', list._stickerInputHandler);
-                list.removeEventListener('change', list._stickerChangeHandler);
-                list.removeEventListener('click', list._stickerClickHandler);
-            }
-
-            const inputHandler = (e) => {
-                const t = e.target;
-                if (t.classList.contains('sticker-ukuran')) {
-                    const idx = parseInt(t.dataset.index);
-                    const val = parseInt(t.value);
-                    heroStickers[idx].ukuran = val;
-                    const valEl = list.querySelector(`.sticker-ukuran-val[data-index="${idx}"]`);
-                    if (valEl) valEl.textContent = val + '%';
-                    updatePreviewStickerStyle(idx);
-                } else if (t.classList.contains('sticker-posx')) {
-                    const idx = parseInt(t.dataset.index);
-                    const val = parseInt(t.value);
-                    heroStickers[idx].posisiX = val;
-                    const valEl = list.querySelector(`.sticker-posx-val[data-index="${idx}"]`);
-                    if (valEl) valEl.textContent = val + '%';
-                    updatePreviewStickerStyle(idx);
-                } else if (t.classList.contains('sticker-posy')) {
-                    const idx = parseInt(t.dataset.index);
-                    const val = parseInt(t.value);
-                    heroStickers[idx].posisiY = val;
-                    const valEl = list.querySelector(`.sticker-posy-val[data-index="${idx}"]`);
-                    if (valEl) valEl.textContent = val + '%';
-                    updatePreviewStickerStyle(idx);
-                } else if (t.classList.contains('sticker-rotasi')) {
-                    const idx = parseInt(t.dataset.index);
-                    const val = parseInt(t.value);
-                    heroStickers[idx].rotasi = val;
-                    const valEl = list.querySelector(`.sticker-rotasi-val[data-index="${idx}"]`);
-                    if (valEl) valEl.textContent = val + '°';
-                    updatePreviewStickerStyle(idx);
-                }
-            };
-
-            const changeHandler = (e) => {
-                const t = e.target;
-                if (t.classList.contains('sticker-aktif')) {
-                    const idx = parseInt(t.dataset.index);
-                    heroStickers[idx].aktif = t.checked;
-                }
-            };
-
-            const clickHandler = (e) => {
-                const actionBtn = e.target.closest('button[data-sticker-action]');
-                if (actionBtn) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const idx = parseInt(actionBtn.dataset.index);
-                    const action = actionBtn.dataset.stickerAction;
-
-                    if (action === 'delete') {
-                        if (confirm('Hapus sticker ini?')) {
-                            heroStickers.splice(idx, 1);
-                            renderStickerEditor();
-                        }
-                    } else if (action === 'up' && idx > 0) {
-                        [heroStickers[idx - 1], heroStickers[idx]] = [heroStickers[idx], heroStickers[idx - 1]];
-                        renderStickerEditor();
-                    } else if (action === 'down' && idx < heroStickers.length - 1) {
-                        [heroStickers[idx + 1], heroStickers[idx]] = [heroStickers[idx], heroStickers[idx + 1]];
-                        renderStickerEditor();
-                    }
-                    return;
-                }
-
-                const uploadBtn = e.target.closest('.sticker-upload-btn');
-                if (uploadBtn) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const idx = parseInt(uploadBtn.dataset.index);
-                    uploadStickerImage(idx);
-                    return;
-                }
-            };
-
-            list.addEventListener('input', inputHandler);
-            list.addEventListener('change', changeHandler);
-            list.addEventListener('click', clickHandler);
-
-            list._stickerInputHandler = inputHandler;
-            list._stickerChangeHandler = changeHandler;
-            list._stickerClickHandler = clickHandler;
-        }
-
-        function updatePreviewStickerStyle(idx) {
-            const s = heroStickers[idx];
-            const previewEl = document.querySelector(`.sticker-preview-item[data-preview-index="${idx}"]`);
-            if (!previewEl || !s) return;
-            previewEl.style.left = (s.posisiX ?? 10) + '%';
-            previewEl.style.top = (s.posisiY ?? 60) + '%';
-            previewEl.style.width = (s.ukuran ?? 15) + '%';
-            previewEl.style.transform = `rotate(${s.rotasi ?? 0}deg)`;
-        }
-
-        // ============================================================
-        // UPLOAD STICKER — via Cloudinary Upload Widget
-        // ============================================================
-        async function uploadStickerImage(idx) {
-            try {
-                const { openCloudinaryUpload } = await import('./assets/js/cloudinary.js');
-
-                openCloudinaryUpload({
-                    folder: 'landing/stickers',
-                    multiple: false,
-                    cropping: false,
-                    maxFileSize: 2000000,
-                    clientAllowedFormats: ['png', 'jpg', 'jpeg', 'webp'],
-                    onSuccess: (url) => {
-                        heroStickers[idx].gambar = url;
-                        renderStickerEditor();
-                    },
-                    onError: (err) => {
-                        console.error('Upload error:', err);
-                        alert('Gagal upload: ' + (err?.message || 'Terjadi kesalahan'));
-                    }
-                });
-            } catch (err) {
-                console.error('Import error:', err);
-                alert('Gagal load Cloudinary widget: ' + err.message);
-            }
-        }
-
-        // ============================================================
-        // MOBILE SIDEBAR
-        // ============================================================
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const menuToggle = document.getElementById('menuToggle');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        // ============================================================
-        // AUTH
-        // ============================================================
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-            } else {
-                setupImageUploadField(HERO_GAMBAR_CONFIG);
-                loadContent();
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-            }
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.href = 'index.html';
-        });
-
-        // ============================================================
-        // LOAD CONTENT
-        // ============================================================
-        async function loadContent() {
-            try {
-                const docSnap = await getDoc(doc(db, 'landingPage', 'content'));
-                if (!docSnap.exists()) {
-                    renderHighlightsEditor();
-                    renderStickerEditor();
-                    return;
-                }
-                
-                const data = docSnap.data();
-                
-                if (data.hero) {
-                    document.getElementById('heroHeading').value = data.hero.heading || '';
-                    document.getElementById('heroSubheading').value = data.hero.subheading || '';
-                    document.getElementById('heroDeskripsi').value = data.hero.deskripsi || '';
-                    document.getElementById('heroSubtext').value = data.hero.subtext || '';
-                    document.getElementById('heroCtaText').value = data.hero.ctaText || '';
-
-                    if (data.hero.gambar) {
-                        document.getElementById('heroGambar').value = data.hero.gambar;
-                        const wrapper = document.getElementById('heroGambarPreviewWrapper');
-                        const img = document.getElementById('heroGambarPreview');
-                        if (wrapper && img) {
-                            img.src = data.hero.gambar;
-                            wrapper.classList.remove('hidden');
-                            document.getElementById('removeHeroGambarBtn')?.classList.remove('hidden');
-                        }
-                    }
-                }
-
-                heroStickers = Array.isArray(data.heroStickers) ? [...data.heroStickers] : [];
-                renderStickerEditor();
-                
-                if (data.about) {
-                    document.getElementById('aboutTitle').value = data.about.judul || '';
-                    document.getElementById('aboutDeskripsi').value = data.about.deskripsi || '';
-                }
-
-                aboutHighlights = Array.isArray(data.aboutHighlights) ? [...data.aboutHighlights] : [];
-                renderHighlightsEditor();
-                
-                if (data.contact) {
-                    document.getElementById('contactWhatsapp').value = data.contact.whatsapp || '';
-                    document.getElementById('contactInstagram').value = data.contact.instagram || '';
-                    document.getElementById('contactAlamat').value = data.contact.alamat || '';
-                    document.getElementById('contactJam').value = data.contact.jamOperasional || '';
-                    document.getElementById('contactMaps').value = data.contact.googleMaps || '';
-                }
-                
-                if (data.footer) {
-                    document.getElementById('footerCopyright').value = data.footer.copyright || '';
-                }
-                
-            } catch (error) {
-                console.error('Error loading content:', error);
-            }
-        }
-
-        // ============================================================
         // ADD HIGHLIGHT BUTTON
         // ============================================================
         document.getElementById('addHighlightBtn')?.addEventListener('click', () => {
@@ -1239,19 +1649,37 @@
         // ADD STICKER BUTTON
         // ============================================================
         document.getElementById('addStickerBtn')?.addEventListener('click', () => {
-            if (heroStickers.length >= MAX_STICKERS) {
-                alert(`Maksimal ${MAX_STICKERS} sticker.`);
+            const stickers = getStickersBySection(activeSection);
+            const maxStickers = getSectionMaxStickers(activeSection);
+            if (stickers.length >= maxStickers) {
+                alert(`Maksimal ${maxStickers} sticker di section ini.`);
                 return;
             }
-            heroStickers.push({
+            
+            const anchor = getSectionAnchor(activeSection);
+            const newOrder = stickers.length > 0 ? Math.max(...stickers.map(s => s.order || 0)) + 1 : 1;
+            
+            sectionStickers.push({
+                id: `sticker-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                section: activeSection,
+                anchor: anchor,
                 gambar: '',
-                ukuran: 15,
                 posisiX: 10,
                 posisiY: 60,
+                ukuran: 15,
                 rotasi: 0,
-                order: heroStickers.length + 1,
-                aktif: true
+                posisiXMobile: 10,
+                posisiYMobile: 60,
+                ukuranMobile: 15,
+                rotasiMobile: 0,
+                permanent: false,
+                aktif: true,
+                order: newOrder,
+                animasi: true,
+                shadow: true,
+                shadowOpacity: 0.25
             });
+            renderSectionTabs();
             renderStickerEditor();
         });
 
@@ -1270,7 +1698,10 @@
             messageEl.innerHTML = '';
 
             const sortedHighlights = [...aboutHighlights].sort((a, b) => (a.order || 0) - (b.order || 0));
-            const sortedStickers = [...heroStickers].sort((a, b) => (a.order || 0) - (b.order || 0));
+            const sortedStickers = [...sectionStickers].sort((a, b) => {
+                if (a.section !== b.section) return a.section.localeCompare(b.section);
+                return (a.order || 0) - (b.order || 0);
+            });
 
             const data = {
                 hero: {
@@ -1281,7 +1712,7 @@
                     ctaText: document.getElementById('heroCtaText').value.trim(),
                     gambar: document.getElementById('heroGambar').value.trim()
                 },
-                heroStickers: sortedStickers,
+                sectionStickers: sortedStickers,
                 about: {
                     judul: document.getElementById('aboutTitle').value.trim(),
                     deskripsi: document.getElementById('aboutDeskripsi').value.trim()
