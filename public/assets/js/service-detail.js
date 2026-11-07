@@ -365,11 +365,11 @@ window.loadMorePricelist = function(button) {
 };
 
 // ============================================================
-// LOAD DOCUMENTATIONS — Support Multi-Foto
+// LOAD DOCUMENTATIONS — MARQUEE (jalan ke kiri, smooth)
 // ============================================================
 export async function loadDocumentations() {
-    const container = document.getElementById('documentationContainer');
-    if (!container) return;
+    const track = document.getElementById('documentationTrack');
+    if (!track) return;
 
     const slug = getServiceSlugFromUrl();
     if (!slug) return;
@@ -389,92 +389,56 @@ export async function loadDocumentations() {
             return;
         }
 
-        let html = '';
+        let itemsHtml = '';
+
         snapshot.forEach((docSnap) => {
             const data = docSnap.data();
 
-            // Support multi-foto: cek gambarList (baru) atau gambar (lama)
+            // Support multi-foto: gambarList (baru) atau gambar (lama)
             let images = [];
-
             if (data.gambarList && Array.isArray(data.gambarList) && data.gambarList.length > 0) {
                 images = data.gambarList;
             } else if (data.gambar) {
                 images = [data.gambar];
             }
 
-            // Render SETIAP gambar dalam dokumentasi ini
-            images.forEach((imgUrl, imgIndex) => {
-                const thumbUrl = optimizeCloudinaryUrl(imgUrl, { 
-                    width: 600, 
-                    height: 600, 
-                    crop: 'fill' 
+            // Render SETIAP gambar sebagai item marquee
+            images.forEach((imgUrl) => {
+                if (!imgUrl) return;
+
+                const thumbUrl = optimizeCloudinaryUrl(imgUrl, {
+                    width: 500,
+                    height: 500,
+                    crop: 'fill'
                 });
-                const fullUrl = optimizeCloudinaryUrl(imgUrl, { 
-                    width: 1600 
-                });
 
-                const caption = images.length > 1 
-                    ? `${data.nama || 'Dokumentasi'} (${imgIndex + 1}/${images.length})`
-                    : (data.nama || 'Dokumentasi');
-
-                html += `
-                    <div class="group cursor-pointer" 
-                         onclick="openImageModal('${fullUrl}', '${escapeHtml(caption)}')">
-                        <div class="relative rounded-2xl overflow-hidden bg-gray-100 aspect-square">
-                            <img src="${thumbUrl}" 
-                                 alt="${escapeHtml(data.nama || 'Dokumentasi')}" 
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                 loading="lazy"
-                                 onerror="this.src='assets/images/placeholder.svg'" />
-
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                            ${images.length > 1 ? `
-                                <span class="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                                    ${imgIndex + 1}/${images.length}
-                                </span>
-                            ` : ''}
-
-                            <div class="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                                <p class="text-sm font-semibold">${escapeHtml(data.nama || '')}</p>
-                                ${data.keterangan ? `<p class="text-xs text-white/80 mt-1">${escapeHtml(data.keterangan)}</p>` : ''}
-                            </div>
-                        </div>
+                itemsHtml += `
+                    <div class="dokumentasi-marquee-item">
+                        <img src="${thumbUrl}"
+                             alt="${escapeHtml(data.nama || 'Dokumentasi')}"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='assets/images/placeholder.svg';" />
                     </div>
                 `;
             });
         });
 
-        container.innerHTML = html;
+        if (!itemsHtml) {
+            const section = document.getElementById('documentationSection');
+            if (section) section.style.display = 'none';
+            return;
+        }
+
+        // Duplikat 2x untuk seamless loop
+        track.innerHTML = itemsHtml + itemsHtml;
 
     } catch (error) {
         console.error('Error loading documentations:', error);
+        const section = document.getElementById('documentationSection');
+        if (section) section.style.display = 'none';
     }
 }
 
-// ============================================================
-// IMAGE MODAL
-// ============================================================
-window.openImageModal = function(url, caption) {
-    const modal = document.getElementById('imageModal');
-    const img = document.getElementById('imageModalImg');
-    const cap = document.getElementById('imageModalCaption');
-
-    if (modal && img) {
-        img.src = url;
-        if (cap) cap.textContent = caption || '';
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-};
-
-window.closeImageModal = function() {
-    const modal = document.getElementById('imageModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-};
 
 // ============================================================
 // INIT — pasang semua loader

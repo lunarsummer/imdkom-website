@@ -264,13 +264,11 @@ function createServiceCard(service) {
         </div>
     `;
 
-    // Event: WhatsApp
     card.querySelector('.btn-wa')?.addEventListener('click', () => {
         const message = `Halo IMDKOM, saya ingin bertanya tentang *${nama}*. Bisa dibantu?`;
         openWhatsApp(message);
     });
 
-    // Event: Share
     card.querySelector('.btn-share')?.addEventListener('click', async (e) => {
         const btn = e.currentTarget;
         await handleShare({
@@ -342,93 +340,197 @@ export function loadMoreServices() {
 }
 
 // ============================================================
-// GALERI KEGIATAN
+// GALERI KEGIATAN — MARQUEE (untuk service.html)
+// HANYA tampilkan dokumentasi service (bukan kursus)
 // ============================================================
 export async function loadGaleri() {
-    const container = document.getElementById('galeriContainer');
-    if (!container) return;
+    const track = document.getElementById('galeriTrack');
+    if (!track) return;
+
+    // Slug yang diizinkan tampil di galeri service.html
+    const SERVICE_SLUGS = ['laptop', 'pc', 'printer', 'panggil', 'sparepart'];
 
     try {
         const q = query(
             collection(db, 'documentations'),
             where('aktif', '==', true),
             orderBy('order', 'asc'),
-            limit(8)
+            limit(50)
         );
         const snapshot = await getDocs(q);
 
         if (snapshot.empty) {
-            container.innerHTML = `
-                <div class="col-span-full text-center text-gray-500 py-8">
+            track.innerHTML = `
+                <div class="text-center text-gray-500 py-8 w-full">
                     <p class="text-sm">Belum ada dokumentasi kegiatan.</p>
                 </div>
             `;
             return;
         }
 
-        let html = '';
+        let itemsHtml = '';
         snapshot.forEach(docSnap => {
             const data = docSnap.data();
+
+            // Skip kalau bukan service (misal kursus)
+            if (!SERVICE_SLUGS.includes(data.serviceSlug)) return;
+
             const gambar = (data.gambarList && data.gambarList[0]) || data.gambar || '';
             if (!gambar) return;
 
-            const imgUrl = optimizeCloudinaryUrl(gambar, { width: 400, height: 400, crop: 'fill' });
-            const totalFoto = (data.gambarList && data.gambarList.length) || 1;
+            const imgUrl = optimizeCloudinaryUrl(gambar, { width: 500, height: 500, crop: 'fill' });
 
-            html += `
-                <button type="button"
-                        class="galeri-item group relative aspect-square rounded-xl overflow-hidden bg-gray-100 cursor-pointer"
-                        data-img="${escapeHtml(gambar)}"
-                        data-caption="${escapeHtml(data.nama || '')}">
+            itemsHtml += `
+                <div class="galeri-marquee-item">
                     <img src="${imgUrl}"
                          alt="${escapeHtml(data.nama || 'Dokumentasi')}"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                          loading="lazy"
                          onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';" />
-                    ${totalFoto > 1 ? `
-                        <span class="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                            <i data-lucide="image" class="w-3 h-3"></i>${totalFoto}
-                        </span>
-                    ` : ''}
-                </button>
+                </div>
             `;
         });
 
-        container.innerHTML = html;
-        if (typeof lucide !== 'undefined') lucide.createIcons();
+        if (!itemsHtml) {
+            track.innerHTML = `
+                <div class="text-center text-gray-500 py-8 w-full">
+                    <p class="text-sm">Belum ada dokumentasi kegiatan.</p>
+                </div>
+            `;
+            return;
+        }
 
-        container.querySelectorAll('.galeri-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                openLightbox(btn.dataset.img, btn.dataset.caption);
-            });
-        });
+        // Duplikat 2x untuk seamless loop
+        track.innerHTML = itemsHtml + itemsHtml;
 
     } catch (error) {
         console.error('Load galeri error:', error);
-        container.innerHTML = `
-            <div class="col-span-full text-center text-gray-500 py-8">
+        track.innerHTML = `
+            <div class="text-center text-gray-500 py-8 w-full">
                 <p class="text-sm">Gagal memuat galeri.</p>
             </div>
         `;
     }
 }
 
-function openLightbox(imgUrl, caption) {
-    const modal = document.getElementById('imageLightbox');
-    const img = document.getElementById('imageLightboxImg');
-    const cap = document.getElementById('imageLightboxCaption');
+// ============================================================
+// LOAD DOKUMENTASI BY SLUG — generic
+// @param slug — serviceSlug filter (misal 'kursus')
+// @param targetId — ID container (default: 'documentationTrack')
+// ============================================================
+export async function loadDokumentasiBySlug(slug, targetId = 'documentationTrack') {
+    const track = document.getElementById(targetId);
+    if (!track) return;
 
-    if (!modal || !img) return;
+    try {
+        const q = query(
+            collection(db, 'documentations'),
+            where('aktif', '==', true),
+            where('serviceSlug', '==', slug),
+            orderBy('order', 'asc'),
+            limit(10)
+        );
+        const snapshot = await getDocs(q);
 
-    img.src = imgUrl;
-    if (cap) cap.textContent = caption || '';
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+        if (snapshot.empty) {
+            track.innerHTML = '';
+            const section = document.getElementById('documentationSection');
+            if (section) section.style.display = 'none';
+            return;
+        }
+
+        let itemsHtml = '';
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            const gambar = (data.gambarList && data.gambarList[0]) || data.gambar || '';
+            if (!gambar) return;
+
+            const imgUrl = optimizeCloudinaryUrl(gambar, { width: 500, height: 500, crop: 'fill' });
+
+            itemsHtml += `
+                <div class="tentang-marquee-item">
+                    <img src="${imgUrl}"
+                         alt="${escapeHtml(data.nama || 'Dokumentasi')}"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';" />
+                </div>
+            `;
+        });
+
+        if (!itemsHtml) {
+            track.innerHTML = '';
+            const section = document.getElementById('documentationSection');
+            if (section) section.style.display = 'none';
+            return;
+        }
+
+        // Duplikat 2x untuk seamless loop
+        track.innerHTML = itemsHtml + itemsHtml;
+
+    } catch (error) {
+        console.error('Load dokumentasi error:', error);
+        track.innerHTML = '';
+        const section = document.getElementById('documentationSection');
+        if (section) section.style.display = 'none';
+    }
 }
 
-export function closeLightbox() {
-    const modal = document.getElementById('imageLightbox');
-    if (!modal) return;
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
+// ============================================================
+// LOAD DOKUMENTASI SERVICE — semua slug service (tanpa kursus)
+// Untuk tentang.html — galeri baris ke-2
+// @param targetId — ID container (default: 'dokumentasiServiceTrack')
+// ============================================================
+export async function loadDokumentasiService(targetId = 'dokumentasiServiceTrack') {
+    const track = document.getElementById(targetId);
+    if (!track) return;
+
+    const SERVICE_SLUGS = ['laptop', 'pc', 'printer', 'panggil', 'sparepart'];
+
+    try {
+        const q = query(
+            collection(db, 'documentations'),
+            where('aktif', '==', true),
+            orderBy('order', 'asc'),
+            limit(50)
+        );
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            track.innerHTML = '';
+            return;
+        }
+
+        let itemsHtml = '';
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+
+            // Skip kalau bukan service
+            if (!SERVICE_SLUGS.includes(data.serviceSlug)) return;
+
+            const gambar = (data.gambarList && data.gambarList[0]) || data.gambar || '';
+            if (!gambar) return;
+
+            const imgUrl = optimizeCloudinaryUrl(gambar, { width: 400, height: 400, crop: 'fill' });
+
+            itemsHtml += `
+                <div class="tentang-marquee-item">
+                    <img src="${imgUrl}"
+                         alt="${escapeHtml(data.nama || 'Dokumentasi')}"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';" />
+                </div>
+            `;
+        });
+
+        if (!itemsHtml) {
+            track.innerHTML = '';
+            return;
+        }
+
+        // Duplikat 2x untuk seamless loop
+        track.innerHTML = itemsHtml + itemsHtml;
+
+    } catch (error) {
+        console.error('Load dokumentasi service error:', error);
+        track.innerHTML = '';
+    }
 }

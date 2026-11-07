@@ -220,8 +220,6 @@
 
         /* ============================================================
            ACTION BUTTONS — Responsive
-           Mobile: Detail full-width, WA + Share 2 kolom
-           Desktop: 3 tombol sejajar
            ============================================================ */
         .program-card-actions {
             display: grid;
@@ -293,12 +291,110 @@
         }
 
         h1, h2 {
-    font-family: 'Anton', 'Poppins', sans-serif;
-    font-weight: 400;
-    letter-spacing: 0.02em;
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+        h1 { line-height: 1.1; }
+        h2 { line-height: 1.2; }
+
+        /* ============================================================
+           NAVBAR — Pill Hover Effect
+           ============================================================ */
+        .nav-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4b5563;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            background-color: rgba(26, 60, 94, 0.08);
+            color: #0057ad;
+            transform: translateY(-1px);
+        }
+        .nav-link-active {
+            background-color: #0057ad;
+            color: white;
+            font-weight: 600;
+        }
+        .nav-link-active:hover {
+            background-color: #0057ad;
+            color: white;
+        }
+
+        /* ============================================================
+           GALERI MARQUEE — Continuous Scroll (jalan ke kiri, smooth)
+           ============================================================ */
+        .galeri-marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .galeri-marquee-track {
+            display: flex;
+            width: max-content;
+            animation: scrollKiri 40s linear infinite;
+            will-change: transform;
+        }
+
+
+        @keyframes scrollKiri {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .galeri-marquee-item {
+            flex-shrink: 0;
+            width: 250px;
+            height: 250px;
+            margin-right: 1rem;
+            background-color: #f3f4f6;
+            overflow: hidden;
+            border-radius: 0;
+        }
+
+        .galeri-marquee-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Default: hitam putih */
+    filter: grayscale(100%);
+    transition: filter 0.4s ease;
 }
-h1 { line-height: 1.1; }
-h2 { line-height: 1.2; }
+
+/* Hover: berwarna (grayscale hilang) */
+.galeri-marquee-item:hover img {
+    filter: grayscale(0%);
+}
+
+        @media (prefers-reduced-motion: reduce) {
+            .galeri-marquee-track {
+                animation: none;
+                overflow-x: auto;
+            }
+        }
+
+        /* Mobile: item lebih kecil */
+        @media (max-width: 639px) {
+            .galeri-marquee-item {
+                width: 180px;
+                height: 180px;
+                margin-right: 0.75rem;
+            }
+            .galeri-marquee-track {
+                animation-duration: 30s;
+            }
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -313,35 +409,14 @@ h2 { line-height: 1.2; }
         <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
-        <div id="mainNav" class="hidden md:flex items-center gap-8">
-            <a href="index.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                Beranda
-                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
-            <a href="kursus.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                Kursus &amp; Pelatihan
-                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
-            <a href="service.html" class="relative text-sm font-semibold text-brand py-1 group">
-                Computer Service
-                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
-            <a href="rakit-komputer.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                Rakit Komputer
-                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
-            <a href="tentang.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                Tentang
-                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
-            <a href="karir.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                Karir
-                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
-            <a href="kontak.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                Kontak
-                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
+        <div id="mainNav" class="hidden md:flex items-center gap-2">
+            <a href="index.html" class="nav-link">Beranda</a>
+            <a href="kursus.html" class="nav-link">Kursus &amp; Pelatihan</a>
+            <a href="service.html" class="nav-link nav-link-active">Computer Service</a>
+            <a href="rakit-komputer.html" class="nav-link">Rakit Komputer</a>
+            <a href="tentang.html" class="nav-link">Tentang</a>
+            <a href="karir.html" class="nav-link">Karir</a>
+            <a href="kontak.html" class="nav-link">Kontak</a>
         </div>
     </div>
 
@@ -516,16 +591,21 @@ h2 { line-height: 1.2; }
 </section>
 
 <!-- ============================================================ -->
-<!-- GALERI KEGIATAN                                               -->
+<!-- GALERI KEGIATAN — MARQUEE                                     -->
 <!-- ============================================================ -->
 <section class="py-12 sm:py-16 bg-white/40 backdrop-blur-sm">
-    <div class="container mx-auto px-4 max-w-5xl">
-        <div class="text-center mb-10">
+    <div class="container mx-auto px-4 max-w-5xl mb-8">
+        <div class="text-center">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Galeri Kegiatan</h2>
             <p class="text-sm sm:text-base text-gray-500 mt-2">Dokumentasi kegiatan service kami</p>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4" id="galeriContainer">
-            <div class="col-span-full text-center text-gray-500 py-8">
+    </div>
+
+    <!-- Marquee Wrapper -->
+    <div class="galeri-marquee-wrapper">
+        <div class="galeri-marquee-track" id="galeriTrack">
+            <!-- Diisi via JS — item akan diduplikat otomatis -->
+            <div class="text-center text-gray-500 py-8 w-full">
                 <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
                 <p class="mt-2 text-sm">Memuat galeri...</p>
             </div>
@@ -533,22 +613,29 @@ h2 { line-height: 1.2; }
     </div>
 </section>
 
-<!-- ============================================================ -->
-<!-- FOOTER                                                        -->
-<!-- ============================================================ -->
-<footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
-    <div class="container mx-auto px-4">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="text-center md:text-left">
-                <span class="text-xl font-bold text-brand">IMDKOM</span>
-                <p class="text-gray-500 text-xs mt-1">Kursus &amp; Pelatihan • Computer Service</p>
-            </div>
-            <div class="text-center text-xs text-gray-500">
-                <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+    <!-- ============================================================ -->
+    <!-- FOOTER                                                       -->
+    <!-- ============================================================ -->
+    <footer class="py-8 sm:py-10 border-t border-gray-200 relative" id="footerSection">
+        <div class="sticker-layer" data-section="footer"></div>
+        
+        <div class="container mx-auto px-4 relative">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h5 class="text-xl font-bold text-brand">IMDKOM</h5>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Kursus &amp; Pelatihan • Service Komputer</p>
+                </div>
+                <div>
+                    <h6 class="font-medium text-gray-700 text-sm mb-2">Kontak</h6>
+                    <p class="text-gray-500 text-xs sm:text-sm" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="text-gray-500 text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
+                </div>
+                <div class="md:text-right">
+                    <p class="text-gray-400 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
 <!-- ============================================================ -->
 <!-- FLOATING WHATSAPP                                             -->
@@ -560,22 +647,6 @@ h2 { line-height: 1.2; }
 </a>
 
 <!-- ============================================================ -->
-<!-- LIGHTBOX                                                      -->
-<!-- ============================================================ -->
-<div id="imageLightbox" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeLightbox()"></div>
-    <div class="absolute inset-0 flex items-center justify-center p-4 overflow-hidden pointer-events-none">
-        <div class="max-w-4xl w-full relative pointer-events-auto">
-            <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-white bg-black/50 hover:bg-black/70 w-10 h-10 rounded-full flex items-center justify-center z-10">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <img id="imageLightboxImg" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl" />
-            <p id="imageLightboxCaption" class="text-white text-center mt-4 text-sm"></p>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================================ -->
 <!-- JAVASCRIPT                                                    -->
 <!-- ============================================================ -->
 <script type="module">
@@ -583,12 +654,9 @@ h2 { line-height: 1.2; }
         loadServicesKatalog,
         filterServices,
         loadMoreServices,
-        loadGaleri,
-        closeLightbox
+        loadGaleri
     } from './assets/js/services-katalog.js';
     import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
-
-    window.closeLightbox = closeLightbox;
 
     document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {

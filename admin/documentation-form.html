@@ -41,77 +41,36 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         /* NAV GROUP / SUBMENU */
-.nav-group { margin: 0; }
-
-.nav-group-toggle {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font: inherit;
-    color: inherit;
-}
-
-.nav-group-toggle .nav-chevron {
-    transition: transform 0.25s ease;
-    opacity: 0.6;
-}
-
-.nav-group-toggle.open .nav-chevron {
-    transform: rotate(180deg);
-    opacity: 1;
-}
-
-.nav-group-toggle.open {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.nav-submenu {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.25rem 0 0.5rem 0;
-    margin-left: 0.5rem;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
-    animation: submenuSlide 0.25s ease;
-}
-
-.nav-submenu.hidden { display: none; }
-
-@keyframes submenuSlide {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-.nav-submenu-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-    color: #d1d5db;
-    text-decoration: none;
-    border-radius: 0.375rem;
-    transition: all 0.2s ease;
-    margin-left: 0.25rem;
-}
-
-.nav-submenu-link:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: white;
-}
-
-.nav-submenu-link.active {
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    font-weight: 600;
-}
-
-.nav-submenu-link i { opacity: 0.7; flex-shrink: 0; }
-.nav-submenu-link.active i { opacity: 1; }
+        .nav-group { margin: 0; }
+        .nav-group-toggle {
+            display: flex; align-items: center; width: 100%;
+            text-align: left; background: none; border: none;
+            cursor: pointer; font: inherit; color: inherit;
+        }
+        .nav-group-toggle .nav-chevron { transition: transform 0.25s ease; opacity: 0.6; }
+        .nav-group-toggle.open .nav-chevron { transform: rotate(180deg); opacity: 1; }
+        .nav-group-toggle.open { background: rgba(255, 255, 255, 0.08); }
+        .nav-submenu {
+            display: flex; flex-direction: column; gap: 0.25rem;
+            padding: 0.25rem 0 0.5rem 0; margin-left: 0.5rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            animation: submenuSlide 0.25s ease;
+        }
+        .nav-submenu.hidden { display: none; }
+        @keyframes submenuSlide {
+            from { opacity: 0; transform: translateY(-4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .nav-submenu-link {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 0.75rem; font-size: 0.8rem; color: #d1d5db;
+            text-decoration: none; border-radius: 0.375rem;
+            transition: all 0.2s ease; margin-left: 0.25rem;
+        }
+        .nav-submenu-link:hover { background: rgba(255, 255, 255, 0.08); color: white; }
+        .nav-submenu-link.active { background: rgba(255, 255, 255, 0.15); color: white; font-weight: 600; }
+        .nav-submenu-link i { opacity: 0.7; flex-shrink: 0; }
+        .nav-submenu-link.active i { opacity: 1; }
     </style>
 </head>
 <body>
@@ -124,87 +83,83 @@
 
     <div class="admin-overlay" id="overlay"></div>
 
-    <!-- ============================================================
-    SIDEBAR ADMIN
-    ============================================================ -->
-<aside class="admin-sidebar" id="sidebar">
-    <div class="brand">IMDKOM Admin</div>
-    <nav>
-        <a href="dashboard.html" class="nav-link">
-            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-            Dashboard
-        </a>
-        <a href="landing-page.html" class="nav-link">
-            <i data-lucide="home" class="w-4 h-4"></i>
-            Landing Page
-        </a>
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
 
-        <!-- Program Kursus — dengan submenu -->
-        <div class="nav-group">
-            <button type="button" 
-                    class="nav-link nav-group-toggle w-full justify-between" 
-                    data-target="submenu-program">
-                <span class="flex items-center gap-2">
-                    <i data-lucide="book-open" class="w-4 h-4"></i>
-                    Program Kursus
-                </span>
-                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform nav-chevron"></i>
-            </button>
+            <div class="nav-group">
+                <button type="button" 
+                        class="nav-link nav-group-toggle w-full justify-between" 
+                        data-target="submenu-program">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        Program Kursus
+                    </span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform nav-chevron"></i>
+                </button>
 
-            <div id="submenu-program" class="nav-submenu hidden">
-                <a href="programs.html" class="nav-submenu-link">
-                    <i data-lucide="list" class="w-3.5 h-3.5"></i>
-                    Daftar Program
-                </a>
-                <a href="program-submissions.html" class="nav-submenu-link">
-                    <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
-                    Review Usulan
-                </a>
-                <a href="tentors.html" class="nav-submenu-link">
-                    <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
-                    Tentor
-                </a>
+                <div id="submenu-program" class="nav-submenu hidden">
+                    <a href="programs.html" class="nav-submenu-link">
+                        <i data-lucide="list" class="w-3.5 h-3.5"></i>
+                        Daftar Program
+                    </a>
+                    <a href="program-submissions.html" class="nav-submenu-link">
+                        <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                        Review Usulan
+                    </a>
+                    <a href="tentors.html" class="nav-submenu-link">
+                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+                        Tentor
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <a href="services.html" class="nav-link">
-            <i data-lucide="wrench" class="w-4 h-4"></i>
-            Computer Service
-        </a>
-        <a href="pc-components.html" class="nav-link">
-            <i data-lucide="cpu" class="w-4 h-4"></i>
-            PC Components
-        </a>
-        <a href="pricelists.html" class="nav-link">
-            <i data-lucide="tag" class="w-4 h-4"></i>
-            Pricelist
-        </a>
-        <a href="documentations.html" class="nav-link active">
-            <i data-lucide="image" class="w-4 h-4"></i>
-            Dokumentasi
-        </a>
-        <a href="testimonials.html" class="nav-link">
-            <i data-lucide="message-square" class="w-4 h-4"></i>
-            Testimoni
-        </a>
-        <a href="faq.html" class="nav-link">
-            <i data-lucide="help-circle" class="w-4 h-4"></i>
-            FAQ
-        </a>
-        <a href="consultations.html" class="nav-link">
-            <i data-lucide="inbox" class="w-4 h-4"></i>
-            Konsultasi
-        </a>
-        <a href="settings.html" class="nav-link">
-            <i data-lucide="settings" class="w-4 h-4"></i>
-            Pengaturan
-        </a>
-        <button id="logoutBtn" class="logout-btn">
-            <i data-lucide="log-out" class="w-4 h-4"></i>
-            Logout
-        </button>
-    </nav>
-</aside>
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pc-components.html" class="nav-link">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                PC Components
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link active">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
 
     <main class="admin-main">
         <div class="page-header">
@@ -228,6 +183,7 @@
                             <option value="printer">Service Printer</option>
                             <option value="panggil">Service Panggil</option>
                             <option value="sparepart">Sparepart</option>
+                            <option value="kursus">Kursus &amp; Pelatihan</option>
                         </select>
                     </div>
                     <div>
@@ -240,13 +196,10 @@
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Foto Dokumentasi (Bisa lebih dari 1) *</label>
                     
-                    <!-- Container untuk preview gambar -->
                     <div id="gambarContainer" class="mb-3 flex flex-wrap gap-2 min-h-[50px] border-2 border-dashed border-gray-300 rounded-lg p-2 bg-gray-50">
-                        <!-- Preview akan muncul di sini -->
                         <span class="text-gray-400 text-sm italic m-auto" id="emptyGambarText">Belum ada foto di-upload.</span>
                     </div>
 
-                    <!-- Tombol Aksi -->
                     <div class="flex flex-wrap gap-2">
                         <button type="button" 
                                 id="uploadGambarBtn" 
@@ -257,7 +210,6 @@
                             <span>Upload Foto (Bisa Banyak)</span>
                         </button>
                         
-                        <!-- Tombol Gunakan Link -->
                         <button type="button" 
                                 id="linkGambarBtn" 
                                 class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
@@ -268,7 +220,6 @@
                         </button>
                     </div>
 
-                    <!-- Input Link URL (muncul saat tombol diklik) -->
                     <div id="linkInputWrapper" class="hidden mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <div class="flex gap-2">
                             <input type="url" id="gambarLinkInput" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" placeholder="https://example.com/gambar.jpg" />
@@ -276,7 +227,6 @@
                         </div>
                     </div>
 
-                    <!-- Hidden Input untuk menyimpan data Array JSON -->
                     <input type="hidden" id="gambarList" required />
                 </div>
 
@@ -309,9 +259,8 @@
         import { auth, onAuthStateChanged, signOut, db, doc, getDoc, addDoc, updateDoc, collection } from './assets/js/firebase.js';
         import { openCloudinaryUpload, optimizeCloudinaryUrl } from './assets/js/cloudinary.js';
 
-        let uploadedImages = []; // Array penampung URL gambar
+        let uploadedImages = [];
 
-        // Mobile sidebar
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         document.getElementById('menuToggle').addEventListener('click', () => {
@@ -336,9 +285,6 @@
             window.location.href = 'index.html';
         });
 
-        // ============================================================
-        // LOGIKA MULTI UPLOAD
-        // ============================================================
         const gambarContainer = document.getElementById('gambarContainer');
         const emptyText = document.getElementById('emptyGambarText');
         const gambarListInput = document.getElementById('gambarList');
@@ -371,16 +317,10 @@
             renderImages();
         };
 
-        // Tombol Upload Cloudinary (Multiple)
         document.getElementById('uploadGambarBtn').addEventListener('click', () => {
-            // Kita butuh modifikasi cloudinary.js untuk support multiple, 
-            // Tapi untuk simplisitas, kita panggil berkali-kali atau loop jika widget mendukung multiple.
-            // Di sini kita asumsikan openCloudinaryUpload mendukung 'multiple: true' di config.
-            
-            // Kita buat fungsi custom sementara untuk multiple upload
             openCloudinaryUpload({
                 folder: 'documentations',
-                multiple: true, // Pastikan cloudinary.js Anda mendukung opsi ini
+                multiple: true,
                 onSuccess: (url) => {
                     uploadedImages.push(url);
                     renderImages();
@@ -389,7 +329,6 @@
             });
         });
 
-        // Tombol Gunakan Link URL
         const linkBtn = document.getElementById('linkGambarBtn');
         const linkWrapper = document.getElementById('linkInputWrapper');
         const applyLinkBtn = document.getElementById('applyLinkBtn');
@@ -413,9 +352,6 @@
             linkWrapper.classList.add('hidden');
         });
 
-        // ============================================================
-        // CHECK EDIT MODE
-        // ============================================================
         async function checkEditMode() {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
@@ -441,11 +377,9 @@
                 document.getElementById('order').value = data.order || 1;
                 document.getElementById('aktif').checked = data.aktif !== false;
 
-                // Load gambar lama
                 if (data.gambarList && Array.isArray(data.gambarList)) {
                     uploadedImages = [...data.gambarList];
                 } else if (data.gambar) {
-                    // Backward compatibility jika dulu hanya 1 gambar string
                     uploadedImages = [data.gambar];
                 }
                 renderImages();
@@ -455,9 +389,6 @@
             }
         }
 
-        // ============================================================
-        // SUBMIT
-        // ============================================================
         document.getElementById('docForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -477,7 +408,7 @@
             const data = {
                 serviceSlug: document.getElementById('serviceSlug').value,
                 nama: document.getElementById('nama').value.trim(),
-                gambarList: uploadedImages, // Simpan sebagai array
+                gambarList: uploadedImages,
                 keterangan: document.getElementById('keterangan').value.trim(),
                 order: parseInt(document.getElementById('order').value) || 1,
                 aktif: document.getElementById('aktif').checked,
@@ -502,38 +433,34 @@
             }
         });
 
-        // ============================================================
-// NAV SUBMENU — TOGGLE
-// ============================================================
-document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
-    toggle.addEventListener('click', () => {
-        const targetId = toggle.dataset.target;
-        const submenu = document.getElementById(targetId);
-        if (!submenu) return;
+        document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.dataset.target;
+                const submenu = document.getElementById(targetId);
+                if (!submenu) return;
 
-        const isOpen = !submenu.classList.contains('hidden');
+                const isOpen = !submenu.classList.contains('hidden');
 
-        if (isOpen) {
-            submenu.classList.add('hidden');
-            toggle.classList.remove('open');
-        } else {
-            submenu.classList.remove('hidden');
-            toggle.classList.add('open');
-        }
+                if (isOpen) {
+                    submenu.classList.add('hidden');
+                    toggle.classList.remove('open');
+                } else {
+                    submenu.classList.remove('hidden');
+                    toggle.classList.add('open');
+                }
 
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-    });
-});
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        });
 
-// Auto-buka submenu kalau ada link active di dalamnya
-document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
-    const submenu = activeLink.closest('.nav-submenu');
-    if (submenu) {
-        submenu.classList.remove('hidden');
-        const toggle = document.querySelector(`.nav-group-toggle[data-target="${submenu.id}"]`);
-        if (toggle) toggle.classList.add('open');
-    }
-});
+        document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
+            const submenu = activeLink.closest('.nav-submenu');
+            if (submenu) {
+                submenu.classList.remove('hidden');
+                const toggle = document.querySelector(`.nav-group-toggle[data-target="${submenu.id}"]`);
+                if (toggle) toggle.classList.add('open');
+            }
+        });
     </script>
 
 </body>

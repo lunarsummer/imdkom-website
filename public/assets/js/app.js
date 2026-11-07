@@ -235,12 +235,8 @@ export async function loadServicePreview() {
             );
             const serviceName = escapeHtml(data.nama || 'Layanan');
             
-            let targetUrl = '';
-            if (data.slug === 'sparepart') {
-                targetUrl = 'sparepart.html';
-            } else {
-                targetUrl = `service-${data.slug}.html`;
-            }
+            // ⭐ Homepage card → service-detail.html?id=xxx
+            const targetUrl = `service-detail.html?id=${docSnap.id}`;
             
             html += `
     <a href="${targetUrl}" class="course-item block cursor-pointer transition-all duration-200 hover:-translate-y-1">

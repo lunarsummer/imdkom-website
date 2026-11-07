@@ -848,7 +848,99 @@ body {
         display: none;
     }
 }
+/* ============================================================
+   NAVBAR — Pill Hover Effect
+   ============================================================ */
+.nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.nav-link:hover {
+    background-color: rgba(26, 60, 94, 0.08);
+    color: #0057ad;
+    transform: translateY(-1px);
+}
+.nav-link-active {
+    background-color: #0057ad;
+    color: white;
+    font-weight: 600;
+}
+.nav-link-active:hover {
+    background-color: #0057ad;
+    color: white;
+}
 
+/* ============================================================
+   DOKUMENTASI MARQUEE — Continuous Scroll
+   ============================================================ */
+.dokumentasi-marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 1rem 0;
+}
+
+.dokumentasi-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: scrollKiriDok 40s linear infinite;
+    will-change: transform;
+}
+
+@keyframes scrollKiriDok {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.dokumentasi-marquee-item {
+    flex-shrink: 0;
+    width: 250px;
+    height: 250px;
+    margin-right: 1rem;
+    background-color: #f3f4f6;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.dokumentasi-marquee-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(100%);
+    transition: filter 0.4s ease;
+}
+
+.dokumentasi-marquee-item:hover img {
+    filter: grayscale(0%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dokumentasi-marquee-track {
+        animation: none;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 639px) {
+    .dokumentasi-marquee-item {
+        width: 180px;
+        height: 180px;
+        margin-right: 0.75rem;
+    }
+    .dokumentasi-marquee-track {
+        animation-duration: 30s;
+    }
+}
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -867,13 +959,13 @@ body {
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
             
-            <div id="mainNav" class="hidden md:flex items-center gap-6">
-                <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-brand font-semibold">Computer Service</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
-            </div>
+            <div id="mainNav" class="hidden md:flex items-center gap-2">
+    <a href="index.html" class="nav-link">Beranda</a>
+    <a href="kursus.html" class="nav-link">Kursus &amp; Pelatihan</a>
+    <a href="service.html" class="nav-link nav-link-active">Computer Service</a>
+    <a href="tentang.html" class="nav-link">Tentang</a>
+    <a href="kontak.html" class="nav-link">Kontak</a>
+</div>
         </div>
         
         <!-- Mobile Menu -->
@@ -1035,21 +1127,23 @@ body {
     <!-- ============================================================
     DOKUMENTASI
     ============================================================ -->
-    <section class="py-8 sm:py-12 bg-white/40 backdrop-blur-sm" id="documentationSection">
-        <div class="container mx-auto px-4 max-w-4xl">
-            <div class="mb-6">
-                <h2 class="text-2xl sm:text-3xl font-bold text-brand">Dokumentasi</h2>
-                <p class="text-sm text-gray-500 mt-1">Galeri foto kegiatan service kami</p>
-            </div>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="documentationContainer">
-                <div class="col-span-full text-center text-gray-500 py-10">
-                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
-                    <p class="mt-3 text-sm">Memuat dokumentasi...</p>
-                </div>
+  <section class="py-8 sm:py-12 bg-white/40 backdrop-blur-sm" id="documentationSection">
+    <div class="container mx-auto px-4 max-w-4xl mb-8">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-brand">Dokumentasi</h2>
+            <p class="text-sm text-gray-500 mt-1">Galeri foto kegiatan service kami</p>
+        </div>
+    </div>
+
+    <div class="dokumentasi-marquee-wrapper">
+        <div class="dokumentasi-marquee-track" id="documentationTrack">
+            <div class="text-center text-gray-500 py-10 w-full">
+                <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm">Memuat dokumentasi...</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- ============================================================
     FOOTER
@@ -1342,23 +1436,6 @@ body {
 
                     <div id="bookingMessage" class="text-center"></div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================
-    IMAGE MODAL
-    ============================================================ -->
-    <div id="imageModal" class="fixed inset-0 z-50 hidden">
-        <div class="modal-overlay absolute inset-0" onclick="closeImageModal()"></div>
-        
-        <div class="absolute inset-0 flex items-center justify-center p-4 overflow-hidden">
-            <div class="max-w-4xl w-full relative">
-                <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 w-10 h-10 rounded-full flex items-center justify-center z-10">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-                <img id="imageModalImg" src="" alt="" class="w-full rounded-2xl shadow-2xl" />
-                <p id="imageModalCaption" class="text-white text-center mt-4"></p>
             </div>
         </div>
     </div>

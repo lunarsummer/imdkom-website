@@ -6,25 +6,15 @@
     <title>Kursus & Pelatihan | IMDKOM</title>
     <meta name="description" content="Daftar program kursus dan pelatihan komputer dari IMDKOM. Temukan program yang sesuai kebutuhan Anda." />
     
-    <!-- Favicon -->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     
-    <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- 🎨 THEME CSS -->
     <link rel="stylesheet" href="assets/css/theme.css">
-    
-    <!-- Tailwind CSS -->
     <link rel="stylesheet" href="assets/css/output.css">
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Tailwind Config -->
-    
 
     <style>
         /* ============================================================
@@ -124,8 +114,7 @@
         }
 
         /* ============================================================
-           PROGRAM GRID — MARKETPLACE
-           Mobile: 2 kolom | Tablet: 3 kolom | Desktop: 4 kolom
+           PROGRAM GRID
            ============================================================ */
         .program-grid {
             display: grid;
@@ -139,9 +128,6 @@
             .program-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
         }
 
-        /* ============================================================
-           PROGRAM CARD
-           ============================================================ */
         .program-card {
             background: white;
             border: 1px solid #e5e7eb;
@@ -173,7 +159,6 @@
         .program-card:hover .program-image-wrapper img {
             transform: scale(1.05);
         }
-        /* Link pembungkus gambar — pastikan block & cursor pointer */
         .program-image-link {
             display: block;
             cursor: pointer;
@@ -195,14 +180,10 @@
             text-transform: uppercase;
             box-shadow: 0 2px 6px rgba(65, 64, 64, 0.3);
             z-index: 2;
-
-            /* SHINE EFFECT */
             overflow: hidden;
             isolation: isolate;
             animation: badge-pulse 2.5s ease-in-out infinite;
         }
-
-        /* Kilau bergerak dari kiri ke kanan */
         .badge-promo::before {
             content: '';
             position: absolute;
@@ -210,53 +191,30 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.9) 50%,
-                transparent 70%
-            );
+            background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.9) 50%, transparent 70%);
             animation: badge-shine 2.5s ease-in-out infinite;
             z-index: 1;
             pointer-events: none;
         }
-
-        /* Pastikan teks badge di atas shine */
         .badge-promo > * {
             position: relative;
             z-index: 2;
         }
-
         @keyframes badge-shine {
-            0% {
-                left: -100%;
-            }
-            40%, 100% {
-                left: 100%;
-            }
+            0% { left: -100%; }
+            40%, 100% { left: 100%; }
         }
-
-        /* Denyut glow oranye lembut */
         @keyframes badge-pulse {
-            0%, 100% {
-                box-shadow: 0 2px 6px rgba(53, 53, 53, 0.3);
-            }
+            0%, 100% { box-shadow: 0 2px 6px rgba(53, 53, 53, 0.3); }
             50% {
                 box-shadow: 
                     0 2px 6px rgba(41, 41, 41, 0.3),
                     0 0 12px rgba(80, 79, 79, 0.5);
             }
         }
-
-        /* Hormati prefers-reduced-motion */
         @media (prefers-reduced-motion: reduce) {
-            .badge-promo {
-                animation: none;
-            }
-            .badge-promo::before {
-                animation: none;
-                display: none;
-            }
+            .badge-promo { animation: none; }
+            .badge-promo::before { animation: none; display: none; }
         }
 
         .badge-kategori {
@@ -274,7 +232,6 @@
             z-index: 2;
         }
 
-        /* Skeleton */
         .skeleton {
             background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
             background-size: 200% 100%;
@@ -284,17 +241,109 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
+
+        /* ============================================================
+           NAVBAR — Pill Hover Effect
+           ============================================================ */
+        .nav-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4b5563;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            background-color: rgba(26, 60, 94, 0.08);
+            color: #0057ad;
+            transform: translateY(-1px);
+        }
+        .nav-link-active {
+            background-color: #0057ad;
+            color: white;
+            font-weight: 600;
+        }
+        .nav-link-active:hover {
+            background-color: #0057ad;
+            color: white;
+        }
+
+        /* ============================================================
+   DOKUMENTASI MARQUEE — Continuous Scroll
+   ============================================================ */
+.dokumentasi-marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 1rem 0;
+}
+
+.dokumentasi-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: scrollKiriDok 40s linear infinite;
+    will-change: transform;
+}
+
+@keyframes scrollKiriDok {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ⭐ Class item — samakan dengan JS (.tentang-marquee-item) */
+.tentang-marquee-item {
+    flex-shrink: 0;
+    width: 250px;
+    height: 250px;
+    margin-right: 1rem;
+    background-color: #f3f4f6;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.tentang-marquee-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(100%);
+    transition: filter 0.4s ease;
+}
+
+.tentang-marquee-item:hover img {
+    filter: grayscale(0%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dokumentasi-marquee-track {
+        animation: none;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 639px) {
+    .tentang-marquee-item {
+        width: 180px;
+        height: 180px;
+        margin-right: 0.75rem;
+    }
+    .dokumentasi-marquee-track {
+        animation-duration: 30s;
+    }
+}
     </style>
 </head>
 <body class="font-sans bg-gray-50">
 
-    <!-- ============================================================ -->
-    <!-- NAVIGATION (Kursus.html)                                     -->
-    <!-- ============================================================ -->
+    <!-- NAVIGATION -->
     <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
             
-            <!-- KIRI: LOGO -->
             <a href="index.html" class="flex items-center gap-3 logo-shine">
                 <img src="assets/images/logo/imd.svg" 
                      alt="Logo IMDKOM" 
@@ -303,60 +352,23 @@
                 <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
             </a>
             
-            <!-- TOMBOL MOBILE -->
             <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
             
-            <!-- KANAN: MENU DESKTOP -->
-            <div id="mainNav" class="hidden md:flex items-center gap-8">
-                <!-- Beranda -->
-                <a href="index.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Beranda
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                
-                <!-- Kursus (AKTIF) -->
-                <a href="kursus.html" class="relative text-sm font-semibold text-brand py-1 group">
-                    Kursus &amp; Pelatihan
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                
-                <!-- Service -->
-                <a href="service.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Computer Service
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                
-                <!-- Rakit Komputer -->
-                <a href="rakit-komputer.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Rakit Komputer
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                
-                <!-- Tentang -->
-                <a href="tentang.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Tentang
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-
-                <!-- Karir -->
-                <a href="karir.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Karir
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                
-                <!-- Kontak -->
-                <a href="kontak.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Kontak
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
+            <div id="mainNav" class="hidden md:flex items-center gap-2">
+                <a href="index.html" class="nav-link">Beranda</a>
+                <a href="kursus.html" class="nav-link nav-link-active">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="nav-link">Computer Service</a>
+                <a href="rakit-komputer.html" class="nav-link">Rakit Komputer</a>
+                <a href="tentang.html" class="nav-link">Tentang</a>
+                <a href="karir.html" class="nav-link">Karir</a>
+                <a href="kontak.html" class="nav-link">Kontak</a>
             </div>
         </div>
         
-        <!-- MOBILE MENU -->
         <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
             <div class="container mx-auto px-4 flex flex-col gap-2">
                 <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
@@ -376,22 +388,17 @@
         </div>
     </nav>
 
-    <!-- ============================================================
-    HEADER + SEARCH + FILTER
-    ============================================================ -->
+    <!-- HEADER + SEARCH + FILTER -->
     <section class="py-8 sm:py-12">
         <div class="container mx-auto px-4">
             
-            <!-- Judul -->
             <div class="text-center mb-8">
                 <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Kursus &amp; Pelatihan</h1>
                 <p class="text-sm sm:text-base text-gray-500 mt-2">Temukan program yang sesuai kebutuhan Anda.</p>
             </div>
 
-            <!-- Search + Filter -->
             <div class="max-w-3xl mx-auto mb-6">
                 <div class="flex flex-col sm:flex-row gap-2">
-                    <!-- Search -->
                     <div class="relative flex-1">
                         <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
                         <input type="text" 
@@ -400,21 +407,16 @@
                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
                     </div>
                     
-                    <!-- Filter kategori -->
                     <select id="filterKategori"
                             class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white">
                         <option value="">Semua Kategori</option>
-                        <!-- Diisi via JS -->
                     </select>
                 </div>
                 
-                <!-- Info filter -->
                 <div id="filterInfo" class="text-xs text-gray-500 mt-2 text-center"></div>
             </div>
 
-            <!-- Grid program -->
             <div class="program-grid" id="allProgramsContainer">
-                <!-- Skeleton loading -->
                 <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
                 <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
                 <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
@@ -425,7 +427,6 @@
                 <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
             </div>
 
-                       <!-- TOMBOL TAMPILKAN LEBIH BANYAK -->
             <div class="text-center mt-10" id="loadMoreWrapper" style="display: none;">
                 <button id="loadMoreBtn" class="group inline-flex items-center gap-2 bg-white border-2 border-brand text-brand hover:bg-brand hover:text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
                     <i data-lucide="chevron-down" class="w-5 h-5 group-hover:text-white transition-colors"></i>
@@ -437,34 +438,69 @@
     </section>
 
     <!-- ============================================================
-    FOOTER
+    DOKUMENTASI — MARQUEE
     ============================================================ -->
-    <footer class="py-6 sm:py-8 border-t border-gray-200 bg-white mt-8">
-        <div class="container mx-auto px-4 text-center text-xs sm:text-sm text-gray-500">
-            <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+    <section class="py-8 sm:py-12 bg-white/40 backdrop-blur-sm" id="documentationSection">
+        <div class="container mx-auto px-4 max-w-5xl mb-8">
+            <div class="text-center">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Dokumentasi</h2>
+                <p class="text-sm sm:text-base text-gray-500 mt-2">Galeri kegiatan kursus &amp; pelatihan kami</p>
+            </div>
+        </div>
+
+        <div class="dokumentasi-marquee-wrapper">
+            <div class="dokumentasi-marquee-track" id="documentationTrack">
+                <div class="text-center text-gray-500 py-10 w-full">
+                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
+                    <p class="mt-3 text-sm">Memuat dokumentasi...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER                                                       -->
+    <!-- ============================================================ -->
+    <footer class="py-8 sm:py-10 border-t border-gray-200 relative" id="footerSection">
+        <div class="sticker-layer" data-section="footer"></div>
+        
+        <div class="container mx-auto px-4 relative">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h5 class="text-xl font-bold text-brand">IMDKOM</h5>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Kursus &amp; Pelatihan • Service Komputer</p>
+                </div>
+                <div>
+                    <h6 class="font-medium text-gray-700 text-sm mb-2">Kontak</h6>
+                    <p class="text-gray-500 text-xs sm:text-sm" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="text-gray-500 text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
+                </div>
+                <div class="md:text-right">
+                    <p class="text-gray-400 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- ============================================================
-    FLOATING WHATSAPP
-    ============================================================ -->
+    <!-- FLOATING WHATSAPP -->
     <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
     </a>
 
-    <!-- ============================================================
-    JAVASCRIPT
-    ============================================================ -->
+    <!-- JAVASCRIPT -->
     <script type="module">
         import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
-        // ⭐ Tambahkan loadMorePrograms di import
         import { loadAllPrograms, filterPrograms, getCategories, loadMorePrograms } from './assets/js/app.js';
+        import { loadDokumentasiBySlug } from './assets/js/services-katalog.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Load program
             await loadAllPrograms();
+
+            // Load dokumentasi kursus (marquee)
+            await loadDokumentasiBySlug('kursus');
 
             // Init Lucide icons
             if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -483,7 +519,7 @@
             document.getElementById('searchInput').addEventListener('input', filterPrograms);
             document.getElementById('filterKategori').addEventListener('change', filterPrograms);
 
-            // ⭐ Event listener untuk tombol Load More
+            // Event listener untuk tombol Load More
             document.getElementById('loadMoreBtn').addEventListener('click', loadMorePrograms);
 
             // Floating WhatsApp

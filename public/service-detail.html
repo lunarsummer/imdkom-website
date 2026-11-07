@@ -370,6 +370,37 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        /* ============================================================
+   NAVBAR — Pill Hover Effect
+   ============================================================ */
+.nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.nav-link:hover {
+    background-color: rgba(26, 60, 94, 0.08);
+    color: #0057ad;
+    transform: translateY(-1px);
+}
+.nav-link-active {
+    background-color: #0057ad;
+    color: white;
+    font-weight: 600;
+}
+.nav-link-active:hover {
+    background-color: #0057ad;
+    color: white;
+}
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -388,13 +419,13 @@
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
 
-            <div id="mainNav" class="hidden md:flex items-center gap-6">
-                <a href="index.html" class="text-gray-600 hover:text-brand">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-brand font-semibold">Computer Service</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand">Tentang</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand">Kontak</a>
-            </div>
+            <div id="mainNav" class="hidden md:flex items-center gap-2">
+    <a href="index.html" class="nav-link">Beranda</a>
+    <a href="kursus.html" class="nav-link">Kursus &amp; Pelatihan</a>
+    <a href="service.html" class="nav-link nav-link-active">Computer Service</a>
+    <a href="tentang.html" class="nav-link">Tentang</a>
+    <a href="kontak.html" class="nav-link">Kontak</a>
+</div>
         </div>
 
         <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">

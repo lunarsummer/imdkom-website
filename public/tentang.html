@@ -8,21 +8,13 @@
     
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     
-    <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- 🎨 THEME CSS -->
     <link rel="stylesheet" href="assets/css/theme.css">
-    
-    <!-- Tailwind CSS -->
     <link rel="stylesheet" href="assets/css/output.css">
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    
 
     <style>
         /* ============================================================
@@ -178,13 +170,116 @@
         .stat-counter {
             font-variant-numeric: tabular-nums;
         }
+
+        /* ============================================================
+           NAVBAR — Pill Hover Effect
+           ============================================================ */
+        .nav-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4b5563;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            background-color: rgba(26, 60, 94, 0.08);
+            color: #0057ad;
+            transform: translateY(-1px);
+        }
+        .nav-link-active {
+            background-color: #0057ad;
+            color: white;
+            font-weight: 600;
+        }
+        .nav-link-active:hover {
+            background-color: #0057ad;
+            color: white;
+        }
+
+        /* ============================================================
+           TENTANG MARQUEE — 2 Baris Galeri
+           ============================================================ */
+        .tentang-marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .tentang-marquee-track {
+            display: flex;
+            width: max-content;
+            will-change: transform;
+        }
+
+        /* Baris 1: kursus — jalan ke KIRI */
+        .tentang-marquee-track--kiri {
+            animation: scrollKiriTentang 40s linear infinite;
+        }
+
+        /* Baris 2: service — jalan ke KANAN */
+        .tentang-marquee-track--kanan {
+            animation: scrollKananTentang 40s linear infinite;
+        }
+
+        @keyframes scrollKiriTentang {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes scrollKananTentang {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+
+        .tentang-marquee-item {
+            flex-shrink: 0;
+            width: 220px;
+            height: 220px;
+            margin-right: 0.75rem;
+            background-color: #f3f4f6;
+            overflow: hidden;
+            border-radius: 0;
+        }
+
+        .tentang-marquee-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(100%);
+            transition: filter 0.4s ease;
+        }
+
+        .tentang-marquee-item:hover img {
+            filter: grayscale(0%);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tentang-marquee-track {
+                animation: none !important;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 639px) {
+            .tentang-marquee-item {
+                width: 160px;
+                height: 160px;
+                margin-right: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
 
-    <!-- ============================================================ -->
-    <!-- NAVIGATION (Tentang.html)                                    -->
-    <!-- ============================================================ -->
+    <!-- NAVIGATION -->
     <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
         <div class="container mx-auto px-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 logo-shine">
@@ -194,39 +289,17 @@
             <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
-            <div id="mainNav" class="hidden md:flex items-center gap-8">
-                <a href="index.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Beranda
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                <a href="kursus.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Kursus &amp; Pelatihan
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                <a href="service.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Computer Service
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                <a href="rakit-komputer.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Rakit Komputer
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                <a href="tentang.html" class="relative text-sm font-semibold text-brand py-1 group">
-                    Tentang
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                <a href="karir.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Karir
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-                <a href="kontak.html" class="relative text-sm font-medium text-gray-600 hover:text-brand py-1 group transition-colors duration-300">
-                    Kontak
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-brand transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
+            <div id="mainNav" class="hidden md:flex items-center gap-2">
+                <a href="index.html" class="nav-link">Beranda</a>
+                <a href="kursus.html" class="nav-link">Kursus &amp; Pelatihan</a>
+                <a href="service.html" class="nav-link">Computer Service</a>
+                <a href="rakit-komputer.html" class="nav-link">Rakit Komputer</a>
+                <a href="tentang.html" class="nav-link nav-link-active">Tentang</a>
+                <a href="karir.html" class="nav-link">Karir</a>
+                <a href="kontak.html" class="nav-link">Kontak</a>
             </div>
         </div>
         
-        <!-- Mobile Menu -->
         <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
             <div class="container mx-auto px-4 flex flex-col gap-2">
                 <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
@@ -247,9 +320,7 @@
         </div>
     </nav>
 
-    <!-- ============================================================ -->
-    <!-- HERO SECTION — MINIMALIS ELEGAN                              -->
-    <!-- ============================================================ -->
+    <!-- HERO SECTION -->
     <section class="pt-20 sm:pt-28 md:pt-36 pb-16 sm:pb-20 fade-in-up">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl">
@@ -272,11 +343,26 @@
                 
             </div>
         </div>
+
+        <!-- ⭐ GALERI 2 BARIS MARQUEE -->
+        <div class="mt-12 sm:mt-16 space-y-3">
+            <!-- Baris 1: Kursus — jalan ke KIRI -->
+            <div class="tentang-marquee-wrapper">
+                <div class="tentang-marquee-track tentang-marquee-track--kiri" id="dokumentasiKursusTrack">
+                    <!-- Diisi via JS -->
+                </div>
+            </div>
+
+            <!-- Baris 2: Service — jalan ke KANAN -->
+            <div class="tentang-marquee-wrapper">
+                <div class="tentang-marquee-track tentang-marquee-track--kanan" id="dokumentasiServiceTrack">
+                    <!-- Diisi via JS -->
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!-- STORY SECTION — EDITORIAL & STATS                            -->
-    <!-- ============================================================ -->
+    <!-- STORY SECTION -->
     <section class="py-12 sm:py-20">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto">
@@ -294,7 +380,6 @@
                     </p>
                 </div>
                 
-                <!-- Stats Grid — Animasi Count Up -->
                 <div class="grid grid-cols-3 gap-4 sm:gap-8 mt-16 pt-12 border-t border-gray-200">
                     <div class="text-center sm:text-left">
                         <div class="text-4xl sm:text-5xl font-extrabold text-brand stat-counter" data-target="25" data-suffix="+">0</div>
@@ -314,9 +399,7 @@
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!-- VISI & MISI — MINIMALIS                                      -->
-    <!-- ============================================================ -->
+    <!-- VISI & MISI -->
     <section class="py-16 sm:py-24 bg-white/40 backdrop-blur-sm">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto">
@@ -364,9 +447,7 @@
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!-- LEGALITAS — MINIMALIS                                        -->
-    <!-- ============================================================ -->
+    <!-- LEGALITAS -->
     <section class="py-16 sm:py-24">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto">
@@ -399,9 +480,7 @@
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!-- CTA SECTION — MINIMALIS                                      -->
-    <!-- ============================================================ -->
+    <!-- CTA SECTION -->
     <section class="pb-20 sm:pb-28">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto">
@@ -423,35 +502,36 @@
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!-- FOOTER                                                       -->
-    <!-- ============================================================ -->
+    <!-- FOOTER -->
     <footer class="py-6 sm:py-8 border-t border-gray-200 bg-gray-50">
         <div class="container mx-auto px-4 text-center text-xs sm:text-sm text-gray-500">
             <p>&copy; 2026 IMDKOM. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- ============================================================ -->
-    <!-- FLOATING WHATSAPP                                            -->
-    <!-- ============================================================ -->
+    <!-- FLOATING WHATSAPP -->
     <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
     </a>
 
-    <!-- ============================================================ -->
-    <!-- JAVASCRIPT                                                   -->
-    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
     <script type="module">
         import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
+        import { loadDokumentasiBySlug, loadDokumentasiService } from './assets/js/services-katalog.js';
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
-            
+
+            // ⭐ Load galeri kursus (baris 1 — kiri)
+            await loadDokumentasiBySlug('kursus', 'dokumentasiKursusTrack');
+
+            // ⭐ Load galeri service (baris 2 — kanan)
+            await loadDokumentasiService('dokumentasiServiceTrack');
+
             document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
                 e.preventDefault();
                 openWhatsAppGeneric();
@@ -466,30 +546,22 @@
         });
     </script>
 
-    <!-- ============================================================ -->
-    <!-- ANIMASI COUNTING ANGKA                                       -->
-    <!-- ============================================================ -->
+    <!-- ANIMASI COUNTING ANGKA -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const counters = document.querySelectorAll('.stat-counter');
             
-            // Konfigurasi IntersectionObserver
             const animateCounter = (counter) => {
                 const target = +counter.getAttribute('data-target');
                 const suffix = counter.getAttribute('data-suffix') || '';
-                const duration = 2000; // Durasi animasi dalam milidetik (2 detik)
+                const duration = 2000;
                 const startTime = performance.now();
                 
                 const updateCount = (currentTime) => {
                     const elapsedTime = currentTime - startTime;
                     const progress = Math.min(elapsedTime / duration, 1);
-                    
-                    // Menggunakan fungsi easing (easeOutQuart) agar animasi lebih halus
                     const easeOutProgress = 1 - Math.pow(1 - progress, 4);
-                    
                     const currentCount = Math.floor(easeOutProgress * target);
-                    
-                    // Format angka dengan pemisah ribuan (misal: 1.000)
                     counter.innerText = currentCount.toLocaleString('id-ID') + suffix;
                     
                     if (progress < 1) {
@@ -506,10 +578,10 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         animateCounter(entry.target);
-                        observer.unobserve(entry.target); // Hanya animasi sekali saat di-scroll
+                        observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.5 }); // Animasi berjalan saat 50% elemen terlihat
+            }, { threshold: 0.5 });
 
             counters.forEach(counter => {
                 observer.observe(counter);
