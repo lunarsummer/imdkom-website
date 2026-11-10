@@ -271,18 +271,41 @@
 
             <div class="reg-card space-y-4">
                 <h2 class="reg-section-title">Pembayaran</h2>
+                <div id="paymentLocked" class="py-4 text-center">
+                    <i data-lucide="lock" class="w-7 h-7 mx-auto text-gray-400"></i>
+                    <p class="font-bold text-gray-800 text-sm mt-2">Pembayaran belum aktif</p>
+                    <p class="text-xs text-gray-500 mt-1">Lengkapi dulu data wajib pada bagian di atas untuk mengaktifkan pembayaran.</p>
+                    <p id="paymentLockedHint" class="text-xs font-semibold text-brand mt-2"></p>
+                </div>
+                <div id="paymentBody" class="hidden space-y-4">
                 <div id="paymentBiayaWrap" class="hidden">
                     <p class="text-xs text-gray-500 mb-1">Biaya yang harus dibayar</p>
                     <div id="paymentBiaya" class="text-lg font-bold text-brand"></div>
+                    <p id="paymentBiayaNote" class="hidden text-xs font-semibold text-emerald-700 mt-1.5"></p>
+                </div>
+                <div class="reg-field" id="referralWrap">
+                    <label class="reg-label" for="regKodeReferral">Kode Referral</label>
+                    <div class="flex gap-2">
+                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional — mis. SAHABAT10" autocapitalize="characters" maxlength="24" />
+                        <button type="button" id="regApplyReferralBtn" class="reg-upload-btn shrink-0" style="width:auto;padding-left:1rem;padding-right:1rem">Terapkan</button>
+                    </div>
+                    <p id="regReferralInfo" class="hidden text-xs font-semibold text-emerald-700 mt-1.5"></p>
+                    <p id="regReferralError" class="hidden text-xs font-semibold text-red-700 mt-1.5"></p>
+                    <p id="regReferralHint" class="text-xs text-gray-400 mt-1.5">Masukkan kode sebelum menampilkan QRIS.</p>
                 </div>
                 <fieldset class="reg-field">
                     <legend class="reg-label">Metode Pembayaran <span class="text-red-700" aria-hidden="true">*</span></legend>
                     <div class="space-y-2">
-                        <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="metodePembayaran" value="qris" checked /> QRIS Statis</label>
+                        <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="metodePembayaran" value="qris" checked /> QRIS</label>
                         <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="metodePembayaran" value="transfer" /> Transfer</label>
                     </div>
                 </fieldset>
                 <div id="paymentQris">
+                    <div id="qrisTrigger" class="space-y-2">
+                        <p class="text-sm text-gray-600">Total biaya sudah benar? Tampilkan QRIS &amp; lanjutkan pembayaran.</p>
+                        <button type="button" id="regShowQrisBtn" class="reg-submit">Tampilkan QRIS</button>
+                    </div>
+                    <div id="qrisActive" class="hidden">
                     <img id="qrisImage" alt="QRIS Pembayaran" style="max-width:220px;width:100%;border-radius:0.5rem;border:1px solid #e5e7eb;display:none;" />
                     <p id="qrisFallback" class="text-sm text-gray-500">QR belum ditambahkan oleh admin.</p>
                     <button type="button" id="regDownloadQris" class="hidden mt-2 inline-flex items-center gap-2 text-sm font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 transition-colors">Simpan QRIS</button>
@@ -295,14 +318,11 @@
                             <span id="regQrisCopyUrlLabel" class="shrink-0 text-amber-700">Salin</span>
                         </button>
                     </div>
+                    </div>
                 </div>
                 <div id="paymentTransfer" class="hidden">
                     <div id="rekeningList" class="space-y-2"></div>
                     <p id="rekeningFallback" class="text-sm text-gray-500 hidden">Rekening belum diatur admin.</p>
-                </div>
-                <div class="reg-field">
-                    <label class="reg-label" for="regKodeReferral">Kode Referral</label>
-                    <input id="regKodeReferral" class="reg-input" type="text" placeholder="Opsional" />
                 </div>
                 <fieldset class="reg-field">
                     <legend class="reg-label">Bukti Pembayaran <span class="text-red-700" aria-hidden="true">*</span></legend>
@@ -321,6 +341,7 @@
                         <textarea id="regCatatan" class="reg-textarea" rows="2" placeholder="Mis. sudah transfer via BCA a.n. Fulan, tanggal 12 Jan 2026"></textarea>
                     </div>
                 </fieldset>
+                </div>
             </div>
 
             <div class="reg-card">
@@ -377,6 +398,67 @@
         tokenEl.value = token;
         const copyTokenBtn = document.getElementById('regCopyToken');
 
+        let appliedReferral = null; // { code, type, value }
+        let staticQrisUrl = '';
+        let qrisRequested = false;
+
+        function parseDigits(v) {
+            return Math.round(Number(String(v || '').replace(/[^0-9]/g, '')) || 0);
+        }
+
+        function getBaseBiaya() {
+            return parseDigits(currentHargaPromo) || parseDigits(currentHarga);
+        }
+
+        function referralDiscount(base) {
+            if (!appliedReferral) return 0;
+            if (appliedReferral.type === 'percent') {
+                return Math.min(base, Math.round(base * appliedReferral.value / 100));
+            }
+            return Math.min(base, appliedReferral.value);
+        }
+
+        function getFinalBiaya() {
+            const base = getBaseBiaya();
+            return Math.max(0, base - referralDiscount(base));
+        }
+
+        function renderBiaya() {
+            const wrap = document.getElementById('paymentBiayaWrap');
+            const el = document.getElementById('paymentBiaya');
+            const note = document.getElementById('paymentBiayaNote');
+            if (!wrap || !el) return;
+            const base = getBaseBiaya();
+            const promoVal = parseDigits(currentHargaPromo);
+            const hargaVal = parseDigits(currentHarga);
+            if (base <= 0) {
+                wrap.classList.add('hidden');
+                return;
+            }
+            const disc = referralDiscount(base);
+            const final = base - disc;
+            let html = '';
+            if (promoVal > 0 && hargaVal > 0 && promoVal !== hargaVal) {
+                html += '<span class="text-xs text-gray-500 line-through">' + escapeHtml(formatRupiah(hargaVal)) + '</span><br>';
+            }
+            if (disc > 0) {
+                html += '<span class="text-sm text-gray-500 line-through">' + escapeHtml(formatRupiah(base)) + '</span><br>';
+                html += '<span class="text-brand">' + escapeHtml(formatRupiah(final)) + '</span>';
+            } else {
+                html += '<span class="text-brand">' + escapeHtml(formatRupiah(base)) + '</span>';
+            }
+            el.innerHTML = html;
+            wrap.classList.remove('hidden');
+            if (note) {
+                if (disc > 0 && appliedReferral) {
+                    note.textContent = 'Potongan kode ' + appliedReferral.code + ': -' + formatRupiah(disc);
+                    note.classList.remove('hidden');
+                } else {
+                    note.classList.add('hidden');
+                }
+            }
+        }
+
         async function loadProgramInfo() {
             if (programDetail) programDetail.hidden = true;
             if (!programId) {
@@ -414,12 +496,7 @@
                 mediaHtml += '<div class="mb-2"><img src="' + programGambar + '" alt="' + programNama + '" style="width:96px;height:96px;object-fit:cover;border-radius:0.5rem;" /></div>';
             }
             programInfo.innerHTML = mediaHtml + '<p class="text-sm"><strong>Program:</strong> ' + escapeHtml(programNama) + '</p><p class="text-sm mt-1"><strong>Biaya:</strong><br>' + biayaHtml + '</p>';
-            const programBiayaWrap = document.getElementById('paymentBiayaWrap');
-            const programBiaya = document.getElementById('paymentBiaya');
-            if (programBiayaWrap && programBiaya) {
-                programBiaya.innerHTML = biayaHtml;
-                programBiayaWrap.classList.remove('hidden');
-            }
+            renderBiaya();
             programDetail.innerHTML = '<p class="text-sm"><strong>Nama:</strong> ' + escapeHtml(programNama) + '</p>';
             programDetail.hidden = false;
         }
@@ -449,6 +526,138 @@
         }
 
         document.getElementById('regTanggalLahir').addEventListener('change', toggleNik);
+
+        const REQUIRED_FIELDS = [
+            { id: 'regNama', label: 'Nama Peserta' },
+            { id: 'regTempat', label: 'Tempat Lahir' },
+            { id: 'regTanggalLahir', label: 'Tanggal Lahir' },
+            { id: 'regJk', label: 'Jenis Kelamin' },
+            { id: 'regAlamat', label: 'Alamat' },
+            { id: 'regWa', label: 'Nomor WhatsApp' }
+        ];
+
+        function getMissingFields() {
+            const missing = [];
+            REQUIRED_FIELDS.forEach(function(f) {
+                const el = document.getElementById(f.id);
+                if (!el || !String(el.value || '').trim()) missing.push(f.label);
+            });
+            if (document.querySelectorAll('#regAlasan .reg-checkbox:checked').length === 0) {
+                missing.push('Alasan Memilih\u00A0Program');
+            }
+            const nikWrap = document.getElementById('regNikWrap');
+            const nikEl = document.getElementById('regNik');
+            if (nikWrap && !nikWrap.classList.contains('hidden') && !String((nikEl && nikEl.value) || '').trim()) {
+                missing.push('NIK');
+            }
+            return missing;
+        }
+
+        function updatePaymentGate() {
+            const missing = getMissingFields();
+            const locked = document.getElementById('paymentLocked');
+            const body = document.getElementById('paymentBody');
+            const hint = document.getElementById('paymentLockedHint');
+            const ok = missing.length === 0;
+            if (locked) locked.classList.toggle('hidden', ok);
+            if (body) body.classList.toggle('hidden', !ok);
+            if (hint) hint.textContent = ok ? '' : 'Kurang: ' + missing.join(', ');
+            return ok;
+        }
+
+        form.addEventListener('input', updatePaymentGate);
+        form.addEventListener('change', updatePaymentGate);
+
+        const refInput = document.getElementById('regKodeReferral');
+        const refApplyBtn = document.getElementById('regApplyReferralBtn');
+        const refInfo = document.getElementById('regReferralInfo');
+        const refError = document.getElementById('regReferralError');
+        const refHint = document.getElementById('regReferralHint');
+
+        function setReferralState(state, msg) {
+            if (refInfo) refInfo.classList.add('hidden');
+            if (refError) refError.classList.add('hidden');
+            if (state === 'ok' && refInfo) { refInfo.textContent = msg; refInfo.classList.remove('hidden'); }
+            else if (state === 'error' && refError) { refError.textContent = msg; refError.classList.remove('hidden'); }
+        }
+
+        async function applyReferral() {
+            if (!refInput) return;
+            const code = String(refInput.value || '').trim().toUpperCase().replace(/\s+/g, '');
+            if (qrisRequested) { setReferralState('error', 'Kode harus diterapkan sebelum QRIS ditampilkan.'); return; }
+            if (!code) { setReferralState('error', 'Masukkan kode referral terlebih dahulu.'); return; }
+            if (refApplyBtn) refApplyBtn.disabled = true;
+            try {
+                const snap = await getDoc(doc(db, 'referrals', code));
+                if (!snap.exists() || snap.data().active === false) {
+                    setReferralState('error', 'Kode tidak valid atau sudah tidak aktif.');
+                    return;
+                }
+                const d = snap.data();
+                const refProgramId = d.programId || '';
+                if (refProgramId && refProgramId !== programId) {
+                    setReferralState('error', 'Kode ini hanya berlaku untuk program ' + (d.programNama || 'tertentu') + '.');
+                    return;
+                }
+                const type = d.type === 'flat' ? 'flat' : 'percent';
+                let value = Math.round(Number(d.value) || 0);
+                if (type === 'percent') value = Math.min(100, Math.max(0, value));
+                if (value <= 0) { setReferralState('error', 'Kode referral tidak valid.'); return; }
+                appliedReferral = { code: code, type: type, value: value, programId: refProgramId, programNama: d.programNama || '' };
+                renderBiaya();
+                const disc = referralDiscount(getBaseBiaya());
+                setReferralState('ok', type === 'percent'
+                    ? 'Kode ' + code + ' terpasang: potongan ' + value + '% (-' + formatRupiah(disc) + ')'
+                    : 'Kode ' + code + ' terpasang: potongan -' + formatRupiah(disc));
+            } catch (e) {
+                console.warn('Gagal cek referral:', e);
+                if (e && (e.code === 'permission-denied' || e.code === 'unavailable')) {
+                    setReferralState('error', 'Kode referral belum aktif di sistem. Hubungi admin.');
+                } else {
+                    setReferralState('error', 'Gagal memeriksa kode. Periksa koneksi lalu coba lagi.');
+                }
+            } finally {
+                if (refApplyBtn) refApplyBtn.disabled = false;
+            }
+        }
+
+        if (refApplyBtn) refApplyBtn.addEventListener('click', applyReferral);
+        if (refInput) {
+            refInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); applyReferral(); }
+            });
+            refInput.addEventListener('input', function() {
+                const v = String(this.value || '').trim().toUpperCase().replace(/\s+/g, '');
+                if (appliedReferral && v !== appliedReferral.code) {
+                    appliedReferral = null;
+                    renderBiaya();
+                    setReferralState('clear', '');
+                }
+            });
+        }
+
+        const showQrisBtn = document.getElementById('regShowQrisBtn');
+        if (showQrisBtn) showQrisBtn.addEventListener('click', async function() {
+            if (qrisRequested) return;
+            qrisRequested = true;
+            this.disabled = true;
+            const trigger = document.getElementById('qrisTrigger');
+            const active = document.getElementById('qrisActive');
+            if (trigger) trigger.classList.add('hidden');
+            if (active) active.classList.remove('hidden');
+            const img = document.getElementById('qrisImage');
+            const dl = document.getElementById('regDownloadQris');
+            if (staticQrisUrl) {
+                if (img) { img.src = staticQrisUrl; img.style.display = 'block'; }
+                const fb = document.getElementById('qrisFallback');
+                if (fb) fb.style.display = 'none';
+                if (dl) dl.classList.remove('hidden');
+            }
+            if (refInput) refInput.disabled = true;
+            if (refApplyBtn) refApplyBtn.disabled = true;
+            if (refHint) refHint.textContent = 'Kode referral terkunci setelah QRIS ditampilkan.';
+            await loadDynamicQris();
+        });
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -502,9 +711,12 @@
                     sumber: sumber,
                     status: 'Menunggu',
                     metodePembayaran: metode || '',
-                    nominalPembayaran: (String(currentHargaPromo || '').trim() !== '' ? currentHargaPromo : currentHarga) || '',
+                    nominalPembayaran: String(getFinalBiaya() || (parseDigits(currentHargaPromo) || parseDigits(currentHarga)) || ''),
+                    hargaSebelumDiskon: String(getBaseBiaya() || ''),
+                    potonganReferral: String(referralDiscount(getBaseBiaya()) || 0),
                     buktiUrl: buktiUrl || '',
                     kodeReferral: kodeReferral || '',
+                    kodeReferralProgramId: appliedReferral ? (appliedReferral.programId || '') : '',
                     catatan: catatan || '',
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
@@ -529,7 +741,7 @@
                 }
                 clearInterval(qrisPollTimer);
                 qrisPollTimer = null;
-                openWhatsApp('*KONFIRMASI PENDAFTARAN IMDKOM*\n\nToken: ' + token + '\nProgram: ' + (programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId) + '\nNama: ' + nama + '\n\n*SIMPAN TOKEN* ini baik-baik! Token digunakan untuk tracking status pendaftaran dan melihat jadwal kursus Anda.\n\nStatus: Menunggu verifikasi.');
+                openWhatsApp('*KONFIRMASI PENDAFTARAN IMDKOM*\n\nToken: ' + token + '\nProgram: ' + (programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId) + '\nNama: ' + nama + '\nPembayaran: ' + (getFinalBiaya() ? formatRupiah(getFinalBiaya()) : '-') + (appliedReferral ? '\nKode Referral: ' + appliedReferral.code + ' (potongan ' + formatRupiah(referralDiscount(getBaseBiaya())) + ')' : '') + '\n\n*SIMPAN TOKEN* ini baik-baik! Token digunakan untuk tracking status pendaftaran dan melihat jadwal kursus Anda.\n\nStatus: Menunggu verifikasi.');
                 successEl.classList.remove('hidden');
                 form.classList.add('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -565,11 +777,9 @@
             const qrisImage = document.getElementById('qrisImage');
             const qrisFallback = document.getElementById('qrisFallback');
             const dlBtn = document.getElementById('regDownloadQris');
-            if (payment && payment.qrisImage) {
-                qrisImage.src = payment.qrisImage;
-                qrisImage.style.display = 'block';
+            staticQrisUrl = (payment && payment.qrisImage) ? payment.qrisImage : '';
+            if (staticQrisUrl) {
                 qrisFallback.style.display = 'none';
-                dlBtn.classList.remove('hidden');
             } else {
                 qrisImage.style.display = 'none';
                 qrisFallback.style.display = 'block';
@@ -587,10 +797,6 @@
                     navigator.clipboard.writeText(b.dataset.nomor || '').then(function() { b.innerText = 'Tersalin'; setTimeout(function() { b.innerText = 'Copy'; }, 2000); });
                 });
             });
-        }
-
-        function parseAmount(value) {
-            return Math.round(Number(String(value || '').replace(/[^0-9]/g, '')));
         }
 
         let qrisPollTimer = null;
@@ -654,7 +860,7 @@
         }
 
         async function loadDynamicQris() {
-            const nominal = parseAmount(currentHargaPromo) || parseAmount(currentHarga);
+            const nominal = getFinalBiaya();
             if (!nominal) return;
             const programName = (programDetail && programDetail.textContent || 'Pendaftaran Kursus IMDKOM').replace('Nama:', '').trim().slice(0, 50);
             try {
@@ -846,8 +1052,8 @@
         if (typeof lucide !== 'undefined') lucide.createIcons();
         await loadProgramInfo();
         await loadPaymentInfo();
-        await loadDynamicQris();
         toggleNik();
+        updatePaymentGate();
     </script>
 </body>
 </html>

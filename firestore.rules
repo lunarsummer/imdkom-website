@@ -207,6 +207,16 @@ service cloud.firestore {
     }
 
     // ============================================================
+    // REFERRALS (Kode diskon pendaftaran — doc id = kode uppercase)
+    // Admin atur potongan; publik hanya bisa get 1 kode (tidak bisa list)
+    // ============================================================
+    match /referrals/{code} {
+      allow get: if true;
+      allow list: if false;
+      allow write: if isAdmin();
+    }
+
+    // ============================================================
     // REGISTRATIONS (Pendaftaran kursus online — tanpa login)
     // ============================================================
     match /registrations/{id} {

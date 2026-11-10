@@ -202,6 +202,21 @@
                 Tambah Rekening
             </button>
 
+            <h3 class="font-bold text-gray-800 mt-6 mb-2">Kode Referral</h3>
+            <p class="text-sm text-gray-500 mb-3">Atur potongan biaya pendaftaran dan berlaku untuk semua program atau program tertentu. Peserta memasukkan kode di halaman pendaftaran, total biaya otomatis menyesuaikan.</p>
+            <div id="referralRows" class="space-y-3"></div>
+            <button id="addReferralBtn" type="button" class="btn-primary mt-3">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Tambah Kode
+            </button>
+            <div class="mt-3 flex items-center gap-3">
+                <button id="saveReferralBtn" type="button" class="btn-primary">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    Simpan Kode Referral
+                </button>
+            </div>
+            <div id="referralMessage" class="text-sm mt-2"></div>
+
             <div class="mt-6 flex items-center gap-3">
                 <button id="savePaymentBtn" class="btn-primary">
                     <i data-lucide="save" class="w-4 h-4"></i>
@@ -213,7 +228,7 @@
     </main>
 
     <script type="module">
-        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc } from './assets/js/firebase.js';
+        import { auth, onAuthStateChanged, signOut, db, doc, getDoc, setDoc, collection, getDocs, deleteDoc } from './assets/js/firebase.js';
         import { openCloudinaryUpload, optimizeCloudinaryUrl } from './assets/js/cloudinary.js';
 
         const sidebar = document.getElementById('sidebar');
@@ -260,6 +275,7 @@
             if (!user) window.location.href = 'index.html';
             else {
                 loadPaymentSettings();
+                loadReferrals();
                 lucide.createIcons();
             }
         });
@@ -390,6 +406,153 @@
             } catch (error) {
                 console.error('Error saving payment settings:', error);
                 paymentMessage.innerHTML = '<p class="text-red-600">Gagal menyimpan: ' + error.message + '</p>';
+            }
+        });
+
+        const referralRows = document.getElementById('referralRows');
+        const referralMessage = document.getElementById('referralMessage');
+        let referralCounter = 0;
+        let referralPrograms = [];
+
+        async function loadReferralPrograms() {
+            referralPrograms = [];
+            try {
+                const snap = await getDocs(collection(db, 'programs'));
+                snap.forEach(function(d) {
+                    referralPrograms.push({ id: d.id, nama: (d.data().nama || 'Program') });
+                });
+                referralPrograms.sort(function(a, b) { return String(a.nama).localeCompare(String(b.nama)); });
+            } catch (error) {
+                console.error('Error loading programs for referrals:', error);
+                referralPrograms = [];
+            }
+        }
+
+        function programOptionsHtml(selectedId) {
+            let html = '<option value=""' + (!selectedId ? ' selected' : '') + '>Semua Program</option>';
+            referralPrograms.forEach(function(p) {
+                html += '<option value="' + escapeAttr(p.id) + '"' + (p.id === selectedId ? ' selected' : '') + '>' + escapeAttr(p.nama) + '</option>';
+            });
+            return html;
+        }
+
+        window.loadReferrals = async function() {
+            referralMessage.innerHTML = '';
+            referralRows.innerHTML = '';
+            await loadReferralPrograms();
+            try {
+                const snap = await getDocs(collection(db, 'referrals'));
+                const list = [];
+                snap.forEach(function(d) { list.push({ code: d.id, ...d.data() }); });
+                list.sort(function(a, b) { return String(a.code).localeCompare(String(b.code)); });
+                list.forEach(function(item) { referralRows.appendChild(createReferralRow(item)); });
+            } catch (error) {
+                console.error('Error loading referrals:', error);
+                referralMessage.innerHTML = '<p class="text-red-600">Gagal memuat kode referral: ' + error.message + '</p>';
+            }
+            if (referralRows.children.length === 0) {
+                referralRows.appendChild(createReferralRow({}));
+            }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        function createReferralRow(ref) {
+            const id = 'referral-' + (++referralCounter);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'border border-gray-200 rounded-xl p-3 grid grid-cols-1 sm:grid-cols-6 gap-3 items-end';
+            wrapper.dataset.row = id;
+            wrapper.dataset.original = ref.code || '';
+            wrapper.innerHTML = `
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Kode</label>
+                    <input class="ref-code w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono uppercase" type="text" placeholder="Mis. SAHABAT10" maxlength="24" autocapitalize="characters" value="${escapeAttr(ref.code || '')}" />
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Tipe Potongan</label>
+                    <select class="ref-type w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <option value="percent"${ref.type === 'percent' ? ' selected' : ''}>Persen (%)</option>
+                        <option value="flat"${ref.type === 'flat' ? ' selected' : ''}>Nominal (Rp)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Nilai</label>
+                    <input class="ref-value w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" type="number" min="0" step="1" placeholder="10" value="${ref.value !== undefined && ref.value !== null ? String(ref.value) : ''}" />
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Berlaku Untuk</label>
+                    <select class="ref-program w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        ${programOptionsHtml(ref.programId || '')}
+                    </select>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                    <label class="flex items-center gap-2 text-sm text-gray-700">
+                        <input class="ref-active" type="checkbox" ${ref.active !== false ? 'checked' : ''} />
+                        Aktif
+                    </label>
+                    <button type="button" class="remove-referral text-red-600 hover:text-red-800 text-sm">Hapus</button>
+                </div>
+            `;
+            wrapper.querySelector('.ref-code').addEventListener('input', function() {
+                this.value = this.value.toUpperCase().replace(/\s+/g, '');
+            });
+            wrapper.querySelector('.remove-referral').addEventListener('click', async function() {
+                const code = wrapper.dataset.original || '';
+                if (code) {
+                    if (!confirm('Hapus kode referral "' + code + '"?')) return;
+                    try {
+                        await deleteDoc(doc(db, 'referrals', code));
+                    } catch (error) {
+                        console.error('Error deleting referral:', error);
+                        referralMessage.innerHTML = '<p class="text-red-600">Gagal menghapus kode: ' + error.message + '</p>';
+                        return;
+                    }
+                }
+                wrapper.remove();
+                referralMessage.innerHTML = '<p class="text-green-600 font-medium">Kode referral dihapus.</p>';
+            });
+            return wrapper;
+        }
+
+        document.getElementById('addReferralBtn').addEventListener('click', function() {
+            referralRows.appendChild(createReferralRow({}));
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+        document.getElementById('saveReferralBtn').addEventListener('click', async function() {
+            referralMessage.innerHTML = '';
+            try {
+                const rows = Array.from(referralRows.querySelectorAll('[data-row]'));
+                let saved = 0;
+                for (const row of rows) {
+                    const codeEl = row.querySelector('.ref-code');
+                    const code = String(codeEl.value || '').trim().toUpperCase().replace(/\s+/g, '');
+                    if (!code) continue;
+                    const type = row.querySelector('.ref-type').value === 'flat' ? 'flat' : 'percent';
+                    const value = Math.max(0, Math.round(Number(row.querySelector('.ref-value').value) || 0));
+                    const active = row.querySelector('.ref-active').checked;
+                    const programSel = row.querySelector('.ref-program');
+                    const programIdSel = programSel ? (programSel.value || '') : '';
+                    const programNamaSel = programIdSel && programSel.options.length
+                        ? (programSel.options[programSel.selectedIndex].text || '')
+                        : '';
+                    if (value <= 0) {
+                        referralMessage.innerHTML = '<p class="text-red-600">Nilai potongan untuk kode "' + code + '" harus lebih dari 0.</p>';
+                        return;
+                    }
+                    const original = row.dataset.original || '';
+                    await setDoc(doc(db, 'referrals', code), { code: code, type: type, value: value, active: active, programId: programIdSel, programNama: programNamaSel, updatedAt: new Date().toISOString() }, { merge: true });
+                    if (original && original !== code) {
+                        try { await deleteDoc(doc(db, 'referrals', original)); } catch (e) { console.error('Gagal hapus kode lama:', e); }
+                    }
+                    row.dataset.original = code;
+                    saved++;
+                }
+                referralMessage.innerHTML = saved > 0
+                    ? '<p class="text-green-600 font-medium">' + saved + ' kode referral tersimpan.</p>'
+                    : '<p class="text-gray-600">Tidak ada kode yang disimpan. Isi minimal satu kode.</p>';
+            } catch (error) {
+                console.error('Error saving referrals:', error);
+                referralMessage.innerHTML = '<p class="text-red-600">Gagal menyimpan kode referral: ' + error.message + '</p>';
             }
         });
     </script>
