@@ -92,6 +92,8 @@ exports.handler = async function (event) {
         grossAmount: data.gross_amount || String(amount),
         qrString: data.qr_string || '',
         qrDataUrl,
+        qrImageUrl: qrAction && qrAction.url ? qrAction.url : '',
+        env,
         expireTime: data.expire_time || '',
         acquirer: data.acquirer || ''
     });
