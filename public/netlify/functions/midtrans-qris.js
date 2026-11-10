@@ -19,8 +19,15 @@ exports.handler = async function (event) {
     const env = (process.env.MIDTRANS_ENV || 'sandbox').toLowerCase();
     const API = env === 'production' ? 'https://api.midtrans.com' : 'https://api.sandbox.midtrans.com';
 
+    let rawBody = event.body || '{}';
+    if (event.isBase64Encoded && rawBody) {
+        try { rawBody = Buffer.from(rawBody, 'base64').toString('utf8'); } catch (e) { /* biarkan gagal di bawah */ }
+    }
+    if (rawBody && rawBody.charCodeAt(0) === 0xFEFF) rawBody = rawBody.slice(1);
+    const bodyText = rawBody.trim();
+
     let body = {};
-    try { body = JSON.parse(event.body || '{}'); } catch (e) {
+    try { body = JSON.parse(bodyText || '{}'); } catch (e) {
         return json(400, { error: 'Body JSON tidak valid' });
     }
 
