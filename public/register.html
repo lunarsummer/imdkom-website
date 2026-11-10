@@ -132,6 +132,8 @@
             transition: background 0.2s ease;
         }
         .reg-upload-btn:hover { background: #043f36; }
+        .qris-spinner { width: 2.75rem; height: 2.75rem; border-radius: 9999px; border: 3px solid #e5e7eb; border-top-color: #0059ff; animation: qrisSpin 0.8s linear infinite; }
+        @keyframes qrisSpin { to { transform: rotate(360deg); } }
         .reg-success {
             padding: 0.5rem 0 0.25rem;
         }
@@ -193,7 +195,7 @@
                 <svg id="regQrisToastIconErr" class="reg-toast-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5l5 5m0-5l-5 5"/></svg>
                 <div class="min-w-0 flex-1">
                     <p class="text-sm font-bold leading-snug" id="regQrisToastTitle">Pembayaran berhasil</p>
-                    <p class="text-xs leading-snug mt-1 text-emerald-50" id="regQrisToastDesc">Midtrans sudah memproses pembayaran Anda.</p>
+                    <p class="text-xs leading-snug mt-1 text-emerald-50" id="regQrisToastDesc">Pembayaran sudah berhasil.</p>
                 </div>
                 <button type="button" id="regQrisToastClose" class="reg-toast-close" aria-label="Tutup notifikasi">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-4 h-4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -324,7 +326,17 @@
                         <button type="button" id="regShowQrisBtn" class="reg-submit">Tampilkan QRIS</button>
                     </div>
                     <div id="qrisActive" class="hidden">
-                    <img id="qrisImage" alt="QRIS Pembayaran" style="max-width:220px;width:100%;border-radius:0.5rem;border:1px solid #e5e7eb;display:none;" />
+                        <div id="qrisLoading" class="hidden py-6 flex-col items-center gap-3 text-center">
+                            <div class="qris-spinner" aria-hidden="true"></div>
+                            <p class="text-sm font-semibold text-gray-700">Mempersiapkan kode QR pembayaran&hellip;</p>
+                            <p class="text-xs text-gray-500">Mohon tunggu sebentar.</p>
+                        </div>
+                        <div id="qrisError" class="hidden text-center py-4">
+                            <p class="text-sm font-semibold" style="color:#b91c1c">Gagal memuat kode QR pembayaran.</p>
+                            <p class="text-xs text-gray-500 mt-1">Periksa koneksi internet Anda, lalu coba lagi.</p>
+                            <button type="button" id="qrisRetryBtn" class="reg-upload-btn shrink-0 mt-3" style="width:auto;padding-left:1.5rem;padding-right:1.5rem">Coba Lagi</button>
+                        </div>
+                        <img id="qrisImage" alt="QRIS Pembayaran" style="max-width:220px;width:100%;border-radius:0.5rem;border:1px solid #e5e7eb;display:none;" />
                     <p id="qrisFallback" class="text-sm text-gray-500">QR belum ditambahkan oleh admin.</p>
                     <button type="button" id="regDownloadQris" class="hidden mt-2 inline-flex items-center gap-2 text-sm font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 transition-colors">Simpan QRIS</button>
                     <p id="regQrisDynamicNote" class="hidden text-xs font-semibold text-emerald-800 mt-2"></p>
@@ -913,6 +925,18 @@
             });
         }
 
+        function showQrisLoading(show) {
+            const loadingEl = document.getElementById('qrisLoading');
+            if (!loadingEl) return;
+            loadingEl.classList.toggle('hidden', !show);
+            loadingEl.classList.toggle('flex', !!show);
+        }
+
+        function showQrisError(show) {
+            const errEl = document.getElementById('qrisError');
+            if (errEl) errEl.classList.toggle('hidden', !show);
+        }
+
         const showQrisBtn = document.getElementById('regShowQrisBtn');
         if (showQrisBtn) showQrisBtn.addEventListener('click', async function() {
             if (qrisRequested) return;
@@ -929,11 +953,33 @@
                 const fb = document.getElementById('qrisFallback');
                 if (fb) fb.style.display = 'none';
                 if (dl) dl.classList.remove('hidden');
+            } else {
+                const fb = document.getElementById('qrisFallback');
+                if (fb) fb.style.display = 'none';
+                showQrisLoading(true);
             }
             if (refInput) refInput.disabled = true;
             if (refApplyBtn) refApplyBtn.disabled = true;
             if (refHint) refHint.textContent = 'Kode referral terkunci setelah QRIS ditampilkan.';
-            await loadDynamicQris();
+            const dynamicOk = await loadDynamicQris();
+            showQrisLoading(false);
+            if (!dynamicOk && !staticQrisUrl) {
+                showQrisError(true);
+            }
+        });
+
+        const qrisRetryBtn = document.getElementById('qrisRetryBtn');
+        if (qrisRetryBtn) qrisRetryBtn.addEventListener('click', async function() {
+            if (this.disabled) return;
+            this.disabled = true;
+            showQrisError(false);
+            showQrisLoading(true);
+            const dynamicOk = await loadDynamicQris();
+            showQrisLoading(false);
+            if (!dynamicOk && !staticQrisUrl) {
+                showQrisError(true);
+            }
+            this.disabled = false;
         });
 
         form.addEventListener('submit', async function(e) {
@@ -1072,7 +1118,7 @@
             const qrisImage = document.getElementById('qrisImage');
             const qrisFallback = document.getElementById('qrisFallback');
             const dlBtn = document.getElementById('regDownloadQris');
-            staticQrisUrl = (payment && payment.qrisImage) ? payment.qrisImage : '';
+            staticQrisUrl = (payment && payment.qrisEnabled !== false && payment.qrisImage) ? payment.qrisImage : '';
             if (staticQrisUrl) {
                 qrisFallback.style.display = 'none';
             } else {
@@ -1156,7 +1202,7 @@
 
         async function loadDynamicQris() {
             const nominal = getFinalBiaya();
-            if (!nominal) return;
+            if (!nominal) return false;
             const programName = (programDetail && programDetail.textContent || 'Pendaftaran Kursus IMDKOM').replace('Nama:', '').trim().slice(0, 50);
             try {
                 const res = await fetch('/.netlify/functions/midtrans-qris', {
@@ -1172,8 +1218,8 @@
                 });
                 const data = await res.json();
                 if (!res.ok || !data.qrDataUrl) {
-                    console.warn('QRIS dinamis tidak tersedia, memakai QRIS statis admin.', data);
-                    return;
+                    console.warn('QR dinamis tidak tersedia.', data);
+                    return false;
                 }
                 const img = document.getElementById('qrisImage');
                 if (img) {
@@ -1196,8 +1242,11 @@
                     }
                 }
                 qrisPollTimer = setInterval(pollQrisStatus, 6000);
+                showQrisError(false);
+                return true;
             } catch (err) {
-                console.warn('QRIS dinamis gagal, memakai QRIS statis admin.', err);
+                console.warn('QR dinamis gagal dimuat.', err);
+                return false;
             }
         }
 
@@ -1209,9 +1258,9 @@
                 const st = String(data.transactionStatus || '').toLowerCase();
                 const note = document.getElementById('regQrisDynamicNote');
                 if (st === 'settlement') {
-                    if (note) note.textContent = 'Pembayaran terkonfirmasi Midtrans.';
+                    if (note) note.textContent = 'Pembayaran sudah berhasil.';
                     styleQrisNote(note, 'ok');
-                    showQrisToast('success', 'Pembayaran berhasil', 'Midtrans sudah memproses pembayaran Anda. Silakan lanjut melengkapi & kirim formulir.');
+                    showQrisToast('success', 'Pembayaran berhasil', 'Pembayaran sudah berhasil. Silakan lanjut melengkapi & kirim formulir.');
                     clearInterval(qrisPollTimer); qrisPollTimer = null;
                 } else if (st === 'expire' || st === 'deny' || st === 'cancel') {
                     if (note) note.textContent = 'QRIS kedaluwarsa / tidak valid. Silakan refresh halaman untuk membuat QR baru.';
@@ -1362,4 +1411,5 @@
     </script>
 </body>
 </html>
+
 

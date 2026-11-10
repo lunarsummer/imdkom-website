@@ -182,7 +182,14 @@
 
         <div class="admin-card p-6">
             <h3 class="font-bold text-gray-800 mb-2">QRIS Statis</h3>
-            <p class="text-sm text-gray-500 mb-3">Upload gambar QRIS statis yang akan ditampilkan di halaman pendaftaran.</p>
+            <p class="text-sm text-gray-500 mb-3">Upload gambar QRIS statis yang akan ditampilkan di halaman pendaftaran. Nonaktifkan atau hapus jika ingin hanya memakai QR dinamis.</p>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-3">
+                <label class="flex items-center gap-2 text-sm text-gray-800 cursor-pointer select-none">
+                    <input id="paymentQrEnabled" type="checkbox" class="accent-[#0059ff] w-4 h-4" />
+                    <span class="font-semibold">QRIS Statis Aktif</span>
+                </label>
+                <button id="paymentQrDeleteBtn" type="button" class="text-sm text-red-700 hover:text-red-900 font-semibold">Hapus QR</button>
+            </div>
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <img id="paymentQrPreview" alt="QRIS" style="max-width:180px;width:100%;border-radius:0.5rem;border:1px solid #e5e7eb;display:none;" />
                 <div class="flex-1">
@@ -193,6 +200,7 @@
                     </button>
                 </div>
             </div>
+            <p class="text-xs text-gray-500 mt-2">Jika nonaktif atau dihapus, halaman pendaftaran hanya menampilkan QR dinamis.</p>
 
             <h3 class="font-bold text-gray-800 mt-6 mb-2">Rekening Transfer</h3>
             <p class="text-sm text-gray-500 mb-3">Tambah, ubah, atau nonaktifkan rekening yang tampil di halaman pendaftaran.</p>
@@ -287,6 +295,8 @@
 
         const paymentQrPreview = document.getElementById('paymentQrPreview');
         const paymentQrUrl = document.getElementById('paymentQrUrl');
+        const paymentQrEnabled = document.getElementById('paymentQrEnabled');
+        const paymentQrDeleteBtn = document.getElementById('paymentQrDeleteBtn');
         const rekeningRows = document.getElementById('rekeningRows');
         const paymentMessage = document.getElementById('paymentMessage');
         let rekeningCounter = 0;
@@ -294,12 +304,14 @@
         window.loadPaymentSettings = async function() {
             try {
                 const snap = await getDoc(doc(db, 'settings', 'paymentInfo'));
-                const data = snap.exists() ? snap.data() : { qrisImage: '', rekening: [] };
+                const data = snap.exists() ? snap.data() : { qrisImage: '', rekening: [], qrisEnabled: true };
                 renderQr(data.qrisImage || '');
+                paymentQrEnabled.checked = data.qrisEnabled !== false;
                 renderRekening(Array.isArray(data.rekening) ? data.rekening : []);
             } catch (error) {
                 console.error('Error loading payment settings:', error);
                 renderQr('');
+                paymentQrEnabled.checked = true;
                 renderRekening([]);
             }
         };
@@ -385,13 +397,64 @@
         document.getElementById('paymentQrUploadBtn').addEventListener('click', function() {
             openCloudinaryUpload({
                 folder: 'pembayaran',
-                onSuccess: function(url) {
+                onSuccess: async function(url) {
                     renderQr(url);
+                    paymentMessage.innerHTML = '';
+                    try {
+                        await setDoc(doc(db, 'settings', 'paymentInfo'), {
+                            qrisImage: url,
+                            qrisEnabled: true,
+                            updatedAt: new Date().toISOString()
+                        }, { merge: true });
+                        paymentQrEnabled.checked = true;
+                        paymentMessage.innerHTML = '<p class="text-green-600 font-medium">QRIS statis berhasil diperbarui dan diaktifkan.</p>';
+                    } catch (error) {
+                        console.error('Error saving QRIS statis:', error);
+                        paymentMessage.innerHTML = '<p class="text-red-600">QR ter-upload tapi gagal tersimpan: ' + error.message + '</p>';
+                    }
                 },
                 onError: function(err) {
                     paymentMessage.innerHTML = '<p class="text-red-600">Gagal upload QR: ' + err.message + '</p>';
                 }
             });
+        });
+
+        paymentQrEnabled.addEventListener('change', async function() {
+            paymentMessage.innerHTML = '';
+            try {
+                await setDoc(doc(db, 'settings', 'paymentInfo'), {
+                    qrisEnabled: paymentQrEnabled.checked,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+                paymentMessage.innerHTML = '<p class="text-green-600 font-medium">' + (paymentQrEnabled.checked
+                    ? 'QRIS statis diaktifkan.'
+                    : 'QRIS statis dinonaktifkan. Peserta hanya memakai QR dinamis.') + '</p>';
+            } catch (error) {
+                console.error('Error toggling QRIS statis:', error);
+                paymentMessage.innerHTML = '<p class="text-red-600">Gagal menyimpan pengaturan: ' + error.message + '</p>';
+            }
+        });
+
+        paymentQrDeleteBtn.addEventListener('click', async function() {
+            if (!paymentQrUrl.value) {
+                paymentMessage.innerHTML = '<p class="text-gray-600">Belum ada gambar QR yang bisa dihapus.</p>';
+                return;
+            }
+            if (!confirm('Hapus gambar QRIS statis? Peserta hanya akan menerima QR dinamis.')) return;
+            paymentMessage.innerHTML = '';
+            try {
+                await setDoc(doc(db, 'settings', 'paymentInfo'), {
+                    qrisImage: '',
+                    qrisEnabled: false,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+                renderQr('');
+                paymentQrEnabled.checked = false;
+                paymentMessage.innerHTML = '<p class="text-green-600 font-medium">QRIS statis dihapus. Peserta hanya memakai QR dinamis.</p>';
+            } catch (error) {
+                console.error('Error deleting QRIS statis:', error);
+                paymentMessage.innerHTML = '<p class="text-red-600">Gagal menghapus QR: ' + error.message + '</p>';
+            }
         });
 
         document.getElementById('savePaymentBtn').addEventListener('click', async function() {
@@ -400,6 +463,7 @@
                 await setDoc(doc(db, 'settings', 'paymentInfo'), {
                     qrisImage: paymentQrUrl.value || '',
                     rekening: readRekening(),
+                    qrisEnabled: paymentQrEnabled.checked,
                     updatedAt: new Date().toISOString()
                 });
                 paymentMessage.innerHTML = '<p class="text-green-600 font-medium">Metode pembayaran berhasil disimpan.</p>';
