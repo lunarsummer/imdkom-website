@@ -1,7 +1,24 @@
-# Netlify redirects
-# Semua request yang tidak ditemukan → 404.html
+# Netlify redirects — Opsi A (clean URL)
+# 1. 301 .html -> clean URL
+/index.html            /                    301
+/kursus.html           /kursus              301
+/service.html          /service             301
+/tentang.html          /tentang             301
+/kontak.html           /kontak              301
+/rakit-komputer.html   /rakit-komputer      301
+/karir.html            /karir               301
+/register.html         /register            301
+/tracking.html         /tracking            301
+/service-laptop.html   /service-laptop      301
+/service-pc.html       /service-pc          301
+/service-printer.html  /service-printer     301
+/service-panggil.html  /service-panggil     301
+/sparepart.html        /sparepart           301
+/program-detail.html   /program-detail      301
+/service-detail.html   /service-detail      301
 
-/*    /index.html   200
+# 2. Jalur admin
+/admin                 /admin/login.html    200
 
-# Redirect admin
-/admin    /admin/login.html   200
+# 3. Semua path yang tidak ada file-nya
+/*                     /404.html            404

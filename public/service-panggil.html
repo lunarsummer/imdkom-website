@@ -3,8 +3,64 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Service Panggil | IMDKOM Yogyakarta</title>
-    <meta name="description" content="Layanan service panggil ke lokasi Anda di IMDKOM Yogyakarta. Teknisi profesional datang langsung, bergaransi 2 bulan." />
+    <link rel="canonical" href="https://imdkomyogyakarta.netlify.app/service-panggil" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Service Panggil Jogja | Teknisi ke Rumah/Kantor — IMDKOM" />
+    <meta property="og:description" content="Service komputer panggilan ke rumah/kantor di Yogyakarta. GRATIS kunjungan radius 7 km." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://imdkomyogyakarta.netlify.app/service-panggil" />
+    <meta property="og:site_name" content="IMDKOM Yogyakarta" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+    <meta property="og:image:alt" content="IMDKOM Yogyakarta — Kursus Komputer & Service Laptop" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Service Panggil Jogja | Teknisi ke Rumah/Kantor — IMDKOM" />
+    <meta name="twitter:description" content="Service komputer panggilan ke rumah/kantor di Yogyakarta. GRATIS kunjungan radius 7 km." />
+    <meta name="twitter:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Beranda",
+      "item": "https://imdkomyogyakarta.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Computer Service",
+      "item": "https://imdkomyogyakarta.netlify.app/service"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Service Panggil",
+      "item": "https://imdkomyogyakarta.netlify.app/service-panggil"
+    }
+  ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Service Panggil",
+  "name": "Service Panggil",
+  "description": "Service komputer panggilan ke rumah/kantor di Yogyakarta.",
+  "provider": {
+    "@type": "LocalBusiness",
+    "@id": "https://imdkomyogyakarta.netlify.app/#business",
+    "telephone": "+62856-0191-3435"
+  },
+  "areaServed": "Yogyakarta"
+}
+    </script>
+    <title>Service Panggil Jogja | Teknisi ke Rumah/Kantor — IMDKOM</title>
+    <meta name="description" content="Service komputer panggilan ke rumah/kantor di Yogyakarta. GRATIS kunjungan radius 7 km." />
     
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     
@@ -20,7 +76,7 @@
     <link rel="stylesheet" href="assets/css/output.css">
     
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <script src="https://unpkg.com/lucide@1.70.0" defer></script>
     <script src="assets/js/navbar.js" defer></script>
     
     
@@ -41,340 +97,565 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
-        .page-bg {
-            background: 
-                radial-gradient(circle at 20% 10%, rgba(26, 60, 94, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 90%, rgba(194, 65, 12, 0.08) 0%, transparent 40%),
-                linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
-        }
-        
+        html { scroll-behavior: smooth; }
+        [data-lucide] { stroke-width: 2; }
+
+        /* Floating WhatsApp pulse */
         @keyframes pulse-wa {
             0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
             50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
         }
-        
-        .floating-wa {
-            animation: pulse-wa 2s infinite;
-        }
-        
-        html { scroll-behavior: smooth; }
-        [data-lucide] { stroke-width: 2; }
-
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+        .floating-wa { animation: pulse-wa 2s infinite; }
+        @media (max-width: 480px) {
+            .floating-wa {
+                width: 2.75rem !important;
+                height: 2.75rem !important;
+                bottom: 1.25rem !important;
+                right: 1.25rem !important;
+            }
         }
 
         /* ============================================================
-           SERVICE MENU CARD (untuk tombol CTA)
+           DISPLAY TOKENS (Anton + Poppins)
            ============================================================ */
-        .service-menu-card {
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            cursor: pointer;
+        .ant {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
         }
-
-        .service-menu-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(26, 60, 94, 0.12);
-            border-color: rgba(26, 60, 94, 0.2);
-        }
-
-        .service-menu-card .menu-icon {
-            transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
-        }
-
-        .service-menu-card:hover .menu-icon {
-            transform: scale(1.05);
-            background-color: #1a3c5e;
-            color: white;
-        }
-
-        .icon-brand .menu-icon { background: rgba(26, 60, 94, 0.1); color: #1a3c5e; }
-        .icon-brand:hover .menu-icon { background: #1a3c5e; color: white; }
+        .accent { color: #0059ff; }
 
         /* ============================================================
-           PRICELIST — Accordion per Kategori
+           BREADCRUMB
            ============================================================ */
-        .price-group {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 0.75rem;
-            border: 1px solid #e5e7eb;
-            overflow: hidden;
+        .detail-breadcrumb {
+            background: #ffffff;
+            border-bottom: 1px solid #efefef;
+            padding: 0.8rem 0;
         }
-
-        .price-group-header {
+        .breadcrumb-list {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.25rem;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+        .breadcrumb-list a { color: #4b5563; transition: color 0.2s ease; }
+        .breadcrumb-list a:hover { color: #0059ff; }
+        .breadcrumb-current { color: #0059ff; font-weight: 600; }
+
+        /* ============================================================
+           HEADER (dot-grid) — judul + menu aksi
+           ============================================================ */
+        .pricelist-head {
+            background-color: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            background-position: 50% 0;
+            border-bottom: 1px solid #efefef;
+            padding: 2.25rem 0 2rem;
+        }
+        .pricelist-title {
+            font-size: clamp(2rem, 6.5vw, 3.1rem);
+            line-height: 1.0;
+            color: #0d0d0d;
+            margin: 0 0 0.7rem;
+        }
+        .pricelist-sub { text-wrap: pretty; } .pricelist-sub {
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: #4b5563;
+            margin: 0;
+            max-width: 34rem;
+        }
+
+        /* ============================================================
+           MENU 8 KARTU (aksi + navigasi pricelist)
+           Mobile: swipe snap 2 per page | Desktop (>=1024px): grid 4 kolom
+           ============================================================ */
+        .menu-track {
+            display: flex;
+            gap: 0.65rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        .menu-track::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        .menu-page {
+            display: flex;
+            gap: 0.65rem;
+            flex-shrink: 0;
+            min-width: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+        @media (min-width: 1024px) {
+            .menu-track {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                overflow: visible;
+                scroll-snap-type: none;
+            }
+            .menu-page { display: contents; }
+        }
+        .menu-card {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 0.5rem;
+            padding: 0.85rem 0.8rem 2.35rem;
+            min-height: 7rem;
             cursor: pointer;
-            background: linear-gradient(135deg, rgba(26, 60, 94, 0.04) 0%, rgba(26, 60, 94, 0.08) 100%);
-            user-select: none;
+            text-align: left;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
         }
-
-        .price-group-header.active {
-            background: linear-gradient(135deg, rgba(26, 60, 94, 0.08) 0%, rgba(26, 60, 94, 0.12) 100%);
-            border-bottom: 1px solid #e5e7eb;
+        .menu-card:hover {
+            transform: translateY(-3px);
+            border-color: #0d0d0d;
+            box-shadow: 0 16px 34px rgba(13, 13, 13, 0.10);
         }
-
-        .price-group-title {
+        .menu-head { display: flex; align-items: center; gap: 0.65rem; }
+        .menu-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.375rem;
+            background: #eef3ff;
+            color: #0059ff;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: center;
+            flex: none;
+            transition: background 0.22s ease, color 0.22s ease;
+        }
+        .menu-card:hover .menu-icon { background: #0059ff; color: #ffffff; }
+        .menu-title {
+            margin: 0;
+            font-size: 0.8rem;
             font-weight: 700;
-            color: #1a3c5e;
-            font-size: 0.95rem;
+            color: #0d0d0d;
+            line-height: 1.3;
         }
+        .menu-sub {
+            font-size: 0.75rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        .menu-arrow {
+            position: absolute;
+            bottom: 0.7rem;
+            right: 0.7rem;
+            color: #6b7280;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .menu-card:hover .menu-arrow { color: #0059ff; transform: translate(2px, -2px); }
 
-        .price-group-count {
-            background: #1a3c5e;
-            color: white;
+        .menu-card-dark {
+            background: #0d0d0d;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 18px 18px;
+            border-color: #262626;
+        }
+        .menu-card-dark .menu-title { margin: 0; color: #ffffff; }
+        .menu-card-dark .menu-sub { color: #a8b0bd; }
+        .menu-card-dark .menu-icon { background: rgba(255, 255, 255, 0.12); color: #ffffff; }
+        .menu-card-dark:hover { border-color: #0059ff; box-shadow: 0 16px 40px rgba(0, 89, 255, 0.28); }
+        .menu-card-dark:hover .menu-icon { background: #0059ff; color: #ffffff; }
+        .menu-card-dark .menu-arrow { color: rgba(255, 255, 255, 0.5); }
+        .menu-card-dark:hover .menu-arrow { color: #6ea3ff; }
+
+        .menu-badge {
+            position: absolute;
+            top: 0.55rem;
+            right: 0.55rem;
+            background: #0059ff;
+            color: #ffffff;
             font-size: 0.7rem;
             font-weight: 700;
-            padding: 0.15rem 0.5rem;
-            border-radius: 999px;
-        }
-
-        .price-chevron {
-            transition: transform 0.3s;
-            color: #9ca3af;
-        }
-
-        .price-group-header.active .price-chevron {
-            transform: rotate(180deg);
-        }
-
-        .price-group-body {
-            display: none;
-        }
-
-        .price-group-body.active {
-            display: block;
-        }
-
-        .price-table {
-            width: 100%;
-            font-size: 0.875rem;
-            border-collapse: collapse;
-        }
-
-        .price-table thead {
-            background: #f8fafc;
-        }
-
-        .price-table th {
-            text-align: left;
-            padding: 0.75rem 1rem;
-            font-weight: 600;
-            color: #6b7280;
-            font-size: 0.75rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid #e5e7eb;
+            border-radius: 999px;
+            padding: 0.22rem 0.5rem;
         }
-
-        .price-table td {
-            padding: 0.875rem 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            vertical-align: middle;
+        .menu-card.is-current {
+            border-color: #0059ff;
+            box-shadow: 0 0 0 1.5px #0059ff inset;
+            cursor: default;
         }
+        .menu-card.is-current .menu-arrow { display: none; }
+        .menu-card.is-current .menu-badge { background: #0059ff; }
 
-        .price-table tbody tr:last-child td {
-            border-bottom: none;
+        /* bounce hint (mobile only) */
+        .bounce-hint-indicator {
+            position: absolute;
+            top: 50%;
+            right: 6px;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            background: #0d0d0d;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
         }
-
-        .price-table tbody tr:hover {
-            background: #f9fafb;
+        .bounce-hint-indicator.show { opacity: 0.92; animation: bounceHint 1.6s cubic-bezier(0.22, 1, 0.36, 1) 2; }
+        @keyframes bounceHint {
+            0%, 100% { transform: translateY(-50%) translateX(0); }
+            30% { transform: translateY(-50%) translateX(-14px); }
+            60% { transform: translateY(-50%) translateX(0); }
         }
-
-        @media (max-width: 640px) {
-            .price-table thead {
-                display: none;
-            }
-            .price-table, .price-table tbody, .price-table tr, .price-table td {
-                display: block;
-                width: 100%;
-            }
-            .price-table tr {
-                padding: 0.75rem;
-                border-bottom: 1px solid #f3f4f6;
-            }
-            .price-table tr:last-child {
-                border-bottom: none;
-            }
-            .price-table td {
-                padding: 0.25rem 0;
-                border: none;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .price-table td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: #6b7280;
-                font-size: 0.7rem;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
+        @media (min-width: 1024px) {
+            .bounce-hint-indicator { display: none; }
         }
 
         /* ============================================================
-           TIPE SERVICE — Radio Card Highlight
+           PRICELIST (tabel per kategori)
            ============================================================ */
-        .tipe-service-option {
-            display: block;
+        .pl-section { padding: 2rem 0 2.5rem; background: #ffffff; }
+        .pl-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            text-transform: uppercase;
+            color: #0d0d0d;
+            margin: 0;
+        }
+        .pl-sub { font-size: 0.82rem; color: #6b7280; margin-top: 0.4rem; text-wrap: pretty; }
+
+        .pl-group {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(13, 13, 13, 0.04);
+        }
+        .pl-head {
+            background: #0d0d0d;
+            color: #ffffff;
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .pl-head svg { color: #6ea3ff; flex: none; }
+        .pl-head h3 {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            margin: 0;
+            line-height: 1.1;
+        }
+        .pl-count {
+            margin-left: auto;
+            background: #0059ff;
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            border-radius: 999px;
+            padding: 0.22rem 0.55rem;
+            white-space: nowrap;
+        }
+        .pl-table-scroll { overflow-x: auto; }
+        .pl-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .pl-table th {
+            text-align: left;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #6b7280;
+            padding: 0.55rem 1rem;
+            border-bottom: 1px solid #efefef;
+            background: #fafafa;
+        }
+        .pl-table th.pl-center { text-align: center; }
+        .pl-table th.pl-right { text-align: right; }
+        .pl-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #f1f1f0;
+            color: #232830;
+            vertical-align: middle;
+        }
+        .pl-table tr:last-child td { border-bottom: none; }
+        .pl-table tbody tr:hover { background: #f8faff; }
+        .pl-name { font-weight: 600; color: #0d0d0d; }
+        .pl-desc { font-size: 0.75rem; color: #6b7280; margin-top: 0.15rem; }
+        .pl-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.3rem;
+        }
+        .pl-warranty {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #eef3ff;
+            color: #0059ff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+        }
+        .pl-price { text-align: right; white-space: nowrap; }
+        .pl-price-strike { display: block; font-size: 0.75rem; color: #6b7280; text-decoration: line-through; }
+        .pl-price-final { font-size: 0.88rem; font-weight: 700; color: #0059ff; }
+        .pl-price-normal { font-weight: 700; color: #0d0d0d; }
+        .promo-shine {
+            display: inline-block;
+            background: #0d0d0d;
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            vertical-align: middle;
+        }
+        @media (max-width: 639px) {
+            .pl-col-hide { display: none; }
+        }
+        .pl-loadmore-wrap {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #efefef;
+            text-align: center;
+            background: #ffffff;
+        }
+        .pl-loadmore {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #0d0d0d;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.65rem 1.35rem;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .pl-loadmore:hover { background: #0059ff; }
+
+        /* ============================================================
+           DOKUMENTASI MARQUEE
+           ============================================================ */
+        .docs-section {
+            border-top: 1px solid #efefef;
+            background: #ffffff;
+            padding: 2rem 0 2.5rem;
+        }
+        .dokumentasi-marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
             position: relative;
+            padding: 1rem 0;
+        }
+        .dokumentasi-marquee-track {
+            display: flex;
+            width: max-content;
+            animation: scrollKiri 40s linear infinite;
+            will-change: transform;
+        }
+        @keyframes scrollKiri {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .dokumentasi-marquee-item {
+            flex-shrink: 0;
+            width: 250px;
+            height: 250px;
+            margin-right: 1rem;
+            background: #f1f2f4;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .dokumentasi-marquee-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(100%);
+            transition: filter 0.4s ease;
+        }
+        .dokumentasi-marquee-item:hover img { filter: grayscale(0%); }
+        @media (prefers-reduced-motion: reduce) {
+            .dokumentasi-marquee-track { animation: none; overflow-x: auto; }
+        }
+        @media (max-width: 639px) {
+            .dokumentasi-marquee-item { width: 180px; height: 180px; margin-right: 0.75rem; }
+            .dokumentasi-marquee-track { animation-duration: 30s; }
         }
 
+        /* ============================================================
+           FOOTER (senada kursus) + PRICELIST DROPDOWN
+           ============================================================ */
+        .kursus-footer {
+            border-top: 1px solid #e8e8e8;
+            background: #ffffff;
+            padding: 2.5rem 0 1.5rem;
+        }
+        .kursus-footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 768px) { .kursus-footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; } }
+        .kursus-footer-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 1.35rem;
+            color: #0d0d0d;
+        }
+        .kursus-footer-heading {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #0d0d0d;
+            margin-bottom: 0.85rem;
+        }
+        .kursus-footer-text { font-size: 0.82rem; line-height: 1.7; color: #6b7280; text-wrap: pretty; }
+        .kursus-footer-link {
+            display: block; font-size: 0.82rem; color: #4b5563;
+            padding: 0.25rem 0; transition: color 0.2s ease;
+        }
+        .kursus-footer-link:hover { color: #0059ff; }
+        .kursus-footer-bottom {
+            margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid #efefef;
+            display: flex; flex-direction: column; gap: 0.5rem;
+            font-size: 0.75rem; color: #6b7280;
+        }
+        @media (min-width: 640px) {
+            .kursus-footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        .footer-pricelist { margin-top: 0.25rem; }
+        .footer-pricelist > summary {
+            list-style: none; display: inline-flex; align-items: center;
+            gap: 0.4rem; font-size: 0.82rem; color: #4b5563;
+            padding: 0.25rem 0; min-height: 44px; cursor: pointer; transition: color 0.2s ease;
+        }
+        .footer-pricelist > summary::-webkit-details-marker { display: none; }
+        .footer-pricelist > summary::marker { content: ""; }
+        .footer-pricelist > summary:hover { color: #0059ff; }
+        .footer-pricelist[open] > summary { color: #0059ff; font-weight: 600; }
+        .footer-pricelist .chev { transition: transform 0.2s ease; }
+        .footer-pricelist[open] .chev { transform: rotate(180deg); }
+        .footer-pricelist-menu {
+            margin-top: 0.35rem; padding: 0.35rem 0 0.35rem 0.75rem; border-left: 2px solid #efefef;
+        }
+        .footer-pricelist-link {
+            display: block; font-size: 0.8rem; color: #4b5563;
+            padding: 0.22rem 0; text-decoration: none; transition: color 0.2s ease;
+        }
+        .footer-pricelist-link:hover { color: #0059ff; }
+        .footer-pricelist-link.is-current { color: #0059ff; font-weight: 600; }
+
+        /* ============================================================
+           MODAL KONSULTASI & BOOKING
+           ============================================================ */
+        .modal-overlay {
+            background: rgba(13, 13, 13, 0.55);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+        .modal-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 0.75rem;
+            box-shadow: 0 24px 60px rgba(13, 13, 13, 0.28);
+            max-width: calc(100vw - 1.5rem);
+            overflow-x: hidden;
+        }
+        #consultationModal .modal-card,
+        #bookingModal .modal-card {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        #consultationModal input,
+        #consultationModal textarea,
+        #bookingModal input,
+        #bookingModal textarea {
+            background: #f7f7f8 !important;
+            border: 1px solid #e8e8e8 !important;
+            border-radius: 12px !important;
+        }
+        #consultationModal input:focus,
+        #consultationModal textarea:focus,
+        #bookingModal input:focus,
+        #bookingModal textarea:focus {
+            background: #ffffff !important;
+            border-color: #0059ff !important;
+            box-shadow: 0 0 0 3px rgba(0, 89, 255, 0.14) !important;
+            outline: none;
+        }
+
+        /* Tipe Service radio cards */
+        .tipe-service-option { display: block; position: relative; }
         .tipe-service-option input:checked + .tipe-service-card {
-            border-color: #1a3c5e !important;
-            background-color: rgba(26, 60, 94, 0.08) !important;
-            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
-            transform: translateY(-2px);
+            border-color: #0059ff !important;
+            background-color: rgba(0, 89, 255, 0.08) !important;
+            box-shadow: 0 4px 12px rgba(0, 89, 255, 0.15);
         }
-
-        .tipe-service-option input:checked + .tipe-service-card i {
-            color: #1a3c5e !important;
-        }
-
-        .tipe-service-option input:checked + .tipe-service-card p:first-of-type {
-            color: #1a3c5e;
-        }
-
+        .tipe-service-option input:checked + .tipe-service-card i { color: #0059ff !important; }
         .tipe-service-card {
             transition: all 0.25s ease;
             border: 2px solid transparent;
             cursor: pointer;
         }
-
         .tipe-service-card:hover {
-            border-color: rgba(26, 60, 94, 0.3);
-            background-color: rgba(26, 60, 94, 0.04);
+            border-color: rgba(0, 89, 255, 0.35);
+            background-color: rgba(0, 89, 255, 0.05);
         }
 
-        /* ============================================================
-           PROMO BADGE — Shine Effect
-           ============================================================ */
-        .promo-shine {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            overflow: hidden;
-            background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
-            color: white;
-            font-weight: 700;
-            font-size: 0.625rem;
-            padding: 0.15rem 0.5rem;
-            border-radius: 999px;
-            letter-spacing: 0.02em;
-            box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
-        }
-
-        .promo-shine::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.8) 50%,
-                transparent 70%
-            );
-            animation: promo-shine-sweep 2.5s infinite;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        @keyframes promo-shine-sweep {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
-
-        .promo-shine > * {
-            position: relative;
-            z-index: 2;
-        }
-
-        .promo-shine i {
-            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
-        }
-
-        @keyframes promo-pulse {
-            0%, 100% {
-                box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3);
-            }
-            50% {
-                box-shadow: 0 2px 12px rgba(194, 65, 12, 0.5),
-                            0 0 16px rgba(234, 88, 12, 0.3);
-            }
-        }
-
-        .promo-shine {
-            animation: promo-pulse 2.5s ease-in-out infinite;
-        }
-
-        /* ============================================================
-           FIX: PREVENT HORIZONTAL SCROLL ON MOBILE (iOS)
-           ============================================================ */
+        /* FIX: prevent horizontal scroll on mobile (iOS) */
         html, body {
             overflow-x: hidden;
             max-width: 100vw;
             width: 100%;
         }
-
-        /* Modal tidak boleh bisa di-scroll horizontal */
         #bookingModal,
-        #consultationModal,
-        #imageModal {
-            overflow-x: hidden;
-        }
-
-        /* Wrapper modal */
+        #consultationModal { overflow-x: hidden; }
         #bookingModal > div,
         #consultationModal > div {
             max-width: 100vw;
             overflow-x: hidden;
         }
 
-        /* Konten modal */
-        #bookingModal .glass,
-        #consultationModal .glass {
-            max-width: calc(100vw - 1.5rem);
-            overflow-x: hidden;
-        }
-
-        /* ============================================================
-           FIX iOS: input date & time tidak overflow di iPhone
-           ============================================================ */
+        /* FIX iOS: input date & time */
         input[type="date"],
         input[type="time"],
         .date-time-input {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            
             width: 100%;
             max-width: 100%;
             min-width: 0;
             box-sizing: border-box;
-            
             font-size: 16px;
-            
             text-align: left;
-            color: #1a3c5e;
+            color: #0d0d0d;
             font-family: 'Poppins', system-ui, sans-serif;
         }
-
-        /* Khusus iOS Safari */
         @supports (-webkit-touch-callout: none) {
             input[type="date"],
             input[type="time"] {
@@ -383,13 +664,11 @@
                 max-width: 100% !important;
                 padding: 0.625rem 0.75rem;
             }
-            
             input[type="date"]::-webkit-date-and-time-value,
             input[type="time"]::-webkit-date-and-time-value {
                 text-align: left;
                 min-width: 0;
             }
-            
             input[type="date"]::-webkit-calendar-picker-indicator,
             input[type="time"]::-webkit-calendar-picker-indicator {
                 opacity: 1;
@@ -398,22 +677,16 @@
             }
         }
 
-        /* ============================================================
-           FIX GRID JADWAL — hanya targetkan grid tanggal & waktu
-           TIDAK bocor ke card tipe service
-           ============================================================ */
+        /* Grid jadwal min-width fix */
         #bookingForm .jadwal-grid > div {
             min-width: 0;
             overflow: hidden;
         }
-
         #bookingForm .jadwal-grid label {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        /* Fix semua input di dalam form booking */
         #bookingForm input,
         #bookingForm textarea,
         #consultationForm input,
@@ -421,462 +694,129 @@
             max-width: 100%;
             box-sizing: border-box;
         }
-
-        /* Fix flex di dalam form */
         #bookingForm .flex,
         #consultationForm .flex {
             min-width: 0;
         }
 
-        /* ============================================================
-   LOAD MORE BUTTON — Pricelist
-   ============================================================ */
-.load-more-btn {
-    transition: all 0.25s ease;
-}
-
-.load-more-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
-}
-
-.load-more-btn:active {
-    transform: translateY(0);
-}
-
-.load-more-btn i {
-    transition: transform 0.25s ease;
-}
-
-.load-more-btn:hover i {
-    transform: rotate(90deg);
-}
-
-/* Beri ruang untuk navbar fixed */
-body {
-    padding-top: 60px !important;
-}
-
-@media (min-width: 640px) {
-    body {
-        padding-top: 64px !important;
-    }
-}
-
-/* ============================================================
-   SERVICE CARDS — Swipe tersembunyi (clean, tanpa indikator)
-   ============================================================ */
-
-/* Wrapper — batasi lebar seperti sekarang */
-.service-cards-wrapper {
-    width: 100%;
-    max-width: 28rem;   /* sama dengan max-w-md */
-}
-
-/* Track — flex + scroll, tanpa scrollbar terlihat */
-.service-cards-track {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    
-    /* Sembunyikan scrollbar — semua browser */
-    scrollbar-width: none;          /* Firefox */
-    -ms-overflow-style: none;       /* IE/Edge */
-}
-
-.service-cards-track::-webkit-scrollbar {
-    display: none;                  /* Chrome, Safari, Opera */
-    width: 0;
-    height: 0;
-}
-
-/* Setiap card — 50% lebar wrapper, biar 2 card pas */
-.service-cards-track > * {
-    flex-shrink: 0;
-    scroll-snap-align: start;
-    width: calc(50% - 0.5rem);      /* 50% dikurangi setengah gap */
-    min-width: calc(50% - 0.5rem);
-}
-
-/* Tablet & desktop — kembali ke grid 2 kolom */
-@media (min-width: 640px) {
-    .service-cards-wrapper {
-        max-width: 28rem;           /* tetap max-w-md */
-    }
-    
-    .service-cards-track {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        overflow: visible;
-        gap: 1rem;
-    }
-    
-    .service-cards-track > * {
-        width: auto;
-        min-width: 0;
-    }
-}
-
-/* ============================================================
-   SERVICE CARDS — Paged swipe (2 card per halaman)
-   ============================================================ */
-
-.service-cards-wrapper {
-    width: 100%;
-    max-width: 28rem;   /* sama max-w-md */
-    overflow: hidden;    /* sembunyikan card di luar */
-}
-
-/* Track — scroll dengan snap per GROUP (page) */
-.service-cards-track {
-    display: flex;
-    gap: 0;                    /* gap antar page = 0, karena page sudah w-full */
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    
-    /* Sembunyikan scrollbar */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.service-cards-track::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
-}
-
-/* Setiap page (group 2 card) — full width, snap ke sini */
-.service-cards-page {
-    width: 100%;
-    min-width: 100%;
-    flex-shrink: 0;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;   /* penting: berhenti di setiap page */
-}
-
-/* Desktop: kembali ke grid biasa (semua card tampil) */
-@media (min-width: 640px) {
-    .service-cards-wrapper {
-        max-width: 28rem;
-        overflow: visible;
-    }
-    
-    .service-cards-track {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        overflow: visible;
-    }
-    
-    .service-cards-page {
-        display: contents;   /* "bongkar" group, card jadi grid biasa */
-    }
-    
-    .service-cards-page > * {
-        width: auto;
-    }
-    
-    /* Grid 2 kolom untuk semua card */
-    .service-cards-track {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .service-cards-page {
-        display: contents;
-    }
-}
-/* Animasi subtle saat scroll */
-.service-cards-track {
-    scroll-behavior: smooth;
-}
-
-/* Card animasi masuk saat muncul */
-@keyframes card-enter {
-    from {
-        opacity: 0.6;
-        transform: scale(0.98);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.service-cards-page:target .service-menu-card {
-    animation: card-enter 0.3s ease-out;
-}
-
-/* ============================================================
-   BOUNCE HINT — Animasi bounce horizontal untuk hint swipe
-   ============================================================ */
-@keyframes bounceHint {
-    0% {
-        transform: translateX(0);
-    }
-    20% {
-        transform: translateX(-60px);
-    }
-    40% {
-        transform: translateX(0);
-    }
-    55% {
-        transform: translateX(-30px);
-    }
-    70% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(0);
-    }
-}
-
-/* Class untuk trigger animasi */
-.service-cards-track.bounce-hint {
-    animation: bounceHint 1.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ⭐ Fade-in hint kecil (opsional) */
-.bounce-hint-indicator {
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    background: rgba(26, 60, 94, 0.15);
-    backdrop-filter: blur(8px);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #1a3c5e;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    z-index: 10;
-}
-
-.bounce-hint-indicator.show {
-    opacity: 1;
-    animation: bounceHintIndicator 2s ease-in-out;
-}
-
-@keyframes bounceHintIndicator {
-    0%, 100% { opacity: 0.5; }
-    50%      { opacity: 1; }
-}
-
-/* Sembunyikan hint indicator di desktop (karena grid) */
-@media (min-width: 640px) {
-    .bounce-hint-indicator {
-        display: none;
-    }
-}
-
-/* ============================================================
-   DOKUMENTASI MARQUEE — Continuous Scroll
-   ============================================================ */
-.dokumentasi-marquee-wrapper {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    padding: 1rem 0;
-}
-
-.dokumentasi-marquee-track {
-    display: flex;
-    width: max-content;
-    animation: scrollKiriDok 40s linear infinite;
-    will-change: transform;
-}
-
-@keyframes scrollKiriDok {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-.dokumentasi-marquee-item {
-    flex-shrink: 0;
-    width: 250px;
-    height: 250px;
-    margin-right: 1rem;
-    background-color: #f3f4f6;
-    overflow: hidden;
-    border-radius: 0;
-}
-
-.dokumentasi-marquee-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    filter: grayscale(100%);
-    transition: filter 0.4s ease;
-}
-
-.dokumentasi-marquee-item:hover img {
-    filter: grayscale(0%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .dokumentasi-marquee-track {
-        animation: none;
-        overflow-x: auto;
-    }
-}
-
-@media (max-width: 639px) {
-    .dokumentasi-marquee-item {
-        width: 180px;
-        height: 180px;
-        margin-right: 0.75rem;
-    }
-    .dokumentasi-marquee-track {
-        animation-duration: 30s;
-    }
-}
+        /* Modal cards (backward compat dengan markup lama) */
+        .glass {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 0.75rem;
+            box-shadow: 0 24px 60px rgba(13, 13, 13, 0.28);
+        }
     </style>
 </head>
-<body class="font-sans page-bg">
+<body class="font-sans bg-white">
 
     <!-- ============================================================
     NAVIGATION
     ============================================================ -->
-    <div id="navbarMount" data-variant="fixed"></div>
+    <div id="navbarMount" data-variant="sticky"></div>
 
     <!-- ============================================================
     BREADCRUMB
     ============================================================ -->
-    <div class="bg-white/40 backdrop-blur-sm border-b border-white/40 py-3">
+    <nav class="detail-breadcrumb" aria-label="Breadcrumb">
         <div class="container mx-auto px-4">
-            <div class="flex items-center gap-2 text-xs text-gray-500">
-                <a href="index.html" class="hover:text-brand">Beranda</a>
-                <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                <a href="service.html" class="hover:text-brand">Service</a>
-                <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                <span class="text-brand font-medium">Service Panggil</span>
+            <div class="breadcrumb-list">
+                <a href="index.html">Beranda</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <a href="service.html">Service</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <span class="breadcrumb-current">Service Panggil</span>
             </div>
         </div>
-    </div>
+    </nav>
 
     <!-- ============================================================
-    JUDUL + CTA
+    JUDUL + CTA CARD (Tanpa Hero)
     ============================================================ -->
-    <section class="py-8 sm:py-10">
-        <div class="container mx-auto px-4 max-w-4xl">
-            <div class="text-center sm:text-left">
-                <span class="inline-block bg-brand-dark text-white text-[10px] font-black px-3 py-1 rounded-full mb-3">POPULER</span>
-                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-brand leading-tight">
-                    Service <span class="text-brand-dark">Panggil</span>
-                </h1>
-                <p class="text-sm sm:text-base text-gray-500 mt-2">
-                    Teknisi datang ke lokasi Anda — praktis, cepat, dan bergaransi.
-                </p>
+    <section class="pricelist-head" id="pricelistHeadSection">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <div>
+                <h1 class="pricelist-title ant">Service <span class="accent">Panggil</span></h1>
+                <p class="pricelist-sub">Teknisi datang ke lokasi Anda — praktis, cepat, dan bergaransi.</p>
             </div>
 
-            <!-- DUA CARD UTAMA + CARD TERSEMBUNYI DI KANAN -->
-<div class="service-cards-wrapper mt-6 max-w-md mx-auto sm:mx-0 relative">
-    <!-- Hint indicator (chevron kanan) -->
-    <div class="bounce-hint-indicator" id="bounceHintIndicator">
-        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-    </div>
-    
-    <div class="service-cards-track flex gap-4 overflow-x-auto pb-1" id="serviceCardsTrack">
-        
-        <!-- GROUP 1: Konsultasi + Booking (default) -->
-        <div class="service-cards-page flex gap-4 flex-shrink-0 w-full">
-            <button onclick="openConsultationModal('panggil', 'Service Panggil')" 
-        class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
-                <div class="flex items-start justify-between mb-5">
-                    <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                        <i data-lucide="message-circle" class="w-7 h-7"></i>
-                    </div>
-                    <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
+            <!-- MENU 8 KARTU: 2 aksi (Konsultasi/Booking) + 5 service + Rakit Komputer -->
+            <div class="service-cards-wrapper relative">
+                <div class="bounce-hint-indicator" id="bounceHintIndicator" aria-hidden="true">
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
                 </div>
-                <h3 class="font-bold text-brand text-base sm:text-lg">Konsultasi</h3>
-                <p class="text-xs sm:text-sm text-gray-500 mt-1">Tanya masalah perangkat</p>
-            </button>
 
-            <button onclick="openBookingModal('panggil', 'Service Panggil')" 
-        class="service-menu-card bg-brand-dark rounded-2xl p-5 sm:p-6 border border-white/40 text-left relative overflow-hidden flex-1 min-w-0">
-                <span class="absolute top-3 right-3 bg-white text-brand-dark text-[10px] font-black px-2 py-0.5 rounded-full">POPULER</span>
-                <div class="flex items-start justify-between mb-5">
-                    <div class="menu-icon w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white">
-                        <i data-lucide="calendar-check" class="w-7 h-7"></i>
+                <div class="menu-track" id="serviceCardsTrack" aria-label="Menu service">
+
+                    <!-- PAGE 1 -->
+                    <div class="menu-page">
+                        <button type="button" onclick="openConsultationModal('panggil', 'Service Panggil')" class="menu-card">
+                            <div class="menu-head"><div class="menu-icon"><i data-lucide="message-circle" class="w-6 h-6"></i></div><div><h2 class="menu-title">Konsultasi</h2><p class="menu-sub">Tanya masalah perangkat Anda</p></div></div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                        </button>
+
+                        <button type="button" onclick="openBookingModal('panggil', 'Service Panggil')" class="menu-card menu-card-dark" aria-label="Booking service">
+                            <span class="menu-badge">Populer</span>
+                            <div class="menu-head"><div class="menu-icon"><i data-lucide="calendar-check" class="w-6 h-6"></i></div><div><h2 class="menu-title">Booking</h2><p class="menu-sub">Jadwalkan service Anda</p></div></div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                        </button>
                     </div>
-                    <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/70"></i>
+
+                    <!-- PAGE 2 -->
+                    <div class="menu-page">
+                        <a href="service-laptop.html" class="menu-card">
+                            <div class="menu-head"><div class="menu-icon"><i data-lucide="laptop" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Laptop</h2><p class="menu-sub">Semua merek laptop</p></div></div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                        </a>
+
+                        <a href="service-pc.html" class="menu-card">
+                            <div class="menu-head"><div class="menu-icon"><i data-lucide="monitor" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service PC</h2><p class="menu-sub">Desktop &amp; komputer rakitan</p></div></div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                        </a>
+                    </div>
+
+                    <!-- PAGE 3 -->
+                    <div class="menu-page">
+                        <a href="service-printer.html" class="menu-card">
+                            <div class="menu-head"><div class="menu-icon"><i data-lucide="printer" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Printer</h2><p class="menu-sub">Semua merek printer</p></div></div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                        </a>
+
+                        <a href="service-panggil.html" class="menu-card is-current" aria-current="page">
+                            <span class="menu-badge">Di Sini</span>
+                            <div class="menu-head"><div class="menu-icon"><i data-lucide="home" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Panggil</h2><p class="menu-sub">Teknisi ke lokasi</p></div></div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                        </a>
+                    </div>
+
+                    <!-- PAGE 4 -->
+                    <div class="menu-page">
+                        <a href="sparepart.html" class="menu-card">
+                            <div class="menu-head"><div class="menu-icon"><i data-lucide="cpu" class="w-6 h-6"></i></div><div><h2 class="menu-title">Sparepart</h2><p class="menu-sub">Suku cadang berkualitas</p></div></div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                        </a>
+
+                        <a href="rakit-komputer.html" class="menu-card">
+                            <div class="menu-head"><div class="menu-icon"><i data-lucide="wrench" class="w-6 h-6"></i></div><div><h2 class="menu-title">Rakit Komputer</h2><p class="menu-sub">Build PC custom</p></div></div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                        </a>
+                    </div>
+
                 </div>
-                <h3 class="font-bold text-white text-base sm:text-lg">Booking</h3>
-                <p class="text-xs sm:text-sm text-white/80 mt-1">Jadwalkan service</p>
-            </button>
-        </div>
-
-        <!-- PAGE 2 -->
-<div class="service-cards-page flex gap-4 flex-shrink-0 w-full">
-    <a href="service-laptop.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
-        <div class="flex items-start justify-between mb-5">
-            <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                <i data-lucide="laptop" class="w-7 h-7"></i>
             </div>
-            <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
-        </div>
-        <h3 class="font-bold text-brand text-base sm:text-lg">Service Laptop</h3>
-        <p class="text-xs sm:text-sm text-gray-500 mt-1">Semua merek laptop</p>
-    </a>
-
-    <a href="service-pc.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
-        <div class="flex items-start justify-between mb-5">
-            <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                <i data-lucide="monitor" class="w-7 h-7"></i>
-            </div>
-            <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
-        </div>
-        <h3 class="font-bold text-brand text-base sm:text-lg">Service PC</h3>
-        <p class="text-xs sm:text-sm text-gray-500 mt-1">Desktop & komputer rakitan</p>
-    </a>
-</div>
-
-<!-- PAGE 3 -->
-<div class="service-cards-page flex gap-4 flex-shrink-0 w-full">
-    <a href="service-printer.html" class="service-menu-card glass icon-brand rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
-        <div class="flex items-start justify-between mb-5">
-            <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                <i data-lucide="printer" class="w-7 h-7"></i>
-            </div>
-            <i data-lucide="arrow-up-right" class="w-5 h-5 text-brand/30"></i>
-        </div>
-        <h3 class="font-bold text-brand text-base sm:text-lg">Service Printer</h3>
-        <p class="text-xs sm:text-sm text-gray-500 mt-1">Semua merek printer</p>
-    </a>
-
-    <a href="sparepart.html" class="service-menu-card glass icon-success rounded-2xl p-5 sm:p-6 border border-white/40 text-left flex-1 min-w-0">
-        <div class="flex items-start justify-between mb-5">
-            <div class="menu-icon w-14 h-14 rounded-2xl flex items-center justify-center">
-                <i data-lucide="cpu" class="w-7 h-7"></i>
-            </div>
-            <i data-lucide="arrow-up-right" class="w-5 h-5 text-success/30"></i>
-        </div>
-        <h3 class="font-bold text-success text-base sm:text-lg">Sparepart</h3>
-        <p class="text-xs sm:text-sm text-gray-500 mt-1">Suku cadang berkualitas</p>
-    </a>
-</div>
         </div>
     </section>
 
     <!-- ============================================================
-    PRICELIST
+    PRICELIST — ACCORDION
     ============================================================ -->
-    <section class="py-8 sm:py-10" id="pricelistSection">
+    <section class="pl-section" id="pricelistSection">
         <div class="container mx-auto px-4 max-w-4xl">
             <div class="mb-6">
-                <h2 class="text-2xl sm:text-3xl font-bold text-brand">Pricelist</h2>
-                <p class="text-sm text-gray-500 mt-1">Daftar harga layanan kami</p>
+                <h2 class="pl-title">Pricelist</h2>
+                <p class="pl-sub">Daftar harga layanan Service Panggil — estimasi terbuka, garansi jelas.</p>
             </div>
+
             <div id="pricelistContainer">
                 <div class="text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
@@ -889,11 +829,11 @@ body {
     <!-- ============================================================
     DOKUMENTASI
     ============================================================ -->
-    <section class="py-8 sm:py-12 bg-white/40 backdrop-blur-sm" id="documentationSection">
+    <section class="docs-section" id="documentationSection">
     <div class="container mx-auto px-4 max-w-4xl mb-8">
         <div>
             <h2 class="text-2xl sm:text-3xl font-bold text-brand">Dokumentasi</h2>
-            <p class="text-sm text-gray-500 mt-1">Galeri foto kegiatan service kami</p>
+            <p class="text-sm sm:text-base text-gray-500 mt-2">Galeri foto kegiatan service kami</p>
         </div>
     </div>
 
@@ -910,16 +850,42 @@ body {
     <!-- ============================================================
     FOOTER
     ============================================================ -->
-    <footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
+    <footer class="kursus-footer" id="footerSection">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-center md:text-left">
-                    <span class="text-xl font-bold text-brand">IMDKOM</span>
-                    <p class="text-gray-500 text-xs mt-1">Kursus &amp; Pelatihan • Computer Service</p>
+            <div class="kursus-footer-grid">
+                <div>
+                    <p class="kursus-footer-title">IMDKOM</p>
+                    <p class="kursus-footer-text mt-2">Kursus &amp; pelatihan komputer, service, dan perakitan PC di Yogyakarta. Belajar langsung dari praktisi.</p>
                 </div>
-                <div class="text-center text-xs text-gray-500">
-                    <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+                <div>
+                    <p class="kursus-footer-heading">Jelajahi</p>
+                    <a class="kursus-footer-link" href="index.html">Beranda</a>
+                    <a class="kursus-footer-link" href="kursus.html">Kursus &amp; Pelatihan</a>
+                    <a class="kursus-footer-link" href="service.html">Service Komputer</a>
+                    <a class="kursus-footer-link" href="karir.html">Karir</a>
                 </div>
+                <div>
+                    <p class="kursus-footer-heading">Kontak</p>
+                    <p class="kursus-footer-text" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="kursus-footer-text">Jl. Kaliurang Km 7,3 No 38, Yogyakarta</p>
+                    <p class="kursus-footer-text" id="footerInstagram">Instagram: @imdkom_yk</p>
+                    <details class="footer-pricelist">
+                        <summary>Pricelist
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 chev"></i>
+                        </summary>
+                        <div class="footer-pricelist-menu">
+                            <a class="footer-pricelist-link" href="service-laptop.html">Service Laptop</a>
+                            <a class="footer-pricelist-link" href="service-pc.html">Service PC</a>
+                            <a class="footer-pricelist-link" href="service-printer.html">Service Printer</a>
+                            <a class="footer-pricelist-link is-current" href="service-panggil.html">Service Panggil</a>
+                            <a class="footer-pricelist-link" href="sparepart.html">Sparepart</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            <div class="kursus-footer-bottom">
+                <p id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                <p>Dibuat di Yogyakarta.</p>
             </div>
         </div>
     </footer>
@@ -927,8 +893,8 @@ body {
     <!-- ============================================================
     FLOATING WHATSAPP
     ============================================================ -->
-    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-50" aria-label="Hubungi via WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+    <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20bertanya." id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
     </a>
@@ -938,6 +904,7 @@ body {
     ============================================================ -->
     <div id="consultationModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeConsultationModal()"></div>
+        
         <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
             <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
@@ -949,43 +916,62 @@ body {
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
+                
                 <form id="consultationForm" class="p-5 space-y-4">
                     <input type="hidden" id="consultationService" />
+                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
                         <div class="relative">
                             <i data-lucide="user" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="consultationNama" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="Contoh: Budi Santoso" />
+                            <input type="text" id="consultationNama" required
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
+                                   placeholder="Contoh: Budi Santoso" />
                         </div>
                     </div>
+                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
                         <div class="relative">
                             <i data-lucide="phone" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="tel" id="consultationWa" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="08xxxxxxxxxx" />
+                            <input type="tel" id="consultationWa" required
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
+                                   placeholder="08xxxxxxxxxx" />
                         </div>
                     </div>
+                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Device / Perangkat *</label>
                         <div class="relative">
-                            <i data-lucide="home" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="consultationDevice" required class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="Contoh: Laptop Asus di rumah" />
+                            <i data-lucide="laptop" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="consultationDevice" required
+                                   class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
+                                   placeholder="Contoh: Asus VivoBook A412" />
                         </div>
                     </div>
+                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
                         <div class="relative">
                             <i data-lucide="file-text" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
-                            <textarea id="consultationMasalah" required rows="3" class="w-full pl-10 pr-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base resize-none" placeholder="Ceritakan masalah perangkat Anda..."></textarea>
+                            <textarea id="consultationMasalah" required rows="3"
+                                      class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base resize-none"
+                                      placeholder="Ceritakan masalah perangkat Anda..."></textarea>
                         </div>
                     </div>
+                    
                     <div class="flex gap-3 pt-2">
-                        <button type="button" onclick="closeConsultationModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 text-sm font-medium">Batal</button>
-                        <button type="submit" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand hover:bg-brand-light text-white rounded-xl text-sm font-medium">
+                        <button type="button" onclick="closeConsultationModal()" 
+                                class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand hover:bg-brand-light text-white rounded-xl transition-colors text-sm font-medium">
                             <i data-lucide="send" class="w-4 h-4"></i>
                             Kirim Konsultasi
                         </button>
                     </div>
+                    
                     <div id="consultationMessage" class="text-center"></div>
                 </form>
             </div>
@@ -997,6 +983,7 @@ body {
     ============================================================ -->
     <div id="bookingModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay absolute inset-0" onclick="closeBookingModal()"></div>
+        
         <div class="absolute inset-0 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
             <div class="glass rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overflow-x-hidden relative">
                 <div class="flex items-center justify-between p-5 border-b border-white/40 sticky top-0 bg-white/80 backdrop-blur-md rounded-t-2xl z-10">
@@ -1017,7 +1004,7 @@ body {
                         <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Service *</label>
                         <div class="grid grid-cols-2 gap-3">
                             <label class="tipe-service-option cursor-pointer">
-                                <input type="radio" name="tipeService" value="Datang ke Toko" class="sr-only" />
+                                <input type="radio" name="tipeService" value="Datang ke Toko" class="sr-only" checked />
                                 <div class="tipe-service-card glass rounded-xl p-4 text-center border-2 border-transparent h-full">
                                     <i data-lucide="store" class="w-6 h-6 text-gray-400 mx-auto mb-2"></i>
                                     <p class="font-semibold text-sm text-gray-800">Datang ke Toko</p>
@@ -1025,7 +1012,7 @@ body {
                                 </div>
                             </label>
                             <label class="tipe-service-option cursor-pointer">
-                                <input type="radio" name="tipeService" value="Service Panggil" class="sr-only" checked />
+                                <input type="radio" name="tipeService" value="Service Panggil" class="sr-only" />
                                 <div class="tipe-service-card glass rounded-xl p-4 text-center border-2 border-transparent h-full">
                                     <i data-lucide="home" class="w-6 h-6 text-gray-400 mx-auto mb-2"></i>
                                     <p class="font-semibold text-sm text-gray-800">Service Panggil</p>
@@ -1037,29 +1024,40 @@ body {
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
-                        <input type="text" id="bookingNama" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="Contoh: Budi Santoso" />
+                        <input type="text" id="bookingNama" required
+                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
+                               placeholder="Contoh: Budi Santoso" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
-                        <input type="tel" id="bookingWa" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="08xxxxxxxxxx" />
+                        <input type="tel" id="bookingWa" required
+                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
+                               placeholder="08xxxxxxxxxx" />
                     </div>
 
-                    <!-- Alamat -->
-                    <div id="bookingAlamatField">
+                    <!-- Alamat (muncul jika Panggil) -->
+                    <div id="bookingAlamatField" class="hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lokasi *</label>
-                        <textarea id="bookingAlamat" rows="2" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base resize-none" placeholder="Alamat lengkap untuk teknisi datang..."></textarea>
+                        <textarea id="bookingAlamat" rows="2"
+                                  class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base resize-none"
+                                  placeholder="Alamat lengkap untuk teknisi datang..."></textarea>
                         <p class="text-xs text-gray-500 mt-1">Biaya transportasi akan diinfokan via WhatsApp</p>
 
+                        <!-- ⭐ CHECKBOX: Gunakan Lokasi Saat Ini -->
                         <div class="mt-3 p-3 bg-brand/5 border border-brand/15 rounded-xl">
                             <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" id="useCurrentLocation" class="w-4 h-4 mt-0.5 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <input type="checkbox" id="useCurrentLocation" 
+                                       class="w-4 h-4 mt-0.5 text-brand focus:ring-brand border-gray-300 rounded" />
                                 <div class="flex-1">
                                     <span class="text-sm font-medium text-gray-800">Gunakan lokasi saat ini</span>
-                                    <p class="text-xs text-gray-500 mt-0.5">Dapatkan link Google Maps otomatis dari lokasi Anda</p>
+                                    <p class="text-xs text-gray-500 mt-0.5">
+                                        Dapatkan link Google Maps otomatis dari lokasi Anda
+                                    </p>
                                 </div>
                             </label>
                             
+                            <!-- Info lokasi (muncul setelah dapat koordinat) -->
                             <div id="locationSuccess" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-center gap-2">
                                     <div class="w-6 h-6 bg-success rounded-full flex items-center justify-center flex-shrink-0">
@@ -1068,6 +1066,7 @@ body {
                                     <span class="text-sm font-semibold text-success">Lokasi berhasil didapatkan</span>
                                 </div>
                                 
+                                <!-- Estimasi Biaya -->
                                 <div id="distanceInfo" class="mt-3 p-3 rounded-lg" style="background: rgba(5, 150, 105, 0.08); border: 1px solid rgba(5, 150, 105, 0.2);">
                                     <div class="flex items-start gap-2">
                                         <i data-lucide="route" class="w-4 h-4 text-success flex-shrink-0 mt-0.5"></i>
@@ -1085,12 +1084,14 @@ body {
                                     </div>
                                 </div>
                                 
-                                <button type="button" id="removeLocation" class="mt-3 text-red-600 hover:text-red-800 text-xs font-medium inline-flex items-center gap-1">
+                                <button type="button" id="removeLocation" 
+                                        class="mt-3 text-red-600 hover:text-red-800 text-xs font-medium inline-flex items-center gap-1">
                                     <i data-lucide="x" class="w-3 h-3"></i>
                                     Hapus Lokasi
                                 </button>
                             </div>
                             
+                            <!-- Loading -->
                             <div id="locationLoading" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-center gap-2 text-xs text-gray-500">
                                     <div class="inline-block animate-spin rounded-full h-3 w-3 border-2 border-brand border-t-transparent"></div>
@@ -1098,6 +1099,7 @@ body {
                                 </div>
                             </div>
                             
+                            <!-- Error -->
                             <div id="locationError" class="hidden mt-3 pt-3 border-t border-brand/15">
                                 <div class="flex items-start gap-2 text-xs text-red-600">
                                     <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
@@ -1109,12 +1111,16 @@ body {
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Device / Perangkat *</label>
-                        <input type="text" id="bookingDevice" required class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base" placeholder="Contoh: Laptop Asus di rumah" />
+                        <input type="text" id="bookingDevice" required
+                               class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
+                               placeholder="Contoh: Asus VivoBook A412" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
-                        <textarea id="bookingMasalah" required rows="3" class="w-full px-4 py-2.5 bg-white/60 border border-white/50 rounded-xl focus:ring-2 focus:ring-brand outline-none text-base resize-none" placeholder="Ceritakan masalah perangkat Anda..."></textarea>
+                        <textarea id="bookingMasalah" required rows="3"
+                                  class="w-full px-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base resize-none"
+                                  placeholder="Ceritakan masalah perangkat Anda..."></textarea>
                     </div>
 
                     <!-- ⭐ JADWAL KUNJUNGAN — TANGGAL & WAKTU -->
@@ -1123,16 +1129,19 @@ body {
                         <div class="jadwal-grid grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div class="min-w-0">
                                 <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
-                                <input type="date" id="bookingTanggal" class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
+                                <input type="date" id="bookingTanggal"
+                                       class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
                             </div>
                             <div class="min-w-0">
                                 <label class="block text-xs text-gray-500 mb-1">Waktu</label>
-                                <input type="time" id="bookingWaktu" class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
+                                <input type="time" id="bookingWaktu"
+                                       class="date-time-input w-full px-3 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none" />
                             </div>
                         </div>
                         <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin dijadwalkan oleh teknisi</p>
                     </div>
 
+                    <!-- Info Garansi -->
                     <div class="bg-success/10 border border-success/30 rounded-xl p-3 flex items-start gap-3">
                         <i data-lucide="badge-check" class="w-5 h-5 text-success flex-shrink-0 mt-0.5"></i>
                         <div>
@@ -1142,8 +1151,12 @@ body {
                     </div>
 
                     <div class="flex gap-3 pt-2">
-                        <button type="button" onclick="closeBookingModal()" class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 text-sm font-medium">Batal</button>
-                        <button type="submit" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-dark hover:bg-[#a0350a] text-white rounded-xl text-sm font-medium">
+                        <button type="button" onclick="closeBookingModal()" 
+                                class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-dark hover:bg-[#a0350a] text-white rounded-xl transition-colors text-sm font-medium">
                             <i data-lucide="send" class="w-4 h-4"></i>
                             Kirim Booking
                         </button>
@@ -1160,7 +1173,6 @@ body {
     ============================================================ -->
     <script type="module">
         import { openWhatsAppGeneric, openWhatsApp } from './assets/js/whatsapp.js';
-        import { initDatabase } from './assets/js/init-db.js';
         import { db, doc, getDoc } from './assets/js/firebase.js';
         import './assets/js/service-detail.js';
         import './assets/js/consultation.js';
@@ -1514,10 +1526,8 @@ body {
             resetLocation();
             if (useCurrentLocationCheckbox) useCurrentLocationCheckbox.checked = false;
             
-            // Reset ke default "Service Panggil" (karena halaman ini fokus service panggil)
-            document.querySelector('input[name="tipeService"][value="Service Panggil"]').checked = true;
-            document.getElementById('bookingAlamatField').classList.remove('hidden');
-            document.getElementById('bookingAlamat').required = true;
+            document.getElementById('bookingAlamatField').classList.add('hidden');
+            document.querySelector('input[name="tipeService"][value="Datang ke Toko"]').checked = true;
         });
         
         // ============================================================
@@ -1525,13 +1535,11 @@ body {
         // ============================================================
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                const result = await initDatabase();
-                console.log('✅ Init result:', result);
                 await loadVisitRate();
             } catch (error) {
-                console.error('❌ Init error:', error);
+                console.warn('Gagal load tarif:', error.message);
             }
-            
+
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
@@ -1556,7 +1564,24 @@ body {
             badges.forEach(badge => badge.remove());
         });
 
-// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+        const track = document.getElementById('serviceCardsTrack');
+        if (!track) return;
+        
+        // Detect scroll end untuk hapus class setelah animasi
+        let scrollTimeout;
+        track.addEventListener('scroll', function() {
+            // Tambah class saat scrolling
+            track.classList.add('scrolling');
+            
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                track.classList.remove('scrolling');
+            }, 150);
+        }, { passive: true });
+    });
+        
+    // ============================================================
 // BOUNCE HINT — Animasi bounce horizontal saat pertama buka
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -1615,7 +1640,6 @@ function initBounceHint() {
         
     }, 300);  // delay 300ms sebelum mulai (biar user sempat lihat halaman)
 }
-
     </script>
 
 </body>

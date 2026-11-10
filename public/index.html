@@ -3,432 +3,749 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IMDKOM Yogyakarta - Kursus & Pelatihan • Service Komputer</title>
-    <meta name="description" content="IMDKOM Yogyakarta menyediakan kursus komputer, pelatihan, dan layanan computer service. Belajar keterampilan digital dan solusi perangkat komputer." />
-    
+    <link rel="canonical" href="https://imdkomyogyakarta.netlify.app/" />
+
     <!-- Open Graph -->
-    <meta property="og:title" content="IMDKOM Yogyakarta | Kursus & Pelatihan • Service Komputer" />
-    <meta property="og:description" content="Belajar keterampilan komputer dan dapatkan solusi untuk perangkat Anda." />
+    <meta property="og:title" content="IMDKOM Yogyakarta | Kursus Komputer & Service Laptop di Jogja" />
+    <meta property="og:description" content="Lembaga kursus komputer & service laptop/PC/printer di Yogyakarta sejak 1997. Izin Dinas Pendidikan 098/Kpts/2021. Konsultasi gratis via WhatsApp 0856-0191-3435." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://imdkomyogyakarta.netlify.app" />
-    <meta property="og:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.jpg" />
-    
-    <!-- Favicon -->
+    <meta property="og:url" content="https://imdkomyogyakarta.netlify.app/" />
+    <meta property="og:site_name" content="IMDKOM Yogyakarta" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+    <meta property="og:image:alt" content="IMDKOM Yogyakarta — Kursus Komputer & Service Laptop" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="IMDKOM Yogyakarta | Kursus Komputer & Service Laptop di Jogja" />
+    <meta name="twitter:description" content="Lembaga kursus komputer & service laptop/PC/printer di Yogyakarta sejak 1997. Izin Dinas Pendidikan 098/Kpts/2021. Konsultasi gratis via WhatsApp 0856-0191-3435." />
+    <meta name="twitter:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "IMDKOM Yogyakarta",
+  "image": "https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png",
+  "telephone": "+62856-0191-3435",
+  "url": "https://imdkomyogyakarta.netlify.app/",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Jl. Kaliurang Km 7,3 No 38",
+    "addressLocality": "Yogyakarta",
+    "addressRegion": "DI Yogyakarta",
+    "addressCountry": "ID"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -7.743922,
+    "longitude": 110.389871
+  },
+  "areaServed": [
+    "Yogyakarta",
+    "Sleman",
+    "Condongcatur",
+    "Depok"
+  ],
+  "sameAs": [
+    "https://www.instagram.com/imdkom_yk"
+  ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "IMDKOM Yogyakarta",
+  "url": "https://imdkomyogyakarta.netlify.app/",
+  "inLanguage": "id-ID"
+}
+    </script>
+    <title>IMDKOM Yogyakarta | Kursus Komputer & Service Laptop di Jogja</title>
+    <meta name="description" content="Lembaga kursus komputer & service laptop/PC/printer di Yogyakarta sejak 1997. Izin Dinas Pendidikan 098/Kpts/2021. Konsultasi gratis via WhatsApp 0856-0191-3435." />
+
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
-    
-    <!-- Google Fonts: Poppins + Anton -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- THEME CSS -->
+
     <link rel="stylesheet" href="assets/css/theme.css">
-    
-    <!-- Tailwind CSS Production -->
     <link rel="stylesheet" href="assets/css/output.css">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@1.70.0"></script>
+
+    <script src="https://unpkg.com/lucide@1.70.0" defer></script>
     <script src="assets/js/navbar.js" defer></script>
-    
 
     <style>
-        
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        [data-lucide] { stroke-width: 2; }
+        :focus-visible { outline: 2px solid #0059ff; outline-offset: 2px; border-radius: 2px; }
+        ::selection { background: rgba(0, 89, 255, 0.2); }
+
+        /* Skip link */
+        .skip-link {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            z-index: 100;
+            background: #0d0d0d;
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 0.65rem 1.1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transform: translateY(-200%);
+            transition: transform 0.2s ease;
+        }
+        .skip-link:focus,
+        .skip-link:focus-visible { transform: translateY(0); }
+
         /* Floating WhatsApp pulse */
         @keyframes pulse-wa {
             0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
             50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
         }
-        .floating-wa {
-            animation: pulse-wa 2s infinite;
+        .floating-wa { animation: pulse-wa 2s infinite; }
+        @media (max-width: 480px) {
+            .floating-wa {
+                width: 2.75rem !important;
+                height: 2.75rem !important;
+                bottom: 1.25rem !important;
+                right: 1.25rem !important;
+            }
         }
 
         /* ============================================================
-           REVEAL ON SCROLL
+           DISPLAY TOKENS
            ============================================================ */
-        html { scroll-behavior: smooth; }
+        .ant {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+        }
+        .accent { color: #0059ff; }
 
+        /* Reveal on scroll */
         .reveal-item {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, transform;
         }
-        .reveal-item.revealed {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+        .reveal-item.revealed { opacity: 1; transform: translateY(0); }
         .reveal-stagger > .reveal-item:nth-child(1) { transition-delay: 0s; }
-        .reveal-stagger > .reveal-item:nth-child(2) { transition-delay: 0.1s; }
-        .reveal-stagger > .reveal-item:nth-child(3) { transition-delay: 0.2s; }
-        .reveal-stagger > .reveal-item:nth-child(4) { transition-delay: 0.3s; }
-        .reveal-stagger > .reveal-item:nth-child(5) { transition-delay: 0.4s; }
-        .reveal-stagger > .reveal-item:nth-child(6) { transition-delay: 0.5s; }
-
+        .reveal-stagger > .reveal-item:nth-child(2) { transition-delay: 0.08s; }
+        .reveal-stagger > .reveal-item:nth-child(3) { transition-delay: 0.16s; }
+        .reveal-stagger > .reveal-item:nth-child(4) { transition-delay: 0.24s; }
+        .reveal-stagger > .reveal-item:nth-child(5) { transition-delay: 0.32s; }
+        .reveal-stagger > .reveal-item:nth-child(6) { transition-delay: 0.4s; }
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
             .reveal-item { transition: none; opacity: 1; transform: none; }
         }
 
-        /* ============================================================
-           LINE CLAMP
-           ============================================================ */
-        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+        .stat-counter { font-variant-numeric: tabular-nums; }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         /* ============================================================
-           ABOUT HIGHLIGHTS
+           HERO
            ============================================================ */
-        .about-highlights-wrapper {
+        .hero-section {
+            background-color: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            background-position: 50% 0;
+            border-bottom: 1px solid #efefef;
+            overflow: hidden;
+        }
+        .hero-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 0.875rem;
+            gap: 2.5rem;
+            padding: 2rem 0 3rem;
+            align-items: center;
         }
-        @media (min-width: 640px) {
-            .about-highlights-wrapper { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        @media (min-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1.15fr 1fr;
+                gap: 4rem;
+                padding: 3.5rem 0 4rem;
+            }
         }
-
-        .about-highlight-card {
-            position: relative;
+        .hero-title {
+            font-size: clamp(2.4rem, 7.2vw, 4.6rem);
+            line-height: 0.98;
+            color: #0d0d0d;
+            margin: 0;
+        }
+        .hero-sub {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #0059ff;
+            margin-top: 1rem;
+        }
+        .hero-desc {
+            font-size: 1.02rem;
+            line-height: 1.65;
+            color: #4b5563;
+            max-width: 32rem;
+            margin-top: 1rem;
+            text-wrap: pretty;
+        }
+        .hero-ctas {
             display: flex;
-            align-items: flex-start;
-            gap: 0.875rem;
-            padding: 1rem;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            box-shadow: 0 2px 8px rgba(26, 60, 94, 0.04);
-            overflow: hidden;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 1.75rem;
         }
-        .about-highlight-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px; height: 100%;
-            background: linear-gradient(180deg, #1a3c5e, #2a5a7a, #c2410c);
-            opacity: 0;
-            transition: opacity 0.35s ease;
+        .btn-dark,
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 0.375rem;
+            padding: 0.85rem 1.5rem;
+            border: 1px solid transparent;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
         }
-        .about-highlight-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(26, 60, 94, 0.14);
-            border-color: rgba(26, 60, 94, 0.25);
+        .btn-dark { background: #0d0d0d; color: #ffffff; }
+        .btn-dark:hover { background: #0059ff; }
+        .btn-ghost { background: #ffffff; color: #0d0d0d; border-color: #d8d8d8; }
+        .btn-ghost:hover { background: #0d0d0d; border-color: #0d0d0d; color: #ffffff; transform: translateY(-1px); }
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #0059ff;
+            padding: 0.85rem 0.25rem;
+            min-height: 44px;
+            text-decoration: none;
+            transition: color 0.2s ease;
         }
-        .about-highlight-card:hover::before { opacity: 1; }
+        .btn-link:hover { color: #0040c0; text-decoration: underline; }
 
-        .about-highlight-icon {
+        .hero-visual { position: relative; }
+        .hero-poster {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 32px 64px rgba(13, 13, 13, 0.22);
+            transform: rotate(1.5deg);
+        }
+        .hero-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            aspect-ratio: 4 / 5;
+        }
+        @media (min-width: 1024px) {
+            .hero-poster img { aspect-ratio: 5 / 5.6; }
+        }
+        .hero-chip {
+            position: absolute;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 0.375rem;
+            box-shadow: 0 12px 28px rgba(13, 13, 13, 0.12);
+            padding: 0.5rem 0.75rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 44px; height: 44px;
-            flex-shrink: 0;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(26, 60, 94, 0.12), rgba(194, 65, 12, 0.08));
-            color: #1a3c5e;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, color 0.4s ease;
+            gap: 0.45rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #0d0d0d;
+            z-index: 2;
         }
-        .about-highlight-card:hover .about-highlight-icon {
-            transform: scale(1.08) rotate(-6deg);
-            background: linear-gradient(135deg, #1a3c5e, #2a5a7a);
-            color: white;
-        }
-        .about-highlight-content { flex: 1; min-width: 0; }
-        .about-highlight-title { font-size: 0.95rem; font-weight: 700; color: #1a3c5e; line-height: 1.25; margin-bottom: 0.25rem; }
-        .about-highlight-desc { font-size: 0.8rem; color: #6b7280; line-height: 1.45; }
-
-        .about-highlight-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
-            transition: left 0.7s ease;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .about-highlight-card:hover::after { left: 100%; }
-
-        /* ============================================================
-           STATS COUNTER
-           ============================================================ */
-        .stat-counter {
-            font-variant-numeric: tabular-nums;
+        .hero-chip svg { color: #0059ff; flex: none; }
+        .hero-chip-1 { top: 8%; left: -4%; transform: rotate(-3deg); }
+        .hero-chip-2 { bottom: 30%; right: -4%; transform: rotate(2deg); }
+        .hero-chip-3 { bottom: 6%; left: 8%; transform: rotate(-1.5deg); }
+        @media (max-width: 1023px) {
+            .hero-chip { display: none; }
+            .hero-poster { transform: none; }
         }
 
         /* ============================================================
-           COURSE / SERVICE GRID
+           STATS BAND (dark)
            ============================================================ */
-        .course-grid {
+        .stat-band {
+            background: #0d0d0d;
+            color: #ffffff;
+            padding: 1.75rem 0;
+            border-bottom: 1px solid #262626;
+        }
+        .stat-band-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem 1rem;
+        }
+        @media (min-width: 768px) {
+            .stat-band-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .stat {
+            border-left: 1px solid #262626;
+            padding-left: 1rem;
+        }
+        .stat:first-child { border-left: none; padding-left: 0; }
+        @media (max-width: 767px) {
+            .stat:nth-child(3) { border-left: none; padding-left: 0; }
+        }
+        .stat-num {
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            line-height: 1;
+            color: #ffffff;
+        }
+        .stat-num .accent { color: #6ea3ff; }
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #a8b0bd;
+            margin-top: 0.45rem;
+            line-height: 1.4;
+        }
+
+        /* ============================================================
+           SECTION HEAD (Anton + link)
+           ============================================================ */
+        .section-head {
             display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
             gap: 1rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding: 0 0 1rem 0;
+            margin-bottom: 1.5rem;
         }
-        .course-grid::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        .section-title {
+            font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+            line-height: 1;
+            color: #0d0d0d;
+            margin: 0;
+        }
+        .section-sub {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            max-width: 34rem;
+        }
+        .section-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #0d0d0d;
+            border-bottom: 2px solid #0059ff;
+            padding-bottom: 0.2rem;
+            padding-top: 0.6rem;
+            min-height: 44px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: color 0.2s ease;
+        }
+        .section-link:hover { color: #0059ff; }
 
-        .course-grid > .course-item {
-            flex: 0 0 78%;
-            scroll-snap-align: start;
-            min-width: 0;
+        /* ============================================================
+           DUA JALUR (Kursus vs Service)
+           ============================================================ */
+        .path-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        @media (min-width: 1024px) {
+            .path-grid { grid-template-columns: 1.15fr 1fr; gap: 1.5rem; }
+        }
+        .path-card {
+            border-radius: 0.5rem;
+            padding: 1.75rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e8e8e8;
+            background: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            position: relative;
+            overflow: hidden;
+        }
+        @media (min-width: 640px) {
+            .path-card { padding: 2.25rem 2rem; }
+        }
+        .path-card-dark {
+            background-color: #0d0d0d;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            border-color: #262626;
+            color: #ffffff;
+        }
+        .path-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #0059ff;
+            margin-bottom: 0.85rem;
+        }
+        .path-card-dark .path-tag { color: #6ea3ff; }
+        .path-title {
+            font-size: clamp(1.6rem, 4.2vw, 2.35rem);
+            line-height: 1.02;
+            color: #0d0d0d;
+            margin: 0;
+        }
+        .path-card-dark .path-title { color: #ffffff; }
+        .path-copy {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #4b5563;
+            margin-top: 0.85rem;
+            max-width: 30rem;
+        }
+        .path-card-dark .path-copy { color: #a8b0bd; }
+        .path-list {
+            list-style: none;
+            margin: 1.25rem 0 1.5rem;
+            padding: 0;
+            display: grid;
+            gap: 0.5rem;
+        }
+        .path-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.55rem;
+            font-size: 0.85rem;
+            color: #232830;
+            line-height: 1.45;
+        }
+        .path-list svg { color: #0059ff; flex: none; margin-top: 0.12rem; }
+        .path-card-dark .path-list li { color: #d5dae3; }
+        .path-card-dark .path-list svg { color: #6ea3ff; }
+        .path-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            align-self: flex-start;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.85rem 1.5rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            margin-top: auto;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+        }
+        .path-cta-dark { background: #0d0d0d; color: #ffffff; }
+        .path-cta-dark:hover { background: #0059ff; transform: translateY(-1px); }
+        .path-cta-accent { background: #0059ff; color: #ffffff; }
+        .path-cta-accent:hover { background: #0040c0; transform: translateY(-1px); }
+
+        /* ============================================================
+           KARTU PROGRAM / LAYANAN
+           ============================================================ */
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        @media (min-width: 640px) { .program-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+        @media (min-width: 1024px) { .program-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; } }
+
+        .program-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             display: flex;
             flex-direction: column;
             height: 100%;
-            background: white;
-            border-radius: 12px;
-            padding: 0.75rem;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 2px 8px rgba(26, 60, 94, 0.04);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .course-grid > .course-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(26, 60, 94, 0.1);
+        .program-card:hover { transform: translateY(-4px); border-color: #0d0d0d; box-shadow: 0 18px 40px rgba(13, 13, 13, 0.10); }
+        .program-image-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            background: #f1f2f4;
+            overflow: hidden;
         }
+        .program-image-wrapper img {
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;
+        }
+        .program-card:hover .program-image-wrapper img { transform: scale(1.04); }
+        .program-image-link { display: block; cursor: pointer; }
+        .program-image-link:hover { opacity: 0.98; }
 
-        @media (min-width: 768px) {
-            .course-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-                overflow: visible;
-                padding: 0;
-                align-items: stretch;
-            }
-            .course-grid > .course-item { flex: none; width: auto; height: 100%; }
+        .badge-promo {
+            position: absolute;
+            top: 0.6rem; left: 0.6rem;
+            background: #0d0d0d; color: #ffffff;
+            font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 0.3rem 0.65rem; border-radius: 999px; z-index: 2;
+            max-width: calc(100% - 1.2rem); overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap;
         }
-        @media (min-width: 1024px) {
-            .course-grid { grid-template-columns: repeat(4, 1fr); }
+        .badge-kategori {
+            position: absolute;
+            bottom: 0.6rem; right: 0.6rem;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            color: #0d0d0d; font-size: 0.7rem; font-weight: 600;
+            padding: 0.3rem 0.65rem; border-radius: 999px;
+            border: 1px solid rgba(13, 13, 13, 0.08); z-index: 2;
+            max-width: calc(100% - 1.2rem); overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap;
         }
-
-        .course-grid > .w-full {
-            flex: 0 0 100% !important;
-            width: 100% !important;
-            background: transparent;
-            border: none;
-            box-shadow: none;
+        .program-card-body {
+            padding: 0.85rem 0.9rem 0.95rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
-        @media (min-width: 768px) {
-            .course-grid > .w-full { grid-column: 1 / -1; }
+        .program-card-title {
+            font-size: 0.9rem; font-weight: 600; line-height: 1.3; color: #0d0d0d;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden; transition: color 0.2s ease; margin-bottom: 0.2rem;
         }
+        .program-card:hover .program-card-title { color: #0059ff; }
+        .program-btn-primary {
+            width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
+            border-radius: 6px; font-size: 0.72rem; font-weight: 600;
+            padding: 0.55rem 0.5rem; background: #0d0d0d; color: #ffffff;
+            border: 1px solid transparent; cursor: pointer;
+            transition: background 0.2s ease; text-decoration: none;
+        }
+        .program-btn-primary:hover { background: #0059ff; }
+        .program-btn-ghost {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
+            border-radius: 6px; font-size: 0.72rem; font-weight: 600;
+            padding: 0.55rem 0.5rem; background: #ffffff; color: #0d0d0d;
+            border: 1px solid #d8d8d8; cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .program-btn-ghost:hover { background: #0d0d0d; border-color: #0d0d0d; color: #ffffff; }
 
         /* ============================================================
-           STICKER LAYER — GENERALISASI
+           WHY IMDKOM (tiles)
            ============================================================ */
-        .sticker-layer {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 5;
+        .tile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        @media (min-width: 640px) { .tile-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; } }
+        @media (min-width: 1024px) { .tile-grid { grid-template-columns: repeat(6, 1fr); } }
+        .tile {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 0.375rem;
+            padding: 1.25rem 0.75rem;
+            text-align: center;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .tile:hover { transform: translateY(-3px); border-color: #0d0d0d; box-shadow: 0 14px 30px rgba(13, 13, 13, 0.08); }
+        .tile-icon {
+            width: 2.5rem; height: 2.5rem; margin: 0 auto 0.6rem;
+            display: flex; align-items: center; justify-content: center;
+            color: #0059ff;
+        }
+        .tile-title { font-weight: 600; color: #0d0d0d; font-size: 0.8rem; line-height: 1.35; }
+        .tile-text { font-size: 0.7rem; color: #6b7280; margin-top: 0.25rem; line-height: 1.45; }
+
+        /* ============================================================
+           ABOUT HIGHLIGHTS (dari Firestore, flat)
+           ============================================================ */
+        .about-highlights-wrapper { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+        @media (min-width: 640px) { .about-highlights-wrapper { grid-template-columns: repeat(2, 1fr); } }
+        .about-highlight-card {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            background: #ffffff; border: 1px solid #e8e8e8; border-radius: 0.375rem;
+            padding: 1rem; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .about-highlight-card:hover { border-color: #0d0d0d; box-shadow: 0 12px 28px rgba(13, 13, 13, 0.08); }
+        .about-highlight-icon {
+            display: flex; align-items: center; justify-content: center;
+            width: 2.5rem; height: 2.5rem; flex: none;
+            border-radius: 0.375rem; background: #eef3ff; color: #0059ff;
+        }
+        .about-highlight-content { flex: 1; min-width: 0; }
+        .about-highlight-title { font-size: 0.88rem; font-weight: 600; color: #0d0d0d; line-height: 1.3; }
+        .about-highlight-desc { font-size: 0.8rem; color: #6b7280; line-height: 1.5; margin-top: 0.2rem; }
+
+        /* ============================================================
+           FINAL CTA
+           ============================================================ */
+        .final-cta {
+            padding: 3.5rem 0 4rem;
+            border-top: 1px solid #efefef;
+            background: #ffffff;
+        }
+        .final-cta-card {
+            background-color: #0d0d0d;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 0.5rem;
+            padding: 3rem 1.5rem;
+            text-align: center;
             overflow: hidden;
         }
-
-        /* Global sticker layer — menutupi seluruh body */
-        .sticker-layer-global {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-            overflow: hidden;
+        @media (min-width: 640px) { .final-cta-card { padding: 4rem 3rem; } }
+        .final-cta-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            line-height: 1.02;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0;
         }
-
-        .sticker-item {
-            position: absolute;
-            pointer-events: auto;
-            cursor: grab;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: none;
-            transform-origin: center center;
-            will-change: transform, left, top;
-            transition: filter 0.3s ease;
+        .final-cta-text {
+            color: #a8b0bd;
+            max-width: 36rem;
+            margin: 0.75rem auto 0;
+            line-height: 1.6;
+            font-size: 0.95rem;
         }
-        .sticker-item.permanent {
-            cursor: default;
-            pointer-events: none;
+        .final-cta-actions {
+            display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 1.75rem;
         }
-        .sticker-item img {
-            width: 100%; height: auto; display: block;
-            pointer-events: none;
-            -webkit-user-drag: none;
-            user-select: none;
+        .final-cta-btn {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            background: #0059ff; color: #ffffff; font-weight: 700;
+            padding: 0.85rem 1.6rem; border-radius: 0.375rem; text-decoration: none;
+            transition: background 0.2s ease, transform 0.2s ease;
         }
-        .sticker-item:not(.permanent):hover {
-            filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4)) !important;
-        }
-        .sticker-item.dragging {
-            cursor: grabbing;
-            z-index: 9999 !important;
-            animation: none !important;
-            transform: scale(1.1) rotate(var(--current-rotation, 0deg)) !important;
-        }
-        .sticker-item.dragging img { opacity: 0.95; }
-
-        /* Animasi float */
-        @keyframes sticker-float {
-            0%, 100% { transform: translateY(0) rotate(var(--sticker-rotation, 0deg)); }
-            50% { transform: translateY(-10px) rotate(var(--sticker-rotation, 0deg)); }
-        }
-        .sticker-item.animasi-true {
-            animation: sticker-float 6s ease-in-out infinite;
-        }
-        .sticker-item.animasi-false {
-            animation: none;
-        }
-        .sticker-item:nth-child(1) { animation-delay: 0s; }
-        .sticker-item:nth-child(2) { animation-delay: 1.2s; }
-        .sticker-item:nth-child(3) { animation-delay: 2.4s; }
-        .sticker-item:nth-child(4) { animation-delay: 3.6s; }
-        .sticker-item:nth-child(5) { animation-delay: 4.8s; }
-
-        .sticker-reset {
-            position: absolute;
-            bottom: 1rem; right: 1rem;
-            z-index: 20;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+        .final-cta-btn:hover { background: #0040c0; transform: translateY(-1px); }
+        .final-cta-btn-ghost {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            background: transparent; color: #ffffff; font-weight: 600;
+            padding: 0.85rem 1.6rem; border-radius: 0.375rem; text-decoration: none;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            gap: 0.4rem;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
         }
-        .sticker-reset:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-2px); }
-        .sticker-reset.visible { display: inline-flex; }
+        .final-cta-btn-ghost:hover { border-color: #ffffff; background: rgba(255, 255, 255, 0.08); transform: translateY(-1px); }
 
-        @media (prefers-reduced-motion: reduce) {
-            .sticker-item { animation: none !important; }
+        /* ============================================================
+           FOOTER (senada kursus) + PRICELIST DROPDOWN
+           ============================================================ */
+        .kursus-footer {
+            border-top: 1px solid #e8e8e8;
+            background: #ffffff;
+            padding: 2.5rem 0 1.5rem;
         }
-
-        /* Section relatif — supaya sticker layer bisa absolute */
-        section[id$="Section"] {
-            position: relative;
+        .kursus-footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 768px) { .kursus-footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; } }
+        .kursus-footer-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            font-size: 1.35rem; color: #0d0d0d;
         }
-
-        /* Body relative — supaya global sticker layer bisa absolute relatif ke body */
-        body {
-            position: relative;
+        .kursus-footer-heading {
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; color: #0d0d0d; margin-bottom: 0.85rem;
         }
+        .kursus-footer-text { font-size: 0.82rem; line-height: 1.7; color: #6b7280; text-wrap: pretty; }
+        .kursus-footer-link {
+            display: block; font-size: 0.82rem; color: #4b5563;
+            padding: 0.25rem 0; transition: color 0.2s ease;
+        }
+        .kursus-footer-link:hover { color: #0059ff; }
+        .kursus-footer-bottom {
+            margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid #efefef;
+            display: flex; flex-direction: column; gap: 0.5rem;
+            font-size: 0.75rem; color: #6b7280;
+        }
+        @media (min-width: 640px) {
+            .kursus-footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+        .footer-pricelist { margin-top: 0.25rem; }
+        .footer-pricelist > summary {
+            list-style: none; display: inline-flex; align-items: center;
+            gap: 0.4rem; font-size: 0.82rem; color: #4b5563;
+            padding: 0.25rem 0; min-height: 44px; cursor: pointer; transition: color 0.2s ease;
+        }
+        .footer-pricelist > summary::-webkit-details-marker { display: none; }
+        .footer-pricelist > summary::marker { content: ""; }
+        .footer-pricelist > summary:hover { color: #0059ff; }
+        .footer-pricelist[open] > summary { color: #0059ff; font-weight: 600; }
+        .footer-pricelist .chev { transition: transform 0.2s ease; }
+        .footer-pricelist[open] .chev { transform: rotate(180deg); }
+        .footer-pricelist-menu {
+            margin-top: 0.35rem; padding: 0.35rem 0 0.35rem 0.75rem; border-left: 2px solid #efefef;
+        }
+        .footer-pricelist-link {
+            display: block; font-size: 0.8rem; color: #4b5563;
+            padding: 0.22rem 0; text-decoration: none; transition: color 0.2s ease;
+        }
+        .footer-pricelist-link:hover { color: #0059ff; }
     </style>
 </head>
-<body class="font-sans">
+<body class="font-sans bg-white">
+
+    <a class="skip-link" href="#heroSection">Lompat ke konten utama</a>
 
     <!-- ============================================================ -->
-    <!-- NAVIGATION                                                   -->
+    <!-- NAVIGATION                                                     -->
     <!-- ============================================================ -->
     <div id="navbarMount" data-variant="sticky"></div>
 
     <!-- ============================================================ -->
-    <!-- HERO SECTION                                                 -->
+    <!-- HERO                                                           -->
     <!-- ============================================================ -->
-    <section class="relative" id="heroSection">
-
-        <!-- MOBILE VERSION -->
-        <div class="relative md:hidden">
-            <img src="assets/images/hero/hero-default.png" 
-                 alt="IMDKOM - Kursus dan Service Komputer" 
-                 class="w-full object-cover" 
-                 style="height: 90vh; min-height: 550px;"
-                 loading="eager" />
-            
-            <div class="absolute inset-0" 
-                 style="background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 40%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.15) 100%);"></div>
-            
-            <!-- Sticker Layer Mobile -->
-            <div class="sticker-layer" data-section="hero" data-device="mobile"></div>
-            
-            <div class="absolute inset-0 flex flex-col justify-end p-6 pb-10 text-white">
-                <h1 class="text-3xl font-extrabold leading-tight reveal-item" id="heroHeading">
-                    IMDKOM YOGYAKARTA
-                </h1>
-                <p class="text-sm text-gray-200 mt-2 reveal-item" id="heroSubheading">
-                    Kursus &amp; Pelatihan • Service Komputer
-                </p>
-                <p class="text-base font-medium mt-4 leading-snug reveal-item" id="heroDescription">
-                    Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
-                </p>
-                
-                <div class="flex flex-wrap gap-2 mt-5 reveal-item">
-                    <a href="kursus.html" class="bg-brand hover:bg-brand-light text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" id="heroCtaPrimaryMobile">
-                        Lihat Program
-                    </a>
-                    <a href="service.html" class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-5 py-2.5 rounded transition-colors text-sm" id="heroCtaServiceMobile">
-                        Computer Services
-                    </a>
-                    <a href="#" class="border border-white/60 hover:border-white text-white font-medium px-5 py-2.5 rounded transition-colors text-sm backdrop-blur-sm bg-white/10" id="heroWhatsAppMobile">
-                        Konsultasi WhatsApp
-                    </a>
+    <section class="hero-section" id="heroSection">
+        <div class="container mx-auto px-4">
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1 class="hero-title ant" id="heroHeadingDesktop">KURSUS &amp; SERVICE KOMPUTER DI YOGYAKARTA</h1>
+                    <p class="hero-sub" id="heroSubheadingDesktop">Kursus &amp; Pelatihan — Computer Service</p>
+                    <p class="hero-desc" id="heroDescriptionDesktop">Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.</p>
+                    <div class="hero-ctas">
+                        <a href="kursus.html" class="btn-dark" id="heroCtaPrimary">
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            Lihat Program
+                        </a>
+                        <a href="service.html" class="btn-ghost" id="heroCtaService">
+                            <i data-lucide="wrench" class="w-4 h-4"></i>
+                            Computer Service
+                        </a>
+                        <a href="#" class="btn-link" id="heroWhatsApp">
+                            Konsultasi WhatsApp
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- DESKTOP VERSION -->
-        <div class="hidden md:block relative">
-            <img id="heroImageDesktop"
-                 src="assets/images/hero/hero-default.png" 
-                 alt="IMDKOM - Kursus dan Service Komputer" 
-                 class="w-full object-cover" 
-                 style="height: 100vh; min-height: 600px; max-height: 900px;"
-                 loading="eager" />
-            
-            <div class="absolute inset-0"
-                 style="background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.1) 100%);"></div>
-
-            <!-- Sticker Layer Desktop -->
-            <div class="sticker-layer" data-section="hero" data-device="desktop"></div>
-
-            <!-- Tombol Reset Posisi Sticker -->
-            <button class="sticker-reset" data-section="hero" title="Kembalikan posisi sticker">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                    <path d="M3 3v5h5"></path>
-                </svg>
-                Reset Posisi
-            </button>
-
-            <div class="absolute inset-0 flex items-center">
-                <div class="container mx-auto px-4">
-                    <div class="max-w-2xl reveal-stagger">
-                        <h1 class="text-5xl lg:text-6xl font-extrabold text-white leading-tight reveal-item" id="heroHeadingDesktop">
-                            IMDKOM YOGYAKARTA
-                        </h1>
-                        <p class="text-xl text-gray-200 mt-3 reveal-item" id="heroSubheadingDesktop">
-                            Kursus &amp; Pelatihan • Service Komputer
-                        </p>
-                        <p class="text-2xl font-medium text-white mt-6 leading-snug reveal-item" id="heroDescriptionDesktop">
-                            Belajar keterampilan komputer. Dapatkan solusi untuk perangkat Anda.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-3 mt-8 reveal-item">
-                            <a href="kursus.html" class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3.5 rounded transition-colors text-base inline-flex items-center gap-2" id="heroCtaPrimary">
-                                <i data-lucide="book-open" class="w-4 h-4"></i>
-                                Lihat Program
-                            </a>
-                            <a href="service.html" class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-7 py-3.5 rounded transition-colors text-base inline-flex items-center gap-2" id="heroCtaService">
-                                <i data-lucide="wrench" class="w-4 h-4"></i>
-                                Service komputer
-                            </a>
-                            <a href="#" class="border border-white/70 hover:border-white text-white font-medium px-7 py-3.5 rounded transition-colors text-base backdrop-blur-sm bg-white/10" id="heroWhatsApp">
-                                Konsultasi WhatsApp
-                            </a>
-                        </div>
+                <div class="hero-visual">
+                    <div class="hero-poster">
+                        <img id="heroImageDesktop"
+                             src="assets/images/hero/hero-default.png"
+                             alt="IMDKOM - Kursus dan Service Komputer"
+                             loading="eager"
+                             fetchpriority="high"
+                             decoding="async" />
+                    </div>
+                    <div class="hero-chip hero-chip-1">
+                        <i data-lucide="award" class="w-4 h-4"></i>
+                        25+ Tahun
+                    </div>
+                    <div class="hero-chip hero-chip-2">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        1.000+ Alumni
+                    </div>
+                    <div class="hero-chip hero-chip-3">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        Garansi 2 Bulan
                     </div>
                 </div>
             </div>
@@ -436,44 +753,98 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- TENTANG SINGKAT                                              -->
+    <!-- STATS BAND                                                     -->
     <!-- ============================================================ -->
-    <section class="py-12 sm:py-16 md:py-20 bg-gray-50" id="aboutSection">
-        <div class="sticker-layer" data-section="about"></div>
-        
-        <div class="container mx-auto px-4 relative">
-            <div class="flex flex-col md:flex-row items-center gap-8 sm:gap-10 md:gap-14">
-                <div class="md:w-1/2 w-full reveal-stagger">
-                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand reveal-item" id="aboutTitle">Tentang IMDKOM</h2>
+    <div class="stat-band">
+        <div class="container mx-auto px-4">
+            <div class="stat-band-grid">
+                <div class="stat">
+                    <div class="stat-num ant"><span class="stat-counter" data-target="25" data-suffix="+">0</span></div>
+                    <div class="stat-label">Tahun Mengajar</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num ant"><span class="stat-counter" data-target="1000" data-suffix="+">0</span></div>
+                    <div class="stat-label">Alumni</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num ant"><span class="stat-counter" data-target="5000" data-suffix="+">0</span></div>
+                    <div class="stat-label">Servis Selesai</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num ant"><span class="stat-counter" data-target="2" data-suffix="">2</span></div>
+                    <div class="stat-label">Bulan Garansi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- DUA JALUR: KURSUS & SERVICE                                    -->
+    <!-- ============================================================ -->
+    <section class="py-14 sm:py-16 md:py-20 bg-white" id="jalurSection">
+        <div class="container mx-auto px-4">
+            <div class="section-head reveal-item">
+                <div>
+                    <h2 class="section-title ant">Dua Jalur, <span class="accent">Satu Tujuan</span></h2>
+                    <p class="section-sub">Pilih kamu mau belajar komputer, atau memperbaiki perangkatmu — keduanya kami kerjakan dengan standar yang sama.</p>
+                </div>
+            </div>
+
+            <div class="path-grid">
+                <article class="path-card reveal-item">
+                    <div class="path-tag">Kursus &amp; Pelatihan</div>
+                    <h3 class="path-title ant">Belajar dari <span class="accent">Praktisi</span>, Bukan Cuma Teori</h3>
+                    <p class="path-copy">Program Microsoft Office, desain grafis, pemrograman, dan keterampilan digital lainnya. Kelas privat &amp; regular, langsung praktik, dibimbing oleh instruktur berpengalaman.</p>
+                    <ul class="path-list">
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Sertifikat kompetensi resmi</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Kelas privat &amp; regular, fleksibel jadwal</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Pembelajaran langsung dari praktisi industri</li>
+                    </ul>
+                    <a href="kursus.html" class="path-cta path-cta-dark">
+                        Lihat Program Kursus
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </article>
+
+                <article class="path-card path-card-dark reveal-item">
+                    <div class="path-tag">Computer Service</div>
+                    <h3 class="path-title ant">Perangkat Bermasalah? <span style="color:#6ea3ff">Kami Bereskan.</span></h3>
+                    <p class="path-copy">Service laptop, PC, printer, dan panggil ke rumah/kantor. Sparepart original, estimasi jelas, tanpa biaya tersembunyi.</p>
+                    <ul class="path-list">
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Garansi service 2 bulan</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Service panggil — gratis radius 7 km</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> 5000+ perangkat sudah berhasil diperbaiki</li>
+                    </ul>
+                    <a href="service.html" class="path-cta path-cta-accent">
+                        Lihat Layanan Service
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- ABOUT SINGKAT                                                  -->
+    <!-- ============================================================ -->
+    <section class="py-14 sm:py-16 md:py-20 bg-[#fafafa] border-y border-[#efefef]" id="aboutSection">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+                <div class="lg:w-1/2 w-full">
+                    <h2 class="section-title ant reveal-item" id="aboutTitle">Lembaga <span class="accent">Terpercaya</span> Sejak 2001</h2>
                     <p class="text-sm sm:text-base text-gray-600 mt-4 leading-relaxed reveal-item" id="aboutDescription">
                         IMDKOM adalah lembaga kursus dan pelatihan komputer yang telah berpengalaman dalam membantu masyarakat mengembangkan keterampilan digital. Kami juga menyediakan layanan service komputer untuk perbaikan laptop, PC, dan printer.
                     </p>
-                    
-                    <div class="grid grid-cols-3 gap-3 sm:gap-6 mt-8 mb-6 reveal-item">
-                        <div>
-                            <div class="text-3xl sm:text-4xl font-extrabold text-brand stat-counter" data-target="25" data-suffix="+">0</div>
-                            <div class="text-xs sm:text-sm text-gray-500 mt-1 uppercase tracking-wider font-medium">Tahun</div>
-                        </div>
-                        <div>
-                            <div class="text-3xl sm:text-4xl font-extrabold text-brand stat-counter" data-target="1000" data-suffix="+">0</div>
-                            <div class="text-xs sm:text-sm text-gray-500 mt-1 uppercase tracking-wider font-medium">Alumni</div>
-                        </div>
-                        <div>
-                            <div class="text-3xl sm:text-4xl font-extrabold text-brand stat-counter" data-target="5000" data-suffix="+">0</div>
-                            <div class="text-xs sm:text-sm text-gray-500 mt-1 uppercase tracking-wider font-medium">Servis</div>
-                        </div>
-                    </div>
-
-                    <p class="text-sm sm:text-base text-gray-600 mt-2 reveal-item">
-                        <strong>Izin Dinas Pendidikan:</strong> 098/Kpts/2021<br />
-                        <strong>NPSN:</strong> K0560748
+                    <p class="text-sm sm:text-base text-gray-600 mt-4 reveal-item">
+                        <strong class="text-[#0d0d0d]">Izin Dinas Pendidikan:</strong> 098/Kpts/2021<br />
+                        <strong class="text-[#0d0d0d]">NPSN:</strong> K0560748
                     </p>
-                    <a href="tentang.html" class="inline-block mt-5 text-brand hover:text-brand-light font-medium border-b-2 border-brand hover:border-brand-light transition-colors text-sm sm:text-base reveal-item">
-                        Selengkapnya →
+                    <a href="tentang.html" class="section-link mt-6">
+                        Selengkapnya
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </a>
                 </div>
-
-                <div class="md:w-1/2 w-full">
+                <div class="lg:w-1/2 w-full">
                     <div id="aboutHighlightsContainer" class="about-highlights-wrapper">
                         <!-- Diisi oleh loadLandingPageContent() di app.js -->
                     </div>
@@ -483,51 +854,93 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- KURSUS & PELATIHAN — PREVIEW                                 -->
+    <!-- KURSUS & PELATIHAN — PREVIEW                                   -->
     <!-- ============================================================ -->
-    <section class="py-12 sm:py-16 md:py-20" id="courseSection">
-        <div class="sticker-layer" data-section="course"></div>
-        
-        <div class="container mx-auto px-4 relative">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Kursus &amp; Pelatihan</h2>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10 reveal-item">Program pelatihan komputer untuk berbagai kebutuhan.</p>
-            
-            <div class="course-grid reveal-stagger" id="coursePreviewContainer">
-                <div class="w-full text-center text-gray-500 py-10">
+    <section class="py-14 sm:py-16 md:py-20 bg-white" id="courseSection">
+        <div class="container mx-auto px-4">
+            <div class="section-head reveal-item">
+                <div>
+                    <h2 class="section-title ant">Program <span class="accent">Pilihan</span></h2>
+                    <p class="section-sub">Empat program paling diminati — dari dasar komputer hingga keterampilan siap kerja.</p>
+                </div>
+                <a href="kursus.html" class="section-link">
+                    Lihat Semua
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+            <div class="program-grid" id="coursePreviewContainer">
+                <div class="col-span-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
                     <p class="mt-3 text-sm">Memuat program...</p>
                 </div>
-            </div>
-            
-            <div class="text-center mt-8 sm:mt-10 reveal-item">
-                <a href="kursus.html" class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3 sm:px-8 sm:py-3.5 rounded transition-colors text-sm sm:text-base">
-                    Lihat Semua Program
-                </a>
             </div>
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- COMPUTER SERVICE — PREVIEW                                   -->
+    <!-- COMPUTER SERVICE — PREVIEW                                      -->
     <!-- ============================================================ -->
-    <section class="py-12 sm:py-16 md:py-20 bg-gray-50" id="serviceSection">
-        <div class="sticker-layer" data-section="service"></div>
-        
-        <div class="container mx-auto px-4 relative">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Service Komputer</h2>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10 reveal-item">Layanan perbaikan dan kebutuhan perangkat komputer.</p>
-            
-            <div class="course-grid reveal-stagger" id="servicePreviewContainer">
-                <div class="w-full text-center text-gray-500 py-10">
+    <section class="py-14 sm:py-16 md:py-20 bg-[#fafafa] border-y border-[#efefef]" id="serviceSection">
+        <div class="container mx-auto px-4">
+            <div class="section-head reveal-item">
+                <div>
+                    <h2 class="section-title ant">Layanan <span class="accent">Service</span></h2>
+                    <p class="section-sub">Laptop, PC, printer, atau panggil ke lokasi — semua dikerjakan teknisi ahli, bergaransi.</p>
+                </div>
+                <a href="service.html" class="section-link">
+                    Lihat Semua
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+            <div class="program-grid" id="servicePreviewContainer">
+                <div class="col-span-full text-center text-gray-500 py-10">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
                     <p class="mt-3 text-sm">Memuat layanan...</p>
                 </div>
             </div>
-            
-            <div class="text-center mt-8 sm:mt-10 reveal-item">
-                <a href="service.html" class="bg-brand hover:bg-brand-light text-white font-medium px-7 py-3 sm:px-8 sm:py-3.5 rounded transition-colors text-sm sm:text-base">
-                    Lihat Semua Layanan
-                </a>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- MENGAPA IMDKOM                                                 -->
+    <!-- ============================================================ -->
+    <section class="py-14 sm:py-16 md:py-20 bg-white" id="whySection">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="section-title ant reveal-item">Kenapa <span class="accent">IMDKOM</span></h2>
+                <p class="section-sub reveal-item" style="margin-left:auto; margin-right:auto;">Bukan sekadar tempat kursus atau service biasa — ini standar yang kami pegang setiap hari.</p>
+            </div>
+            <div class="tile-grid reveal-stagger">
+                <div class="tile reveal-item">
+                    <div class="tile-icon"><i data-lucide="shield-check" class="w-7 h-7"></i></div>
+                    <h3 class="tile-title">Bergaransi</h3>
+                    <p class="tile-text">Garansi service 2 bulan untuk setiap perbaikan</p>
+                </div>
+                <div class="tile reveal-item">
+                    <div class="tile-icon"><i data-lucide="zap" class="w-7 h-7"></i></div>
+                    <h3 class="tile-title">Proses Cepat</h3>
+                    <p class="tile-text">Estimasi waktu jelas sejak awal</p>
+                </div>
+                <div class="tile reveal-item">
+                    <div class="tile-icon"><i data-lucide="wallet" class="w-7 h-7"></i></div>
+                    <h3 class="tile-title">Harga Transparan</h3>
+                    <p class="tile-text">Tanpa biaya tersembunyi</p>
+                </div>
+                <div class="tile reveal-item">
+                    <div class="tile-icon"><i data-lucide="users" class="w-7 h-7"></i></div>
+                    <h3 class="tile-title">Teknisi Ahli</h3>
+                    <p class="tile-text">Berpengalaman langsung di industri</p>
+                </div>
+                <div class="tile reveal-item">
+                    <div class="tile-icon"><i data-lucide="badge-check" class="w-7 h-7"></i></div>
+                    <h3 class="tile-title">Izin Resmi</h3>
+                    <p class="tile-text">Lembaga berlisensi Dinas Pendidikan</p>
+                </div>
+                <div class="tile reveal-item">
+                    <div class="tile-icon"><i data-lucide="wrench" class="w-7 h-7"></i></div>
+                    <h3 class="tile-title">5.000+ Servis</h3>
+                    <p class="tile-text">Rekam jejak nyata, bukan klaim</p>
+                </div>
             </div>
         </div>
     </section>
@@ -535,88 +948,113 @@
     <!-- ============================================================ -->
     <!-- TESTIMONI                                                    -->
     <!-- ============================================================ -->
-    <section class="py-12 sm:py-16 md:py-20" id="testimonialsSection" style="display:none;">
-        <div class="sticker-layer" data-section="testimonial"></div>
-        
-        <div class="container mx-auto px-4 relative">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Testimoni</h2>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10 reveal-item">Apa kata mereka tentang IMDKOM.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 reveal-stagger" id="testimonialsContainer"></div>
+    <section class="py-14 sm:py-16 md:py-20 bg-[#fafafa] border-t border-[#efefef]" id="testimonialsSection" style="display:none;">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="section-title ant reveal-item">Kata Mereka <span class="accent">Tentang IMDKOM</span></h2>
+                <p class="section-sub reveal-item" style="margin-left:auto; margin-right:auto;">Testimoni nyata dari alumni kursus dan pelanggan service kami.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 reveal-stagger" id="testimonialsContainer"></div>
         </div>
     </section>
 
     <!-- ============================================================ -->
     <!-- FAQ                                                          -->
     <!-- ============================================================ -->
-    <section class="py-12 sm:py-16 md:py-20 bg-gray-50" id="faqSection" style="display:none;">
-        <div class="sticker-layer" data-section="faq"></div>
-        
-        <div class="container mx-auto px-4 relative">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand reveal-item">Pertanyaan Umum</h2>
-            <p class="text-sm sm:text-base text-gray-500 text-center mt-3 mb-8 sm:mb-10 reveal-item">Informasi yang sering ditanyakan.</p>
+    <section class="py-14 sm:py-16 md:py-20 bg-white border-t border-[#efefef]" id="faqSection" style="display:none;">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="section-title ant reveal-item">Pertanyaan <span class="accent">Umum</span></h2>
+                <p class="section-sub reveal-item" style="margin-left:auto; margin-right:auto;">Informasi yang sering ditanyakan.</p>
+            </div>
             <div class="max-w-3xl mx-auto space-y-3 reveal-stagger" id="faqContainer"></div>
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- FOOTER                                                       -->
+    <!-- FINAL CTA                                                      -->
     <!-- ============================================================ -->
-    <footer class="py-8 sm:py-10 border-t border-gray-200 relative" id="footerSection">
-        <div class="sticker-layer" data-section="footer"></div>
-        
-        <div class="container mx-auto px-4 relative">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <section class="final-cta" id="ctaSection">
+        <div class="container mx-auto px-4">
+            <div class="final-cta-card reveal-item">
+                <h2 class="final-cta-title">Siap Belajar — atau<br><span style="color:#6ea3ff">Perangkat Butuh Ditangani?</span></h2>
+                <p class="final-cta-text">Pilih jalurmu: tingkatkan skill komputer, atau serahkan perbaikan perangkat ke tim kami. Dua-duanya dikerjakan dengan standar yang sama.</p>
+                <div class="final-cta-actions">
+                    <a href="kursus.html" class="final-cta-btn">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                        Lihat Program Kursus
+                    </a>
+                    <a href="service.html" class="final-cta-btn-ghost">
+                        <i data-lucide="wrench" class="w-5 h-5"></i>
+                        Service Sekarang
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER                                                         -->
+    <!-- ============================================================ -->
+    <footer class="kursus-footer" id="footerSection">
+        <div class="container mx-auto px-4">
+            <div class="kursus-footer-grid">
                 <div>
-                    <h5 class="text-xl font-bold text-brand">IMDKOM</h5>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Kursus &amp; Pelatihan • Service Komputer</p>
+                    <p class="kursus-footer-title">IMDKOM</p>
+                    <p class="kursus-footer-text mt-2">Kursus &amp; pelatihan komputer, service, dan perakitan PC di Yogyakarta. Belajar langsung dari praktisi.</p>
                 </div>
                 <div>
-                    <h6 class="font-medium text-gray-700 text-sm mb-2">Kontak</h6>
-                    <p class="text-gray-500 text-xs sm:text-sm" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
-                    <p class="text-gray-500 text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
+                    <p class="kursus-footer-heading">Jelajahi</p>
+                    <a class="kursus-footer-link" href="kursus.html">Kursus &amp; Pelatihan</a>
+                    <a class="kursus-footer-link" href="service.html">Service Komputer</a>
+                    <a class="kursus-footer-link" href="rakit-komputer.html">Rakit Komputer</a>
+                    <a class="kursus-footer-link" href="karir.html">Karir</a>
                 </div>
-                <div class="md:text-right">
-                    <p class="text-gray-400 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                <div>
+                    <p class="kursus-footer-heading">Kontak</p>
+                    <p class="kursus-footer-text" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="kursus-footer-text">Jl. Kaliurang Km 7,3 No 38, Yogyakarta</p>
+                    <p class="kursus-footer-text" id="footerInstagram">Instagram: @imdkom_yk</p>
+                    <details class="footer-pricelist">
+                        <summary>Pricelist
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 chev"></i>
+                        </summary>
+                        <div class="footer-pricelist-menu">
+                            <a class="footer-pricelist-link" href="service-laptop.html">Service Laptop</a>
+                            <a class="footer-pricelist-link" href="service-pc.html">Service PC</a>
+                            <a class="footer-pricelist-link" href="service-printer.html">Service Printer</a>
+                            <a class="footer-pricelist-link" href="service-panggil.html">Service Panggil</a>
+                            <a class="footer-pricelist-link" href="sparepart.html">Sparepart</a>
+                        </div>
+                    </details>
                 </div>
+            </div>
+            <div class="kursus-footer-bottom">
+                <p id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                <p>Dibuat di Yogyakarta.</p>
             </div>
         </div>
     </footer>
 
     <!-- ============================================================ -->
-    <!-- GLOBAL STICKER LAYER — untuk anchor="free"                   -->
+    <!-- FLOATING WHATSAPP BUTTON                                       -->
     <!-- ============================================================ -->
-    <div id="globalStickerLayer" class="sticker-layer-global"></div>
-
-    <!-- ============================================================ -->
-    <!-- FLOATING WHATSAPP BUTTON                                     -->
-    <!-- ============================================================ -->
-    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
+    <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20bertanya." id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
     </a>
 
     <!-- ============================================================ -->
-    <!-- JAVASCRIPT                                                   -->
+    <!-- JAVASCRIPT                                                     -->
     <!-- ============================================================ -->
     <script type="module" src="assets/js/firebase.js"></script>
     <script type="module" src="assets/js/utils.js"></script>
     <script type="module" src="assets/js/whatsapp.js"></script>
-    <script type="module" src="assets/js/init-db.js"></script>
     <script type="module" src="assets/js/app.js"></script>
 
     <script type="module">
-        import { initDatabase } from './assets/js/init-db.js';
-        
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🚀 Memulai init database...');
-            try {
-                const result = await initDatabase();
-                console.log('✅ Init result:', result);
-            } catch (error) {
-                console.error('❌ Init error:', error);
-            }
-            
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
@@ -624,17 +1062,10 @@
             setTimeout(initLandingReveal, 100);
         });
 
-        // Init sticker drag setelah konten dimuat
-        setTimeout(() => {
-            if (typeof window.initAllStickerDrag === 'function') {
-                window.initAllStickerDrag();
-            }
-        }, 2000);
-
         function initLandingReveal() {
             const revealItems = document.querySelectorAll('.reveal-item');
             if (revealItems.length === 0) return;
-            
+
             const revealObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -643,304 +1074,16 @@
                     }
                 });
             }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-            
-            revealItems.forEach(el => {
-                revealObserver.observe(el);
-            });
+
+            revealItems.forEach(el => revealObserver.observe(el));
+
+            // Fallback: pastikan semua item tampil meski belum di-scroll
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-item').forEach(el => el.classList.add('revealed'));
+            }, 1500);
         }
-
-        // ============================================================
-        // STICKER DRAG BEHAVIOR — SEMUA SECTION + GLOBAL
-        // ============================================================
-        window.initAllStickerDrag = function() {
-            const deviceType = window.innerWidth < 768 ? 'mobile' : 'desktop';
-            const isMobile = deviceType === 'mobile';
-            
-            // Semua sticker layer (per section)
-            const stickerLayers = document.querySelectorAll('.sticker-layer');
-            
-            stickerLayers.forEach(layer => {
-                const sectionId = layer.dataset.section;
-                const layerDevice = layer.dataset.device;
-                
-                // Skip layer kalau device tidak cocok (hero punya 2 layer: mobile & desktop)
-                if (layerDevice && layerDevice !== deviceType) return;
-                
-                const stickers = layer.querySelectorAll('.sticker-item:not(.permanent)');
-                if (stickers.length === 0) return;
-
-                const STORAGE_KEY = `imdkom_sticker_positions_${sectionId}_${deviceType}`;
-                const section = layer.closest('section') || layer.closest('footer');
-                if (!section) return;
-                
-                const resetBtn = document.querySelector(`.sticker-reset[data-section="${sectionId}"]`);
-
-                let savedPositions = {};
-                try {
-                    const raw = localStorage.getItem(STORAGE_KEY);
-                    if (raw) savedPositions = JSON.parse(raw);
-                } catch (e) {}
-
-                let hasCustomPositions = Object.keys(savedPositions).length > 0;
-
-                function updateResetBtn() {
-                    if (!resetBtn) return;
-                    if (hasCustomPositions) resetBtn.classList.add('visible');
-                    else resetBtn.classList.remove('visible');
-                }
-
-                stickers.forEach(sticker => {
-                    const id = sticker.dataset.stickerId;
-                    const saved = savedPositions[id];
-                    if (saved) {
-                        sticker.style.left = saved.x + '%';
-                        sticker.style.top = saved.y + '%';
-                    }
-
-                    const currentRot = sticker.style.transform.match(/rotate\(([-\d.]+)deg\)/);
-                    if (currentRot) {
-                        sticker.style.setProperty('--sticker-rotation', currentRot[1] + 'deg');
-                        sticker.style.setProperty('--current-rotation', currentRot[1] + 'deg');
-                    }
-                    makeDraggable(sticker, section, STORAGE_KEY, false);
-                });
-
-                updateResetBtn();
-
-                if (resetBtn) {
-                    const newResetBtn = resetBtn.cloneNode(true);
-                    resetBtn.parentNode.replaceChild(newResetBtn, resetBtn);
-                    newResetBtn.addEventListener('click', () => {
-                        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-                        savedPositions = {};
-                        hasCustomPositions = false;
-                        updateResetBtn();
-                        window.location.reload();
-                    });
-                }
-            });
-
-            // ============================================================
-            // GLOBAL STICKER LAYER
-            // ============================================================
-            const globalLayer = document.getElementById('globalStickerLayer');
-            if (!globalLayer) return;
-
-            const globalStickers = globalLayer.querySelectorAll('.sticker-item:not(.permanent)');
-            if (globalStickers.length === 0) return;
-
-            const GLOBAL_STORAGE_KEY = `imdkom_sticker_positions_global_${deviceType}`;
-            const bodyEl = document.body;
-
-            let savedGlobalPositions = {};
-            try {
-                const raw = localStorage.getItem(GLOBAL_STORAGE_KEY);
-                if (raw) savedGlobalPositions = JSON.parse(raw);
-            } catch (e) {}
-
-            let hasCustomGlobalPositions = Object.keys(savedGlobalPositions).length > 0;
-
-            // Buat tombol reset global (kalau belum ada)
-            let globalResetBtn = document.getElementById('globalStickerReset');
-            if (!globalResetBtn) {
-                globalResetBtn = document.createElement('button');
-                globalResetBtn.id = 'globalStickerReset';
-                globalResetBtn.className = 'sticker-reset';
-                globalResetBtn.style.position = 'fixed';
-                globalResetBtn.style.bottom = '6rem';
-                globalResetBtn.style.right = '1rem';
-                globalResetBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                        <path d="M3 3v5h5"></path>
-                    </svg>
-                    Reset Sticker Global
-                `;
-                document.body.appendChild(globalResetBtn);
-            }
-
-            function updateGlobalResetBtn() {
-                if (hasCustomGlobalPositions) globalResetBtn.classList.add('visible');
-                else globalResetBtn.classList.remove('visible');
-            }
-
-            globalStickers.forEach(sticker => {
-                const id = sticker.dataset.stickerId;
-                const saved = savedGlobalPositions[id];
-                if (saved) {
-                    sticker.style.left = saved.x + '%';
-                    sticker.style.top = saved.y + '%';
-                }
-
-                const currentRot = sticker.style.transform.match(/rotate\(([-\d.]+)deg\)/);
-                if (currentRot) {
-                    sticker.style.setProperty('--sticker-rotation', currentRot[1] + 'deg');
-                    sticker.style.setProperty('--current-rotation', currentRot[1] + 'deg');
-                }
-                makeDraggable(sticker, bodyEl, GLOBAL_STORAGE_KEY, true);
-            });
-
-            updateGlobalResetBtn();
-
-            globalResetBtn.addEventListener('click', () => {
-                try { localStorage.removeItem(GLOBAL_STORAGE_KEY); } catch (e) {}
-                savedGlobalPositions = {};
-                hasCustomGlobalPositions = false;
-                updateGlobalResetBtn();
-                window.location.reload();
-            });
-
-            // ============================================================
-            // FUNGSI DRAG (shared)
-            // ============================================================
-            function makeDraggable(el, containerEl, storageKey, isGlobal) {
-                let isDragging = false;
-                let startX, startY, startLeft, startTop;
-
-                el.addEventListener('mousedown', startDrag);
-                el.addEventListener('touchstart', startDrag, { passive: false });
-
-                function startDrag(e) {
-                    if (el.classList.contains('permanent')) return;
-                    
-                    e.preventDefault();
-                    isDragging = true;
-                    el.classList.add('dragging');
-
-                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-                    startX = clientX;
-                    startY = clientY;
-                    startLeft = el.offsetLeft;
-                    startTop = el.offsetTop;
-
-                    document.querySelectorAll('.sticker-item').forEach(s => {
-                        if (s !== el) s.style.zIndex = Math.min(parseInt(s.style.zIndex) || 10, 50);
-                    });
-                    el.style.zIndex = '9999';
-
-                    document.addEventListener('mousemove', onMove);
-                    document.addEventListener('mouseup', onUp);
-                    document.addEventListener('touchmove', onMove, { passive: false });
-                    document.addEventListener('touchend', onUp);
-                }
-
-                function onMove(e) {
-                    if (!isDragging) return;
-                    e.preventDefault();
-                    
-                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                    
-                    const dx = clientX - startX;
-                    const dy = clientY - startY;
-                    let newLeftPx = startLeft + dx;
-                    let newTopPx = startTop + dy;
-
-                    const stickerW = el.offsetWidth;
-                    const stickerH = el.offsetHeight;
-                    const containerW = containerEl.offsetWidth;
-                    const containerH = containerEl.offsetHeight;
-
-                    newLeftPx = Math.max(0, Math.min(newLeftPx, containerW - stickerW));
-                    newTopPx = Math.max(0, Math.min(newTopPx, containerH - stickerH));
-
-                    const leftPct = (newLeftPx / containerW) * 100;
-                    const topPct = (newTopPx / containerH) * 100;
-
-                    el.style.left = leftPct + '%';
-                    el.style.top = topPct + '%';
-                }
-
-                function onUp() {
-                    if (!isDragging) return;
-                    isDragging = false;
-                    el.classList.remove('dragging');
-
-                    document.removeEventListener('mousemove', onMove);
-                    document.removeEventListener('mouseup', onUp);
-                    document.removeEventListener('touchmove', onMove);
-                    document.removeEventListener('touchend', onUp);
-
-                    const id = el.dataset.stickerId;
-                    const leftPct = parseFloat(el.style.left) || 0;
-                    const topPct = parseFloat(el.style.top) || 0;
-
-                    let saved = {};
-                    try {
-                        const raw = localStorage.getItem(storageKey);
-                        if (raw) saved = JSON.parse(raw);
-                    } catch (e) {}
-                    
-                    saved[id] = { x: leftPct, y: topPct };
-                    try {
-                        localStorage.setItem(storageKey, JSON.stringify(saved));
-                        
-                        if (isGlobal) {
-                            hasCustomGlobalPositions = true;
-                            updateGlobalResetBtn();
-                        } else {
-                            // Update reset button per section
-                            const layer = el.closest('.sticker-layer');
-                            const sectionId = layer?.dataset.section;
-                            if (sectionId) {
-                                const resetBtn = document.querySelector(`.sticker-reset[data-section="${sectionId}"]`);
-                                if (resetBtn) resetBtn.classList.add('visible');
-                            }
-                        }
-                    } catch (err) {}
-                }
-            }
-        };
-
-        // ============================================================
-        // ANIMASI COUNTING ANGKA STATISTIK
-        // ============================================================
-        document.addEventListener("DOMContentLoaded", () => {
-            const counters = document.querySelectorAll('.stat-counter');
-            
-            const animateCounter = (counter) => {
-                const target = +counter.getAttribute('data-target');
-                const suffix = counter.getAttribute('data-suffix') || '';
-                const duration = 2000;
-                const startTime = performance.now();
-                
-                const updateCount = (currentTime) => {
-                    const elapsedTime = currentTime - startTime;
-                    const progress = Math.min(elapsedTime / duration, 1);
-                    
-                    const easeOutProgress = 1 - Math.pow(1 - progress, 4);
-                    const currentCount = Math.floor(easeOutProgress * target);
-                    
-                    counter.innerText = currentCount.toLocaleString('id-ID') + suffix;
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(updateCount);
-                    } else {
-                        counter.innerText = target.toLocaleString('id-ID') + suffix;
-                    }
-                };
-                
-                requestAnimationFrame(updateCount);
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        animateCounter(entry.target);
-                        observer.unobserve(entry.target); 
-                    }
-                });
-            }, { threshold: 0.5 }); 
-
-            counters.forEach(counter => {
-                observer.observe(counter);
-            });
-        });
     </script>
-    
-    <!-- Hide Netlify Badge -->
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const netlifyBadge = document.querySelector('a[href*="netlify.com"]');
@@ -949,6 +1092,58 @@
             }
             const badges = document.querySelectorAll('[id*="netlify"], [class*="netlify"]');
             badges.forEach(badge => badge.remove());
+        });
+    </script>
+
+    <!-- Stat counters -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const counters = document.querySelectorAll('.stat-counter');
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const setFinal = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                const suffix = counter.getAttribute('data-suffix') || '';
+                counter.innerText = target.toLocaleString('id-ID') + suffix;
+            };
+
+            if (prefersReducedMotion) {
+                counters.forEach(setFinal);
+                return;
+            }
+
+            const animateCounter = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                const suffix = counter.getAttribute('data-suffix') || '';
+                const duration = 2000;
+                const startTime = performance.now();
+
+                const updateCount = (currentTime) => {
+                    const elapsedTime = currentTime - startTime;
+                    const progress = Math.min(elapsedTime / duration, 1);
+                    const easeOutProgress = 1 - Math.pow(1 - progress, 4);
+                    const currentCount = Math.floor(easeOutProgress * target);
+                    counter.innerText = currentCount.toLocaleString('id-ID') + suffix;
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        counter.innerText = target.toLocaleString('id-ID') + suffix;
+                    }
+                };
+
+                requestAnimationFrame(updateCount);
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => observer.observe(counter));
         });
     </script>
 

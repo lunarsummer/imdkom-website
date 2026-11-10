@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Halaman Tidak Ditemukan (404) | IMDKOM Yogyakarta</title>
+    <meta name="description" content="Halaman yang Anda cari tidak ditemukan. Kunjungi beranda IMDKOM Yogyakarta untuk melihat program kursus & layanan service komputer." />
+    <meta name="robots" content="noindex,follow" />
+
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/output.css">
+    <script src="https://unpkg.com/lucide@1.70.0" defer></script>
+    <script src="assets/js/navbar.js" defer></script>
+
+    <style>
+        .notfound-hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            border-bottom: 1px solid #efefef;
+        }
+        .notfound-code {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(5rem, 18vw, 10rem);
+            line-height: 0.9;
+            color: #0d0d0d;
+            letter-spacing: -0.02em;
+        }
+        .notfound-code .accent { color: #0059ff; }
+        .notfound-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(1.4rem, 4vw, 2.1rem);
+            color: #0d0d0d;
+            margin-top: 0.75rem;
+            text-transform: uppercase;
+        }
+        .notfound-text {
+            color: #4b5563;
+            margin-top: 0.75rem;
+            max-width: 32rem;
+        }
+        .notfound-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 1.5rem;
+        }
+        .notfound-btn,
+        .notfound-btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.75rem 1.4rem;
+            border-radius: 0.5rem;
+            border: 1px solid transparent;
+        }
+        .notfound-btn { background: #0d0d0d; color: #ffffff; }
+        .notfound-btn:hover { background: #0059ff; }
+        .notfound-btn-ghost { color: #0d0d0d; border-color: #d8d8d8; background: #ffffff; }
+        .notfound-btn-ghost:hover { border-color: #0d0d0d; }
+    </style>
+</head>
+<body class="font-sans bg-white">
+    <div id="navbarMount" data-variant="sticky"></div>
+
+    <main class="notfound-hero">
+        <div class="container mx-auto px-4">
+            <div class="ant notfound-code">4<span class="accent">0</span>4</div>
+            <h1 class="ant notfound-title">Halaman Tidak Ditemukan</h1>
+            <p class="notfound-text">Maaf, alamat yang Anda tuju tidak ada atau sudah dipindahkan. Kembali ke beranda untuk melihat program kursus dan layanan service komputer kami.</p>
+            <div class="notfound-actions">
+                <a href="/" class="notfound-btn"><i data-lucide="home" class="w-4 h-4"></i> Kembali ke Beranda</a>
+                <a href="/kursus" class="notfound-btn-ghost"><i data-lucide="book-open" class="w-4 h-4"></i> Kursus Komputer</a>
+                <a href="/service" class="notfound-btn-ghost"><i data-lucide="wrench" class="w-4 h-4"></i> Computer Service</a>
+                <a href="/kontak" class="notfound-btn-ghost"><i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi Kami</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

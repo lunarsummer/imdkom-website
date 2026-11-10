@@ -73,7 +73,7 @@ export async function loadServiceDetail() {
 
     if (!id) {
         container.innerHTML = `
-            <div class="text-center text-red-600 py-10">
+            <div class="detail-error">
                 <p>Layanan tidak ditemukan. <a href="service.html" class="text-brand underline">Kembali ke katalog</a></p>
             </div>
         `;
@@ -84,7 +84,7 @@ export async function loadServiceDetail() {
         const docSnap = await getDoc(doc(db, 'services', id));
         if (!docSnap.exists()) {
             container.innerHTML = `
-                <div class="text-center text-red-600 py-10">
+                <div class="detail-error">
                     <p>Layanan tidak ditemukan. <a href="service.html" class="text-brand underline">Kembali ke katalog</a></p>
                 </div>
             `;
@@ -116,9 +116,16 @@ export async function loadServiceDetail() {
         setMeta('og:title', pageTitle);
         setMeta('og:description', pageDesc);
         setMeta('og:image', ogImage);
-        setMeta('og:url', window.location.href);
+        setMeta('og:url', `${window.location.origin}/service-detail?id=${id}`);
         setMeta('og:type', 'article');
         setMetaName('description', pageDesc);
+        let canonicalLink = document.querySelector('link[rel="canonical"]');
+        if (!canonicalLink) {
+            canonicalLink = document.createElement('link');
+            canonicalLink.rel = 'canonical';
+            document.head.appendChild(canonicalLink);
+        }
+        canonicalLink.href = `${window.location.origin}/service-detail?id=${id}`;
         setMetaName('twitter:card', 'summary_large_image');
         setMetaName('twitter:title', pageTitle);
         setMetaName('twitter:description', pageDesc);
@@ -130,46 +137,45 @@ export async function loadServiceDetail() {
 
         // Render
         container.innerHTML = `
-            <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
-                <div class="lg:w-1/2">
-                    <div class="relative">
+            <div class="pd-hero">
+                <div class="pd-media">
+                    <div class="pd-media-wrap">
                         <img src="${imageUrl}" alt="${escapeHtml(nama)}"
-                             class="w-full aspect-[4/5] object-cover rounded-2xl shadow-sm"
-                             loading="lazy"
+                             class="pd-img" loading="eager" fetchpriority="high"
                              onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';" />
                     </div>
                 </div>
-
-                <div class="lg:w-1/2">
-                    ${kategori ? `<p class="text-sm text-gray-500">${escapeHtml(kategori)}</p>` : ''}
-                    <h1 class="text-3xl md:text-4xl font-bold text-brand mt-1">${escapeHtml(nama)}</h1>
-
-                    <p class="text-gray-600 mt-4">${escapeHtml(deskripsiSingkat || deskripsi)}</p>
+                <div class="pd-body">
+                    <div class="pd-kicker-row">
+                        ${kategori && kategori !== nama ? `<span class="pd-kicker">${escapeHtml(kategori)}</span>` : ''}
+                    </div>
+                    <h1 class="pd-title ant">${escapeHtml(nama)}</h1>
+                    <p class="pd-desc">${escapeHtml(deskripsiSingkat || deskripsi)}</p>
 
                     ${hargaMulai ? `
-                        <div class="bg-gray-50 rounded-xl p-4 mt-4">
-                            <p class="text-xs text-gray-500 mb-1">Harga Mulai</p>
-                            <p class="text-2xl font-bold text-brand">${formatRupiah(hargaMulai)}</p>
+                        <div class="pd-price">
+                            <p class="pd-price-caption">Harga Mulai</p>
+                            <p class="pd-price-final">${formatRupiah(hargaMulai)}</p>
                         </div>
                     ` : ''}
 
-                    <div class="mt-6 flex flex-wrap gap-3">
-                        <button id="btnKonsultasi" class="bg-brand hover:bg-brand-light text-white font-medium px-8 py-3 rounded-xl transition-colors inline-flex items-center gap-2">
+                    <div class="pd-ctas">
+                        <button id="btnKonsultasi" class="pd-btn pd-btn-primary">
                             <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            Konsultasi
+                            Konsultasi Sekarang
                         </button>
-                        <button id="btnBooking" class="bg-brand-dark hover:bg-[#a0350a] text-white font-medium px-6 py-3 rounded-xl transition-colors inline-flex items-center gap-2">
+                        <button id="btnBooking" class="pd-btn pd-btn-wa">
                             <i data-lucide="calendar-check" class="w-4 h-4"></i>
                             Booking
                         </button>
-                        <button id="btnShare" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-6 py-3 rounded-xl transition-colors inline-flex items-center gap-2">
+                        <button id="btnShare" class="pd-btn pd-btn-ghost">
                             <i data-lucide="share-2" class="w-4 h-4"></i>
                             Bagikan
                         </button>
                     </div>
 
                     ${kategori ? `
-                        <a href="${pricelistUrl}" class="mt-6 inline-flex items-center gap-2 text-brand hover:text-brand-light font-medium text-sm border-b-2 border-brand hover:border-brand-light transition-colors">
+                        <a href="${pricelistUrl}" class="pd-pricelist-link">
                             <i data-lucide="tag" class="w-4 h-4"></i>
                             Lihat Pricelist ${escapeHtml(kategori)}
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -179,14 +185,15 @@ export async function loadServiceDetail() {
             </div>
 
             ${deskripsi ? `
-                <div class="mt-10 border-t border-gray-200 pt-8">
-                    <h2 class="text-xl font-bold text-brand flex items-center gap-2">
-                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                <div class="pd-section">
+                    <h2 class="pd-section-title">
+                        <i data-lucide="file-text" class="pd-section-icon"></i>
                         Tentang Layanan Ini
                     </h2>
-                    <p class="text-gray-700 mt-3 leading-relaxed whitespace-pre-line">${escapeHtml(deskripsi)}</p>
+                    <p class="pd-about">${escapeHtml(deskripsi)}</p>
                 </div>
             ` : ''}
+
         `;
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -200,7 +207,7 @@ export async function loadServiceDetail() {
     } catch (error) {
         console.error('Error loading service detail:', error);
         container.innerHTML = `
-            <div class="text-center text-red-600 py-10">
+            <div class="detail-error">
                 <p>Gagal memuat layanan. <a href="service.html" class="text-brand underline">Kembali ke katalog</a></p>
             </div>
         `;
@@ -659,30 +666,24 @@ export async function loadRecommendations(currentId) {
             const harga = service.hargaMulai || '';
 
             html += `
-                <a href="${escapeHtml(detailUrl)}" class="course-item block cursor-pointer hover:opacity-95 transition-opacity">
-                    <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3">
+                <a href="${escapeHtml(detailUrl)}" class="rec-card">
+                    <div class="rec-media">
                         <img src="${imageUrl}" alt="${escapeHtml(nama)}"
-                             class="w-full h-full object-cover" loading="lazy"
+                             class="rec-img" loading="eager"
                              onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';" />
                         ${service.kategori ? `
                             <span class="badge-kategori">${escapeHtml(service.kategori)}</span>
                         ` : ''}
                     </div>
-                    <h5 class="text-base font-semibold text-brand line-clamp-1 leading-tight">
-                        ${escapeHtml(nama)}
-                    </h5>
-                    <p class="text-xs text-gray-500 mt-1 line-clamp-1">
-                        ${escapeHtml(service.kategori || '')}
-                    </p>
-                    <p class="text-sm text-gray-600 mt-2 line-clamp-2 leading-snug flex-1">
-                        ${escapeHtml(deskripsi)}
-                    </p>
+                    <h3 class="rec-title">${escapeHtml(nama)}</h3>
+                    ${service.kategori ? `<p class="rec-cat">${escapeHtml(service.kategori)}</p>` : ''}
                     ${harga ? `
-                        <p class="text-xs text-gray-500 mt-2">
-                            Mulai <span class="font-bold text-brand text-sm">${escapeHtml(harga)}</span>
-                        </p>
+                        <div class="rec-price">
+                            <p class="rec-price-line">Mulai dari</p>
+                            <p class="rec-price-value">${escapeHtml(harga)}</p>
+                        </div>
                     ` : ''}
-                    <p class="text-brand font-medium text-xs mt-2">Lihat Detail →</p>
+                    <span class="rec-cta">Lihat Detail</span>
                 </a>
             `;
         });

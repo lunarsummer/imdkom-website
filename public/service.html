@@ -3,8 +3,43 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Servis Komputer | IMDKOM Yogyakarta</title>
-    <meta name="description" content="Layanan servis komputer profesional dari IMDKOM Yogyakarta. Service laptop, PC, printer, service panggil, dan sparepart." />
+    <link rel="canonical" href="https://imdkomyogyakarta.netlify.app/service" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Service Laptop & PC Jogja | Bergaransi 2 Bulan — IMDKOM" />
+    <meta property="og:description" content="Service laptop, PC, printer, dan panggil ke rumah/kantor di Yogyakarta. Sparepart original, garansi 2 bulan, gratis kunjungan radius 7 km." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://imdkomyogyakarta.netlify.app/service" />
+    <meta property="og:site_name" content="IMDKOM Yogyakarta" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+    <meta property="og:image:alt" content="IMDKOM Yogyakarta — Kursus Komputer & Service Laptop" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Service Laptop & PC Jogja | Bergaransi 2 Bulan — IMDKOM" />
+    <meta name="twitter:description" content="Service laptop, PC, printer, dan panggil ke rumah/kantor di Yogyakarta. Sparepart original, garansi 2 bulan, gratis kunjungan radius 7 km." />
+    <meta name="twitter:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Beranda",
+      "item": "https://imdkomyogyakarta.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Computer Service",
+      "item": "https://imdkomyogyakarta.netlify.app/service"
+    }
+  ]
+}
+    </script>
+    <title>Service Laptop & PC Jogja | Bergaransi 2 Bulan — IMDKOM</title>
+    <meta name="description" content="Service laptop, PC, printer, dan panggil ke rumah/kantor di Yogyakarta. Sparepart original, garansi 2 bulan, gratis kunjungan radius 7 km." />
 
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
 
@@ -14,40 +49,158 @@
 
     <link rel="stylesheet" href="assets/css/theme.css">
     <link rel="stylesheet" href="assets/css/output.css">
-    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <script src="https://unpkg.com/lucide@1.70.0" defer></script>
     <script src="assets/js/navbar.js" defer></script>
 
     <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-        }
-        .glass-dark {
-            background: rgba(26, 60, 94, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-        .page-bg {
-            background:
-                radial-gradient(circle at 20% 10%, rgba(26, 60, 94, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 90%, rgba(194, 65, 12, 0.08) 0%, transparent 40%),
-                linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
-        }
+
+        html { scroll-behavior: smooth; }
+        [data-lucide] { stroke-width: 2; }
+
         @keyframes pulse-wa {
             0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
             50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
         }
         .floating-wa { animation: pulse-wa 2s infinite; }
-        html { scroll-behavior: smooth; }
-        [data-lucide] { stroke-width: 2; }
+        @media (max-width: 480px) {
+            .floating-wa {
+                width: 2.75rem !important;
+                height: 2.75rem !important;
+                bottom: 1.25rem !important;
+                right: 1.25rem !important;
+            }
+        }
 
         /* ============================================================
-           PROGRAM GRID — KATALOG KONTEN
+           DISPLAY TOKENS (Anton + Poppins)
+           ============================================================ */
+        .ant {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+        }
+        .accent { color: #0059ff; }
+
+        /* ============================================================
+           HEADER (tanpa hero)
+           ============================================================ */
+        .kursus-head {
+            background-color: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            background-position: 50% 0;
+            border-bottom: 1px solid #efefef;
+            padding: 3rem 0 1.75rem;
+        }
+        .kursus-title {
+            font-size: clamp(2.1rem, 6vw, 3.6rem);
+            line-height: 1.03;
+            color: #0d0d0d;
+            margin: 0 0 0.85rem;
+        }
+        .kursus-lead {
+            max-width: 34rem;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #4b5563;
+            margin: 0 0 1.75rem;
+            text-wrap: pretty;
+        }
+        .kursus-toolbar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 18px;
+            padding: 0.65rem;
+            box-shadow: 0 10px 30px rgba(13, 13, 13, 0.06);
+        }
+        @media (min-width: 640px) {
+            .kursus-toolbar { flex-direction: row; align-items: center; }
+        }
+        .kursus-input,
+        .kursus-select {
+            width: 100%;
+            font-size: 0.875rem;
+            color: #0d0d0d;
+            background: #f7f7f8;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 0.72rem 0.9rem;
+            outline: none;
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .kursus-input { padding-left: 2.4rem; }
+        .kursus-input::placeholder { color: #6b7280; }
+        .kursus-input:focus,
+        .kursus-select:focus {
+            background: #ffffff;
+            border-color: #0059ff;
+            box-shadow: 0 0 0 3px rgba(0, 89, 255, 0.14);
+        }
+        @media (min-width: 640px) {
+            .kursus-select { width: 12rem; flex-shrink: 0; }
+        }
+        .kursus-pricelist { position: relative; }
+        .kursus-pricelist > summary {
+            list-style: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: #0d0d0d;
+            padding: 0.72rem 1.1rem;
+            border-radius: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .kursus-pricelist > summary::-webkit-details-marker { display: none; }
+        .kursus-pricelist > summary::marker { content: ""; }
+        .kursus-pricelist > summary:hover { background: #0059ff; }
+        .kursus-pricelist[open] > summary { background: #0059ff; }
+        .kursus-pricelist .chev { transition: transform 0.2s ease; }
+        .kursus-pricelist[open] .chev { transform: rotate(180deg); }
+        .kursus-pricelist-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: 0;
+            right: 0;
+            z-index: 40;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 14px;
+            box-shadow: 0 18px 40px rgba(13, 13, 13, 0.14);
+            padding: 0.4rem;
+            display: flex;
+            flex-direction: column;
+            min-width: 12rem;
+        }
+        @media (min-width: 640px) {
+            .kursus-pricelist-menu { left: auto; right: 0; width: 12rem; }
+        }
+        .kursus-pricelist-menu a {
+            font-size: 0.85rem;
+            color: #232830;
+            text-decoration: none;
+            padding: 0.5rem 0.7rem;
+            border-radius: 9px;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .kursus-pricelist-menu a:hover { background: #f3f6ff; color: #0059ff; }
+        .kursus-filter-info {
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        /* ============================================================
+           KARTU LAYANAN (senada kartu kursus)
            ============================================================ */
         .program-grid {
             display: grid;
@@ -62,58 +215,57 @@
         }
 
         .program-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 16px;
             overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             display: flex;
             flex-direction: column;
             height: 100%;
         }
         .program-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 24px rgba(26, 60, 94, 0.12);
+            transform: translateY(-4px);
+            border-color: #0d0d0d;
+            box-shadow: 0 18px 40px rgba(13, 13, 13, 0.10);
         }
         .program-image-wrapper {
             position: relative;
             width: 100%;
             aspect-ratio: 4 / 5;
-            background: #f3f4f6;
+            background: #f1f2f4;
             overflow: hidden;
         }
         .program-image-wrapper img {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.5s ease;
         }
         .program-card:hover .program-image-wrapper img {
-            transform: scale(1.05);
+            transform: scale(1.04);
         }
         .program-image-link { display: block; cursor: pointer; }
-        .program-image-link:hover { opacity: 0.97; }
+        .program-image-link:hover { opacity: 0.98; }
 
         .badge-kategori {
             position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: rgba(26, 60, 94, 0.85);
+            bottom: 0.6rem;
+            right: 0.6rem;
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            color: white;
-            font-size: 0.6rem;
-            font-weight: 700;
-            padding: 0.2rem 0.5rem;
+            color: #0d0d0d;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.3rem 0.65rem;
             border-radius: 999px;
+            border: 1px solid rgba(13, 13, 13, 0.08);
             z-index: 2;
-        }
-
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            max-width: calc(100% - 1.2rem);
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .skeleton {
@@ -126,97 +278,224 @@
             100% { background-position: -200% 0; }
         }
 
-        @keyframes toastIn {
-            from { opacity: 0; transform: translate(-50%, 20px); }
-            to { opacity: 1; transform: translate(-50%, 0); }
-        }
-        @keyframes toastOut {
-            from { opacity: 1; transform: translate(-50%, 0); }
-            to { opacity: 0; transform: translate(-50%, 20px); }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* ============================================================
-           ACTION BUTTONS — Responsive
-           ============================================================ */
-        .program-card-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.375rem;
-            margin-top: 0.75rem;
+        .program-card-body {
+            padding: 0.85rem 0.9rem 0.95rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
-        .program-card-actions .btn-detail {
-            grid-column: 1 / -1;
+        .program-card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0d0d0d;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: color 0.2s ease;
+            margin-bottom: 0.2rem;
         }
-        .program-card-actions .btn-action {
+        .program-card:hover .program-card-title { color: #0059ff; }
+
+        .program-btn-primary,
+        .program-btn-wa,
+        .program-btn-ghost {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.375rem;
-            padding: 0.5rem 0.5rem;
-            font-size: 0.7rem;
+            border-radius: 10px;
+            font-size: 0.72rem;
             font-weight: 600;
-            border-radius: 0.5rem;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            min-width: 0;
-            line-height: 1.2;
+            padding: 0.55rem 0.5rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
-        .program-card-actions .btn-action i {
-            flex-shrink: 0;
-            width: 0.875rem;
-            height: 0.875rem;
+        .program-btn-primary {
+            width: 100%;
+            color: #ffffff;
+            background: #0d0d0d;
+        }
+        .program-btn-primary:hover { background: #0059ff; }
+        .program-btn-wa {
+            color: #ffffff;
+            background: #075e54;
+        }
+        .program-btn-wa:hover { background: #043f36; }
+        .program-btn-ghost {
+            color: #0d0d0d;
+            background: #ffffff;
+            border-color: #d8d8d8;
+        }
+        .program-btn-ghost:hover {
+            color: #ffffff;
+            background: #0d0d0d;
+            border-color: #0d0d0d;
         }
 
-        @media (min-width: 640px) {
-            .program-card-actions {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-            .program-card-actions .btn-detail {
-                grid-column: auto;
-            }
-            .program-card-actions .btn-action {
-                font-size: 0.75rem;
-                padding: 0.5rem 0.25rem;
-            }
+        .kursus-loadmore {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #0d0d0d;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.8rem 1.6rem;
+            border-radius: 999px;
+            transition: background 0.2s ease;
         }
+        .kursus-loadmore:hover { background: #0059ff; }
 
         /* ============================================================
-           MOBILE OPTIMIZATION — Card lebih compact
+           KEUNGGULAN
            ============================================================ */
-        @media (max-width: 639px) {
-            .program-card .card-content {
-                padding: 0.625rem;
-            }
-            .program-card h3 {
-                font-size: 0.8125rem;
-            }
-            .program-card .card-desc {
-                font-size: 0.6875rem;
-            }
-            .program-card .card-price {
-                font-size: 0.6875rem;
-            }
-            .program-card .card-price strong {
-                font-size: 0.8125rem;
-            }
-            .badge-kategori {
-                font-size: 0.55rem;
-                padding: 0.15rem 0.4rem;
-                top: 0.375rem;
-                right: 0.375rem;
-            }
+        .svc-adv-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
         }
-
-        h1, h2 {
-            font-family: 'Anton', 'Poppins', sans-serif;
-            font-weight: 400;
-            letter-spacing: 0.02em;
+        @media (min-width: 640px) {
+            .svc-adv-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
         }
-        h1 { line-height: 1.1; }
-        h2 { line-height: 1.2; }
+        .svc-adv {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 1rem;
+            padding: 1.25rem 0.9rem;
+            text-align: left;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .svc-adv:hover {
+            transform: translateY(-3px);
+            border-color: #0d0d0d;
+            box-shadow: 0 14px 30px rgba(13, 13, 13, 0.08);
+        }
+        .svc-adv-head {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .svc-adv-icon {
+            width: 1.75rem;
+            height: 1.75rem;
+            color: #0059ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: none;
+        }
+        .svc-adv-title {
+            font-weight: 600;
+            color: #0d0d0d;
+            font-size: 0.875rem;
+        }
+        .svc-adv-text {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
 
         /* ============================================================
-           GALERI MARQUEE — Continuous Scroll (jalan ke kiri, smooth)
+           CARA KERJA
+           ============================================================ */
+        .svc-steps {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .svc-steps { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        }
+        .svc-step { text-align: center; }
+        .svc-step-num {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 999px;
+            background: #0d0d0d;
+            color: #ffffff;
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.85rem;
+        }
+        .svc-step-title {
+            font-weight: 600;
+            color: #0d0d0d;
+        }
+        .svc-step-text {
+            font-size: 0.82rem;
+            color: #6b7280;
+            margin-top: 0.35rem;
+            line-height: 1.55;
+        }
+
+        /* ============================================================
+           FINAL CTA (dark charcoal + accent)
+           ============================================================ */
+        .svc-cta {
+            padding: 3rem 0 4rem;
+            border-top: 1px solid #efefef;
+            background: #ffffff;
+        }
+        .svc-cta-card {
+            background-color: #0d0d0d;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 1.5rem;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            overflow: hidden;
+        }
+        @media (min-width: 640px) {
+            .svc-cta-card { padding: 3.5rem 3rem; }
+        }
+        .svc-cta-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0;
+        }
+        .svc-cta-text {
+            color: #a8b0bd;
+            max-width: 36rem;
+            margin: 0.6rem auto 0;
+            line-height: 1.6;
+            font-size: 0.92rem;
+        }
+        .svc-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: #0059ff;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.85rem 1.6rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .svc-cta-btn:hover { background: #0040c0; transform: translateY(-1px); }
+
+        /* ============================================================
+           GALERI MARQUEE
            ============================================================ */
         .galeri-marquee-wrapper {
             width: 100%;
@@ -224,53 +503,40 @@
             position: relative;
             padding: 1rem 0;
         }
-
         .galeri-marquee-track {
             display: flex;
             width: max-content;
             animation: scrollKiri 40s linear infinite;
             will-change: transform;
         }
-
-
         @keyframes scrollKiri {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
-
         .galeri-marquee-item {
             flex-shrink: 0;
             width: 250px;
             height: 250px;
             margin-right: 1rem;
-            background-color: #f3f4f6;
+            background: #f1f2f4;
+            border-radius: 16px;
             overflow: hidden;
-            border-radius: 0;
         }
-
         .galeri-marquee-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    /* Default: hitam putih */
-    filter: grayscale(100%);
-    transition: filter 0.4s ease;
-}
-
-/* Hover: berwarna (grayscale hilang) */
-.galeri-marquee-item:hover img {
-    filter: grayscale(0%);
-}
-
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(100%);
+            transition: filter 0.4s ease;
+        }
+        .galeri-marquee-item:hover img { filter: grayscale(0%); }
         @media (prefers-reduced-motion: reduce) {
             .galeri-marquee-track {
                 animation: none;
                 overflow-x: auto;
             }
         }
-
-        /* Mobile: item lebih kecil */
         @media (max-width: 639px) {
             .galeri-marquee-item {
                 width: 180px;
@@ -281,169 +547,248 @@
                 animation-duration: 30s;
             }
         }
+
+        /* ============================================================
+           FOOTER (senada kursus)
+           ============================================================ */
+        .kursus-footer {
+            border-top: 1px solid #e8e8e8;
+            background: #ffffff;
+            padding: 2.5rem 0 1.5rem;
+        }
+        .kursus-footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .kursus-footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; }
+        }
+        .kursus-footer-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 1.35rem;
+            color: #0d0d0d;
+        }
+        .kursus-footer-heading {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #0d0d0d;
+            margin-bottom: 0.85rem;
+        }
+        .kursus-footer-text {
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: #6b7280;
+            text-wrap: pretty;
+        }
+        .kursus-footer-link {
+            display: block;
+            font-size: 0.82rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            transition: color 0.2s ease;
+        }
+        .kursus-footer-link:hover { color: #0059ff; }
+        .kursus-footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #efefef;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        @media (min-width: 640px) {
+            .kursus-footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        /* ============================================================
+           PRICELIST DROPDOWN (footer)
+           ============================================================ */
+        .footer-pricelist { margin-top: 0.25rem; }
+        .footer-pricelist > summary {
+            list-style: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.82rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .footer-pricelist > summary::-webkit-details-marker { display: none; }
+        .footer-pricelist > summary::marker { content: ""; }
+        .footer-pricelist > summary:hover { color: #0059ff; }
+        .footer-pricelist[open] > summary { color: #0059ff; font-weight: 600; }
+        .footer-pricelist .chev { transition: transform 0.2s ease; }
+        .footer-pricelist[open] .chev { transform: rotate(180deg); }
+        .footer-pricelist-menu {
+            margin-top: 0.35rem;
+            padding: 0.35rem 0 0.35rem 0.75rem;
+            border-left: 2px solid #efefef;
+        }
+        .footer-pricelist-link {
+            display: block;
+            font-size: 0.8rem;
+            color: #4b5563;
+            padding: 0.22rem 0;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer-pricelist-link:hover { color: #0059ff; }
     </style>
 </head>
-<body class="font-sans page-bg">
+<body class="font-sans bg-white">
 
-<!-- NAVIGATION -->
+<!-- ============================================================ -->
+<!-- NAVIGATION                                                      -->
+<!-- ============================================================ -->
 <div id="navbarMount" data-variant="sticky"></div>
 
 <!-- ============================================================ -->
-<!-- HEADER + KATALOG                                              -->
+<!-- HEADER + KATALOG (tanpa hero)                                    -->
 <!-- ============================================================ -->
-<section class="py-8 sm:py-12">
+<section class="kursus-head">
     <div class="container mx-auto px-4">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Computer Service</h1>
-            <p class="text-sm sm:text-base text-gray-500 mt-2">Layanan perbaikan perangkat komputer profesional di Yogyakarta.</p>
+
+        <div class="max-w-2xl">
+            <h1 class="kursus-title ant">Computer <span class="accent">Service</span></h1>
+            <p class="kursus-lead">Layanan perbaikan perangkat komputer dan laptop profesional di Yogyakarta — cepat, bergaransi, dan harga transparan.</p>
         </div>
 
-        <div class="max-w-6xl mx-auto">
-            <!-- Search + Filter -->
-            <div class="max-w-3xl mx-auto mb-6">
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <div class="relative flex-1">
-                        <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                        <input type="text"
-                               id="searchInput"
-                               placeholder="Cari layanan service..."
-                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
-                    </div>
-                    <select id="filterKategori"
-                            class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white">
-                        <option value="">Semua Kategori</option>
-                    </select>
+        <div class="kursus-toolbar mt-6">
+            <div class="relative flex-1">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                <input type="text"
+                       id="searchInput"
+                       placeholder="Cari layanan service..."
+                       class="kursus-input" />
+            </div>
+
+            <select id="filterKategori" class="kursus-select">
+                <option value="">Semua Kategori</option>
+            </select>
+
+            <details class="kursus-pricelist">
+                <summary>Pricelist
+                    <i data-lucide="chevron-down" class="w-4 h-4 chev"></i>
+                </summary>
+                <div class="kursus-pricelist-menu">
+                    <a href="service-laptop.html">Service Laptop</a>
+                    <a href="service-pc.html">Service PC</a>
+                    <a href="service-printer.html">Service Printer</a>
+                    <a href="service-panggil.html">Service Panggil</a>
+                    <a href="sparepart.html">Sparepart</a>
                 </div>
-                <div id="filterInfo" class="text-xs text-gray-500 mt-2 text-center"></div>
-            </div>
-
-            <!-- Grid Katalog -->
-            <div class="program-grid" id="servicesCatalogContainer">
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-            </div>
-
-            <!-- Load More -->
-            <div class="text-center mt-10" id="loadMoreWrapper" style="display: none;">
-                <button id="loadMoreBtn" class="group inline-flex items-center gap-2 bg-white border-2 border-brand text-brand hover:bg-brand hover:text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
-                    <i data-lucide="chevron-down" class="w-5 h-5 group-hover:text-white transition-colors"></i>
-                    <span class="group-hover:text-white transition-colors">Tampilkan Lebih Banyak</span>
-                </button>
-            </div>
+            </details>
         </div>
+
+        <div id="filterInfo" class="kursus-filter-info"></div>
+
+        <h2 class="sr-only">Daftar Layanan Service</h2>
+
+        <div class="program-grid mt-8" id="servicesCatalogContainer">
+            <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+            <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+            <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+            <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+            <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+            <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+            <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+            <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+        </div>
+
+        <div class="text-center mt-10" id="loadMoreWrapper" style="display: none;">
+            <button id="loadMoreBtn" class="kursus-loadmore">
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                <span>Tampilkan Lebih Banyak</span>
+            </button>
+        </div>
+
     </div>
 </section>
 
 <!-- ============================================================ -->
-<!-- KEUNGGULAN                                                    -->
+<!-- KEUNGGULAN                                                       -->
 <!-- ============================================================ -->
-<section class="py-12 sm:py-16">
+<section class="py-12 sm:py-16 bg-white" id="keunggulanSection">
     <div class="container mx-auto px-4">
         <div class="text-center mb-10">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">
-                Keunggulan <span class="text-brand-dark">Layanan</span> Kami
-            </h2>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Keunggulan <span class="accent">Layanan Kami</span></h2>
             <p class="text-sm sm:text-base text-gray-500 mt-2">Kami berkomitmen memberikan layanan terbaik.</p>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
-            <div class="glass rounded-2xl p-5 text-center">
-                <div class="inline-flex items-center justify-center w-12 h-12 bg-success/10 rounded-xl mb-3">
-                    <i data-lucide="shield-check" class="w-6 h-6 text-success"></i>
+        <div class="svc-adv-grid max-w-5xl mx-auto">
+            <div class="svc-adv">
+                <div class="svc-adv-head">
+                    <span class="svc-adv-icon"><i data-lucide="shield-check" class="w-5 h-5"></i></span>
+                    <h3 class="svc-adv-title">Bergaransi</h3>
                 </div>
-                <h3 class="font-semibold text-gray-800 text-sm">Bergaransi</h3>
-                <p class="text-xs text-gray-500 mt-1">Garansi service 2 bulan</p>
+                <p class="svc-adv-text">Garansi service 2 bulan</p>
             </div>
-            <div class="glass rounded-2xl p-5 text-center">
-                <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-                    <i data-lucide="zap" class="w-6 h-6 text-brand"></i>
+            <div class="svc-adv">
+                <div class="svc-adv-head">
+                    <span class="svc-adv-icon"><i data-lucide="zap" class="w-5 h-5"></i></span>
+                    <h3 class="svc-adv-title">Proses Cepat</h3>
                 </div>
-                <h3 class="font-semibold text-gray-800 text-sm">Proses Cepat</h3>
-                <p class="text-xs text-gray-500 mt-1">Estimasi waktu jelas</p>
+                <p class="svc-adv-text">Estimasi waktu jelas</p>
             </div>
-            <div class="glass rounded-2xl p-5 text-center">
-                <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-                    <i data-lucide="wallet" class="w-6 h-6 text-brand"></i>
+            <div class="svc-adv">
+                <div class="svc-adv-head">
+                    <span class="svc-adv-icon"><i data-lucide="wallet" class="w-5 h-5"></i></span>
+                    <h3 class="svc-adv-title">Harga Transparan</h3>
                 </div>
-                <h3 class="font-semibold text-gray-800 text-sm">Harga Transparan</h3>
-                <p class="text-xs text-gray-500 mt-1">Tanpa biaya tersembunyi</p>
+                <p class="svc-adv-text">Tanpa biaya tersembunyi</p>
             </div>
-            <div class="glass rounded-2xl p-5 text-center">
-                <div class="inline-flex items-center justify-center w-12 h-12 bg-brand/10 rounded-xl mb-3">
-                    <i data-lucide="users" class="w-6 h-6 text-brand"></i>
+            <div class="svc-adv">
+                <div class="svc-adv-head">
+                    <span class="svc-adv-icon"><i data-lucide="users" class="w-5 h-5"></i></span>
+                    <h3 class="svc-adv-title">Teknisi Ahli</h3>
                 </div>
-                <h3 class="font-semibold text-gray-800 text-sm">Teknisi Ahli</h3>
-                <p class="text-xs text-gray-500 mt-1">Berpengalaman</p>
+                <p class="svc-adv-text">Berpengalaman</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ============================================================ -->
-<!-- CARA KERJA                                                    -->
+<!-- CARA KERJA                                                       -->
 <!-- ============================================================ -->
-<section class="py-12 sm:py-16 bg-white/40 backdrop-blur-sm">
+<section class="py-12 sm:py-16 bg-[#fafafa] border-y border-[#efefef]" id="caraKerjaSection">
     <div class="container mx-auto px-4">
         <div class="text-center mb-10">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Cara Kerja</h2>
             <p class="text-sm sm:text-base text-gray-500 mt-2">Cepat, aman, bergaransi</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
-            <div class="text-center">
-                <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
-                    <i data-lucide="mouse-pointer-click" class="w-6 h-6 text-brand"></i>
-                </div>
-                <h3 class="font-semibold text-gray-800">Pilih Layanan</h3>
-                <p class="text-sm text-gray-500 mt-2">Pilih layanan dari katalog di atas</p>
+        <div class="svc-steps max-w-4xl mx-auto">
+            <div class="svc-step">
+                <div class="svc-step-num">1</div>
+                <h3 class="svc-step-title">Pilih Layanan</h3>
+                <p class="svc-step-text">Pilih layanan dari katalog di atas</p>
             </div>
-            <div class="text-center">
-                <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
-                    <i data-lucide="message-circle" class="w-6 h-6 text-brand"></i>
-                </div>
-                <h3 class="font-semibold text-gray-800">Konsultasi</h3>
-                <p class="text-sm text-gray-500 mt-2">Chat WhatsApp untuk konsultasi gratis</p>
+            <div class="svc-step">
+                <div class="svc-step-num">2</div>
+                <h3 class="svc-step-title">Konsultasi</h3>
+                <p class="svc-step-text">Chat WhatsApp untuk konsultasi gratis</p>
             </div>
-            <div class="text-center">
-                <div class="inline-flex items-center justify-center w-14 h-14 glass rounded-full mb-4 border border-brand/20">
-                    <i data-lucide="check-circle-2" class="w-6 h-6 text-brand"></i>
-                </div>
-                <h3 class="font-semibold text-gray-800">Selesai</h3>
-                <p class="text-sm text-gray-500 mt-2">Perangkat normal & bergaransi</p>
+            <div class="svc-step">
+                <div class="svc-step-num">3</div>
+                <h3 class="svc-step-title">Selesai</h3>
+                <p class="svc-step-text">Perangkat normal &amp; bergaransi</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ============================================================ -->
-<!-- CTA — KONSULTASI                                              -->
+<!-- GALERI KEGIATAN                                                  -->
 <!-- ============================================================ -->
-<section class="py-12 sm:py-16">
-    <div class="container mx-auto px-4">
-        <div class="glass-dark rounded-3xl p-8 sm:p-12 text-center max-w-3xl mx-auto relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
-            <div class="relative">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Butuh Bantuan Cepat?</h2>
-                <p class="text-white/80 mt-3 max-w-lg mx-auto text-sm sm:text-base">
-                    Konsultasikan masalah perangkat Anda langsung via WhatsApp. Gratis, tanpa komitmen.
-                </p>
-                <button id="ctaKonsultasiBtn" class="mt-6 inline-flex items-center gap-2 bg-white text-brand hover:bg-gray-100 font-medium px-6 py-3 rounded-xl transition-all">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i>
-                    Konsultasi Gratis
-                </button>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================================ -->
-<!-- GALERI KEGIATAN — MARQUEE                                     -->
-<!-- ============================================================ -->
-<section class="py-12 sm:py-16 bg-white/40 backdrop-blur-sm">
+<section class="py-12 sm:py-16 bg-white" id="galeriSection">
     <div class="container mx-auto px-4 max-w-5xl mb-8">
         <div class="text-center">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Galeri Kegiatan</h2>
@@ -451,10 +796,8 @@
         </div>
     </div>
 
-    <!-- Marquee Wrapper -->
     <div class="galeri-marquee-wrapper">
         <div class="galeri-marquee-track" id="galeriTrack">
-            <!-- Diisi via JS — item akan diduplikat otomatis -->
             <div class="text-center text-gray-500 py-8 w-full">
                 <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
                 <p class="mt-2 text-sm">Memuat galeri...</p>
@@ -463,41 +806,76 @@
     </div>
 </section>
 
-    <!-- ============================================================ -->
-    <!-- FOOTER                                                       -->
-    <!-- ============================================================ -->
-    <footer class="py-8 sm:py-10 border-t border-gray-200 relative" id="footerSection">
-        <div class="sticker-layer" data-section="footer"></div>
-        
-        <div class="container mx-auto px-4 relative">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div>
-                    <h5 class="text-xl font-bold text-brand">IMDKOM</h5>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Kursus &amp; Pelatihan • Service Komputer</p>
-                </div>
-                <div>
-                    <h6 class="font-medium text-gray-700 text-sm mb-2">Kontak</h6>
-                    <p class="text-gray-500 text-xs sm:text-sm" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
-                    <p class="text-gray-500 text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
-                </div>
-                <div class="md:text-right">
-                    <p class="text-gray-400 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
-                </div>
-            </div>
+<!-- ============================================================ -->
+<!-- CTA — KONSULTASI                                                 -->
+<!-- ============================================================ -->
+<section class="svc-cta" id="svcCtaSection">
+    <div class="container mx-auto px-4">
+        <div class="svc-cta-card">
+            <h2 class="svc-cta-title">Butuh <span style="color:#6ea3ff">Bantuan</span> Cepat?</h2>
+            <p class="svc-cta-text">Konsultasikan masalah perangkat Anda langsung via WhatsApp. Gratis, tanpa komitmen.</p>
+            <button id="ctaKonsultasiBtn" class="svc-cta-btn">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Konsultasi Gratis
+            </button>
         </div>
-    </footer>
+    </div>
+</section>
 
 <!-- ============================================================ -->
-<!-- FLOATING WHATSAPP                                             -->
+<!-- FOOTER                                                           -->
 <!-- ============================================================ -->
-<a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-50" aria-label="Hubungi via WhatsApp">
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+<footer class="kursus-footer" id="footerSection">
+    <div class="container mx-auto px-4">
+        <div class="kursus-footer-grid">
+            <div>
+                <p class="kursus-footer-title">IMDKOM</p>
+                <p class="kursus-footer-text mt-2">Kursus &amp; pelatihan komputer, service, dan perakitan PC di Yogyakarta. Belajar langsung dari praktisi.</p>
+            </div>
+            <div>
+                <p class="kursus-footer-heading">Jelajahi</p>
+                <a class="kursus-footer-link" href="index.html">Beranda</a>
+                <a class="kursus-footer-link" href="kursus.html">Kursus &amp; Pelatihan</a>
+                <a class="kursus-footer-link" href="service.html">Service Komputer</a>
+                <a class="kursus-footer-link" href="karir.html">Karir</a>
+            </div>
+            <div>
+                <p class="kursus-footer-heading">Kontak</p>
+                <p class="kursus-footer-text" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="kursus-footer-text">Jl. Kaliurang Km 7,3 No 38, Yogyakarta</p>
+                <p class="kursus-footer-text" id="footerInstagram">Instagram: @imdkom_yk</p>
+                <details class="footer-pricelist">
+                    <summary>Pricelist
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 chev"></i>
+                    </summary>
+                    <div class="footer-pricelist-menu">
+                        <a class="footer-pricelist-link" href="service-laptop.html">Service Laptop</a>
+                        <a class="footer-pricelist-link" href="service-pc.html">Service PC</a>
+                        <a class="footer-pricelist-link" href="service-printer.html">Service Printer</a>
+                        <a class="footer-pricelist-link" href="service-panggil.html">Service Panggil</a>
+                        <a class="footer-pricelist-link" href="sparepart.html">Sparepart</a>
+                    </div>
+                </details>
+            </div>
+        </div>
+        <div class="kursus-footer-bottom">
+            <p id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+            <p>Dibuat di Yogyakarta.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ============================================================ -->
+<!-- FLOATING WHATSAPP                                                -->
+<!-- ============================================================ -->
+<a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20bertanya." id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
     </svg>
 </a>
 
 <!-- ============================================================ -->
-<!-- JAVASCRIPT                                                    -->
+<!-- JAVASCRIPT                                                       -->
 <!-- ============================================================ -->
 <script type="module">
     import {

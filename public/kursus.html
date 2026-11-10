@@ -3,8 +3,43 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kursus & Pelatihan | IMDKOM</title>
-    <meta name="description" content="Daftar program kursus dan pelatihan komputer dari IMDKOM. Temukan program yang sesuai kebutuhan Anda." />
+    <link rel="canonical" href="https://imdkomyogyakarta.netlify.app/kursus" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Kursus Komputer Jogja | Privat, Office & Sertifikasi — IMDKOM" />
+    <meta property="og:description" content="Daftar program kursus komputer IMDKOM Yogyakarta: Microsoft Office, desain grafis, pemrograman, kelas privat & reguler. Izin Dinas Pendidikan 098/Kpts/2021." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://imdkomyogyakarta.netlify.app/kursus" />
+    <meta property="og:site_name" content="IMDKOM Yogyakarta" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+    <meta property="og:image:alt" content="IMDKOM Yogyakarta — Kursus Komputer & Service Laptop" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kursus Komputer Jogja | Privat, Office & Sertifikasi — IMDKOM" />
+    <meta name="twitter:description" content="Daftar program kursus komputer IMDKOM Yogyakarta: Microsoft Office, desain grafis, pemrograman, kelas privat & reguler. Izin Dinas Pendidikan 098/Kpts/2021." />
+    <meta name="twitter:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Beranda",
+      "item": "https://imdkomyogyakarta.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Kursus & Pelatihan",
+      "item": "https://imdkomyogyakarta.netlify.app/kursus"
+    }
+  ]
+}
+    </script>
+    <title>Kursus Komputer Jogja | Privat, Office & Sertifikasi — IMDKOM</title>
+    <meta name="description" content="Daftar program kursus komputer IMDKOM Yogyakarta: Microsoft Office, desain grafis, pemrograman, kelas privat & reguler. Izin Dinas Pendidikan 098/Kpts/2021." />
     
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     
@@ -14,7 +49,7 @@
 
     <link rel="stylesheet" href="assets/css/theme.css">
     <link rel="stylesheet" href="assets/css/output.css">
-    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <script src="https://unpkg.com/lucide@1.70.0" defer></script>
     <script src="assets/js/navbar.js" defer></script>
 
     <style>
@@ -408,6 +443,42 @@
         @media (min-width: 640px) {
             .kursus-footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
         }
+
+        /* ============================================================
+           PRICELIST DROPDOWN (footer)
+           ============================================================ */
+        .footer-pricelist { margin-top: 0.25rem; }
+        .footer-pricelist > summary {
+            list-style: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.82rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .footer-pricelist > summary::-webkit-details-marker { display: none; }
+        .footer-pricelist > summary::marker { content: ""; }
+        .footer-pricelist > summary:hover { color: #0059ff; }
+        .footer-pricelist[open] > summary { color: #0059ff; font-weight: 600; }
+        .footer-pricelist .chev { transition: transform 0.2s ease; }
+        .footer-pricelist[open] .chev { transform: rotate(180deg); }
+        .footer-pricelist-menu {
+            margin-top: 0.35rem;
+            padding: 0.35rem 0 0.35rem 0.75rem;
+            border-left: 2px solid #efefef;
+        }
+        .footer-pricelist-link {
+            display: block;
+            font-size: 0.8rem;
+            color: #4b5563;
+            padding: 0.22rem 0;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer-pricelist-link:hover { color: #0059ff; }
     </style>
 </head>
 <body class="font-sans bg-white">
@@ -512,8 +583,20 @@
                 <div>
                     <p class="kursus-footer-heading">Kontak</p>
                     <p class="kursus-footer-text" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="kursus-footer-text">Jl. Kaliurang Km 7,3 No 38, Yogyakarta</p>
                     <p class="kursus-footer-text" id="footerInstagram">Instagram: @imdkom_yk</p>
-                    <a class="kursus-footer-link mt-1" href="tracking.html">Lacak Status Pendaftaran</a>
+                    <details class="footer-pricelist">
+                        <summary>Pricelist
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 chev"></i>
+                        </summary>
+                        <div class="footer-pricelist-menu">
+                            <a class="footer-pricelist-link" href="service-laptop.html">Service Laptop</a>
+                            <a class="footer-pricelist-link" href="service-pc.html">Service PC</a>
+                            <a class="footer-pricelist-link" href="service-printer.html">Service Printer</a>
+                            <a class="footer-pricelist-link" href="service-panggil.html">Service Panggil</a>
+                            <a class="footer-pricelist-link" href="sparepart.html">Sparepart</a>
+                        </div>
+                    </details>
                 </div>
             </div>
             <div class="kursus-footer-bottom">
@@ -524,7 +607,7 @@
     </footer>
 
     <!-- FLOATING WHATSAPP -->
-    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+    <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20bertanya." id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>

@@ -138,54 +138,50 @@ export async function loadCoursePreview() {
             const promo = getPromoInfo(data);
             
             html += `
-    <a href="program-detail.html?id=${docSnap.id}" class="course-item block cursor-pointer hover:opacity-95 transition-opacity">
-        <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3">
-            <img src="${imageUrl}" 
-                 alt="${escapeHtml(data.nama || 'Program')}" 
-                 class="w-full h-full object-cover"
-                 loading="lazy" />
-            ${promo.hasPromo ? `
-                <span class="absolute top-3 left-3 bg-brand-dark text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md">
-                    ${escapeHtml(promo.label)}
-                </span>
-            ` : ''}
-        </div>
-        
-        <div class="flex flex-col flex-1">
-            <h5 class="text-base font-semibold text-brand line-clamp-1 leading-tight">
-                ${escapeHtml(data.nama || 'Program')}
-            </h5>
-            
-            <p class="text-xs text-gray-500 mt-1 line-clamp-1">
-                ${escapeHtml(data.kategori || '')}
-            </p>
-            
-            <p class="text-sm text-gray-600 mt-2 line-clamp-2 leading-snug flex-1">
+    <div class="program-card">
+        <a href="program-detail.html?id=${docSnap.id}" class="block program-image-link" aria-label="Lihat detail ${escapeHtml(data.nama || 'Program')}">
+            <div class="program-image-wrapper">
+                <img src="${imageUrl}"
+                     alt="${escapeHtml(data.nama || 'Program')}"
+                     class="w-full h-full object-cover"
+                     loading="eager" />
+                ${promo.hasPromo ? `
+                    <span class="badge-promo"><span>${escapeHtml(promo.label)}</span></span>
+                ` : ''}
+                ${data.kategori ? `
+                    <span class="badge-kategori">${escapeHtml(data.kategori)}</span>
+                ` : ''}
+            </div>
+        </a>
+
+        <div class="program-card-body">
+            <a href="program-detail.html?id=${docSnap.id}" class="block group">
+                <h3 class="program-card-title">
+                    ${escapeHtml(data.nama || 'Program')}
+                </h3>
+            </a>
+            <p class="text-xs text-gray-500 mt-1">${escapeHtml(data.kategori || '')}</p>
+            <p class="text-sm text-gray-600 mt-1.5 line-clamp-2 flex-1">
                 ${escapeHtml(data.deskripsiSingkat || data.deskripsi || '')}
             </p>
-            
-            <div class="mt-3">
+            <div class="mt-2">
                 ${renderHarga(data, { size: 'md' })}
             </div>
-            
-            <div class="flex flex-wrap gap-3 mt-2">
-                <span class="text-brand font-medium text-xs border-b border-brand">
-                    Lihat Detail →
-                </span>
-                
-                <button class="share-program-btn text-[#075e54] hover:text-[#043f36] font-medium text-xs border-b border-[#075e54] hover:border-[#043f36] transition-colors inline-flex items-center gap-1"
-                        onclick="event.preventDefault(); event.stopPropagation();"
+            <div class="mt-3 flex gap-1.5">
+                <a href="program-detail.html?id=${docSnap.id}" class="program-btn-primary" style="flex:1">
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    Lihat Detail
+                </a>
+                <button class="share-program-btn program-btn-ghost" style="flex:none"
                         data-program-id="${docSnap.id}"
                         data-program-name="${escapeHtml(data.nama || 'Program')}"
-                        data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                    </svg>
-                    Bagikan
+                        data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}"
+                        title="Bagikan">
+                    <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
                 </button>
             </div>
         </div>
-    </a>
+    </div>
 `;
         });
         container.innerHTML = html;
@@ -239,40 +235,44 @@ export async function loadServicePreview() {
             const targetUrl = `service-detail.html?id=${docSnap.id}`;
             
             html += `
-    <a href="${targetUrl}" class="course-item block cursor-pointer transition-all duration-200 hover:-translate-y-1">
-        <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3">
-            <img src="${imageUrl}" 
-                 alt="${serviceName}" 
-                 class="w-full h-full object-cover"
-                 loading="lazy" />
-        </div>
-        
-        <div class="flex flex-col flex-1">
-            <h5 class="text-base font-semibold text-brand line-clamp-1 leading-tight">
-                ${serviceName}
-            </h5>
-            
-            <p class="text-xs text-gray-500 mt-1 line-clamp-1">
-                ${escapeHtml(data.kategori || '')}
-            </p>
-            
-            <p class="text-sm text-gray-600 mt-2 line-clamp-2 leading-snug flex-1">
+    <div class="program-card">
+        <a href="${targetUrl}" class="block program-image-link" aria-label="Lihat detail ${serviceName}">
+            <div class="program-image-wrapper">
+                <img src="${imageUrl}"
+                     alt="${serviceName}"
+                     class="w-full h-full object-cover"
+                     loading="eager" />
+                ${data.kategori ? `
+                    <span class="badge-kategori">${escapeHtml(data.kategori)}</span>
+                ` : ''}
+            </div>
+        </a>
+
+        <div class="program-card-body">
+            <a href="${targetUrl}" class="block group">
+                <h3 class="program-card-title">${serviceName}</h3>
+            </a>
+            <p class="text-xs text-gray-500 mt-1">${escapeHtml(data.kategori || '')}</p>
+            <p class="text-sm text-gray-600 mt-1.5 line-clamp-2 flex-1">
                 ${escapeHtml(data.deskripsi || '')}
             </p>
-            
             ${data.hargaMulai ? `
-                <p class="text-xs text-gray-500 mt-2">
-                    Mulai <span class="font-bold text-brand text-sm">${formatRupiah(data.hargaMulai)}</span>
-                </p>
+                <p class="text-xs text-gray-500 mt-2">Mulai dari</p>
+                <p class="text-sm font-bold text-[#0d0d0d]">${formatRupiah(data.hargaMulai)}</p>
             ` : ''}
-            
-            <button class="wa-service-btn mt-2 text-brand hover:text-brand-light font-medium text-xs border-b border-brand hover:border-brand-light transition-colors text-left"
-                    onclick="event.preventDefault(); event.stopPropagation();"
-                    data-service="${serviceName}">
-                Tanya via WhatsApp →
-            </button>
+            <div class="mt-3 flex gap-1.5">
+                <a href="${targetUrl}" class="program-btn-primary" style="flex:1">
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    Lihat Detail
+                </a>
+                <button class="wa-service-btn program-btn-ghost" style="flex:none"
+                        data-service="${serviceName}"
+                        title="Tanya via WhatsApp">
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
         </div>
-    </a>
+    </div>
 `;
         });
         container.innerHTML = html;
@@ -401,132 +401,6 @@ export async function loadFaqs() {
     }
 }
 
-// ============================================================
-// RENDER STICKER KE SECTION & GLOBAL LAYER
-// ============================================================
-function renderSectionStickers(stickers) {
-    if (!Array.isArray(stickers) || stickers.length === 0) return;
-
-    const isMobile = window.innerWidth < 768;
-    const device = isMobile ? 'mobile' : 'desktop';
-
-    // Pisahkan anchor section vs free
-    const sectionAnchored = [];
-    const freeAnchored = [];
-
-    stickers.forEach(s => {
-        if (s.aktif === false) return;
-        if (!s.gambar) return;
-        
-        const anchor = s.anchor || (s.section === 'global' ? 'free' : 'section');
-        if (anchor === 'free' || s.section === 'global') {
-            freeAnchored.push(s);
-        } else {
-            sectionAnchored.push(s);
-        }
-    });
-
-    // ============================================================
-    // RENDER ANCHOR SECTION — ke .sticker-layer[data-section]
-    // ============================================================
-    const bySection = {};
-    sectionAnchored.forEach(s => {
-        const sec = s.section || 'hero';
-        if (!bySection[sec]) bySection[sec] = [];
-        bySection[sec].push(s);
-    });
-
-    Object.keys(bySection).forEach(sectionId => {
-        const sectionStickers = bySection[sectionId].sort((a, b) => (a.order || 0) - (b.order || 0));
-
-        // Cari semua layer untuk section ini (hero punya 2: mobile & desktop)
-        const layers = document.querySelectorAll(`.sticker-layer[data-section="${sectionId}"]`);
-        if (layers.length === 0) return;
-
-        layers.forEach(layer => {
-            const layerDevice = layer.dataset.device;
-            if (layerDevice && layerDevice !== device) {
-                layer.innerHTML = '';
-                return;
-            }
-
-            layer.innerHTML = sectionStickers.map((s, idx) => createStickerHTML(s, sectionId, idx, device)).join('');
-        });
-    });
-
-    // ============================================================
-    // RENDER FREE ANCHOR — ke #globalStickerLayer
-    // ============================================================
-    const globalLayer = document.getElementById('globalStickerLayer');
-    if (globalLayer) {
-        if (freeAnchored.length === 0) {
-            globalLayer.innerHTML = '';
-        } else {
-            const sortedFree = freeAnchored.sort((a, b) => (a.order || 0) - (b.order || 0));
-            globalLayer.innerHTML = sortedFree.map((s, idx) => createStickerHTML(s, 'global', idx, device)).join('');
-        }
-    }
-
-    // Init drag setelah render
-    if (typeof window.initAllStickerDrag === 'function') {
-        setTimeout(() => window.initAllStickerDrag(), 100);
-    }
-}
-
-// ============================================================
-// HELPER: Create Sticker HTML
-// ============================================================
-function createStickerHTML(s, sectionId, idx, device) {
-    // Pilih posisi sesuai device
-    let posX, posY, ukuran, rotasi;
-    if (device === 'mobile') {
-        posX = s.posisiXMobile ?? s.posisiX ?? 10;
-        posY = s.posisiYMobile ?? s.posisiY ?? 60;
-        ukuran = s.ukuranMobile ?? s.ukuran ?? 15;
-        rotasi = s.rotasiMobile ?? s.rotasi ?? 0;
-    } else {
-        posX = s.posisiX ?? 10;
-        posY = s.posisiY ?? 60;
-        ukuran = s.ukuran ?? 15;
-        rotasi = s.rotasi ?? 0;
-    }
-
-    const stickerId = s.id || `sticker-${sectionId}-${idx}`;
-    
-    // Class: permanent, animasi, shadow
-    const permanentClass = s.permanent ? 'permanent' : '';
-    const animasiClass = s.animasi !== false ? 'animasi-true' : 'animasi-false';
-    
-    // Shadow via inline style (karena opacity dinamis)
-    const hasShadow = s.shadow !== false;
-    const shadowOpacity = s.shadowOpacity ?? 0.25;
-    const shadowStyle = hasShadow 
-        ? `filter: drop-shadow(0 4px 12px rgba(0,0,0,${shadowOpacity}));` 
-        : 'filter: none;';
-
-    return `
-        <div class="sticker-item ${permanentClass} ${animasiClass}"
-             data-sticker-id="${escapeHtml(stickerId)}"
-             data-sticker-index="${idx}"
-             style="
-                 left: ${posX}%;
-                 top: ${posY}%;
-                 width: ${ukuran}%;
-                 transform: rotate(${rotasi}deg);
-                 z-index: ${10 + (s.order || 0)};
-                 --sticker-rotation: ${rotasi}deg;
-                 --current-rotation: ${rotasi}deg;
-                 ${shadowStyle}
-             ">
-            <img src="${escapeHtml(s.gambar)}" 
-                 alt="Sticker dekoratif" 
-                 draggable="false" 
-                 loading="lazy" />
-        </div>
-    `;
-}
-
-// ============================================================
 // LOAD LANDING PAGE CONTENT
 // ============================================================
 export async function loadLandingPageContent() {
@@ -576,37 +450,6 @@ export async function loadLandingPageContent() {
         // ============================================================
         // SECTION STICKERS — render ke section + global
         // ============================================================
-        let stickers = [];
-        if (Array.isArray(data.sectionStickers) && data.sectionStickers.length > 0) {
-            stickers = data.sectionStickers;
-        } else if (Array.isArray(data.heroStickers) && data.heroStickers.length > 0) {
-            // Migrasi dari heroStickers lama → section: 'hero', anchor: 'section'
-            stickers = data.heroStickers.map((s, idx) => ({
-                id: `sticker-hero-${idx}`,
-                section: 'hero',
-                anchor: 'section',
-                gambar: s.gambar || '',
-                posisiX: s.posisiX ?? 10,
-                posisiY: s.posisiY ?? 60,
-                ukuran: s.ukuran ?? 15,
-                rotasi: s.rotasi ?? 0,
-                posisiXMobile: s.posisiX ?? 10,
-                posisiYMobile: s.posisiY ?? 60,
-                ukuranMobile: s.ukuran ?? 15,
-                rotasiMobile: s.rotasi ?? 0,
-                permanent: false,
-                aktif: s.aktif !== false,
-                order: s.order ?? (idx + 1),
-                animasi: true,
-                shadow: true,
-                shadowOpacity: 0.25
-            }));
-        }
-
-        if (stickers.length > 0) {
-            renderSectionStickers(stickers);
-        }
-
         // ============================================================
         // ABOUT
         // ============================================================
@@ -707,14 +550,14 @@ export async function loadProgramDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     if (!id) {
-        container.innerHTML = '<div class="text-center text-red-600 py-10">Program tidak ditemukan.</div>';
+        container.innerHTML = '<div class="detail-error">Program tidak ditemukan.</div>';
         return;
     }
 
     try {
         const docSnap = await getDoc(doc(db, 'programs', id));
         if (!docSnap.exists()) {
-            container.innerHTML = '<div class="text-center text-red-600 py-10">Program tidak ditemukan.</div>';
+            container.innerHTML = '<div class="detail-error">Program tidak ditemukan.</div>';
             return;
         }
 
@@ -759,9 +602,16 @@ export async function loadProgramDetail() {
         setMetaProperty('og:title', data.nama || 'Program Kursus');
         setMetaProperty('og:description', pageDesc);
         setMetaProperty('og:image', ogImageUrl);
-        setMetaProperty('og:url', window.location.href);
+        setMetaProperty('og:url', `${window.location.origin}/program-detail?id=${id}`);
         setMetaProperty('og:type', 'article');
         setMetaName('description', pageDesc);
+        let canonicalLink = document.querySelector('link[rel="canonical"]');
+        if (!canonicalLink) {
+            canonicalLink = document.createElement('link');
+            canonicalLink.rel = 'canonical';
+            document.head.appendChild(canonicalLink);
+        }
+        canonicalLink.href = `${window.location.origin}/program-detail?id=${id}`;
         setMetaName('twitter:card', 'summary_large_image');
         setMetaName('twitter:title', data.nama || 'Program Kursus');
         setMetaName('twitter:description', pageDesc);
@@ -769,12 +619,12 @@ export async function loadProgramDetail() {
 
         let materiHtml = '';
         if (data.materi && Array.isArray(data.materi) && data.materi.length > 0) {
-            materiHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">';
+            materiHtml = '<div class="pd-checklist">';
             data.materi.forEach(item => {
                 materiHtml += `
-                    <div class="flex items-start gap-2 text-gray-700 text-sm">
-                        <svg class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                    <div class="pd-check-item">
+                        <svg class="pd-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 13l4 4L19 7"></path>
                         </svg>
                         <span>${escapeHtml(item)}</span>
                     </div>
@@ -785,15 +635,15 @@ export async function loadProgramDetail() {
 
         let benefitHtml = '';
         if (data.benefit && Array.isArray(data.benefit) && data.benefit.length > 0) {
-            benefitHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">';
+            benefitHtml = '<div class="pd-benefit-grid">';
             data.benefit.forEach(item => {
                 const icon = getBenefitIcon(item);
                 benefitHtml += `
-                    <div class="flex items-start gap-3 bg-white border border-gray-200 rounded-xl p-4">
-                        <div class="w-9 h-9 rounded-lg bg-brand/10 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="${icon}" class="w-4 h-4 text-brand"></i>
+                    <div class="pd-benefit-card">
+                        <div class="pd-benefit-icon">
+                            <i data-lucide="${icon}" class="w-4 h-4"></i>
                         </div>
-                        <span class="text-sm text-gray-700 leading-snug">${escapeHtml(item)}</span>
+                        <span class="pd-benefit-text">${escapeHtml(item)}</span>
                     </div>
                 `;
             });
@@ -807,41 +657,41 @@ export async function loadProgramDetail() {
         let durasiSesiHtml = '';
         if (totalPertemuan > 0 || jamPerSesi > 0 || data.durasi) {
             durasiSesiHtml = `
-                <div class="grid grid-cols-2 gap-3 mt-4">
+                <div class="pd-stats">
                     ${data.durasi ? `
-                        <div class="bg-gray-50 rounded-lg p-3">
-                            <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                        <div class="pd-stat">
+                            <div class="pd-stat-label">
                                 <i data-lucide="clock" class="w-3.5 h-3.5"></i>
                                 <span>Durasi</span>
                             </div>
-                            <p class="font-semibold text-gray-800 text-sm">${escapeHtml(data.durasi)}</p>
+                            <p class="pd-stat-value">${escapeHtml(data.durasi)}</p>
                         </div>
                     ` : ''}
                     ${totalPertemuan > 0 ? `
-                        <div class="bg-gray-50 rounded-lg p-3">
-                            <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                        <div class="pd-stat">
+                            <div class="pd-stat-label">
                                 <i data-lucide="calendar-days" class="w-3.5 h-3.5"></i>
                                 <span>Pertemuan</span>
                             </div>
-                            <p class="font-semibold text-gray-800 text-sm">${totalPertemuan}x</p>
+                            <p class="pd-stat-value">${totalPertemuan}x</p>
                         </div>
                     ` : ''}
                     ${jamPerSesi > 0 ? `
-                        <div class="bg-gray-50 rounded-lg p-3">
-                            <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                        <div class="pd-stat">
+                            <div class="pd-stat-label">
                                 <i data-lucide="timer" class="w-3.5 h-3.5"></i>
                                 <span>Jam / Sesi</span>
                             </div>
-                            <p class="font-semibold text-gray-800 text-sm">${jamPerSesi} jam</p>
+                            <p class="pd-stat-value">${jamPerSesi} jam</p>
                         </div>
                     ` : ''}
                     ${totalJam > 0 ? `
-                        <div class="bg-brand/5 rounded-lg p-3 border border-brand/20">
-                            <div class="flex items-center gap-1.5 text-xs text-brand/70 mb-1">
+                        <div class="pd-stat">
+                            <div class="pd-stat-label">
                                 <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
                                 <span>Total Jam</span>
                             </div>
-                            <p class="font-bold text-brand text-sm">${totalJam} jam</p>
+                            <p class="pd-stat-value">${totalJam} jam</p>
                         </div>
                     ` : ''}
                 </div>
@@ -850,16 +700,10 @@ export async function loadProgramDetail() {
 
         let levelHtml = '';
         if (data.level) {
-            const levelColors = {
-                'Pemula': 'bg-green-100 text-green-700',
-                'Menengah': 'bg-yellow-100 text-yellow-700',
-                'Mahir': 'bg-purple-100 text-purple-700'
-            };
-            const colorClass = levelColors[data.level] || 'bg-gray-100 text-gray-700';
             levelHtml = `
-                <span class="inline-flex items-center gap-1 ${colorClass} text-xs font-semibold px-2.5 py-1 rounded-full mt-2">
-                    <i data-lucide="signal" class="w-3 h-3"></i>
-                    Level: ${escapeHtml(data.level)}
+                <span class="pd-level">
+                    <i data-lucide="signal" class="w-3.5 h-3.5"></i>
+                    ${escapeHtml(data.level)}
                 </span>
             `;
         }
@@ -867,64 +711,64 @@ export async function loadProgramDetail() {
         let hargaSectionHtml = '';
         if (promo.hasPromo) {
             hargaSectionHtml = `
-                <div class="border border-brand-dark/20 bg-brand-dark/5 rounded-xl p-4 mt-4">
-                    <div class="flex items-center gap-2 mb-1">
-                        <i data-lucide="tag" class="w-4 h-4 text-brand-dark"></i>
-                        <span class="text-xs font-bold text-brand-dark">${escapeHtml(promo.label)}</span>
+                <div class="pd-price pd-price-promo">
+                    <div class="pd-price-label">
+                        <i data-lucide="tag" class="w-3.5 h-3.5"></i>
+                        <span>${escapeHtml(promo.label)}</span>
                     </div>
-                    <div class="text-sm text-gray-400 line-through">${formatRupiah(promo.hargaAsli)}</div>
-                    <div class="text-2xl font-bold text-brand">${formatRupiah(promo.hargaPromo)}</div>
+                    <div class="pd-price-row">
+                        <span class="pd-price-strike">${formatRupiah(promo.hargaAsli)}</span>
+                        <span class="pd-price-final">${formatRupiah(promo.hargaPromo)}</span>
+                    </div>
                 </div>
             `;
         } else {
             hargaSectionHtml = `
-                <div class="bg-gray-50 rounded-xl p-4 mt-4">
-                    <p class="text-xs text-gray-500 mb-1">Harga Program</p>
-                    <p class="text-2xl font-bold text-brand">${formatRupiah(promo.hargaAsli)}</p>
+                <div class="pd-price">
+                    <p class="pd-price-caption">Biaya Program</p>
+                    <p class="pd-price-final">${formatRupiah(promo.hargaAsli)}</p>
                 </div>
             `;
         }
 
         container.innerHTML = `
-            <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
-                <div class="lg:w-1/2">
-                    <div class="relative">
-                        <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}" 
-                             class="w-full aspect-[4/5] object-cover rounded-lg shadow-sm" loading="lazy" />
+            <div class="pd-hero">
+                <div class="pd-media">
+                    <div class="pd-media-wrap">
+                        <img src="${imageUrl}" alt="${escapeHtml(data.nama || 'Program')}"
+                             class="pd-img" loading="eager" fetchpriority="high" />
                         ${promo.hasPromo ? `
-                            <span class="badge-promo badge-promo-lg">
-                                <span>${escapeHtml(promo.label)}</span>
-                            </span>
+                            <span class="badge-promo badge-promo-lg"><span>${escapeHtml(promo.label)}</span></span>
                         ` : ''}
                     </div>
                 </div>
-                <div class="lg:w-1/2">
-                    <p class="text-sm text-gray-500">${escapeHtml(data.kategori || '')}</p>
-                    <h1 class="text-3xl md:text-4xl font-bold text-brand mt-1">${escapeHtml(data.nama || 'Program')}</h1>
-                    ${levelHtml}
-                    <p class="text-gray-600 mt-4">${escapeHtml(data.deskripsiSingkat || '')}</p>
-                    
+                <div class="pd-body">
+                    <div class="pd-kicker-row">
+                        ${data.kategori ? `<span class="pd-kicker">${escapeHtml(data.kategori)}</span>` : ''}
+                        ${levelHtml}
+                    </div>
+                    <h1 class="pd-title ant">${escapeHtml(data.nama || 'Program')}</h1>
+                    <p class="pd-desc">${escapeHtml(data.deskripsiSingkat || '')}</p>
+
                     ${hargaSectionHtml}
                     ${durasiSesiHtml}
-                    
-                    <div class="mt-6 flex flex-wrap gap-3">
-                        <button class="daftar-program-btn bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-8 py-3 rounded transition-colors inline-flex items-center gap-2" 
-                                data-program-id="${docSnap.id}">
+
+                    <div class="pd-ctas">
+                        <button class="daftar-program-btn pd-btn pd-btn-primary" data-program-id="${docSnap.id}">
                             <i data-lucide="user-plus" class="w-4 h-4"></i>
-                            Daftar
+                            Daftar Sekarang
                         </button>
-                        <button class="wa-program-btn bg-brand hover:bg-brand-light text-white font-medium px-8 py-3 rounded transition-colors inline-flex items-center gap-2" 
-                                data-program="${escapeHtml(data.nama || 'Program')}"
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <button class="wa-program-btn pd-btn pd-btn-wa" data-program="${escapeHtml(data.nama || 'Program')}">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                             </svg>
                             Tanya Program Ini
                         </button>
-                        <button class="share-detail-btn border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-6 py-3 rounded transition-colors inline-flex items-center gap-2"
+                        <button class="share-detail-btn pd-btn pd-btn-ghost"
                                 data-program-name="${escapeHtml(data.nama || 'Program')}"
                                 data-program-desc="${escapeHtml(truncateText(data.deskripsiSingkat || data.deskripsi || '', 100))}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
                             </svg>
                             Bagikan
                         </button>
@@ -933,9 +777,9 @@ export async function loadProgramDetail() {
             </div>
 
             ${materiHtml ? `
-                <div class="mt-10 border-t border-gray-200 pt-8">
-                    <h2 class="text-xl font-bold text-brand flex items-center gap-2">
-                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                <div class="pd-section">
+                    <h2 class="pd-section-title">
+                        <i data-lucide="book-open" class="pd-section-icon"></i>
                         Materi Pembelajaran
                     </h2>
                     ${materiHtml}
@@ -943,9 +787,9 @@ export async function loadProgramDetail() {
             ` : ''}
 
             ${benefitHtml ? `
-                <div class="mt-10 border-t border-gray-200 pt-8">
-                    <h2 class="text-xl font-bold text-brand flex items-center gap-2">
-                        <i data-lucide="gift" class="w-5 h-5"></i>
+                <div class="pd-section">
+                    <h2 class="pd-section-title">
+                        <i data-lucide="gift" class="pd-section-icon"></i>
                         Yang Anda Dapatkan
                     </h2>
                     ${benefitHtml}
@@ -953,14 +797,15 @@ export async function loadProgramDetail() {
             ` : ''}
 
             ${data.deskripsi ? `
-                <div class="mt-10 border-t border-gray-200 pt-8">
-                    <h2 class="text-xl font-bold text-brand flex items-center gap-2">
-                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                <div class="pd-section">
+                    <h2 class="pd-section-title">
+                        <i data-lucide="file-text" class="pd-section-icon"></i>
                         Tentang Program Ini
                     </h2>
-                    <p class="text-gray-700 mt-3 leading-relaxed whitespace-pre-line">${escapeHtml(data.deskripsi)}</p>
+                    <p class="pd-about">${escapeHtml(data.deskripsi)}</p>
                 </div>
             ` : ''}
+
         `;
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -1004,7 +849,7 @@ export async function loadProgramDetail() {
 
     } catch (error) {
         console.error('Error loading program detail:', error);
-        container.innerHTML = '<div class="text-center text-red-600 py-10">Gagal memuat detail program.</div>';
+        container.innerHTML = '<div class="detail-error">Gagal memuat detail program.</div>';
     }
 }
 
@@ -1067,25 +912,18 @@ async function loadRecommendations(currentId) {
             const promo = getPromoInfo(prog);
 
             html += `
-                <a href="program-detail.html?id=${prog.id}" class="course-item block cursor-pointer hover:opacity-95 transition-opacity">
-                    <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3">
-                        <img src="${imageUrl}" alt="${escapeHtml(prog.nama || 'Program')}" 
-                             class="w-full h-full object-cover" loading="lazy" />
+                <a href="program-detail.html?id=${prog.id}" class="rec-card">
+                    <div class="rec-media">
+                        <img src="${imageUrl}" alt="${escapeHtml(prog.nama || 'Program')}"
+                             class="rec-img" loading="eager" />
                         ${promo.hasPromo ? `
-                            <span class="badge-promo">
-                                <span>${escapeHtml(promo.label)}</span>
-                            </span>
+                            <span class="badge-promo"><span>${escapeHtml(promo.label)}</span></span>
                         ` : ''}
                     </div>
-                    <h5 class="text-base font-semibold text-brand line-clamp-1 leading-tight">
-                        ${escapeHtml(prog.nama || 'Program')}
-                    </h5>
-                    <p class="text-xs text-gray-500 mt-1 line-clamp-1">${escapeHtml(prog.kategori || '')}</p>
-                    <p class="text-sm text-gray-600 mt-2 line-clamp-2 leading-snug">
-                        ${escapeHtml(prog.deskripsiSingkat || prog.deskripsi || '')}
-                    </p>
-                    <div class="mt-2">${renderHarga(prog, { size: 'md' })}</div>
-                    <p class="text-brand font-medium text-xs mt-2">Lihat Detail →</p>
+                    <h3 class="rec-title">${escapeHtml(prog.nama || 'Program')}</h3>
+                    ${prog.kategori ? `<p class="rec-cat">${escapeHtml(prog.kategori)}</p>` : ''}
+                    <div class="rec-price">${renderHarga(prog, { size: 'md' })}</div>
+                    <span class="rec-cta">Lihat Detail</span>
                 </a>
             `;
         });

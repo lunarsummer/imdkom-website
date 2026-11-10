@@ -3,42 +3,63 @@
 
   <url>
     <loc>https://imdkomyogyakarta.netlify.app/</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/tentang.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/kursus</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/kursus.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/service</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/program-detail.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/rakit-komputer</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/service.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/service-laptop</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/service-laptop.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/service-pc</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/service-pc.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/service-printer</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/service-printer.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/service-panggil</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/service-panggil.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/sparepart</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/rakit-komputer.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/tentang</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/sparepart.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/kontak</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://imdkomyogyakarta.netlify.app/kontak.html</loc>
-  </url>
-  <url>
-    <loc>https://imdkomyogyakarta.netlify.app/karir.html</loc>
+    <loc>https://imdkomyogyakarta.netlify.app/karir</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.6</priority>
   </url>
 
 </urlset>

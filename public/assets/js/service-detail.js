@@ -229,21 +229,21 @@ export async function loadPricelist() {
             const remaining = totalItems - PRICELIST_LIMIT;
 
             html += `
-                <div class="glass rounded-2xl overflow-hidden mb-4" data-kategori-group="${escapeHtml(kategori)}">
-                    <div class="bg-brand text-white px-4 py-3 flex items-center gap-2">
+                <div class="pl-group" data-kategori-group="${escapeHtml(kategori)}">
+                    <div class="pl-head">
                         <i data-lucide="tag" class="w-4 h-4"></i>
-                        <h3 class="font-bold text-sm uppercase tracking-wide">${escapeHtml(kategori)}</h3>
-                        <span class="ml-auto bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${totalItems} item</span>
+                        <h3>${escapeHtml(kategori)}</h3>
+                        <span class="pl-count">${totalItems} item</span>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
+                    <div class="pl-table-scroll">
+                        <table class="pl-table">
                             <thead>
-                                <tr class="bg-white/50 border-b border-gray-200">
-                                    <th class="text-left px-4 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Layanan</th>
-                                    <th class="text-center px-3 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden sm:table-cell">Estimasi</th>
-                                    <th class="text-center px-3 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden sm:table-cell">Garansi</th>
-                                    <th class="text-right px-4 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Start From</th>
+                                <tr>
+                                    <th>Layanan</th>
+                                    <th class="pl-center pl-col-hide">Estimasi</th>
+                                    <th class="pl-center pl-col-hide">Garansi</th>
+                                    <th class="pl-right">Start From</th>
                                 </tr>
                             </thead>
                             <tbody id="pricelist-body-${kategoriIndex}">
@@ -253,9 +253,9 @@ export async function loadPricelist() {
                     </div>
 
                     ${hasMore ? `
-                        <div class="px-4 py-3 bg-white/40 border-t border-gray-200 text-center">
+                        <div class="pl-loadmore-wrap">
                             <button type="button"
-                                    class="load-more-btn inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-brand hover:text-white border-2 border-brand/20 hover:border-brand text-brand font-semibold text-xs rounded-xl transition-all"
+                                    class="pl-loadmore load-more-btn"
                                     data-kategori="${escapeHtml(kategori)}"
                                     data-index="${kategoriIndex}"
                                     data-total="${totalItems}"
@@ -293,31 +293,30 @@ function renderPricelistRows(items) {
         const hasPromo = item.hargaPromo && item.hargaPromo < item.harga;
 
         html += `
-            <tr class="border-b border-gray-100 hover:bg-white/60 transition-colors last:border-0">
-                <td class="px-4 py-3" data-label="Layanan">
+            <tr>
+                <td data-label="Layanan">
                     <div class="flex items-center gap-2 flex-wrap">
-                        <span class="font-medium text-gray-800">${escapeHtml(item.nama)}</span>
+                        <span class="pl-name">${escapeHtml(item.nama)}</span>
                         ${hasPromo ? `<span class="promo-shine">PROMO</span>` : ''}
                     </div>
-                    ${item.deskripsi ? `<p class="text-xs text-gray-500 mt-0.5">${escapeHtml(item.deskripsi)}</p>` : ''}
-
-                    <div class="flex items-center gap-3 mt-1 text-[11px] text-gray-400 sm:hidden">
+                    ${item.deskripsi ? `<p class="pl-desc">${escapeHtml(item.deskripsi)}</p>` : ''}
+                    <div class="pl-meta">
                         ${item.estimasi ? `<span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${escapeHtml(item.estimasi)}</span>` : ''}
-                        ${item.garansi && item.garansi !== '-' ? `<span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i>${escapeHtml(item.garansi)}</span>` : ''}
+                        ${item.garansi && item.garansi !== '-' ? `<span class="pl-warranty"><i data-lucide="shield-check" class="w-3 h-3"></i>${escapeHtml(item.garansi)}</span>` : ''}
                     </div>
                 </td>
-                <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell" data-label="Estimasi">
+                <td class="pl-center pl-col-hide" data-label="Estimasi">
                     ${item.estimasi ? escapeHtml(item.estimasi) : '-'}
                 </td>
-                <td class="px-3 py-3 text-center text-gray-500 text-xs hidden sm:table-cell" data-label="Garansi">
-                    ${item.garansi && item.garansi !== '-' ? `<span class="inline-flex items-center gap-1 bg-success/10 text-success px-2 py-0.5 rounded-full text-[10px] font-semibold">${escapeHtml(item.garansi)}</span>` : '-'}
+                <td class="pl-center pl-col-hide" data-label="Garansi">
+                    ${item.garansi && item.garansi !== '-' ? `<span class="pl-warranty">${escapeHtml(item.garansi)}</span>` : '-'}
                 </td>
-                <td class="px-4 py-3 text-right" data-label="Start From">
+                <td class="pl-price" data-label="Start From">
                     ${hasPromo ? `
-                        <div class="text-xs text-gray-400 line-through">${formatRupiah(item.harga)}</div>
-                        <div class="text-sm font-bold text-brand-dark">${formatRupiah(item.hargaPromo)}</div>
+                        <span class="pl-price-strike">${formatRupiah(item.harga)}</span>
+                        <span class="pl-price-final">${formatRupiah(item.hargaPromo)}</span>
                     ` : `
-                        <div class="text-sm font-bold text-brand">${formatRupiah(item.harga)}</div>
+                        <span class="pl-price-normal">${formatRupiah(item.harga)}</span>
                     `}
                 </td>
             </tr>
@@ -416,7 +415,7 @@ export async function loadDocumentations() {
                     <div class="dokumentasi-marquee-item">
                         <img src="${thumbUrl}"
                              alt="${escapeHtml(data.nama || 'Dokumentasi')}"
-                             loading="lazy"
+                             loading="eager"
                              onerror="this.onerror=null; this.src='assets/images/placeholder.svg';" />
                     </div>
                 `;

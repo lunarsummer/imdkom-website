@@ -3,7 +3,48 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Detail Layanan | IMDKOM Yogyakarta</title>
+    <link rel="canonical" href="https://imdkomyogyakarta.netlify.app/service-detail" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Detail Layanan Service | IMDKOM Yogyakarta" />
+    <meta property="og:description" content="Detail layanan service komputer di IMDKOM Yogyakarta." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://imdkomyogyakarta.netlify.app/service-detail" />
+    <meta property="og:site_name" content="IMDKOM Yogyakarta" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+    <meta property="og:image:alt" content="IMDKOM Yogyakarta — Kursus Komputer & Service Laptop" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Detail Layanan Service | IMDKOM Yogyakarta" />
+    <meta name="twitter:description" content="Detail layanan service komputer di IMDKOM Yogyakarta." />
+    <meta name="twitter:image" content="https://imdkomyogyakarta.netlify.app/assets/images/hero/hero-default.png" />
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Beranda",
+      "item": "https://imdkomyogyakarta.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Computer Service",
+      "item": "https://imdkomyogyakarta.netlify.app/service"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Detail Layanan",
+      "item": "https://imdkomyogyakarta.netlify.app/service-detail"
+    }
+  ]
+}
+    </script>
+    <title>Detail Layanan Service | IMDKOM Yogyakarta</title>
     <meta name="description" content="Detail layanan service komputer di IMDKOM Yogyakarta." />
 
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
@@ -14,31 +55,47 @@
 
     <link rel="stylesheet" href="assets/css/theme.css">
     <link rel="stylesheet" href="assets/css/output.css">
-    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <script src="https://unpkg.com/lucide@1.70.0" defer></script>
     <script src="assets/js/navbar.js" defer></script>
 
     <style>
         .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 1.25rem;
+            box-shadow: 0 24px 60px rgba(13, 13, 13, 0.18);
         }
 
         .glass-dark {
-            background: rgba(26, 60, 94, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(13, 13, 13, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        .page-bg {
-            background:
-                radial-gradient(circle at 20% 10%, rgba(26, 60, 94, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 90%, rgba(194, 65, 12, 0.08) 0%, transparent 40%),
-                linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
+        /* Modal input normalization */
+        #consultationModal input[type="text"],
+        #consultationModal input[type="tel"],
+        #consultationModal textarea,
+        #bookingModal input[type="text"],
+        #bookingModal input[type="tel"],
+        #bookingModal input[type="date"],
+        #bookingModal input[type="time"],
+        #bookingModal textarea {
+            background: #f7f7f8 !important;
+            border: 1px solid #e8e8e8 !important;
+            border-radius: 12px !important;
+        }
+        #consultationModal input[type="text"]:focus,
+        #consultationModal input[type="tel"]:focus,
+        #consultationModal textarea:focus,
+        #bookingModal input[type="text"]:focus,
+        #bookingModal input[type="tel"]:focus,
+        #bookingModal input[type="date"]:focus,
+        #bookingModal input[type="time"]:focus,
+        #bookingModal textarea:focus {
+            background: #ffffff !important;
+            border-color: #0059ff !important;
+            box-shadow: 0 0 0 3px rgba(0, 89, 255, 0.14) !important;
+            outline: none;
         }
 
         @keyframes pulse-wa {
@@ -62,16 +119,16 @@
         .tipe-service-option { display: block; position: relative; }
 
         .tipe-service-option input:checked + .tipe-service-card {
-            border-color: #1a3c5e !important;
-            background-color: rgba(26, 60, 94, 0.08) !important;
-            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.15);
+            border-color: #0059ff !important;
+            background-color: rgba(0, 89, 255, 0.08) !important;
+            box-shadow: 0 4px 12px rgba(0, 89, 255, 0.15);
             transform: translateY(-2px);
         }
         .tipe-service-option input:checked + .tipe-service-card i {
-            color: #1a3c5e !important;
+            color: #0059ff !important;
         }
         .tipe-service-option input:checked + .tipe-service-card p:first-of-type {
-            color: #1a3c5e;
+            color: #0059ff;
         }
 
         .tipe-service-card {
@@ -80,8 +137,8 @@
             cursor: pointer;
         }
         .tipe-service-card:hover {
-            border-color: rgba(26, 60, 94, 0.3);
-            background-color: rgba(26, 60, 94, 0.04);
+            border-color: rgba(0, 89, 255, 0.35);
+            background-color: rgba(0, 89, 255, 0.05);
         }
 
         /* ============================================================
@@ -186,95 +243,526 @@
            REKOMENDASI GRID — 4 kolom desktop
            Mobile: swipe horizontal | Tablet: 2 kolom | Desktop: 4 kolom
            ============================================================ */
-        .recommendation-grid {
+        /* ============================================================
+           DISPLAY TOKENS (Anton + Poppins)
+           ============================================================ */
+        .ant {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+        }
+        .accent { color: #0059ff; }
+
+        /* ============================================================
+           BREADCRUMB
+           ============================================================ */
+        .detail-breadcrumb {
+            background: #ffffff;
+            border-bottom: 1px solid #efefef;
+            padding: 0.8rem 0;
+        }
+        .breadcrumb-list {
             display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+        .breadcrumb-list a {
+            color: #4b5563;
+            transition: color 0.2s ease;
+        }
+        .breadcrumb-list a:hover { color: #0059ff; }
+        .breadcrumb-current { color: #0059ff; font-weight: 600; }
+
+        /* ============================================================
+           HERO WRAP (dot-grid, senada kursus)
+           ============================================================ */
+        .detail-hero-wrap {
+            background-color: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            background-position: 50% 0;
+            border-bottom: 1px solid #efefef;
+        }
+        .detail-hero-inner {
+            padding-block: 2.25rem 2.5rem;
+        }
+
+        /* ============================================================
+           DETAIL HERO
+           ============================================================ */
+        .pd-hero {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        @media (min-width: 1024px) {
+            .pd-hero { flex-direction: row; align-items: center; gap: 3rem; }
+            .pd-media { width: 42%; flex: none; }
+            .pd-body { flex: 1; }
+        }
+        .pd-media-wrap {
+            position: relative;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 18px 40px rgba(13, 13, 13, 0.10);
+            background: #f1f2f4;
+        }
+        .pd-img {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            object-fit: cover;
+            display: block;
+        }
+        .pd-kicker-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+        .pd-kicker {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #6b7280;
+        }
+        .pd-title {
+            font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+            line-height: 1.03;
+            color: #0d0d0d;
+            margin: 0 0 1rem;
+            text-wrap: balance;
+        }
+        .pd-desc {
+            color: #4b5563;
+            line-height: 1.65;
+            font-size: 0.98rem;
+            max-width: 34rem;
+            margin: 0 0 1.5rem;
+            text-wrap: pretty;
+        }
+
+        .pd-price {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 1.25rem;
+            padding: 1rem 1.25rem;
+            display: inline-flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            box-shadow: 0 6px 16px rgba(13, 13, 13, 0.05);
+        }
+        .pd-price-caption {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #6b7280;
+        }
+        .pd-price-final {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: 1.9rem;
+            line-height: 1;
+            color: #0d0d0d;
+            letter-spacing: 0.01em;
+        }
+
+        .pd-ctas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 1.75rem;
+        }
+        .pd-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            padding: 0.8rem 1.4rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+        }
+        .pd-btn-primary { background: #0d0d0d; color: #ffffff; }
+        .pd-btn-primary:hover { background: #0059ff; }
+        .pd-btn-wa { background: #075e54; color: #ffffff; }
+        .pd-btn-wa:hover { background: #043f36; }
+        .pd-btn-ghost { background: #ffffff; color: #0d0d0d; border-color: #d8d8d8; }
+        .pd-btn-ghost:hover { background: #0d0d0d; border-color: #0d0d0d; color: #ffffff; }
+        @media (max-width: 480px) {
+            .pd-ctas { flex-direction: column; }
+            .pd-ctas .pd-btn { width: 100%; justify-content: center; }
+        }
+
+        .pd-pricelist-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            color: #0059ff;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-bottom: 2px solid #0059ff;
+            padding-bottom: 0.15rem;
+            text-decoration: none;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .pd-pricelist-link:hover { color: #0040c0; border-color: #0040c0; }
+
+        /* ============================================================
+           SECTION CARD (tentang layanan)
+           ============================================================ */
+        .pd-section {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 1.25rem;
+            padding: 1.4rem 1.25rem;
+            margin-top: 1.25rem;
+            box-shadow: 0 6px 16px rgba(13, 13, 13, 0.04);
+        }
+        .pd-section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: 1.15rem;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #0d0d0d;
+            margin: 0 0 1rem;
+        }
+        .pd-section-icon { width: 1.4rem; height: 1.4rem; color: #0059ff; }
+        .pd-about {
+            color: #232830;
+            line-height: 1.75;
+            white-space: pre-line;
+            margin: 0;
+        }
+
+        /* ============================================================
+           REKOMENDASI (senada kartu kursus)
+           ============================================================ */
+        .rec-section {
+            border-top: 1px solid #efefef;
+            background: #ffffff;
+            padding: 3rem 0 3.5rem;
+        }
+        .rec-heading {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+            color: #0d0d0d;
+            margin: 0;
+        }
+        .rec-sub {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 0.35rem;
+        }
+        .rec-grid {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 78%;
             gap: 1rem;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
+            padding-bottom: 0.5rem;
             scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding: 0 0 1rem 0;
+            margin-top: 1.5rem;
         }
-        .recommendation-grid::-webkit-scrollbar {
-            display: none;
-            width: 0;
-            height: 0;
+        .rec-grid::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        @media (min-width: 768px) {
+            .rec-grid {
+                grid-auto-flow: unset;
+                grid-auto-columns: unset;
+                grid-template-columns: repeat(2, 1fr);
+                overflow: visible;
+                scroll-snap-type: none;
+            }
         }
-        .recommendation-grid > .course-item {
-            flex: 0 0 78%;
+        @media (min-width: 1024px) {
+            .rec-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .rec-card {
             scroll-snap-align: start;
-            min-width: 0;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 1rem;
+            padding: 0.65rem;
             display: flex;
             flex-direction: column;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .rec-card:hover {
+            transform: translateY(-3px);
+            border-color: #0d0d0d;
+            box-shadow: 0 16px 34px rgba(13, 13, 13, 0.10);
+        }
+        .rec-media {
+            position: relative;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            aspect-ratio: 4 / 5;
+            background: #f1f2f4;
+        }
+        .rec-img {
+            width: 100%;
             height: 100%;
-            background: white;
-            border-radius: 12px;
-            padding: 0.75rem;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 2px 8px rgba(26, 60, 94, 0.04);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            object-fit: cover;
+            display: block;
         }
-        .recommendation-grid > .course-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(26, 60, 94, 0.1);
+        .rec-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #0d0d0d;
+            line-height: 1.35;
+            margin: 0.5rem 0.15rem 0;
+        }
+        .rec-cat {
+            font-size: 0.7rem;
+            color: #6b7280;
+            margin: 0.25rem 0.15rem 0;
+        }
+        .rec-price { margin: 0.5rem 0.15rem 0; }
+        .rec-cta {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #0059ff;
+            margin: 0.5rem 0.15rem 0.15rem;
+        }
+        .rec-price-line {
+            font-size: 0.72rem;
+            color: #6b7280;
+        }
+        .rec-price-value {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #0d0d0d;
         }
 
-        @media (min-width: 768px) {
-            .recommendation-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-                overflow: visible;
-                padding: 0;
-                align-items: stretch;
-            }
-            .recommendation-grid > .course-item {
-                flex: none;
-                width: auto;
-                height: 100%;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .recommendation-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
+        /* ============================================================
+           BADGE KATEGORI (white blur, senada kursus)
+           ============================================================ */
         .badge-kategori {
             position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: rgba(26, 60, 94, 0.85);
+            bottom: 0.6rem;
+            right: 0.6rem;
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            color: white;
-            font-size: 0.6rem;
-            font-weight: 700;
-            padding: 0.2rem 0.5rem;
+            color: #0d0d0d;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.3rem 0.65rem;
             border-radius: 999px;
+            border: 1px solid rgba(13, 13, 13, 0.08);
             z-index: 2;
+            max-width: calc(100% - 1.2rem);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .line-clamp-1 {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        /* ============================================================
+           FINAL CTA (dark charcoal + accent)
+           ============================================================ */
+        .final-cta {
+            padding: 3rem 0 4rem;
+            border-top: 1px solid #efefef;
+            background: #ffffff;
         }
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+        .final-cta-card {
+            background-color: #0d0d0d;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 1.5rem;
+            padding: 3rem 1.5rem;
+            text-align: center;
             overflow: hidden;
-            text-overflow: ellipsis;
         }
+        @media (min-width: 640px) {
+            .final-cta-card { padding: 3.5rem 3rem; }
+        }
+        .final-cta-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0;
+        }
+        .final-cta-text {
+            color: #a8b0bd;
+            max-width: 36rem;
+            margin: 0.6rem auto 0;
+            line-height: 1.6;
+            font-size: 0.92rem;
+        }
+        .final-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: #0059ff;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.85rem 1.6rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .final-cta-btn:hover { background: #0040c0; transform: translateY(-1px); }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .detail-footer {
+            border-top: 1px solid #e8e8e8;
+            background: #ffffff;
+            padding: 2.5rem 0 1.5rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; }
+        }
+        .footer-brand {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 1.35rem;
+            color: #0d0d0d;
+        }
+        .footer-heading {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #0d0d0d;
+            margin-bottom: 0.85rem;
+        }
+        .footer-text {
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: #6b7280;
+            text-wrap: pretty;
+        }
+        .footer-link {
+            display: block;
+            font-size: 0.82rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            transition: color 0.2s ease;
+        }
+        .footer-link:hover { color: #0059ff; }
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #efefef;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        @media (min-width: 640px) {
+            .footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        /* ============================================================
+           PRICELIST DROPDOWN (footer)
+           ============================================================ */
+        .footer-pricelist { margin-top: 0.25rem; }
+        .footer-pricelist > summary {
+            list-style: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.82rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .footer-pricelist > summary::-webkit-details-marker { display: none; }
+        .footer-pricelist > summary::marker { content: ""; }
+        .footer-pricelist > summary:hover { color: #0059ff; }
+        .footer-pricelist[open] > summary { color: #0059ff; font-weight: 600; }
+        .footer-pricelist .chev { transition: transform 0.2s ease; }
+        .footer-pricelist[open] .chev { transform: rotate(180deg); }
+        .footer-pricelist-menu {
+            margin-top: 0.35rem;
+            padding: 0.35rem 0 0.35rem 0.75rem;
+            border-left: 2px solid #efefef;
+        }
+        .footer-pricelist-link {
+            display: block;
+            font-size: 0.8rem;
+            color: #4b5563;
+            padding: 0.22rem 0;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer-pricelist-link:hover { color: #0059ff; }
+
+        /* ============================================================
+           LOADING / ERROR STATES
+           ============================================================ */
+        .detail-loading {
+            text-align: center;
+            padding: 4rem 0;
+            color: #6b7280;
+        }
+        .detail-spinner {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 999px;
+            border: 3px solid #e8e8e8;
+            border-top-color: #0059ff;
+            animation: detail-spin 0.9s linear infinite;
+            margin: 0 auto 0.75rem;
+        }
+        @keyframes detail-spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .detail-spinner { animation: none; }
+        }
+        .detail-error {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: #dc2626;
+            background: #ffffff;
+            border: 1px solid #fecaca;
+            border-radius: 1.25rem;
+        }
+        @media (max-width: 480px) {
+            .floating-wa {
+                width: 2.75rem !important;
+                height: 2.75rem !important;
+                bottom: 1.25rem !important;
+                right: 1.25rem !important;
+            }
+        }
+
     </style>
 </head>
-<body class="font-sans page-bg">
+<body class="font-sans bg-white">
 
     <!-- ============================================================
     NAVIGATION
@@ -284,26 +772,26 @@
     <!-- ============================================================
     BREADCRUMB
     ============================================================ -->
-    <div class="bg-white/40 backdrop-blur-sm border-b border-white/40 py-3">
+    <nav class="detail-breadcrumb" aria-label="Breadcrumb">
         <div class="container mx-auto px-4">
-            <div class="flex items-center gap-2 text-xs text-gray-500">
-                <a href="index.html" class="hover:text-brand">Beranda</a>
-                <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                <a href="service.html" class="hover:text-brand">Service</a>
-                <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                <span id="breadcrumbServiceName" class="text-brand font-medium">Detail Layanan</span>
+            <div class="breadcrumb-list">
+                <a href="index.html">Beranda</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <a href="service.html">Service</a>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                <span id="breadcrumbServiceName" class="breadcrumb-current">Detail Layanan</span>
             </div>
         </div>
-    </div>
+    </nav>
 
     <!-- ============================================================
     DETAIL CONTAINER
     ============================================================ -->
-    <main class="py-8 sm:py-12">
-        <div class="container mx-auto px-4 max-w-4xl">
+    <main class="detail-hero-wrap">
+        <div class="container mx-auto px-4 detail-hero-inner">
             <div id="serviceDetailContainer">
-                <div class="text-center text-gray-500 py-12">
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <div class="detail-loading">
+                    <div class="detail-spinner"></div>
                     <p class="mt-3 text-sm">Memuat detail layanan...</p>
                 </div>
             </div>
@@ -313,14 +801,30 @@
     <!-- ============================================================
     REKOMENDASI LAYANAN LAIN
     ============================================================ -->
-    <section id="recommendationSection" class="py-12 sm:py-16 bg-white/40 backdrop-blur-sm" style="display:none;">
-        <div class="container mx-auto px-4 max-w-5xl">
-            <div class="mb-8">
-                <h2 class="text-2xl sm:text-3xl font-bold text-brand">Layanan Lain yang Mungkin Anda Butuhkan</h2>
-                <p class="text-sm text-gray-500 mt-1">Jelajahi layanan lain yang relevan dengan kebutuhan Anda.</p>
+    <section id="recommendationSection" class="rec-section" style="display:none;">
+        <div class="container mx-auto px-4">
+            <div class="rec-heading-block">
+                <h2 class="rec-heading">Layanan <span class="accent">Serupa</span></h2>
+                <p class="rec-sub">Jelajahi layanan lain yang relevan dengan kebutuhan Anda.</p>
             </div>
-            <div class="recommendation-grid" id="recommendationContainer">
+            <div class="rec-grid" id="recommendationContainer">
                 <!-- Diisi oleh loadRecommendations() di service-detail-page.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    CTA AKHIR
+    ============================================================ -->
+    <section id="finalCtaSection" class="final-cta">
+        <div class="container mx-auto px-4">
+            <div class="final-cta-card">
+                <h2 class="final-cta-title">Masih <span style="color:#6ea3ff">Ragu</span> Memilih?</h2>
+                <p class="final-cta-text">Konsultasi gratis dengan tim kami. Kami akan membantu Anda memilih layanan yang paling sesuai dengan kebutuhan Anda.</p>
+                <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20tanya%20program%2Fservice." id="finalCtaWhatsApp" class="final-cta-btn">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Chat WhatsApp
+                </a>
             </div>
         </div>
     </section>
@@ -328,16 +832,42 @@
     <!-- ============================================================
     FOOTER
     ============================================================ -->
-    <footer class="py-8 border-t border-white/40 bg-white/40 backdrop-blur-sm">
+    <footer class="detail-footer">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-center md:text-left">
-                    <span class="text-xl font-bold text-brand">IMDKOM</span>
-                    <p class="text-gray-500 text-xs mt-1">Kursus &amp; Pelatihan • Computer Service</p>
+            <div class="footer-grid">
+                <div>
+                    <p class="footer-brand">IMDKOM</p>
+                    <p class="footer-text mt-2">Kursus &amp; pelatihan komputer, service, dan perakitan PC di Yogyakarta. Belajar langsung dari praktisi.</p>
                 </div>
-                <div class="text-center text-xs text-gray-500">
-                    <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+                <div>
+                    <p class="footer-heading">Jelajahi</p>
+                    <a class="footer-link" href="index.html">Beranda</a>
+                    <a class="footer-link" href="kursus.html">Kursus &amp; Pelatihan</a>
+                    <a class="footer-link" href="service.html">Service Komputer</a>
+                    <a class="footer-link" href="karir.html">Karir</a>
                 </div>
+                <div>
+                    <p class="footer-heading">Kontak</p>
+                    <p class="footer-text" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                <p class="footer-text">Jl. Kaliurang Km 7,3 No 38, Yogyakarta</p>
+                    <p class="footer-text" id="footerInstagram">Instagram: @imdkom_yk</p>
+                    <details class="footer-pricelist">
+                        <summary>Pricelist
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 chev"></i>
+                        </summary>
+                        <div class="footer-pricelist-menu">
+                            <a class="footer-pricelist-link" href="service-laptop.html">Service Laptop</a>
+                            <a class="footer-pricelist-link" href="service-pc.html">Service PC</a>
+                            <a class="footer-pricelist-link" href="service-printer.html">Service Printer</a>
+                            <a class="footer-pricelist-link" href="service-panggil.html">Service Panggil</a>
+                            <a class="footer-pricelist-link" href="sparepart.html">Sparepart</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                <p>Dibuat di Yogyakarta.</p>
             </div>
         </div>
     </footer>
@@ -345,8 +875,8 @@
     <!-- ============================================================
     FLOATING WHATSAPP
     ============================================================ -->
-    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-50" aria-label="Hubungi via WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+    <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20bertanya." id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
     </a>
@@ -647,6 +1177,12 @@
 
             // Floating WA
             document.getElementById('floatingWhatsApp')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                openWhatsAppGeneric();
+            });
+
+            // CTA akhir
+            document.getElementById('finalCtaWhatsApp')?.addEventListener('click', (e) => {
                 e.preventDefault();
                 openWhatsAppGeneric();
             });
