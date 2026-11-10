@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
@@ -133,11 +133,7 @@
         }
         .reg-upload-btn:hover { background: #043f36; }
         .reg-success {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 1.125rem;
-            padding: 1.25rem;
-            box-shadow: 0 14px 34px rgba(13, 13, 13, 0.055);
+            padding: 0.5rem 0 0.25rem;
         }
         .reg-toast {
             position: fixed;
@@ -165,6 +161,28 @@
         .reg-toast-icon { flex-shrink: 0; width: 1.5rem; height: 1.5rem; margin-top: 0.1rem; }
         .reg-toast-close { flex-shrink: 0; width: 1.75rem; height: 1.75rem; display: grid; place-items: center; border-radius: 0.5rem; color: rgba(255,255,255,0.85); background: transparent; border: none; cursor: pointer; }
         .reg-toast-close:hover { background: rgba(255,255,255,0.15); color: #ffffff; }
+        .ticket { position: relative; display: flex; background: #ffffff; border: 1px solid #e7e7e3; border-radius: 1.125rem; overflow: hidden; box-shadow: 0 14px 34px rgba(13, 13, 13, 0.10); }
+        .ticket-main { flex: 1 1 auto; min-width: 0; padding: 0.85rem 1.1rem 1rem; }
+        .ticket-brand { display: flex; align-items: center; gap: 0.6rem; border-bottom: 1px solid #eceae4; padding-bottom: 0.55rem; }
+        .ticket-logo { font-size: 1.35rem; line-height: 1; color: #ffffff; background: #1a3c5e; padding: 0.3rem 0.55rem 0.25rem; border-radius: 0.45rem; letter-spacing: 0.02em; }
+        .ticket-brand-text { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: #1a3c5e; }
+        .ticket-date { margin-left: auto; font-size: 0.68rem; color: #6b7280; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .ticket-program { padding: 0.6rem 0 0.55rem; border-bottom: 1px dashed #e7e7e3; }
+        .ticket-label { display: block; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.13em; color: #9ca3af; font-weight: 700; }
+        .ticket-program-name { font-family: 'Anton', sans-serif; font-size: 1.4rem; color: #111827; line-height: 1.15; text-transform: uppercase; margin-top: 0.15rem; overflow-wrap: anywhere; }
+        .ticket-program-meta { font-size: 0.8rem; font-weight: 700; color: #1a3c5e; margin-top: 0.2rem; }
+        .ticket-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.85rem; padding-top: 0.6rem; }
+        .ticket-grid p { font-size: 0.82rem; color: #1f2937; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; margin-top: 0.1rem; }
+        .ticket-span-2 { grid-column: span 2; }
+        .ticket-stub { flex: 0 0 175px; background: #f7f7f5; border-left: 2px dashed #dcdcd6; padding: 0.75rem 0.7rem; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.35rem; }
+        .ticket-token { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; color: #111827; background: #ffffff; border: 1px solid #e7e7e3; border-radius: 0.45rem; padding: 0.3rem 0.4rem; overflow-wrap: anywhere; }
+        .ticket-last4 { font-family: 'Anton', sans-serif; font-size: 2rem; color: #1a3c5e; letter-spacing: 0.1em; line-height: 1; margin-top: 0.1rem; }
+        .ticket-barcode { width: 100%; max-width: 150px; height: 54px; display: block; }
+        .ticket-web { font-size: 0.55rem; color: #9ca3af; overflow-wrap: anywhere; }
+        @media (max-width: 620px) {
+            .ticket { flex-direction: column; }
+            .ticket-stub { flex: none; border-left: none; border-top: 2px dashed #dcdcd6; padding: 0.75rem 0.85rem; }
+        }
     </style>
 </head>
 <body class="font-sans min-h-screen">
@@ -286,7 +304,7 @@
                 <div class="reg-field" id="referralWrap">
                     <label class="reg-label" for="regKodeReferral">Kode Referral</label>
                     <div class="flex gap-2">
-                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional — mis. SAHABAT10" autocapitalize="characters" maxlength="24" />
+                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional â€” mis. SAHABAT10" autocapitalize="characters" maxlength="24" />
                         <button type="button" id="regApplyReferralBtn" class="reg-upload-btn shrink-0" style="width:auto;padding-left:1rem;padding-right:1rem">Terapkan</button>
                     </div>
                     <p id="regReferralInfo" class="hidden text-xs font-semibold text-emerald-700 mt-1.5"></p>
@@ -311,8 +329,8 @@
                     <button type="button" id="regDownloadQris" class="hidden mt-2 inline-flex items-center gap-2 text-sm font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 transition-colors">Simpan QRIS</button>
                     <p id="regQrisDynamicNote" class="hidden text-xs font-semibold text-emerald-800 mt-2"></p>
                     <div id="regQrisSandboxHelp" class="hidden mt-3 max-w-[280px] w-full text-left rounded-lg border border-amber-300 bg-amber-50 p-3">
-                        <p class="text-[11px] font-bold text-amber-800 uppercase">Mode Sandbox — jangan bayar dengan uang asli</p>
-                        <p class="text-[11px] text-amber-900 mt-1">Buka <a href="https://simulator.sandbox.midtrans.com/v2/qris/index" target="_blank" rel="noopener" class="underline font-semibold">Simulator Midtrans</a> → klik &ldquo;Scan QR&rdquo; → pilih GoPay → pilih &ldquo;Success&rdquo;.</p>
+                        <p class="text-[11px] font-bold text-amber-800 uppercase">Mode Sandbox â€” jangan bayar dengan uang asli</p>
+                        <p class="text-[11px] text-amber-900 mt-1">Buka <a href="https://simulator.sandbox.midtrans.com/v2/qris/index" target="_blank" rel="noopener" class="underline font-semibold">Simulator Midtrans</a> â†’ klik &ldquo;Scan QR&rdquo; â†’ pilih GoPay â†’ pilih &ldquo;Success&rdquo;.</p>
                         <button type="button" id="regQrisCopyUrl" class="mt-2 w-full flex items-center justify-between gap-2 rounded-md bg-white border border-amber-200 px-2 py-2 text-[11px] font-semibold text-gray-700 text-left hover:bg-amber-100">
                             <span id="regQrisImageUrlText" class="truncate">(tidak tersedia)</span>
                             <span id="regQrisCopyUrlLabel" class="shrink-0 text-amber-700">Salin</span>
@@ -356,24 +374,282 @@
         </form>
 
         <div id="regSuccess" class="reg-success hidden mt-6" role="status">
-            <p class="text-base text-green-800 font-bold">Pendaftaran berhasil diajukan!</p>
+            <p class="text-lg text-emerald-800 font-bold">Pendaftaran berhasil diajukan!</p>
             <p class="text-sm text-gray-700 mt-1">Data Anda sudah tersimpan. Admin akan memverifikasi pembayaran dan data pendaftaran Anda. Mohon tunggu konfirmasi dari kami.</p>
-            <p class="text-sm text-gray-700 mt-3">Simpan <strong>TOKEN PENDAFTARAN</strong> Anda berikut ini:</p>
-            <div class="flex items-center gap-2 mt-2">
+            <p class="text-sm text-gray-600 mt-2">Simpan <strong>TOKEN PENDAFTARAN</strong> Anda &mdash; dipakai untuk tracking status dan melihat jadwal kursus:</p>
+            <div class="flex items-center gap-2 mt-2 max-w-md">
                 <input id="regToken" class="reg-input bg-transparent font-mono text-lg tracking-widest" readonly aria-label="Token pendaftaran" />
                 <button type="button" id="regCopyToken" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold px-3 py-2 rounded-lg">Salin</button>
             </div>
-            <div class="mt-3 bg-white rounded-lg border border-emerald-100 p-3">
-                <p class="text-sm font-semibold text-brand mb-1">Kegunaan token:</p>
-                <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
-                    <li><strong>Tracking status pendaftaran</strong> &mdash; Anda bisa cek apakah pendaftaran sudah diverifikasi admin.</li>
-                    <li><strong>Melihat jadwal kursus</strong> setelah Anda diterima.</li>
-                    <li>Mengidentifikasi data Anda di dashboard admin.</li>
-                </ul>
-                <p class="text-xs text-gray-500 mt-2">Token ini hanya untuk Anda. Jangan berikan kepada orang lain dan simpan seperti Anda menyimpan nomor telepon. Token juga sudah dikirim ke WhatsApp Anda.</p>
+
+            <div class="ticket mt-5" id="regTicket" aria-label="Tiket pendaftaran">
+                <div class="ticket-main">
+                    <div class="ticket-brand">
+                        <span class="ticket-logo ant">IMDKOM</span>
+                        <span class="ticket-brand-text">Tiket Pendaftaran</span>
+                        <span class="ticket-date" id="ticketDate">-</span>
+                    </div>
+                    <div class="ticket-program">
+                        <span class="ticket-label">Program</span>
+                        <p class="ticket-program-name" id="ticketProgram">-</p>
+                        <p class="ticket-program-meta"><span id="ticketNominal">-</span> &middot; <span id="ticketMetode">-</span><span id="ticketReferralWrap" class="hidden"> &middot; Referral <span id="ticketReferral">-</span></span></p>
+                    </div>
+                    <div class="ticket-grid">
+                        <div><span class="ticket-label">Nama Peserta</span><p id="ticketNama">-</p></div>
+                        <div><span class="ticket-label">WhatsApp</span><p id="ticketWa">-</p></div>
+                        <div><span class="ticket-label">Tempat, Tgl Lahir</span><p id="ticketLahir">-</p></div>
+                        <div><span class="ticket-label">Jenis Kelamin</span><p id="ticketJk">-</p></div>
+                        <div class="ticket-span-2"><span class="ticket-label">Alamat</span><p id="ticketAlamat">-</p></div>
+                        <div><span class="ticket-label">Pendidikan</span><p id="ticketPendidikan">-</p></div>
+                        <div><span class="ticket-label">Pekerjaan</span><p id="ticketPekerjaan">-</p></div>
+                    </div>
+                </div>
+                <div class="ticket-stub">
+                    <span class="ticket-label">Tiket No.</span>
+                    <p class="ticket-token" id="ticketToken">-</p>
+                    <div>
+                        <span class="ticket-label">4 Digit Terakhir WA</span>
+                        <p class="ticket-last4" id="ticketLast4">-</p>
+                    </div>
+                    <canvas id="ticketBarcode" class="ticket-barcode" width="220" height="72" role="img" aria-label="Barcode tiket"></canvas>
+                    <p class="ticket-web">imdkomyogyakarta.netlify.app</p>
+                </div>
             </div>
+            <button type="button" id="regDownloadTicketBtn" class="reg-submit mt-3">Download Tiket</button>
         </div>
     </main>
+
+    <script>
+        window.IMDKOMTicket = (function () {
+            const BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            function pad(n) { return n < 10 ? '0' + n : '' + n; }
+            function fmtDateTime(value) {
+                const d = value instanceof Date ? value : new Date(value);
+                if (isNaN(d.getTime())) return '-';
+                return d.getDate() + ' ' + BULAN[d.getMonth()] + ' ' + d.getFullYear() + ' Â· ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+            }
+            function fmtShortDate(value) {
+                const parts = String(value || '').split('-');
+                if (parts.length !== 3) return String(value || '-');
+                const m = parseInt(parts[1], 10) - 1;
+                if (isNaN(m) || m < 0 || m > 11) return String(value);
+                return parseInt(parts[2], 10) + ' ' + BULAN[m] + ' ' + parts[0];
+            }
+            function waLast4(wa) {
+                const d = String(wa || '').replace(/\D/g, '');
+                return d.slice(-4);
+            }
+            function drawBarcode(canvas, seed) {
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width, H = canvas.height;
+                ctx.clearRect(0, 0, W, H);
+                ctx.fillStyle = '#111111';
+                const s = String(seed || 'IMDKOM');
+                let x = 0, i = 0;
+                while (x < W) {
+                    const c = s.charCodeAt(i % s.length);
+                    let w = 1 + (c % 4);
+                    if (i % 6 === 5) w += 1;
+                    ctx.fillRect(x, 0, w, H);
+                    x += w + 1 + ((c >> 3) % 3);
+                    i++;
+                }
+            }
+            function rr(ctx, x, y, w, h, r) {
+                ctx.beginPath();
+                ctx.moveTo(x + r, y);
+                ctx.arcTo(x + w, y, x + w, y + h, r);
+                ctx.arcTo(x + w, y + h, x, y + h, r);
+                ctx.arcTo(x, y + h, x, y, r);
+                ctx.arcTo(x, y, x + w, y, r);
+                ctx.closePath();
+            }
+            function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+                const words = String(text || '-').split(/\s+/);
+                let line = '', yy = y;
+                for (const w of words) {
+                    const test = line ? line + ' ' + w : w;
+                    if (ctx.measureText(test).width > maxWidth && line) {
+                        ctx.fillText(line, x, yy);
+                        line = w;
+                        yy += lineHeight;
+                    } else {
+                        line = test;
+                    }
+                }
+                if (line) ctx.fillText(line, x, yy);
+                return yy;
+            }
+            function drawFitted(ctx, text, x, y, maxWidth) {
+                let size = 23;
+                ctx.font = size + 'px Anton, sans-serif';
+                while (ctx.measureText(text).width > maxWidth && size > 13) {
+                    size -= 1;
+                    ctx.font = size + 'px Anton, sans-serif';
+                }
+                ctx.fillText(text, x, y);
+            }
+            function renderPage(d) {
+                const setText = function (id, value) { const el = document.getElementById(id); if (el) el.textContent = value; };
+                setText('ticketDate', fmtDateTime(d.timestamp));
+                setText('ticketProgram', d.programNama || '-');
+                setText('ticketNominal', d.nominal || '-');
+                setText('ticketMetode', d.metode || '-');
+                setText('ticketNama', d.nama || '-');
+                setText('ticketWa', d.wa || '-');
+                setText('ticketLahir', (d.tempatLahir || '-') + ', ' + fmtShortDate(d.tanggalLahir));
+                setText('ticketJk', d.jenisKelamin || '-');
+                setText('ticketAlamat', d.alamat || '-');
+                setText('ticketPendidikan', d.pendidikan || '-');
+                setText('ticketPekerjaan', d.pekerjaan || '-');
+                setText('ticketToken', d.token || '-');
+                setText('ticketLast4', waLast4(d.wa) || '----');
+                const refWrap = document.getElementById('ticketReferralWrap');
+                if (d.referral) {
+                    setText('ticketReferral', d.referral);
+                    if (refWrap) refWrap.classList.remove('hidden');
+                } else if (refWrap) {
+                    refWrap.classList.add('hidden');
+                }
+                const barcode = document.getElementById('ticketBarcode');
+                if (barcode) drawBarcode(barcode, String(d.token || '') + waLast4(d.wa));
+            }
+            function buildCanvas(d) {
+                const W = 1240, H = 440, S = 2;
+                const canvas = document.createElement('canvas');
+                canvas.width = W * S;
+                canvas.height = H * S;
+                const ctx = canvas.getContext('2d');
+                ctx.scale(S, S);
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#eceae6';
+                ctx.fillRect(0, 0, W, H);
+                const cardX = 14, cardY = 14, cardW = W - 28, cardH = H - 28, R = 22;
+                ctx.save();
+                rr(ctx, cardX, cardY, cardW, cardH, R);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = '#e2e0d8';
+                ctx.stroke();
+                ctx.restore();
+                const bandH = 76;
+                ctx.save();
+                rr(ctx, cardX, cardY, cardW, cardH, R);
+                ctx.clip();
+                ctx.fillStyle = '#1a3c5e';
+                ctx.fillRect(cardX, cardY, cardW, bandH);
+                ctx.fillStyle = '#0059ff';
+                ctx.fillRect(cardX, cardY + bandH, cardW, 4);
+                ctx.restore();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '34px Anton, sans-serif';
+                ctx.fillText('IMDKOM', cardX + 34, cardY + bandH / 2 - 8);
+                ctx.fillStyle = '#bcd0e4';
+                ctx.font = '700 10px Poppins, sans-serif';
+                ctx.fillText('TIKET PENDAFTARAN KURSUS', cardX + 34, cardY + bandH / 2 + 14);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#d9e6f2';
+                ctx.font = '600 15px Poppins, sans-serif';
+                ctx.fillText(fmtDateTime(d.timestamp), cardX + cardW - 32, cardY + bandH / 2);
+                ctx.textAlign = 'left';
+                const divX = cardX + Math.round(cardW * 0.70);
+                ctx.fillStyle = '#eceae6';
+                ctx.beginPath(); ctx.arc(divX, cardY, 15, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(divX, cardY + cardH, 15, 0, Math.PI * 2); ctx.fill();
+                ctx.save();
+                ctx.strokeStyle = '#d8d6ce';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([7, 6]);
+                ctx.beginPath();
+                ctx.moveTo(divX, cardY + bandH + 14);
+                ctx.lineTo(divX, cardY + cardH - 14);
+                ctx.stroke();
+                ctx.restore();
+                const lx = cardX + 32;
+                const lw = divX - lx - 28;
+                let y = cardY + bandH + 24;
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '700 9px Poppins, sans-serif';
+                ctx.fillText('PROGRAM', lx, y);
+                ctx.fillStyle = '#111827';
+                drawFitted(ctx, String(d.programNama || '-').toUpperCase(), lx, y + 19, lw);
+                ctx.fillStyle = '#1a3c5e';
+                ctx.font = '700 13px Poppins, sans-serif';
+                let meta = (d.nominal || '-') + '  Â·  ' + (d.metode || '-');
+                if (d.referral) meta += '  Â·  Referral ' + d.referral;
+                ctx.fillText(meta, lx, y + 42);
+                y += 58;
+                ctx.save();
+                ctx.strokeStyle = '#eeece6';
+                ctx.setLineDash([4, 5]);
+                ctx.beginPath();
+                ctx.moveTo(lx, y);
+                ctx.lineTo(divX - 22, y);
+                ctx.stroke();
+                ctx.restore();
+                y += 14;
+                const col2 = lx + Math.floor(lw * 0.54);
+                const row = function (label, value, x, yy, w) {
+                    ctx.fillStyle = '#9ca3af';
+                    ctx.font = '700 8.5px Poppins, sans-serif';
+                    ctx.fillText(label, x, yy);
+                    ctx.fillStyle = '#1f2937';
+                    ctx.font = '600 13px Poppins, sans-serif';
+                    const end = wrapText(ctx, String(value || '-'), x, yy + 14, w, 16);
+                    return end + 9;
+                };
+                let yLeft = row('NAMA PESERTA', d.nama, lx, y, lw * 0.52);
+                let yRight = row('WHATSAPP', d.wa, col2, y, lw * 0.46);
+                y = Math.max(yLeft, yRight);
+                yLeft = row('LAHIR', (d.tempatLahir || '-') + ', ' + fmtShortDate(d.tanggalLahir) + ' Â· ' + (d.jenisKelamin || '-'), lx, y, lw * 0.52);
+                yRight = row('PENDIDIKAN', d.pendidikan, col2, y, lw * 0.46);
+                y = Math.max(yLeft, yRight);
+                yLeft = row('ALAMAT', d.alamat, lx, y, col2 - lx - 16);
+                yRight = row('PEKERJAAN', d.pekerjaan, col2, y, lw * 0.46);
+                const sx = divX + 20;
+                const sw = cardX + cardW - sx - 22;
+                let sy = cardY + bandH + 22;
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '700 9px Poppins, sans-serif';
+                ctx.fillText('TIKET NO.', sx, sy);
+                ctx.fillStyle = '#111827';
+                ctx.font = '700 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+                ctx.fillText(String(d.token || '-'), sx, sy + 17);
+                sy += 38;
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '700 9px Poppins, sans-serif';
+                ctx.fillText('4 DIGIT TERAKHIR WA', sx, sy);
+                ctx.fillStyle = '#1a3c5e';
+                ctx.font = '58px Anton, sans-serif';
+                ctx.fillText(waLast4(d.wa) || '----', sx, sy + 44);
+                sy += 62;
+                const bc = document.createElement('canvas');
+                bc.width = sw;
+                bc.height = 52;
+                drawBarcode(bc, String(d.token || '') + waLast4(d.wa));
+                ctx.drawImage(bc, sx, sy, sw, 52);
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '9px Poppins, sans-serif';
+                ctx.fillText('imdkomyogyakarta.netlify.app', sx, sy + 64);
+                return canvas;
+            }
+            function render(data) {
+                renderPage(data);
+            }
+            function download(data) {
+                const canvas = buildCanvas(data);
+                const a = document.createElement('a');
+                a.download = 'tiket-pendaftaran-' + String(data.token || 'imdkom') + '.png';
+                a.rel = 'noopener';
+                a.href = canvas.toDataURL('image/png');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+            return { render: render, download: download, drawBarcode: drawBarcode };
+        })();
+    </script>
 
     <script type="module">
         import { db, collection, addDoc, setDoc, getDoc, doc, getDocs, query, where } from './assets/js/firebase.js';
@@ -384,6 +660,7 @@
         const params = new URLSearchParams(window.location.search);
         let currentHarga = '';
         let currentHargaPromo = '';
+        let lastTicketData = null;
         const programId = params.get('program') || localStorage.getItem('imdkom_reg_program') || '';
         const token = 'IMDKOM-' + Math.random().toString(36).slice(2, 10).toUpperCase();
         localStorage.setItem('imdkom_reg_token', token);
@@ -692,6 +969,23 @@
                 const metode = metodeEl ? metodeEl.value : 'qris';
                 const kodeReferral = document.getElementById('regKodeReferral').value.trim();
                 const catatan = document.getElementById('regCatatan').value.trim();
+                const ticketProgramName = programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId;
+                lastTicketData = {
+                    token: token,
+                    nama: nama,
+                    tempatLahir: tempatLahir,
+                    tanggalLahir: tanggalLahir,
+                    jenisKelamin: jenisKelamin === 'L' ? 'Laki-laki' : (jenisKelamin === 'P' ? 'Perempuan' : ''),
+                    alamat: alamat,
+                    pendidikan: pendidikan + (jurusan ? ' - ' + jurusan : ''),
+                    pekerjaan: pekerjaan || '-',
+                    wa: wa,
+                    programNama: ticketProgramName,
+                    nominal: getFinalBiaya() ? formatRupiah(getFinalBiaya()) : '-',
+                    metode: metode === 'qris' ? 'QRIS' : 'Transfer',
+                    referral: appliedReferral ? appliedReferral.code : '',
+                    timestamp: new Date()
+                };
 
                 await addDoc(collection(db, 'registrations'), {
                     token: token,
@@ -743,6 +1037,7 @@
                 qrisPollTimer = null;
                 openWhatsApp('*KONFIRMASI PENDAFTARAN IMDKOM*\n\nToken: ' + token + '\nProgram: ' + (programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId) + '\nNama: ' + nama + '\nPembayaran: ' + (getFinalBiaya() ? formatRupiah(getFinalBiaya()) : '-') + (appliedReferral ? '\nKode Referral: ' + appliedReferral.code + ' (potongan ' + formatRupiah(referralDiscount(getBaseBiaya())) + ')' : '') + '\n\n*SIMPAN TOKEN* ini baik-baik! Token digunakan untuk tracking status pendaftaran dan melihat jadwal kursus Anda.\n\nStatus: Menunggu verifikasi.');
                 successEl.classList.remove('hidden');
+                try { window.IMDKOMTicket && window.IMDKOMTicket.render(lastTicketData); } catch (ticketErr) { console.warn('Gagal menampilkan tiket:', ticketErr); }
                 form.classList.add('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 messageEl.innerHTML = '';
@@ -1049,6 +1344,16 @@
             });
         });
 
+        const downloadTicketBtn = document.getElementById('regDownloadTicketBtn');
+        if (downloadTicketBtn) downloadTicketBtn.addEventListener('click', function() {
+            if (!lastTicketData) return;
+            try {
+                window.IMDKOMTicket.download(lastTicketData);
+            } catch (ticketErr) {
+                console.warn('Gagal mengunduh tiket:', ticketErr);
+            }
+        });
+
         if (typeof lucide !== 'undefined') lucide.createIcons();
         await loadProgramInfo();
         await loadPaymentInfo();
@@ -1057,3 +1362,4 @@
     </script>
 </body>
 </html>
+

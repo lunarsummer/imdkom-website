@@ -208,11 +208,12 @@ service cloud.firestore {
 
     // ============================================================
     // REFERRALS (Kode diskon pendaftaran — doc id = kode uppercase)
-    // Admin atur potongan; publik hanya bisa get 1 kode (tidak bisa list)
+    // Publik: get 1 kode saja (tidak bisa list)
+    // Admin:  list + CRUD
     // ============================================================
     match /referrals/{code} {
       allow get: if true;
-      allow list: if false;
+      allow list: if isAdmin();
       allow write: if isAdmin();
     }
 
