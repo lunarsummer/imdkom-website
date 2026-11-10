@@ -10,11 +10,11 @@
     var FALLBACK_NAVBAR = '<nav id="mainNavbar"><div class="container mx-auto px-4 flex items-center justify-between"><a href="/" class="flex items-center gap-3 logo-shine"><img src="assets/images/logo/imd.svg" alt="IMDKOM — Kursus & Service Komputer Yogyakarta" class="h-7 w-auto" loading="eager" /><span class="text-sm text-gray-500 hidden xl:inline">Kursus &amp; Pelatihan • Computer Service</span></a><button id="mobileMenuBtn" class="lg:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu"><i data-lucide="menu" class="w-6 h-6"></i></button><div id="mainNav" class="hidden lg:flex items-center gap-2"><a href="/" class="nav-link">Beranda</a><a href="/kursus" class="nav-link">Kursus &amp; Pelatihan</a><a href="/service" class="nav-link">Computer Service</a><a href="/rakit-komputer" class="nav-link">Rakit Komputer</a><a href="/tentang" class="nav-link">Tentang</a><a href="/karir" class="nav-link">Karir</a><a href="/kontak" class="nav-link">Kontak</a></div></div><div id="mobileNav" class="hidden lg:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3"><div class="container mx-auto px-4 flex flex-col gap-2"><a href="/" class="text-gray-600 hover:text-brand py-1.5">Beranda</a><a href="/kursus" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a><a href="/service" class="mobile-menu-highlight"><span class="menu-icon-wrap"><i data-lucide="wrench" class="w-4 h-4"></i>Computer Service</span><i data-lucide="arrow-right" class="menu-arrow"></i></a><a href="/rakit-komputer" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a><a href="/tentang" class="text-gray-600 hover:text-brand py-1.5">Tentang</a><a href="/karir" class="text-gray-600 hover:text-brand py-1.5">Karir</a><a href="/kontak" class="text-gray-600 hover:text-brand py-1.5">Kontak</a></div></div></nav>';
 
     function currentPage() {
-        var file = (window.location.pathname.split('/').pop() || '/').toLowerCase();
-        if (!file) file = '/';
-        if (file === '/program-detail') return '/kursus';
-        if (file.indexOf('service') === 0) return '/service';
-        return file;
+        var path = window.location.pathname.replace(/\/+$/, '').toLowerCase();
+        if (!path) path = '/';
+        if (path === '/program-detail' || path === '/program-detail.html') return '/kursus';
+        if (path.indexOf('/service') === 0) return '/service';
+        return path;
     }
 
     function setNavHeightVar(nav) {
