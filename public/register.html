@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daftar Program | IMDKOM</title>
+    <meta name="description" content="Form pendaftaran kursus IMDKOM. Daftar tanpa membuat akun terlebih dahulu." />
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/output.css">
+    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <style>
+        :root {
+            --reg-ink: #0d0d0d;
+            --reg-muted: #4b5563;
+            --reg-line: #e9e7e2;
+            --reg-soft: #f7f7f5;
+        }
+        body {
+            background-color: #fbfbf8;
+            background-image: radial-gradient(#e7e7e3 1px, transparent 1px);
+            background-size: 22px 22px;
+            background-position: 50% 0;
+        }
+        .ant { font-family: 'Anton', 'Poppins', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+        .reg-title {
+            font-size: clamp(1.9rem, 5vw, 2.9rem);
+            line-height: 1.04;
+            color: var(--reg-ink);
+            margin: 0 0 0.4rem;
+        }
+        .reg-title .accent { color: #0059ff; }
+        .reg-field { display: flex; flex-direction: column; gap: 0.4rem; }
+        .reg-field.hidden { display: none; }
+        .reg-label { font-size: 0.78rem; font-weight: 600; color: #1f2937; letter-spacing: 0.01em; }
+        .reg-input, .reg-select, .reg-textarea {
+            width: 100%;
+            padding: 0.72rem 0.85rem;
+            border: 1px solid transparent;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            background: var(--reg-soft);
+            color: var(--reg-ink);
+            outline: none;
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .reg-input, .reg-textarea, .reg-select { text-transform: uppercase; }
+        .reg-input:focus, .reg-select:focus, .reg-textarea:focus {
+            border-color: #0059ff;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 89, 255, 0.14);
+        }
+        .reg-input::placeholder, .reg-textarea::placeholder { color: #6b7280; text-transform: none; }
+        input[type="checkbox"], input[type="radio"] {
+            accent-color: #0059ff;
+            width: 1.05rem;
+            height: 1.05rem;
+            cursor: pointer;
+        }
+        button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid #0059ff; outline-offset: 2px; }
+        .reg-error { font-size: 0.78rem; color: #dc2626; font-weight: 500; }
+        .reg-card {
+            background: #ffffff;
+            border: 1px solid var(--reg-line);
+            border-radius: 1.125rem;
+            padding: 1.35rem;
+            box-shadow: 0 14px 34px rgba(13, 13, 13, 0.055);
+        }
+        .reg-info-box {
+            font-size: 0.875rem;
+            color: var(--reg-muted);
+            background: var(--reg-soft);
+            border: 1px solid var(--reg-line);
+            border-radius: 0.85rem;
+            padding: 0.75rem 0.9rem;
+        }
+        #regForm { counter-reset: step; }
+        .reg-section-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--reg-ink);
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+        .reg-section-title::before {
+            counter-increment: step;
+            content: counter(step, decimal-leading-zero);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.65rem;
+            height: 1.65rem;
+            background: var(--reg-ink);
+            color: #ffffff;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .reg-submit {
+            width: 100%;
+            background: var(--reg-ink);
+            color: #ffffff;
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.95rem;
+            padding: 0.95rem 1rem;
+            border-radius: 0.85rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .reg-submit:hover { background: #0059ff; }
+        .reg-upload-btn {
+            width: 100%;
+            background: #075e54;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.85rem 1rem;
+            border-radius: 0.85rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .reg-upload-btn:hover { background: #043f36; }
+        .reg-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 1.125rem;
+            padding: 1.25rem;
+            box-shadow: 0 14px 34px rgba(13, 13, 13, 0.055);
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen">
+    <main class="max-w-3xl mx-auto px-4 py-10">
+        <div class="mb-6">
+            <a href="kursus.html" class="text-sm text-gray-500 hover:text-brand transition-colors">&larr; Kembali ke Kursus</a>
+        </div>
+
+        <div class="reg-card mb-6">
+            <h1 class="reg-title ant">Daftar Program <span class="accent">Kursus</span></h1>
+            <p class="text-sm text-gray-500">Isi data berikut untuk mendaftarkan diri. Anda tidak perlu membuat akun. Kolom bertanda <span class="text-red-700" aria-hidden="true">*</span> wajib diisi.</p>
+            <div id="regProgramInfo" class="reg-info-box mt-3"></div>
+        </div>
+
+        <form id="regForm" class="space-y-6">
+            <div class="reg-card space-y-4">
+                <h2 class="reg-section-title">Data Pribadi</h2>
+                <div class="reg-field">
+                    <label class="reg-label" for="regNama">Nama Peserta <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <input id="regNama" class="reg-input" type="text" placeholder="Nama lengkap" required />
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regTempat">Tempat Lahir <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <input id="regTempat" class="reg-input" type="text" placeholder="Kota / kabupaten" required />
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regTanggalLahir">Tanggal Lahir <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <input id="regTanggalLahir" class="reg-input" type="date" required />
+                </div>
+                <div id="regNikWrap" class="hidden reg-field">
+                    <label class="reg-label" for="regNik">NIK <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <input id="regNik" class="reg-input" type="text" placeholder="Nomor Induk Kependudukan" />
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regJk">Jenis Kelamin <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <select id="regJk" class="reg-select" required>
+                        <option value="">Pilih jenis kelamin</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regAlamat">Alamat Saat Ini <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <textarea id="regAlamat" class="reg-textarea" rows="2" placeholder="Alamat lengkap" required></textarea>
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regWa">Nomor WhatsApp <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <input id="regWa" class="reg-input" type="tel" placeholder="08xxxxxxxxxx" required />
+                </div>
+            </div>
+
+            <div class="reg-card space-y-4">
+                <h2 class="reg-section-title">Pendidikan dan Pekerjaan</h2>
+                <div class="reg-field">
+                    <label class="reg-label" for="regPendidikan">Pendidikan Terakhir - Asal Sekolah / Perguruan Tinggi</label>
+                    <input id="regPendidikan" class="reg-input" type="text" placeholder="Mis. SMA Negeri 1 Yogyakarta" />
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regJurusan">Jurusan</label>
+                    <input id="regJurusan" class="reg-input" type="text" placeholder="Mis. IPA / RPL" />
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regPekerjaan">Pekerjaan</label>
+                    <input id="regPekerjaan" class="reg-input" type="text" placeholder="Opsional" />
+                </div>
+            </div>
+
+            <div class="reg-card space-y-4">
+                <h2 class="reg-section-title">Program Kursus</h2>
+                <div id="regProgramDetail" class="reg-info-box" hidden></div>
+                <fieldset class="reg-field">
+                    <legend class="reg-label">Alasan Memilih Program <span class="text-red-700" aria-hidden="true">*</span></legend>
+                    <div id="regAlasan" class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" class="reg-checkbox" value="belum bisa mengoperasikan" /> Belum bisa mengoperasikan</label>
+                        <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" class="reg-checkbox" value="memperdalam ilmu" /> Ingin memperdalam ilmu</label>
+                        <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" class="reg-checkbox" value="mendapatkan sertifikat" /> Ingin mendapatkan sertifikat</label>
+                        <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" class="reg-checkbox" value="alasan lain" /> Alasan lainnya</label>
+                    </div>
+                </fieldset>
+                <div class="reg-field">
+                    <label class="reg-label" for="regSumber">Sumber Informasi IMDKOM</label>
+                    <select id="regSumber" class="reg-select">
+                        <option value="">Pilih sumber</option>
+                        <option value="sosmed">Sosial Media</option>
+                        <option value="website">Website</option>
+                        <option value="iklan">Iklan</option>
+                        <option value="teman">Teman atau Saudara</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="reg-card space-y-4">
+                <h2 class="reg-section-title">Pembayaran</h2>
+                <div id="paymentBiayaWrap" class="hidden">
+                    <p class="text-xs text-gray-500 mb-1">Biaya yang harus dibayar</p>
+                    <div id="paymentBiaya" class="text-lg font-bold text-brand"></div>
+                </div>
+                <fieldset class="reg-field">
+                    <legend class="reg-label">Metode Pembayaran <span class="text-red-700" aria-hidden="true">*</span></legend>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="metodePembayaran" value="qris" checked /> QRIS Statis</label>
+                        <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="metodePembayaran" value="transfer" /> Transfer</label>
+                    </div>
+                </fieldset>
+                <div id="paymentQris">
+                    <img id="qrisImage" alt="QRIS Pembayaran" style="max-width:220px;width:100%;border-radius:0.5rem;border:1px solid #e5e7eb;display:none;" />
+                    <p id="qrisFallback" class="text-sm text-gray-500">QR belum ditambahkan oleh admin.</p>
+                    <button type="button" id="regDownloadQris" class="hidden mt-2 inline-flex items-center gap-2 text-sm font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 transition-colors">Simpan QRIS</button>
+                    <p id="regQrisDynamicNote" class="hidden text-xs font-semibold text-emerald-800 mt-2"></p>
+                </div>
+                <div id="paymentTransfer" class="hidden">
+                    <div id="rekeningList" class="space-y-2"></div>
+                    <p id="rekeningFallback" class="text-sm text-gray-500 hidden">Rekening belum diatur admin.</p>
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regKodeReferral">Kode Referral</label>
+                    <input id="regKodeReferral" class="reg-input" type="text" placeholder="Opsional" />
+                </div>
+                <fieldset class="reg-field">
+                    <legend class="reg-label">Bukti Pembayaran <span class="text-red-700" aria-hidden="true">*</span></legend>
+                    <button type="button" id="regUploadBukti" class="reg-upload-btn">Kirim Bukti Pembayaran</button>
+                    <input id="regBuktiUrl" type="hidden" />
+                    <div id="regBuktiPreview" class="hidden mt-3 border border-emerald-200 bg-emerald-50 rounded-lg p-3 flex items-center gap-3">
+                        <img id="regBuktiImage" alt="Bukti pembayaran" style="width:72px;height:72px;object-fit:cover;border-radius:0.5rem;border:1px solid #e5e7eb;" />
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs text-emerald-700 font-semibold">Bukti berhasil diupload</p>
+                            <p id="regBuktiName" class="text-sm text-gray-800 truncate"></p>
+                        </div>
+                        <button type="button" id="regBuktiRemove" class="text-xs text-red-600 border border-red-200 rounded-md px-2 py-1">Hapus</button>
+                    </div>
+                    <div class="reg-field mt-3">
+                        <label class="reg-label" for="regCatatan">Catatan untuk Admin</label>
+                        <textarea id="regCatatan" class="reg-textarea" rows="2" placeholder="Mis. sudah transfer via BCA a.n. Fulan, tanggal 12 Jan 2026"></textarea>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="reg-card">
+                <label class="flex items-start gap-2 cursor-pointer">
+                    <input id="regAgreement" class="mt-1 reg-checkbox" type="checkbox" required />
+                    <span class="text-sm text-gray-600">Saya menyatakan data yang saya isi benar dan setuju dengan proses pendaftaran serta kebijakan yang berlaku.</span>
+                </label>
+            </div>
+
+            <button type="submit" id="regSubmit" class="reg-submit">Kirim Pendaftaran</button>
+            <div id="regMessage" class="text-sm" role="alert"></div>
+        </form>
+
+        <div id="regSuccess" class="reg-success hidden mt-6" role="status">
+            <p class="text-base text-green-800 font-bold">Pendaftaran berhasil diajukan!</p>
+            <p class="text-sm text-gray-700 mt-1">Data Anda sudah tersimpan. Admin akan memverifikasi pembayaran dan data pendaftaran Anda. Mohon tunggu konfirmasi dari kami.</p>
+            <p class="text-sm text-gray-700 mt-3">Simpan <strong>TOKEN PENDAFTARAN</strong> Anda berikut ini:</p>
+            <div class="flex items-center gap-2 mt-2">
+                <input id="regToken" class="reg-input bg-transparent font-mono text-lg tracking-widest" readonly aria-label="Token pendaftaran" />
+                <button type="button" id="regCopyToken" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold px-3 py-2 rounded-lg">Salin</button>
+            </div>
+            <div class="mt-3 bg-white rounded-lg border border-emerald-100 p-3">
+                <p class="text-sm font-semibold text-brand mb-1">Kegunaan token:</p>
+                <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
+                    <li><strong>Tracking status pendaftaran</strong> &mdash; Anda bisa cek apakah pendaftaran sudah diverifikasi admin.</li>
+                    <li><strong>Melihat jadwal kursus</strong> setelah Anda diterima.</li>
+                    <li>Mengidentifikasi data Anda di dashboard admin.</li>
+                </ul>
+                <p class="text-xs text-gray-500 mt-2">Token ini hanya untuk Anda. Jangan berikan kepada orang lain dan simpan seperti Anda menyimpan nomor telepon. Token juga sudah dikirim ke WhatsApp Anda.</p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { db, collection, addDoc, setDoc, getDoc, doc, getDocs, query, where } from './assets/js/firebase.js';
+        import { openCloudinaryUpload, optimizeCloudinaryUrl } from './assets/js/cloudinary.js';
+        import { openWhatsApp } from './assets/js/whatsapp.js';
+        import { formatRupiah, escapeHtml } from './assets/js/utils.js';
+
+        const params = new URLSearchParams(window.location.search);
+        let currentHarga = '';
+        let currentHargaPromo = '';
+        const programId = params.get('program') || localStorage.getItem('imdkom_reg_program') || '';
+        const token = 'IMDKOM-' + Math.random().toString(36).slice(2, 10).toUpperCase();
+        localStorage.setItem('imdkom_reg_token', token);
+
+        const programInfo = document.getElementById('regProgramInfo');
+        const programDetail = document.getElementById('regProgramDetail');
+        const form = document.getElementById('regForm');
+        const submitBtn = document.getElementById('regSubmit');
+        const messageEl = document.getElementById('regMessage');
+        const successEl = document.getElementById('regSuccess');
+        const tokenEl = document.getElementById('regToken');
+        tokenEl.value = token;
+        const copyTokenBtn = document.getElementById('regCopyToken');
+
+        async function loadProgramInfo() {
+            if (programDetail) programDetail.hidden = true;
+            if (!programId) {
+                programInfo.innerHTML = '<p class="text-sm" style="color:#b91c1c">Program kursus tidak valid. Silakan kembali ke halaman kursus.</p>';
+                return;
+            }
+            let programNama = 'Program';
+            let programGambar = '';
+            let harga = '';
+            let hargaPromo = '';
+            try {
+                const programSnap = await getDoc(doc(db, 'programs', programId));
+                if (programSnap.exists()) {
+                    const p = programSnap.data();
+                    programNama = p.nama || programNama;
+                    programGambar = p.gambar || '';
+                    harga = p.harga || '';
+                    hargaPromo = p.hargaPromo || '';
+                    currentHarga = harga;
+                    currentHargaPromo = hargaPromo;
+                }
+            } catch (e) {
+                programInfo.innerHTML = '<p class="text-sm" style="color:#b91c1c">Detail program belum tersedia. Anda tetap bisa melanjutkan pendaftaran.</p>';
+                return;
+            }
+            const hasPromo = String(hargaPromo || '').trim() !== '';
+            let biayaHtml = '';
+            if (hasPromo && String(harga || '').trim() !== '') {
+                 biayaHtml = '<span class="text-xs text-gray-500 line-through">' + escapeHtml(formatRupiah(harga)) + '</span><br><span class="text-brand">' + escapeHtml(formatRupiah(hargaPromo)) + '</span>';
+            } else {
+                biayaHtml = '<span class="text-brand">' + escapeHtml(formatRupiah(harga || hargaPromo)) + '</span>';
+            }
+            let mediaHtml = '';
+            if (programGambar) {
+                mediaHtml += '<div class="mb-2"><img src="' + programGambar + '" alt="' + programNama + '" style="width:96px;height:96px;object-fit:cover;border-radius:0.5rem;" /></div>';
+            }
+            programInfo.innerHTML = mediaHtml + '<p class="text-sm"><strong>Program:</strong> ' + escapeHtml(programNama) + '</p><p class="text-sm mt-1"><strong>Biaya:</strong><br>' + biayaHtml + '</p>';
+            const programBiayaWrap = document.getElementById('paymentBiayaWrap');
+            const programBiaya = document.getElementById('paymentBiaya');
+            if (programBiayaWrap && programBiaya) {
+                programBiaya.innerHTML = biayaHtml;
+                programBiayaWrap.classList.remove('hidden');
+            }
+            programDetail.innerHTML = '<p class="text-sm"><strong>Nama:</strong> ' + escapeHtml(programNama) + '</p>';
+            programDetail.hidden = false;
+        }
+
+        function calcAge(tanggalLahir) {
+            if (!tanggalLahir) return 0;
+            const lahir = new Date(tanggalLahir + 'T00:00:00');
+            if (isNaN(lahir.getTime())) return 0;
+            const now = new Date();
+            let age = now.getFullYear() - lahir.getFullYear();
+            const m = now.getMonth() - lahir.getMonth();
+            if (m < 0 || (m === 0 && now.getDate() < lahir.getDate())) age--;
+            return age;
+        }
+
+        function toggleNik() {
+            const age = calcAge(document.getElementById('regTanggalLahir').value);
+            const wrap = document.getElementById('regNikWrap');
+            const nik = document.getElementById('regNik');
+            if (age >= 17) {
+                wrap.classList.remove('hidden');
+                nik.required = true;
+            } else {
+                wrap.classList.add('hidden');
+                nik.required = false;
+            }
+        }
+
+        document.getElementById('regTanggalLahir').addEventListener('change', toggleNik);
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!document.getElementById('regAgreement').checked) {
+                messageEl.innerHTML = '<p class="reg-error">Anda wajib mencentang persetujuan terlebih dahulu.</p>';
+                return;
+            }
+            const nama = document.getElementById('regNama').value.trim();
+            const wa = document.getElementById('regWa').value.trim();
+            const tempatLahir = document.getElementById('regTempat').value.trim();
+            const tanggalLahir = document.getElementById('regTanggalLahir').value;
+            const jenisKelamin = document.getElementById('regJk').value;
+            const nik = document.getElementById('regNik').value.trim();
+            const alamat = document.getElementById('regAlamat').value.trim();
+            const pendidikan = document.getElementById('regPendidikan').value.trim();
+            const jurusan = document.getElementById('regJurusan').value.trim();
+            const pekerjaan = document.getElementById('regPekerjaan').value.trim();
+            const sumber = document.getElementById('regSumber').value;
+            const alasan = Array.from(document.querySelectorAll('#regAlasan .reg-checkbox')).filter(function(c) { return c.checked; }).map(function(c) { return c.value; });
+            const buktiUrl = document.getElementById('regBuktiUrl').value;
+            if (!nama || !wa || alasan.length === 0) {
+                messageEl.innerHTML = '<p class="reg-error">Mohon lengkapi data wajib.</p>';
+                return;
+            }
+            if (!buktiUrl) {
+                messageEl.innerHTML = '<p class="reg-error">Silakan kirim bukti pembayaran terlebih dahulu.</p>';
+                return;
+            }
+            submitBtn.disabled = true;
+            try {
+                const metodeEl = document.querySelector('input[name="metodePembayaran"]:checked');
+                const metode = metodeEl ? metodeEl.value : 'qris';
+                const kodeReferral = document.getElementById('regKodeReferral').value.trim();
+                const catatan = document.getElementById('regCatatan').value.trim();
+
+                await addDoc(collection(db, 'registrations'), {
+                    token: token,
+                    programId: programId,
+                    programNama: programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : '',
+                    nama: nama,
+                    whatsapp: wa,
+                    tempatLahir: tempatLahir,
+                    tanggalLahir: tanggalLahir,
+                    jenisKelamin: jenisKelamin,
+                    nik: nik,
+                    alamat: alamat,
+                    pendidikan: pendidikan,
+                    jurusan: jurusan,
+                    pekerjaan: pekerjaan,
+                    alasan: alasan,
+                    sumber: sumber,
+                    status: 'Menunggu',
+                    metodePembayaran: metode || '',
+                    nominalPembayaran: (String(currentHargaPromo || '').trim() !== '' ? currentHargaPromo : currentHarga) || '',
+                    buktiUrl: buktiUrl || '',
+                    kodeReferral: kodeReferral || '',
+                    catatan: catatan || '',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                });
+                try {
+                    const wa4 = wa.replace(/\D/g, '').slice(-4);
+                    const wa4hash = await sha256hex('imdkom-wa:' + wa4);
+                    const programName = programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId;
+                    await setDoc(doc(db, 'tracking', token), {
+                        token: token,
+                        nama: nama,
+                        programNama: programName,
+                        statusPembayaran: 'Menunggu',
+                        statusVerifikasiData: 'Menunggu',
+                        jadwalTerbit: false,
+                        jadwal: null,
+                        wa4hash: wa4hash,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch (trackingError) {
+                    console.error('Gagal menulis mirror tracking:', trackingError);
+                }
+                clearInterval(qrisPollTimer);
+                qrisPollTimer = null;
+                openWhatsApp('*KONFIRMASI PENDAFTARAN IMDKOM*\n\nToken: ' + token + '\nProgram: ' + (programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId) + '\nNama: ' + nama + '\n\n*SIMPAN TOKEN* ini baik-baik! Token digunakan untuk tracking status pendaftaran dan melihat jadwal kursus Anda.\n\nStatus: Menunggu verifikasi.');
+                successEl.classList.remove('hidden');
+                form.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                messageEl.innerHTML = '';
+            } catch (err) {
+                messageEl.innerHTML = '<p class="reg-error">Gagal mengirim pendaftaran: ' + err.message + '</p>';
+            }
+            submitBtn.disabled = false;
+        });
+
+        async function sha256hex(str) {
+            const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buffer)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+        }
+
+        function escapeString(str) {
+            if (str === null || str === undefined) return '';
+            const div = document.createElement('div');
+            div.textContent = String(str);
+            return div.innerHTML;
+        }
+
+        async function loadPaymentInfo() {
+            try {
+                const paymentSnap = await getDoc(doc(db, 'settings', 'paymentInfo'));
+                setupPaymentOptions(paymentSnap.exists() ? paymentSnap.data() : null);
+            } catch (e) {
+                setupPaymentOptions(null);
+            }
+        }
+
+            function setupPaymentOptions(payment) {
+            const qrisImage = document.getElementById('qrisImage');
+            const qrisFallback = document.getElementById('qrisFallback');
+            const dlBtn = document.getElementById('regDownloadQris');
+            if (payment && payment.qrisImage) {
+                qrisImage.src = payment.qrisImage;
+                qrisImage.style.display = 'block';
+                qrisFallback.style.display = 'none';
+                dlBtn.classList.remove('hidden');
+            } else {
+                qrisImage.style.display = 'none';
+                qrisFallback.style.display = 'block';
+                dlBtn.classList.add('hidden');
+            }
+            const rekeningList = document.getElementById('rekeningList');
+            const rekeningFallback = document.getElementById('rekeningFallback');
+            const list = Array.isArray(payment && payment.rekening) ? payment.rekening.filter(function(r) { return r && r.active !== false; }) : [];
+            rekeningList.innerHTML = list.map(function(r) {
+                return '<div class="border border-gray-200 rounded-lg p-3 flex items-center justify-between gap-3"><div><p class="text-sm font-semibold text-gray-800">' + escapeString(r.bank) + '</p><p class="text-sm text-gray-600">' + escapeString(r.nama) + ' - ' + escapeString(r.nomor) + '</p></div><button type="button" class="text-xs border border-gray-300 rounded px-2 py-1" data-nomor="' + escapeString(r.nomor) + '">Copy</button></div>';
+            }).join('');
+            rekeningFallback.classList.toggle('hidden', list.length > 0);
+            rekeningList.querySelectorAll('button[data-nomor]').forEach(function(b) {
+                b.addEventListener('click', function() {
+                    navigator.clipboard.writeText(b.dataset.nomor || '').then(function() { b.innerText = 'Tersalin'; setTimeout(function() { b.innerText = 'Copy'; }, 2000); });
+                });
+            });
+        }
+
+        function parseAmount(value) {
+            return Math.round(Number(String(value || '').replace(/[^0-9]/g, '')));
+        }
+
+        let qrisPollTimer = null;
+
+        async function loadDynamicQris() {
+            const nominal = parseAmount(currentHargaPromo) || parseAmount(currentHarga);
+            if (!nominal) return;
+            const programName = (programDetail && programDetail.textContent || 'Pendaftaran Kursus IMDKOM').replace('Nama:', '').trim().slice(0, 50);
+            try {
+                const res = await fetch('/.netlify/functions/midtrans-qris', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: token,
+                        amount: String(nominal),
+                        description: programName,
+                        nama: (document.getElementById('regNama') || {}).value || 'Peserta',
+                        wa: (document.getElementById('regWa') || {}).value || ''
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.qrDataUrl) {
+                    console.warn('QRIS dinamis tidak tersedia, memakai QRIS statis admin.', data);
+                    return;
+                }
+                const img = document.getElementById('qrisImage');
+                if (img) {
+                    img.src = data.qrDataUrl;
+                    img.style.display = 'block';
+                }
+                const fallback = document.getElementById('qrisFallback');
+                if (fallback) fallback.style.display = 'none';
+                const dl = document.getElementById('regDownloadQris');
+                if (dl) dl.classList.remove('hidden');
+                qrisPollTimer = setInterval(pollQrisStatus, 6000);
+            } catch (err) {
+                console.warn('QRIS dinamis gagal, memakai QRIS statis admin.', err);
+            }
+        }
+
+        async function pollQrisStatus() {
+            try {
+                const res = await fetch('/.netlify/functions/midtrans-qris-status?orderId=' + encodeURIComponent(token));
+                if (!res.ok) return;
+                const data = await res.json();
+                const st = String(data.transactionStatus || '').toLowerCase();
+                const note = document.getElementById('regQrisDynamicNote');
+                if (st === 'settlement') {
+                    if (note) { note.textContent = 'Pembayaran terkonfirmasi Midtrans.'; note.classList.remove('hidden'); }
+                    clearInterval(qrisPollTimer); qrisPollTimer = null;
+                } else if (st === 'expire' || st === 'deny' || st === 'cancel') {
+                    if (note) { note.textContent = 'QRIS kedaluwarsa / tidak valid. Silakan refresh halaman.'; note.classList.remove('hidden'); }
+                    clearInterval(qrisPollTimer); qrisPollTimer = null;
+                }
+            } catch (e) { /* abaikan sementara */ }
+        }
+
+        document.querySelectorAll('input[name="metodePembayaran"]').forEach(function(r) {
+            r.addEventListener('change', function() {
+                document.getElementById('paymentQris').classList.toggle('hidden', this.value !== 'qris');
+                document.getElementById('paymentTransfer').classList.toggle('hidden', this.value !== 'transfer');
+            });
+        });
+
+        function showBuktiPreview(url) {
+            const preview = document.getElementById('regBuktiPreview');
+            const img = document.getElementById('regBuktiImage');
+            const name = document.getElementById('regBuktiName');
+            img.src = url;
+            img.onerror = function() {
+                img.style.display = 'none';
+            };
+            img.style.display = 'block';
+            const parts = (url || '').split('/');
+            name.textContent = decodeURIComponent(parts[parts.length - 1] || 'file');
+            preview.classList.remove('hidden');
+        }
+
+        function hideBuktiPreview() {
+            const preview = document.getElementById('regBuktiPreview');
+            const img = document.getElementById('regBuktiImage');
+            document.getElementById('regBuktiUrl').value = '';
+            img.src = '';
+            preview.classList.add('hidden');
+        }
+
+        document.getElementById('regDownloadQris').addEventListener('click', function() {
+            const src = document.getElementById('qrisImage').src;
+            if (!src) return;
+            const dlBtn = this;
+            const triggerDownload = function(url) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'qris-imdkom.png';
+                a.rel = 'noopener';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            dlBtn.disabled = true;
+            dlBtn.innerText = 'Menyimpan...';
+            fetch(src)
+                .then(function(resp) { if (!resp.ok) throw new Error('Gagal mengunduh QRIS'); return resp.blob(); })
+                .then(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    triggerDownload(url);
+                    setTimeout(function() { URL.revokeObjectURL(url); }, 4000);
+                })
+                .catch(function() { triggerDownload(src); })
+                .finally(function() {
+                    dlBtn.disabled = false;
+                    dlBtn.innerText = 'Simpan QRIS';
+                });
+        });
+
+        document.getElementById('regBuktiRemove').addEventListener('click', hideBuktiPreview);
+
+        document.querySelectorAll('#regForm input[type="text"], #regForm input[type="tel"], #regForm textarea').forEach(function(el) {
+            el.addEventListener('input', function() {
+                const start = this.selectionStart;
+                this.value = this.value.toUpperCase();
+                try { this.setSelectionRange(start, start); } catch (e) { /* noop */ }
+            });
+        });
+
+        document.getElementById('regUploadBukti').addEventListener('click', function() {
+            openCloudinaryUpload({
+                folder: 'bukti-pembayaran',
+                onSuccess: (url) => {
+                    document.getElementById('regBuktiUrl').value = url;
+                    showBuktiPreview(url);
+                },
+                onError: (err) => {
+                    messageEl.innerHTML = '<p class="reg-error">Gagal upload bukti: ' + err.message + '</p>';
+                }
+            });
+        });
+
+        copyTokenBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(token).then(function() {
+                copyTokenBtn.innerText = 'Tersalin';
+                setTimeout(function() { copyTokenBtn.innerText = 'Salin'; }, 2000);
+            });
+        });
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        await loadProgramInfo();
+        await loadPaymentInfo();
+        await loadDynamicQris();
+        toggleNik();
+    </script>
+</body>
+</html>

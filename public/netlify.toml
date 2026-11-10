@@ -8,6 +8,15 @@
   publish = "."
 
 # ============================================================
+# FUNCTIONS (serverless Node) — dipanggil dari register.html
+#   POST /.netlify/functions/midtrans-qris
+#   GET  /.netlify/functions/midtrans-qris-status?orderId=...
+# Set env MIDTRANS_SERVER_KEY & MIDTRANS_ENV=sandbox|production
+# ============================================================
+[functions]
+  directory = "netlify/functions"
+
+# ============================================================
 # EDGE FUNCTIONS
 # ============================================================
 [[edge_functions]]

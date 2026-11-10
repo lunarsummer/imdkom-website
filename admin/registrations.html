@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrasi | Admin IMDKOM</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <link rel="stylesheet" href="./assets/css/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* NAV GROUP / SUBMENU */
+        .nav-group { margin: 0; }
+
+        .nav-group-toggle {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font: inherit;
+            color: inherit;
+        }
+
+        .nav-group-toggle .nav-chevron {
+            transition: transform 0.25s ease;
+            opacity: 0.6;
+        }
+
+        .nav-group-toggle.open .nav-chevron {
+            transform: rotate(180deg);
+            opacity: 1;
+        }
+
+        .nav-group-toggle.open {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-submenu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.25rem 0 0.5rem 0;
+            margin-left: 0.5rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            animation: submenuSlide 0.25s ease;
+        }
+
+        .nav-submenu.hidden { display: none; }
+
+        @keyframes submenuSlide {
+            from { opacity: 0; transform: translateY(-4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-submenu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+            margin-left: 0.25rem;
+        }
+
+        .nav-submenu-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .nav-submenu-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-weight: 600;
+        }
+
+        .nav-submenu-link i { opacity: 0.7; flex-shrink: 0; }
+        .nav-submenu-link.active i { opacity: 1; }
+
+        #printArea { display: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block; position: absolute; top: 0; left: 0; width: 100%; padding: 24px 28px; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0f172a; }
+        }
+        .doc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+        .doc-org { font-size: 9px; letter-spacing: 2.5px; color: #64748b; text-transform: uppercase; font-weight: 700; margin: 0; }
+        .doc-title { font-size: 21px; color: #0f172a; margin: 5px 0 0; font-weight: 800; letter-spacing: -0.3px; line-height: 1.15; }
+        .doc-sub { font-size: 10.5px; color: #64748b; margin: 3px 0 0; }
+        .doc-contact { text-align: right; font-size: 9.5px; color: #64748b; line-height: 1.7; }
+        .doc-accent { width: 56px; height: 5px; border-radius: 999px; background: #1a3c5e; border: 0; margin: 16px 0 16px; }
+        .doc-meta { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 10px; }
+        .doc-meta .label { font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 1.4px; margin: 0; }
+        .doc-meta .value { font-size: 11px; color: #0f172a; font-weight: 600; margin: 3px 0 0; }
+        .doc-token { font-family: 'Inter', system-ui, sans-serif; font-size: 11.5px; background: #f1f5f9; border: 1px solid #e2e8f0; color: #0f172a; padding: 7px 12px; border-radius: 8px; letter-spacing: 0.5px; font-weight: 600; white-space: nowrap; }
+        .print-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11.5px; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+        .print-table td { border-bottom: 1px solid #eef2f7; padding: 9px 12px; vertical-align: top; }
+        .print-table tr:last-child td { border-bottom: 0; }
+        .print-table td:first-child { width: 34%; background: #f8fafc; color: #64748b; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; }
+        .print-sign { display: flex; justify-content: space-between; gap: 48px; margin-top: 38px; font-size: 10.5px; color: #0f172a; text-align: center; }
+        .print-sign .line { border-top: 1.5px solid #0f172a; padding-top: 6px; margin-top: 44px; }
+        .print-foot { display: flex; justify-content: space-between; gap: 20px; margin-top: 18px; font-size: 8.5px; color: #94a3b8; letter-spacing: 0.4px; border-top: 1px solid #eef2f7; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        <span class="text-white font-bold">Registrasi</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR ADMIN
+    ============================================================ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+
+            <div class="nav-group">
+                <button type="button" 
+                    class="nav-link nav-group-toggle w-full justify-between" 
+                    data-target="submenu-program">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        Program Kursus
+                    </span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform nav-chevron"></i>
+                </button>
+
+                <div id="submenu-program" class="nav-submenu hidden">
+                    <a href="programs.html" class="nav-submenu-link">
+                        <i data-lucide="list" class="w-3.5 h-3.5"></i>
+                        Daftar Program
+                    </a>
+                    <a href="program-submissions.html" class="nav-submenu-link">
+                        <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                        Review Usulan
+                    </a>
+                    <a href="tentors.html" class="nav-submenu-link">
+                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+                        Tentor
+                    </a>
+                    <a href="registrations.html" class="nav-submenu-link active">
+                        <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                        Registrasi
+                    </a>
+                    <a href="payment-settings.html" class="nav-submenu-link">
+                        <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                        Metode Pembayaran
+                    </a>
+                </div>
+            </div>
+
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pc-components.html" class="nav-link">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                PC Components
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="jobs.html" class="nav-link">
+            <i data-lucide="briefcase" class="w-4 h-4"></i>
+            Karir
+        </a>
+        <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <div class="page-header">
+            <h2>Registrasi Peserta</h2>
+            <div class="flex items-center gap-2">
+                <button id="syncTrackingBtn" onclick="syncAllTracking()" class="btn-primary">
+                    <i data-lucide="refresh-ccw" class="w-4 h-4"></i>
+                    Sync Tracking
+                </button>
+                <button onclick="loadRegistrations()" class="btn-primary">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="registrationsGrid">
+            <div class="col-span-full text-center text-gray-500 py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                <p class="mt-3 text-sm">Memuat...</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="printArea"></div>
+
+    <div id="detailModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative">
+            <button id="closeDetailModal" class="absolute top-3 right-4 text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</button>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <div id="jadwalModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 relative">
+            <button id="closeJadwalModal" class="absolute top-3 right-4 text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</button>
+            <h3 class="font-bold text-gray-800 text-lg mb-1">Buat &amp; Terbitkan Jadwal</h3>
+            <p class="text-sm text-gray-500 mb-4" id="jadwalSubtitle">-</p>
+            <label class="block text-xs text-gray-500 mb-1">Tentor</label>
+            <select id="jadwalTentor" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-3"></select>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Jam Mulai (default)</label>
+                    <input id="jadwalJamMulai" type="time" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">Jam Selesai (default)</label>
+                    <input id="jadwalJamSelesai" type="time" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                </div>
+            </div>
+            <label class="block text-xs text-gray-500 mb-1">Kelas / Ruang</label>
+            <input id="jadwalKelas" type="text" placeholder="Mis. Kelas B1 / Lab Komputer" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-3" />
+            <label class="block text-xs text-gray-500 mb-1">Ruangan</label>
+            <input id="jadwalRuang" type="text" placeholder="Mis. Ruang 2" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-3" />
+            <div class="flex items-center justify-between gap-2 mt-2 mb-2">
+                <span class="text-xs text-gray-500">Baris terisi: <span id="jadwalFilledInfo" class="font-bold text-brand">0</span></span>
+                <div class="flex gap-2">
+                    <button id="applyJamAllBtn" type="button" class="text-xs border border-gray-300 rounded-md px-2 py-1.5 text-gray-700 hover:bg-gray-50">Salin jam ke semua</button>
+                    <button id="addJadwalRowBtn" type="button" class="text-xs border border-brand text-brand rounded-md px-2 py-1.5 hover:bg-brand/5">+ Tambah baris</button>
+                </div>
+            </div>
+            <div id="jadwalRows" class="space-y-2 max-h-64 overflow-y-auto mb-3"></div>
+            <label class="block text-xs text-gray-500 mb-1">Catatan</label>
+            <textarea id="jadwalCatatan" rows="2" placeholder="Catatan untuk tentor" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-3"></textarea>
+            <div id="jadwalMessage" class="text-sm mb-2"></div>
+            <button id="jadwalSubmitBtn" class="btn-primary">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i>
+                Terbitkan Jadwal
+            </button>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative">
+            <button id="closeDeleteModal" class="absolute top-3 right-4 text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</button>
+            <h3 class="font-bold text-red-700 text-lg mb-2 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5"></i>Hapus Peserta</h3>
+            <p class="text-sm text-gray-600 mb-1">Anda akan menghapus data pendaftaran:</p>
+            <p class="text-sm font-bold text-gray-800 mb-4" id="deleteSubtitle">-</p>
+            <p class="text-xs text-red-600 mb-3">Tindakan ini tidak bisa dibatalkan. Semua data pendaftaran beserta status verifikasi akan dihapus permanen.</p>
+            <label class="block text-xs text-gray-500 mb-1">Konfirmasi password login admin</label>
+            <input id="deletePassword" type="password" autocomplete="current-password" placeholder="Masukkan password admin" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-3" />
+            <div id="deleteMessage" class="text-sm mb-2"></div>
+            <div class="flex items-center gap-2">
+                <button id="deleteCancelBtn" class="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2">Batal</button>
+                <button id="deleteConfirmBtn" class="inline-flex items-center gap-1.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg px-3 py-2 ml-auto"><i data-lucide="trash-2" class="w-4 h-4"></i>Hapus Permanen</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, getDoc, addDoc, setDoc, where, query, orderBy, limit, updateDoc, deleteDoc, doc } from './assets/js/firebase.js';
+        import { EmailAuthProvider, reauthenticateWithCredential } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.dataset.target;
+                const submenu = document.getElementById(targetId);
+                if (!submenu) return;
+
+                const isOpen = !submenu.classList.contains('hidden');
+
+                if (isOpen) {
+                    submenu.classList.add('hidden');
+                    toggle.classList.remove('open');
+                } else {
+                    submenu.classList.remove('hidden');
+                    toggle.classList.add('open');
+                }
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        });
+
+        document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
+            const submenu = activeLink.closest('.nav-submenu');
+            if (submenu) {
+                submenu.classList.remove('hidden');
+                const toggle = document.querySelector('.nav-group-toggle[data-target="' + submenu.id + '"]');
+                if (toggle) toggle.classList.add('open');
+            }
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'index.html';
+            else {
+                loadRegistrations();
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
+
+        const registrationsMap = {};
+        let currentRegistrationId = null;
+        let currentRegistration = null;
+
+        window.loadRegistrations = async function() {
+            const container = document.getElementById('registrationsGrid');
+
+            try {
+                const q = query(collection(db, 'registrations'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <div class="col-span-full admin-card text-center text-gray-500 py-12">
+                            <i data-lucide="user-plus" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                            <p>Belum ada pendaftaran masuk.</p>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+
+                let html = '';
+                snapshot.forEach((docSnap) => {
+                    registrationsMap[docSnap.id] = docSnap.data();
+                    const data = docSnap.data();
+                    const date = data.createdAt ? new Date(data.createdAt).toLocaleString('id-ID') : '-';
+                    const token = data.token || '-';
+                    const programNama = data.programNama || (data.programId ? String(data.programId) : '-');
+                    const bayarOk = (data.statusPembayaran || '') === 'Terverifikasi';
+                    const dataOk = (data.statusVerifikasiData || '') === 'Terverifikasi';
+                    const bayarBtn = bayarOk
+                        ? `<span class="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2"><i data-lucide="check-circle-2" class="w-4 h-4"></i>Pembayaran Terverifikasi</span>`
+                        : `<button class="btn-primary" onclick="verifyPayment('${docSnap.id}')"><i data-lucide="check-circle" class="w-4 h-4"></i>Verifikasi Pembayaran</button>`;
+                    const dataBtn = dataOk
+                        ? `<span class="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2"><i data-lucide="check-circle-2" class="w-4 h-4"></i>Data Terverifikasi</span>`
+                        : `<button class="btn-primary" onclick="verifyData('${docSnap.id}')"><i data-lucide="check" class="w-4 h-4"></i>Verifikasi Data</button>`;
+
+                    html += `
+                        <div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="badge badge-info">${escapeHtmlProgram(programNama)}</span>
+                                <span class="text-xs text-gray-400">${date}</span>
+                            </div>
+
+                            <h3 class="font-bold text-gray-800">${escapeHtmlText(data.nama || '-')}</h3>
+                            <p class="text-sm text-gray-500 mt-1">Token: <span class="font-mono text-xs">${escapeHtmlText(token)}</span></p>
+                            <p class="text-sm text-gray-500 mt-1">WhatsApp: ${escapeHtmlText(data.whatsapp || '-')}</p>
+
+                            <p class="text-sm text-gray-700 mt-2"><strong>Status:</strong> ${escapeHtmlText(data.status || 'Menunggu')}</p>
+                            <div class="flex flex-wrap items-center gap-2 mt-2">
+                                <span class="text-[11px] text-gray-500">Pembayaran:</span>
+                                <span class="text-[11px] px-2 py-0.5 rounded-full ${bayarOk ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${bayarOk ? 'Terverifikasi' : 'Menunggu'}</span>
+                                <span class="text-[11px] text-gray-500 ml-2">Data:</span>
+                                <span class="text-[11px] px-2 py-0.5 rounded-full ${dataOk ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${dataOk ? 'Terverifikasi' : 'Menunggu'}</span>
+                            </div>
+                            ${data.buktiUrl ? `<a href="${String(data.buktiUrl).replace(/"/g, '%22')}" target="_blank" rel="noopener" class="text-sm text-brand hover:text-brand-light underline block mt-1">Lihat Bukti Pembayaran</a>` : ''}
+
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                ${bayarBtn}
+                                ${dataBtn}
+                                <button class="btn-primary" onclick="openDetail('${docSnap.id}')">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                    Detail
+                                </button>
+                                <button class="btn-primary" onclick="openJadwalModal('${docSnap.id}')">
+                                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                                    Buat Jadwal
+                                </button>
+                                <button class="inline-flex items-center gap-1.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg px-3 py-2 transition-colors" onclick="requestDelete('${docSnap.id}')">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error loading registrations:', error);
+                container.innerHTML = `
+                    <div class="col-span-full admin-card text-center text-gray-500 py-12">
+                        <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                        <p>Gagal memuat daftar pendaftaran.</p>
+                    </div>
+                `;
+            }
+        };
+
+        window.syncAllTracking = async function() {
+            const btn = document.getElementById('syncTrackingBtn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 animate-spin"></i>Menyinkronkan...';
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+            let ok = 0, fail = 0;
+            try {
+                const q = query(collection(db, 'registrations'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(q);
+                for (const docSnap of snapshot.docs) {
+                    try {
+                        await syncTrackingDoc(docSnap.data().token, docSnap.data());
+                        ok++;
+                    } catch (syncError) {
+                        fail++;
+                        console.error('Gagal sync tracking untuk', docSnap.id, syncError);
+                    }
+                }
+                alert('Sync tracking selesai: ' + ok + ' berhasil, ' + fail + ' gagal.');
+            } catch (error) {
+                alert('Gagal sync tracking: ' + (error && error.message ? error.message : 'unknown'));
+            }
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="refresh-ccw" class="w-4 h-4"></i>Sync Tracking';
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        };
+
+        window.verifyPayment = async function(id) {
+            try {
+                await updateDoc(doc(db, 'registrations', id), {
+                    statusPembayaran: 'Terverifikasi',
+                    updatedAt: new Date().toISOString()
+                });
+                const data = Object.assign({}, registrationsMap[id], { statusPembayaran: 'Terverifikasi' });
+                await syncTrackingDoc(data.token, data);
+                await loadRegistrations();
+            } catch (error) {
+                console.error('Error verifying payment:', error);
+            }
+        };
+
+        window.verifyData = async function(id) {
+            try {
+                await updateDoc(doc(db, 'registrations', id), {
+                    statusVerifikasiData: 'Terverifikasi',
+                    updatedAt: new Date().toISOString()
+                });
+                const data = Object.assign({}, registrationsMap[id], { statusVerifikasiData: 'Terverifikasi' });
+                await syncTrackingDoc(data.token, data);
+                await loadRegistrations();
+            } catch (error) {
+                console.error('Error verifying data:', error);
+            }
+        };
+
+        window.openDetail = function(id) {
+            const data = registrationsMap[id];
+            if (!data) return;
+            currentRegistrationId = id;
+            currentRegistration = data;
+            const waLink = toWaLink(data.whatsapp);
+            const alasan = Array.isArray(data.alasan) ? data.alasan.join(', ') : (data.alasan || '-');
+            const jenisKelamin = data.jenisKelamin === 'L' ? 'Laki-laki' : (data.jenisKelamin === 'P' ? 'Perempuan' : (data.jenisKelamin || '-'));
+            const rows = [
+                ['Token', data.token],
+                ['Program', data.programNama || data.programId],
+                ['Nama', data.nama],
+                ['No. WhatsApp', data.whatsapp],
+                ['Tempat Lahir', data.tempatLahir],
+                ['Tanggal Lahir', data.tanggalLahir],
+                ['Jenis Kelamin', jenisKelamin],
+                ['NIK', data.nik],
+                ['Alamat', data.alamat],
+                ['Pendidikan', data.pendidikan],
+                ['Jurusan', data.jurusan],
+                ['Pekerjaan', data.pekerjaan],
+                ['Alasan Memilih Program', alasan],
+                ['Sumber Informasi', data.sumber],
+                ['Metode Pembayaran', data.metodePembayaran],
+                ['Nominal Pembayaran', data.nominalPembayaran],
+                ['Kode Referral', data.kodeReferral],
+                ['Catatan Peserta', data.catatan],
+                ['Status Pendaftaran', data.status || 'Menunggu'],
+                ['Status Pembayaran', data.statusPembayaran || 'Menunggu'],
+                ['Status Verifikasi Data', data.statusVerifikasiData || 'Menunggu']
+            ];
+            let html = '<h3 class="font-bold text-gray-800 text-lg mb-3">Detail Peserta</h3>';
+            html += '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">';
+            rows.forEach(([label, value]) => {
+                html += '<div class="bg-gray-50 rounded-lg p-2"><p class="text-xs text-gray-500">' + escapeHtmlText(label) + '</p><p class="text-gray-800">' + escapeHtmlText(value || '-') + '</p></div>';
+            });
+            html += '</div>';
+            if (data.buktiUrl) {
+                html += '<a href="' + String(data.buktiUrl).replace(/"/g, '%22') + '" target="_blank" rel="noopener" class="block mt-3 text-sm text-brand underline">Buka Bukti Pembayaran</a>';
+            }
+            html += '<div class="mt-4 flex flex-wrap gap-2">';
+            html += '<a href="' + escapeHtmlText(waLink) + '" target="_blank" rel="noopener" class="btn-primary"><i data-lucide="message-circle" class="w-4 h-4"></i>Follow-up WA</a>';
+            html += '<button class="btn-primary" onclick="window.print()"><i data-lucide="printer" class="w-4 h-4"></i>Print Form</button>';
+            html += '<button class="btn-primary" onclick="verifyPayment(\'' + id + '\'); closeDetail();"><i data-lucide="check-circle" class="w-4 h-4"></i>Verifikasi Pembayaran</button>';
+            html += '<button class="btn-primary" onclick="verifyData(\'' + id + '\'); closeDetail();"><i data-lucide="check" class="w-4 h-4"></i>Verifikasi Data</button>';
+            html += '<button class="btn-primary" onclick="closeDetail(); openJadwalModal(\'' + id + '\');"><i data-lucide="calendar-check" class="w-4 h-4"></i>Buat &amp; Terbitkan Jadwal</button>';
+            html += '</div>';
+            document.getElementById('detailContent').innerHTML = html;
+            document.getElementById('printArea').innerHTML = buildPrintHtml(data);
+            document.getElementById('detailModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.closeDetail = function() {
+            document.getElementById('detailModal').classList.add('hidden');
+        };
+
+        async function sha256hex(str) {
+            const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buffer)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+        }
+
+        async function syncTrackingDoc(token, registrationData) {
+            if (!token || !registrationData) return;
+            try {
+                const whatsappDigits = String(registrationData.whatsapp || '').replace(/\D/g, '');
+                const last4 = whatsappDigits.slice(-4) || '0000';
+                const wa4hash = await sha256hex('imdkom-wa:' + last4);
+
+                let jadwalTerbit = false;
+                let jadwalList = [];
+                try {
+                    const q = query(collection(db, 'schedules'), where('pesertaToken', '==', token));
+                    const snap = await getDocs(q);
+                    const items = [];
+                    snap.forEach(function(docSnap) {
+                        const s = docSnap.data();
+                        const tanggal = (s.sesi && s.sesi[0] && s.sesi[0].tanggal) ? s.sesi[0].tanggal : '';
+                        items.push({
+                            tanggal,
+                            jamMulai: s.jamMulai || '',
+                            jamSelesai: s.jamSelesai || '',
+                            kelas: s.kelas || '',
+                            ruang: s.ruang || '',
+                            tentorNama: s.tentorNama || '',
+                            totalPertemuan: s.totalPertemuan || 1,
+                            catatan: s.catatan || '',
+                            programNama: s.programNama || '',
+                            published: s.published === true || s.status === 'aktif'
+                        });
+                    });
+                    items.sort(function(a, b) { return String(a.tanggal).localeCompare(String(b.tanggal)); });
+                    jadwalList = items.filter(function(item) { return item.published; });
+                    if (jadwalList.length > 0) jadwalTerbit = true;
+                } catch (scheduleError) {
+                    console.error('Gagal memeriksa jadwal:', scheduleError);
+                }
+                const jadwalSummary = jadwalList.length > 0
+                    ? { tanggal: jadwalList[0].tanggal, jamMulai: jadwalList[0].jamMulai, jamSelesai: jadwalList[0].jamSelesai, kelas: jadwalList[0].kelas, ruang: jadwalList[0].ruang, tentorNama: jadwalList[0].tentorNama, totalPertemuan: jadwalList.length, catatan: jadwalList[0].catatan, programNama: jadwalList[0].programNama }
+                    : null;
+
+                await setDoc(doc(db, 'tracking', token), {
+                    token,
+                    nama: registrationData.nama || '',
+                    programNama: registrationData.programNama || '',
+                    statusPembayaran: registrationData.statusPembayaran || 'Menunggu',
+                    statusVerifikasiData: registrationData.statusVerifikasiData || 'Menunggu',
+                    jadwalTerbit,
+                    jadwal: jadwalSummary,
+                    jadwalList: jadwalList.map(function(item) {
+                        return {
+                            tanggal: item.tanggal,
+                            jamMulai: item.jamMulai,
+                            jamSelesai: item.jamSelesai,
+                            kelas: item.kelas,
+                            ruang: item.ruang,
+                            tentorNama: item.tentorNama,
+                            programNama: item.programNama,
+                            catatan: item.catatan
+                        };
+                    }),
+                    wa4hash,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+            } catch (error) {
+                console.error('Gagal sinkronisasi tracking:', error);
+            }
+        }
+
+        function toWaLink(raw) {
+            const d = String(raw || '').replace(/[^0-9]/g, '');
+            if (d.startsWith('0')) return 'https://wa.me/62' + d.slice(1);
+            return 'https://wa.me/' + d;
+        }
+
+        function createJadwalRow() {
+            const container = document.getElementById('jadwalRows');
+            if (!container) return;
+            const row = document.createElement('div');
+            row.className = 'jadwal-row-item flex items-center gap-2';
+            const jamMulaiDefault = document.getElementById('jadwalJamMulai').value || '09:00';
+            const jamSelesaiDefault = document.getElementById('jadwalJamSelesai').value || '10:00';
+            row.innerHTML =
+                '<span class="jadwal-row-number text-xs text-gray-400 w-6 text-right shrink-0"></span>' +
+                '<input type="date" class="jadwal-row-date flex-1 min-w-0 px-2 py-1.5 border border-gray-300 rounded-lg text-sm" />' +
+                '<input type="time" class="jadwal-row-mulai w-24 shrink-0 px-2 py-1.5 border border-gray-300 rounded-lg text-sm" value="' + jamMulaiDefault + '" />' +
+                '<input type="time" class="jadwal-row-selesai w-24 shrink-0 px-2 py-1.5 border border-gray-300 rounded-lg text-sm" value="' + jamSelesaiDefault + '" />' +
+                '<button type="button" class="jadwal-row-remove text-red-500 hover:text-red-700 shrink-0" aria-label="Hapus baris"><i data-lucide="trash-2" class="w-4 h-4"></i></button>';
+            row.querySelector('.jadwal-row-remove').addEventListener('click', function() {
+                row.remove();
+                updateJadwalRowNumbers();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+            row.querySelector('.jadwal-row-date').addEventListener('input', updateJadwalFilledInfo);
+            row.querySelector('.jadwal-row-mulai').addEventListener('input', updateJadwalFilledInfo);
+            row.querySelector('.jadwal-row-selesai').addEventListener('input', updateJadwalFilledInfo);
+            container.appendChild(row);
+            updateJadwalRowNumbers();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function updateJadwalRowNumbers() {
+            const rows = document.querySelectorAll('#jadwalRows .jadwal-row-item');
+            rows.forEach(function(row, index) {
+                const num = row.querySelector('.jadwal-row-number');
+                if (num) num.textContent = '#' + (index + 1);
+            });
+            updateJadwalFilledInfo();
+        }
+
+        function updateJadwalFilledInfo() {
+            const rows = Array.from(document.querySelectorAll('#jadwalRows .jadwal-row-item'));
+            const filled = rows.filter(function(row) { return row.querySelector('.jadwal-row-date').value; }).length;
+            const info = document.getElementById('jadwalFilledInfo');
+            if (info) info.textContent = String(filled);
+            const submitBtn = document.getElementById('jadwalSubmitBtn');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i data-lucide="calendar-check" class="w-4 h-4"></i> ' + (filled > 0 ? 'Terbitkan ' + filled + ' Pertemuan' : 'Terbitkan Jadwal');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        document.getElementById('addJadwalRowBtn').addEventListener('click', createJadwalRow);
+        document.getElementById('applyJamAllBtn').addEventListener('click', function() {
+            const mulai = document.getElementById('jadwalJamMulai').value;
+            const selesai = document.getElementById('jadwalJamSelesai').value;
+            document.querySelectorAll('#jadwalRows .jadwal-row-mulai').forEach(function(el) { el.value = mulai; });
+            document.querySelectorAll('#jadwalRows .jadwal-row-selesai').forEach(function(el) { el.value = selesai; });
+            updateJadwalFilledInfo();
+        });
+
+        window.openJadwalModal = async function(id) {
+            const data = registrationsMap[id];
+            if (!data) return;
+            currentRegistrationId = id;
+            currentRegistration = data;
+            document.getElementById('jadwalSubtitle').textContent = (data.nama || '') + ' - ' + (data.programNama || '') + ' (Token: ' + (data.token || '-') + ')';
+            document.getElementById('jadwalJamMulai').value = '09:00';
+            document.getElementById('jadwalJamSelesai').value = '10:00';
+            document.getElementById('jadwalKelas').value = data.programNama || '';
+            document.getElementById('jadwalRuang').value = '';
+            document.getElementById('jadwalCatatan').value = '';
+            document.getElementById('jadwalMessage').innerHTML = '';
+            const rows = document.getElementById('jadwalRows');
+            if (rows) rows.innerHTML = '';
+            let totalPertemuan = 1;
+            if (data.programId) {
+                try {
+                    const programSnap = await getDoc(doc(db, 'programs', data.programId));
+                    if (programSnap.exists()) {
+                        totalPertemuan = parseInt(programSnap.data().totalPertemuan) || 1;
+                    }
+                } catch (programError) {
+                    console.error('Gagal membaca data program:', programError);
+                }
+            }
+            const rowCount = Math.max(1, Math.min(60, totalPertemuan || 1));
+            for (let i = 0; i < rowCount; i++) {
+                createJadwalRow();
+            }
+            const select = document.getElementById('jadwalTentor');
+            select.innerHTML = '<option value="">Pilih tentor...</option>';
+            try {
+                const q = query(collection(db, 'users'), where('role', '==', 'tentor'));
+                const snapshot = await getDocs(q);
+                snapshot.forEach((docSnap) => {
+                    const t = docSnap.data();
+                    const opt = document.createElement('option');
+                    opt.value = docSnap.id;
+                    opt.textContent = (t.nama || t.email || 'Tanpa nama') + (t.status ? ' (' + t.status + ')' : '');
+                    select.appendChild(opt);
+                });
+            } catch (error) {
+                console.error('Error loading tentors:', error);
+            }
+            updateJadwalFilledInfo();
+            document.getElementById('jadwalModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.closeJadwalModal = function() {
+            document.getElementById('jadwalModal').classList.add('hidden');
+        };
+
+        let pendingDeleteId = null;
+
+        window.requestDelete = function(id) {
+            const data = registrationsMap[id];
+            pendingDeleteId = id;
+            document.getElementById('deleteSubtitle').textContent = (data && data.nama ? data.nama : '-') + ' (Token: ' + (data && data.token ? data.token : '-') + ')';
+            document.getElementById('deletePassword').value = '';
+            document.getElementById('deleteMessage').innerHTML = '';
+            document.getElementById('deleteModal').classList.remove('hidden');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.closeDeleteModal = function() {
+            pendingDeleteId = null;
+            document.getElementById('deleteModal').classList.add('hidden');
+        };
+
+        document.getElementById('closeDeleteModal').addEventListener('click', window.closeDeleteModal);
+        document.getElementById('deleteCancelBtn').addEventListener('click', window.closeDeleteModal);
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) window.closeDeleteModal();
+        });
+
+        document.getElementById('deleteConfirmBtn').addEventListener('click', async function() {
+            const id = pendingDeleteId;
+            const passwordInput = document.getElementById('deletePassword');
+            const password = passwordInput.value;
+            const messageEl = document.getElementById('deleteMessage');
+            const confirmBtn = this;
+            if (!id) return;
+            if (!password) {
+                messageEl.innerHTML = '<p class="text-red-600">Password admin wajib diisi.</p>';
+                return;
+            }
+            const user = auth.currentUser;
+            if (!user) {
+                messageEl.innerHTML = '<p class="text-red-600">Sesi tidak ditemukan. Muat ulang halaman.</p>';
+                return;
+            }
+            confirmBtn.disabled = true;
+            confirmBtn.innerText = 'Menghapus...';
+            try {
+                const cred = EmailAuthProvider.credential(user.email, password);
+                await reauthenticateWithCredential(user, cred);
+                const deletedRegistration = registrationsMap[id];
+                await deleteDoc(doc(db, 'registrations', id));
+                if (deletedRegistration && deletedRegistration.token) {
+                    try {
+                        await deleteDoc(doc(db, 'tracking', deletedRegistration.token));
+                    } catch (trackingError) {
+                        console.error('Gagal menghapus tracking:', trackingError);
+                    }
+                }
+                messageEl.innerHTML = '<p class="text-green-600 font-medium">Data peserta berhasil dihapus.</p>';
+                setTimeout(function() {
+                    window.closeDeleteModal();
+                    loadRegistrations();
+                }, 800);
+            } catch (error) {
+                console.error('Error deleting registration:', error);
+                const code = error && error.code ? error.code : '';
+                if (code === 'auth/wrong-password' || code === 'auth/invalid-credential' || code === 'auth/invalid-login-credentials') {
+                    messageEl.innerHTML = '<p class="text-red-600">Password admin salah.</p>';
+                } else {
+                    messageEl.innerHTML = '<p class="text-red-600">Gagal menghapus: ' + (error && error.message ? error.message : 'unknown') + '</p>';
+                }
+            }
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<i data-lucide="trash-2" class="w-4 h-4"></i>Hapus Permanen';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+        document.getElementById('closeDetailModal').addEventListener('click', window.closeDetail);
+        document.getElementById('closeJadwalModal').addEventListener('click', window.closeJadwalModal);
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) window.closeDetail();
+        });
+        document.getElementById('jadwalModal').addEventListener('click', function(e) {
+            if (e.target === this) window.closeJadwalModal();
+        });
+
+        document.getElementById('jadwalSubmitBtn').addEventListener('click', async function() {
+            const data = currentRegistration;
+            const id = currentRegistrationId;
+            const messageEl = document.getElementById('jadwalMessage');
+            if (!data || !id) {
+                messageEl.innerHTML = '<p class="text-red-600">Data pendaftaran tidak ditemukan.</p>';
+                return;
+            }
+            const tentorSelect = document.getElementById('jadwalTentor');
+            const tentorId = tentorSelect.value;
+            const tentorNama = tentorSelect.selectedOptions.length > 0 ? tentorSelect.selectedOptions[0].textContent : '';
+            const defaultMulai = document.getElementById('jadwalJamMulai').value;
+            const defaultSelesai = document.getElementById('jadwalJamSelesai').value;
+            const kelas = document.getElementById('jadwalKelas').value.trim();
+            const ruang = document.getElementById('jadwalRuang').value.trim();
+            const catatan = document.getElementById('jadwalCatatan').value.trim();
+            const rows = Array.from(document.querySelectorAll('#jadwalRows .jadwal-row-item')).map(function(row) {
+                return {
+                    tanggal: row.querySelector('.jadwal-row-date').value,
+                    jamMulai: row.querySelector('.jadwal-row-mulai').value || defaultMulai,
+                    jamSelesai: row.querySelector('.jadwal-row-selesai').value || defaultSelesai
+                };
+            }).filter(function(row) { return row.tanggal; });
+            if (!tentorId) { messageEl.innerHTML = '<p class="text-red-600">Pilih tentor terlebih dahulu.</p>'; return; }
+            if (rows.length === 0) { messageEl.innerHTML = '<p class="text-red-600">Isi minimal satu tanggal pertemuan. Program privat boleh diisi sebagian, tidak harus semua.</p>'; return; }
+            for (let i = 0; i < rows.length; i++) {
+                if (!rows[i].jamMulai || !rows[i].jamSelesai || rows[i].jamMulai >= rows[i].jamSelesai) {
+                    messageEl.innerHTML = '<p class="text-red-600">Pertemuan #' + (i + 1) + ': jam selesai harus setelah jam mulai.</p>';
+                    return;
+                }
+            }
+            const now = new Date().toISOString();
+            let saved = 0;
+            const errors = [];
+            for (const row of rows) {
+                try {
+                    const [h1, m1] = row.jamMulai.split(':').map(Number);
+                    const [h2, m2] = row.jamSelesai.split(':').map(Number);
+                    await addDoc(collection(db, 'schedules'), {
+                        tentorId,
+                        tentorNama,
+                        pesertaNama: data.nama || '',
+                        pesertaToken: data.token || '',
+                        programId: data.programId || '',
+                        programNama: data.programNama || '',
+                        kelas,
+                        ruang,
+                        catatan,
+                        totalPertemuan: rows.length,
+                        jamMulai: row.jamMulai,
+                        jamSelesai: row.jamSelesai,
+                        durasiMenit: (h2 * 60 + m2) - (h1 * 60 + m1),
+                        sesi: [{ tanggal: row.tanggal, status: 'belum', keterangan: '' }],
+                        penilaian: null,
+                        status: 'aktif',
+                        published: true,
+                        publishedAt: now,
+                        createdAt: now,
+                        updatedAt: now,
+                        createdBy: auth.currentUser.uid
+                    });
+                    saved++;
+                } catch (rowError) {
+                    errors.push(rowError.message);
+                }
+            }
+            if (saved > 0) {
+                await updateDoc(doc(db, 'registrations', id), {
+                    status: 'Jadwal Terbit',
+                    jadwalTerbit: true,
+                    updatedAt: now
+                });
+                await syncTrackingDoc(data.token, Object.assign({}, data, { jadwalTerbit: true }));
+                messageEl.innerHTML = '<p class="text-green-600 font-medium">' + saved + ' pertemuan berhasil diterbitkan' + (errors.length ? ' (' + errors.length + ' gagal)' : '') + '.</p>';
+                setTimeout(function() { window.closeJadwalModal(); }, 1200);
+                await loadRegistrations();
+            } else {
+                messageEl.innerHTML = '<p class="text-red-600">Gagal menerbitkan jadwal: ' + (errors[0] || 'unknown') + '</p>';
+            }
+        });
+
+        function buildPrintHtml(d) {
+            const alasan = Array.isArray(d.alasan) ? d.alasan.join(', ') : (d.alasan || '-');
+            const jenisKelamin = d.jenisKelamin === 'L' ? 'Laki-laki' : (d.jenisKelamin === 'P' ? 'Perempuan' : (d.jenisKelamin || '-'));
+            const rows = [
+                ['Program', d.programNama || d.programId],
+                ['Nama Peserta', d.nama],
+                ['No. WhatsApp', d.whatsapp],
+                ['Tempat Lahir', d.tempatLahir],
+                ['Tanggal Lahir', d.tanggalLahir],
+                ['Jenis Kelamin', jenisKelamin],
+                ['NIK', d.nik],
+                ['Alamat', d.alamat],
+                ['Pendidikan', d.pendidikan],
+                ['Jurusan', d.jurusan],
+                ['Pekerjaan', d.pekerjaan],
+                ['Alasan Memilih Program', alasan],
+                ['Sumber Informasi', d.sumber],
+                ['Metode Pembayaran', d.metodePembayaran],
+                ['Nominal Pembayaran', d.nominalPembayaran],
+                ['Kode Referral', d.kodeReferral],
+                ['Catatan Peserta', d.catatan],
+                ['Status Pendaftaran', d.status || 'Menunggu'],
+                ['Status Pembayaran', d.statusPembayaran || 'Menunggu'],
+                ['Status Verifikasi Data', d.statusVerifikasiData || 'Menunggu']
+            ];
+            const trs = rows.map(function(r) {
+                return '<tr><td>' + escapeHtmlText(r[0]) + '</td><td>' + escapeHtmlText(r[1] || '-') + '</td></tr>';
+            }).join('');
+            const date = new Date().toLocaleString('id-ID');
+            return '<div class="doc-top">' +
+                '<div><p class="doc-org">IMDKOM Yogyakarta</p><h1 class="doc-title">Form Pendaftaran Kursus</h1><p class="doc-sub">Registrasi peserta kursus IMDKOM</p></div>' +
+                '<div class="doc-contact">WA 0856-0191-3435<br>@imdkom_yk<br>Yogyakarta</div>' +
+            '</div>' +
+            '<hr class="doc-accent" />' +
+            '<div class="doc-meta">' +
+                '<div><p class="label">Dokumen</p><p class="value">FORM-PDK/' + escapeHtmlText(d.token || '-') + '</p></div>' +
+                '<div class="doc-token">No. ' + escapeHtmlText(d.token || '-') + '</div>' +
+            '</div>' +
+            '<table class="print-table">' + trs + '</table>' +
+            '<div class="print-sign">' +
+                '<div><p style="margin:0;font-size:10px;color:#64748b">Peserta</p><div class="line"><strong>' + escapeHtmlText(d.nama || '......................................') + '</strong></div></div>' +
+                '<div><p style="margin:0;font-size:10px;color:#64748b">Admin IMDKOM</p><div class="line"><strong>( .................................... )</strong></div></div>' +
+            '</div>' +
+            '<div class="print-foot">' +
+                '<span>Dicetak pada ' + escapeHtmlText(date) + '</span>' +
+                '<span>Dokumen diterbitkan otomatis oleh sistem &bull; IMDKOM Yogyakarta</span>' +
+            '</div>';
+        }
+
+        function escapeHtmlText(str) {
+            if (str === null || str === undefined) return '-';
+            const div = document.createElement('div');
+            div.textContent = String(str);
+            return div.innerHTML;
+        }
+
+        function escapeHtmlProgram(str) {
+            const text = str === null || str === undefined ? '-' : String(str);
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

@@ -10,10 +10,14 @@
    
    ============================================================ */
 
+@layer theme, base, components, utilities;
+
 :root {
+    --nav-h: 57px;
+
     /* ============================================
-        WARNA BRAND UTAMA — GANTI DI SINI
-       ============================================ */
+         WARNA BRAND UTAMA — GANTI DI SINI
+        ============================================ */
     --color-brand: #0059ff;          /* Warna utama (tombol, heading) */
     --color-brand-light: #2f78ff;    /* Warna hover (lebih terang) */
     --color-brand-dark: #f14400;     /* Warna aksen (orange tua) */
@@ -47,8 +51,8 @@
     /* ============================================
        WARNA WHATSAPP
        ============================================ */
-    --color-whatsapp: #25d366;
-    --color-whatsapp-dark: #1da851;
+    --color-whatsapp: #075e54;
+    --color-whatsapp-dark: #043f36;
 }
 
 /* ============================================================
@@ -195,6 +199,8 @@ body {
     background: var(--color-brand);
 }
 
+@layer components {
+
 /* ============================================================
    HEADING FONT — ANTON
    ============================================================ */
@@ -260,6 +266,8 @@ h2 {
     }
 }
 
+}
+
 /* ============================================================
    PALET TEMA SIAP PAKAI
    ============================================================
@@ -307,3 +315,187 @@ h2 {
    --color-brand-dark: #be185d;
    
    ============================================================ */
+
+/* ============================================================
+   NAVBAR (dipakai oleh components/navbar.html)
+   ============================================================ */
+
+#navbarMount:not([data-variant="fixed"]) {
+    min-height: 53px;
+}
+
+#navbarMount[data-variant="sticky"] {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+.logo-shine {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 6px;
+    padding: 2px 4px;
+}
+
+.logo-shine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.75) 50%, transparent 70%);
+    animation: shine-sweep 3s infinite;
+    z-index: 2;
+    pointer-events: none;
+}
+
+@keyframes shine-sweep {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+.logo-shine img {
+    position: relative;
+    z-index: 1;
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
+    transition: filter 0.3s ease;
+}
+
+.logo-shine:hover img {
+    filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
+}
+
+.nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    background-color: rgba(26, 60, 94, 0.08);
+    color: #0057ad;
+    transform: translateY(-1px);
+}
+
+.nav-link-active {
+    background-color: #0057ad;
+    color: white;
+    font-weight: 600;
+}
+
+.nav-link-active:hover {
+    background-color: #0057ad;
+    color: white;
+}
+
+.mobile-menu-highlight {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    margin: 0.35rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    font-weight: 600;
+    background: linear-gradient(135deg, rgba(26, 60, 94, 0.12) 0%, rgba(26, 60, 94, 0.06) 50%, rgba(26, 60, 94, 0.12) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(26, 60, 94, 0.25);
+    box-shadow: 0 4px 20px rgba(26, 60, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    color: #1a3c5e !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: highlight-pulse 3s ease-in-out infinite;
+}
+
+.mobile-menu-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.7) 50%, transparent 70%);
+    animation: mobile-shine 3.5s infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@keyframes mobile-shine {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+.mobile-menu-highlight > * {
+    position: relative;
+    z-index: 2;
+}
+
+.mobile-menu-highlight .menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.mobile-menu-highlight .menu-icon-wrap i {
+    filter: drop-shadow(0 0 4px rgba(26, 60, 94, 0.3));
+    transition: filter 0.3s ease;
+}
+
+.mobile-menu-highlight .menu-arrow {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-highlight:hover,
+.mobile-menu-highlight:active {
+    transform: translateX(4px) scale(1.01);
+    background: linear-gradient(135deg, rgba(26, 60, 94, 0.18) 0%, rgba(26, 60, 94, 0.1) 50%, rgba(26, 60, 94, 0.18) 100%);
+    border-color: rgba(26, 60, 94, 0.4);
+    box-shadow: 0 6px 24px rgba(26, 60, 94, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.mobile-menu-highlight:hover .menu-arrow,
+.mobile-menu-highlight:active .menu-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+}
+
+.mobile-menu-highlight:hover .menu-icon-wrap i {
+    filter: drop-shadow(0 0 8px rgba(26, 60, 94, 0.5));
+}
+
+@keyframes highlight-pulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(26, 60, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5); }
+    50% { box-shadow: 0 4px 24px rgba(26, 60, 94, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 20px rgba(26, 60, 94, 0.15); }
+}
+
+#mainNavbar.is-fixed {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    width: 100%;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+#mainNavbar.is-fixed.scrolled {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background-color: rgba(255, 255, 255, 0.95);
+}

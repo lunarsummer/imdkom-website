@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Status Pendaftaran Saya | IMDKOM</title>
+    <meta name="description" content="Cek status pendaftaran dan jadwal kursus IMDKOM Anda dengan token pendaftaran dan 4 digit terakhir nomor WhatsApp." />
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <style>
+        :root {
+            --bg: #f4f6fa;
+            --surface: #ffffff;
+            --ink: #0f172a;
+            --muted: #526075;
+            --line: #e2e8f0;
+            --line-soft: #edf1f7;
+            --accent: #1d4ed8;
+            --accent-hover: #1e40af;
+            --accent-soft: #eef4ff;
+            --ok: #047857;
+            --ok-soft: #ecfdf5;
+            --ok-line: #a7f3d0;
+            --warn-ink: #92400e;
+            --warn-soft: #fffbeb;
+            --err: #dc2626;
+            --err-soft: #fef2f2;
+            --err-line: #fecaca;
+            --radius: 18px;
+        }
+
+        * { box-sizing: border-box; }
+        html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--ink);
+            background-color: var(--bg);
+            background-image: radial-gradient(circle, rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+            background-size: 22px 22px;
+            overflow-x: hidden;
+        }
+        ::selection { background: #bfdbfe; color: #0f172a; }
+        :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; border-radius: 4px; }
+
+        .topbar { border-bottom: 1px solid var(--line); background: rgba(255,255,255,0.82); backdrop-filter: blur(8px); }
+        .topbar-inner { max-width: 30rem; margin: 0 auto; padding: 0.85rem 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+        .wordmark { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; color: #94a3b8; text-transform: uppercase; }
+        .wordmark strong { color: var(--ink); font-weight: 800; letter-spacing: 0.18em; }
+        .back-link { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; font-weight: 600; color: var(--muted); text-decoration: none; padding: 0.35rem 0.6rem; border-radius: 8px; transition: color .15s ease, background .15s ease; }
+        .back-link:hover { color: var(--ink); background: #eef2f7; }
+
+        main { flex: 1; width: 100%; max-width: 30rem; margin: 0 auto; padding: 2.25rem 1.25rem 3.5rem; }
+
+        .page-title { font-size: 1.65rem; font-weight: 800; line-height: 1.12; letter-spacing: -0.035em; margin: 0 0 0.6rem; text-wrap: balance; }
+        .page-sub { font-size: 0.86rem; color: var(--muted); line-height: 1.55; margin: 0 0 1.5rem; }
+
+        .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 1px 2px rgba(15,23,42,0.05), 0 12px 32px rgba(15,23,42,0.07); }
+        .form-card { padding: 1.5rem; }
+
+        .field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+        .label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); display: block; }
+        .hint { font-size: 0.72rem; color: #526075; }
+        .input {
+            width: 100%; padding: 0.8rem 0.9rem;
+            border: 1.5px solid var(--line); border-radius: 12px;
+            font-size: 0.95rem; font-family: inherit; color: var(--ink);
+            background: #fbfcfe; outline: none; transition: border-color .15s ease, box-shadow .15s ease;
+            caret-color: var(--accent);
+        }
+        .input:hover { border-color: #cbd5e1; }
+        .input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29,78,216,0.14); }
+        .mono { font-family: 'Inter', system-ui, sans-serif; font-variant-numeric: tabular-nums; letter-spacing: 0.08em; }
+
+        .cta {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            width: 100%; border: 0; border-radius: 12px; cursor: pointer;
+            padding: 0.9rem 1rem; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.02em;
+            font-family: inherit; color: #ffffff; background: var(--accent);
+            transition: background .15s ease, transform .15s ease, box-shadow .15s ease;
+            box-shadow: 0 6px 16px rgba(29,78,216,0.28);
+        }
+        .cta:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 10px 22px rgba(29,78,216,0.32); }
+        .cta:active { transform: translateY(0); box-shadow: 0 4px 10px rgba(29,78,216,0.3); }
+        .cta:disabled { background: #94a3b8; box-shadow: none; cursor: not-allowed; transform: none; }
+
+        .security-note { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.9rem; font-size: 0.72rem; color: #64748b; }
+
+        .alert { border-radius: 12px; padding: 0.75rem 0.9rem; font-size: 0.8rem; display: flex; gap: 0.5rem; align-items: flex-start; margin-top: 0.9rem; }
+        .alert-error { background: var(--err-soft); border: 1px solid var(--err-line); color: #991b1b; }
+        .alert-ok { background: var(--ok-soft); border: 1px solid var(--ok-line); color: var(--ok); }
+
+        .result-card { padding: 1.5rem; margin-top: 1.25rem; opacity: 0; transform: translateY(8px); clip-path: inset(0 0 0 0); transition: opacity .45s cubic-bezier(.16,1,.3,1), transform .45s cubic-bezier(.16,1,.3,1); }
+        .result-card.visible { opacity: 1; transform: translateY(0); }
+
+        .ident-head { padding-bottom: 1rem; border-bottom: 1px solid var(--line-soft); margin-bottom: 1.1rem; }
+        .ident-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #5f7086; margin: 0 0 0.25rem; }
+        .program-name { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+        .ident-row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-top: 0.35rem; flex-wrap: wrap; }
+        .ident-nama { font-size: 0.86rem; color: var(--muted); }
+        .token-chip { font-size: 0.72rem; font-variant-numeric: tabular-nums; letter-spacing: 0.1em; background: #f1f5f9; border: 1px solid var(--line); color: #334155; padding: 0.3rem 0.6rem; border-radius: 999px; }
+
+        .step-title-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.75rem; }
+        .step-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #5f7086; margin: 0; }
+        .step-summary { font-size: 0.72rem; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+        .timeline { list-style: none; padding: 0; margin: 0; }
+        .step { display: flex; gap: 0.75rem; align-items: stretch; padding: 0.55rem 0; }
+        .rail { display: flex; flex-direction: column; align-items: center; width: 1.75rem; flex-shrink: 0; }
+        .dot { width: 1.75rem; height: 1.75rem; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 0.66rem; font-weight: 800; }
+        .dot-done { background: var(--ok); color: #fff; }
+        .dot-pending { background: #eef2f7; border: 1.5px solid var(--line); color: #8a97ab; }
+        .connector { flex: 1; width: 2px; background: var(--line); margin: 0.25rem 0; }
+        .connector.filled { background: var(--ok-line); }
+        .step-body { flex: 1; padding-bottom: 0.35rem; }
+        .step-name { font-size: 0.84rem; font-weight: 700; }
+        .step-state { font-size: 0.7rem; margin-top: 0.1rem; }
+        .state-done { color: var(--ok); }
+        .state-pending { color: #5f7086; }
+
+        .jadwal-panel { border: 1px solid #dbe4ff; background: var(--accent-soft); border-radius: 14px; overflow: hidden; margin-top: 0.25rem; }
+        .jadwal-head { display: flex; align-items: center; gap: 0.55rem; padding: 0.75rem 1rem; border-bottom: 1px solid #dbe4ff; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em; color: #1e3a8a; }
+        .jadwal-rows { display: flex; flex-direction: column; max-height: 340px; overflow-y: auto; }
+        .jadwal-sub { display: block; font-size: 0.72rem; font-weight: 500; color: #526075; }
+        .jadwal-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.55rem 1rem; border-bottom: 1px solid #e6edff; }
+        .jadwal-row:last-child { border-bottom: 0; }
+        .jadwal-key { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5b6b93; padding-top: 0.1rem; }
+        .jadwal-val { font-size: 0.83rem; font-weight: 600; color: #172554; text-align: right; font-variant-numeric: tabular-nums; }
+
+        .empty-box { border: 1.5px dashed var(--line); border-radius: 14px; padding: 1.25rem; text-align: center; margin-top: 0.25rem; }
+        .empty-title { font-size: 0.82rem; font-weight: 700; margin: 0.35rem 0 0.2rem; }
+        .empty-text { font-size: 0.72rem; color: var(--muted); margin: 0; line-height: 1.5; }
+
+        .reset-link { display: inline-flex; align-items: center; gap: 0.4rem; margin: 1.1rem auto 0; font-size: 0.76rem; font-weight: 600; color: var(--muted); background: none; border: 0; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-family: inherit; transition: color .15s ease, background .15s ease; }
+        .reset-link:hover { color: var(--ink); background: #eef2f7; }
+
+        .foot { border-top: 1px solid var(--line); padding: 1rem 1.25rem 1.5rem; max-width: 30rem; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; gap: 1rem; font-size: 0.68rem; color: #5f7086; }
+        .foot .secure { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+        @media (prefers-reduced-motion: reduce) { .result-card { transition: none; opacity: 1; transform: none; } }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <span class="wordmark"><strong>IMDKOM</strong> &nbsp;TRACKING</span>
+            <a class="back-link" href="kursus.html"><i data-lucide="arrow-left" class="w-4 h-4"></i>Kembali ke Kursus</a>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="page-title">Status pendaftaran Anda</h1>
+        <p class="page-sub">Masukkan token pendaftaran dan 4 digit terakhir nomor WhatsApp yang Anda daftarkan. Tanpa akun, tanpa login.</p>
+
+        <form id="trackForm" class="card form-card" novalidate>
+            <div class="field">
+                <label class="label" for="trackToken">Token pendaftaran</label>
+                <input id="trackToken" class="input mono" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="IMDKOM-XXXXXXXX" required />
+                <span class="hint">Token dikirim ke WhatsApp Anda setelah pendaftaran.</span>
+            </div>
+            <div class="field">
+                <label class="label" for="trackWa4">4 digit terakhir No. WhatsApp</label>
+                <input id="trackWa4" class="input mono" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" placeholder="••••" required />
+                <span class="hint">Contoh: jika No. WA Anda 0856-0191-<strong>3435</strong>, ketik <strong>3435</strong>.</span>
+            </div>
+            <button type="submit" id="trackSubmit" class="cta">
+                Lihat status saya
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+            <div class="security-note"><i data-lucide="shield-check" class="w-4 h-4"></i><span>Token Anda hanya dipakai untuk menampilkan data pendaftaran milik Anda.</span></div>
+            <div id="trackMessage" aria-live="assertive"></div>
+        </form>
+
+        <section id="trackResult" class="card result-card" aria-live="polite" hidden>
+            <div class="ident-head">
+                <p class="ident-label">Program</p>
+                <p id="trackProgram" class="program-name">-</p>
+                <div class="ident-row">
+                    <span id="trackNama" class="ident-nama">-</span>
+                    <span class="token-chip">No. <span id="trackTokenDisplay">-</span></span>
+                </div>
+            </div>
+
+            <div class="step-title-row">
+                <p class="step-title">Status proses</p>
+                <span id="stepSummary" class="step-summary">0/4</span>
+            </div>
+            <ol id="trackStepper" class="timeline"></ol>
+
+            <div id="trackJadwal" class="jadwal-panel" hidden>
+                <div class="jadwal-head"><i data-lucide="calendar-check-2" class="w-4 h-4"></i>Jadwal kursus Anda</div>
+                <div id="jadwalDetail" class="jadwal-rows"></div>
+            </div>
+            <div id="trackEmpty" class="empty-box" hidden>
+                <i data-lucide="calendar-clock" class="w-5 h-5" style="color:#8a97ab;"></i>
+                <p class="empty-title">Jadwal belum diterbitkan</p>
+                <p class="empty-text">Admin akan menerbitkan jadwal setelah verifikasi data dan pembayaran Anda selesai.</p>
+            </div>
+
+            <button id="trackBack" class="reset-link"><i data-lucide="search" class="w-4 h-4"></i>Cek pendaftaran lain</button>
+        </section>
+    </main>
+
+    <footer class="foot">
+        <span>IMDKOM YOGYAKARTA &bull; Kursus &amp; Service Komputer</span>
+        <span class="secure"><i data-lucide="lock" class="w-3.5 h-3.5"></i>Verifikasi token</span>
+    </footer>
+
+    <script type="module">
+        import { db, doc, getDoc } from './assets/js/firebase.js';
+
+        const form = document.getElementById('trackForm');
+        const tokenInput = document.getElementById('trackToken');
+        const wa4Input = document.getElementById('trackWa4');
+        const message = document.getElementById('trackMessage');
+        const resultEl = document.getElementById('trackResult');
+        const programEl = document.getElementById('trackProgram');
+        const namaEl = document.getElementById('trackNama');
+        const tokenDisplay = document.getElementById('trackTokenDisplay');
+        const stepper = document.getElementById('trackStepper');
+        const stepSummary = document.getElementById('stepSummary');
+        const jadwalBox = document.getElementById('trackJadwal');
+        const jadwalDetail = document.getElementById('jadwalDetail');
+        const emptyBox = document.getElementById('trackEmpty');
+        const backBtn = document.getElementById('trackBack');
+
+        async function sha256hex(str) {
+            const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buffer)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+        }
+
+        function formatTanggal(value) {
+            if (!value) return '-';
+            const d = new Date(value + 'T00:00:00');
+            if (isNaN(d.getTime())) return value;
+            return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function renderError(text) {
+            message.innerHTML = '<div class="alert alert-error"><i data-lucide="alert-circle" class="w-4 h-4" style="margin-top:1px;flex-shrink:0"></i><span>' + text + '</span></div>';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function renderTracking(data) {
+            form.hidden = true;
+            resultEl.hidden = false;
+            requestAnimationFrame(function() { resultEl.classList.add('visible'); });
+
+            programEl.textContent = data.programNama || '-';
+            namaEl.textContent = data.nama || '-';
+            tokenDisplay.textContent = data.token || '-';
+
+            const steps = [
+                { label: 'Pengajuan', ok: true },
+                { label: 'Verifikasi Pembayaran', ok: data.statusPembayaran === 'Terverifikasi' },
+                { label: 'Verifikasi Data', ok: data.statusVerifikasiData === 'Terverifikasi' },
+                { label: 'Jadwal Terbit', ok: !!data.jadwalTerbit }
+            ];
+            const doneCount = steps.filter(function(s) { return s.ok; }).length;
+            stepSummary.textContent = doneCount + '/' + steps.length;
+
+            stepper.innerHTML = steps.map(function(step, i) {
+                const last = i === steps.length - 1;
+                const dot = step.ok
+                    ? '<span class="dot dot-done"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>'
+                    : '<span class="dot dot-pending">' + (i + 1) + '</span>';
+                const rail = last ? '' : '<span class="connector' + (steps[i + 1].ok || step.ok ? ' filled' : '') + '"></span>';
+                return '<li class="step">' +
+                    '<span class="rail">' + dot + rail + '</span>' +
+                    '<span class="step-body"><span class="step-name">' + step.label + '</span>' +
+                    '<span class="step-state ' + (step.ok ? 'state-done' : 'state-pending') + '">' + (step.ok ? 'Selesai diverifikasi' : 'Menunggu verifikasi admin') + '</span></span>' +
+                '</li>';
+            }).join('');
+
+            const list = Array.isArray(data.jadwalList) && data.jadwalList.length > 0 ? data.jadwalList : [];
+            if (data.jadwalTerbit && (list.length > 0 || data.jadwal)) {
+                let html = '';
+                if (list.length > 0) {
+                    html += list.map(function(item, index) {
+                        return '<div class="jadwal-row"><span class="jadwal-key">Pertemuan ' + (index + 1) + '</span>' +
+                            '<span class="jadwal-val">' + formatTanggal(item.tanggal) +
+                            '<br><span class="jadwal-sub">' + (item.jamMulai || '-') + ' - ' + (item.jamSelesai || '-') +
+                            (item.ruang ? ' · ' + item.ruang : '') + (item.kelas ? ' · ' + item.kelas : '') + '</span></span></div>';
+                    }).join('');
+                    const first = list[0] || {};
+                    if (first.tentorNama) {
+                        html += '<div class="jadwal-row"><span class="jadwal-key">Tentor</span><span class="jadwal-val">' + first.tentorNama + '</span></div>';
+                    }
+                    if (first.programNama) {
+                        html += '<div class="jadwal-row"><span class="jadwal-key">Program</span><span class="jadwal-val">' + first.programNama + '</span></div>';
+                    }
+                    const catatan = list.map(function(item) { return item.catatan; }).find(Boolean);
+                    if (catatan) {
+                        html += '<div class="jadwal-row"><span class="jadwal-key">Catatan</span><span class="jadwal-val">' + catatan + '</span></div>';
+                    }
+                } else if (data.jadwal) {
+                    const j = data.jadwal;
+                    const rows = [
+                        ['Program', j.programNama || data.programNama || '-'],
+                        ['Tanggal', formatTanggal(j.tanggal)],
+                        ['Jam', (j.jamMulai || '-') + ' - ' + (j.jamSelesai || '-')],
+                        ['Kelas / Ruang', (j.kelas || '-') + (j.ruang ? ' / ' + j.ruang : '')],
+                        ['Tentor', j.tentorNama || '-'],
+                        ['Total Pertemuan', String(j.totalPertemuan || 1) + ' kali']
+                    ];
+                    html = rows.map(function(row) {
+                        return '<div class="jadwal-row"><span class="jadwal-key">' + row[0] + '</span><span class="jadwal-val">' + row[1] + '</span></div>';
+                    }).join('');
+                    if (j.catatan) {
+                        html += '<div class="jadwal-row"><span class="jadwal-key">Catatan</span><span class="jadwal-val">' + j.catatan + '</span></div>';
+                    }
+                }
+                jadwalDetail.innerHTML = html;
+                jadwalBox.hidden = false;
+                emptyBox.hidden = true;
+            } else {
+                jadwalBox.hidden = true;
+                emptyBox.hidden = false;
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            message.innerHTML = '';
+            const token = tokenInput.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+            const wa4 = wa4Input.value.trim().replace(/\D/g, '');
+            if (!token || !/^\d{4}$/.test(wa4)) {
+                renderError('Isi token dan tepat 4 digit nomor WhatsApp Anda.');
+                return;
+            }
+            const submitBtn = document.getElementById('trackSubmit');
+            submitBtn.disabled = true;
+            try {
+                const snap = await getDoc(doc(db, 'tracking', token));
+                if (!snap.exists()) {
+                    renderError('Token tidak ditemukan. Periksa kembali token pendaftaran Anda.');
+                    return;
+                }
+                const data = snap.data();
+                const hash = await sha256hex('imdkom-wa:' + wa4);
+                if (hash !== data.wa4hash) {
+                    renderError('Nomor WhatsApp tidak cocok dengan data pendaftaran ini.');
+                    return;
+                }
+                renderTracking(Object.assign({ token: token }, data));
+            } catch (error) {
+                console.error('Tracking error:', error);
+                if (error && error.code === 'permission-denied') {
+                    renderError('Akses ditolak oleh Firestore. Pastikan aturan tracking sudah di-publish.');
+                } else {
+                    renderError('Gagal memuat data. Periksa koneksi Anda lalu coba lagi.');
+                }
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        backBtn.addEventListener('click', function() {
+            resultEl.hidden = true;
+            resultEl.classList.remove('visible');
+            form.hidden = false;
+            tokenInput.value = '';
+            wa4Input.value = '';
+            message.innerHTML = '';
+            tokenInput.focus();
+        });
+    </script>
+</body>
+</html>

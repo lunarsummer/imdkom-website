@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Rakit Komputer | IMDKOM Yogyakarta</title>
     <meta name="description" content="Rakit spesifikasi komputer Anda — pilih komponen, cek kompatibilitas, konsultasi via WhatsApp di IMDKOM Yogyakarta." />
     
@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="assets/css/theme.css">
     
     <link rel="stylesheet" href="assets/css/output.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <script src="assets/js/navbar.js" defer></script>
     
     
 
@@ -39,46 +40,12 @@
         html { scroll-behavior: smooth; }
         [data-lucide] { stroke-width: 2; }
 
-        .logo-shine {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            overflow: hidden;
-            border-radius: 6px;
-            padding: 2px 4px;
-        }
-        
-        .logo-shine::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 50%, transparent 70%);
-            animation: shine-sweep 3s infinite;
-            z-index: 2;
-            pointer-events: none;
-        }
-        
-        @keyframes shine-sweep {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
-        
-        .logo-shine img {
-            position: relative;
-            z-index: 1;
-            display: block;
-            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
-        }
-
         /* ============================================================
            STICKY STEP NAVIGATION
            ============================================================ */
         .sticky-step-nav {
             position: sticky;
-            top: 56px;
+            top: var(--nav-h, 57px);
             z-index: 40;
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
@@ -86,10 +53,6 @@
             border-bottom: 1px solid rgba(26, 60, 94, 0.08);
             box-shadow: 0 4px 20px rgba(26, 60, 94, 0.05);
             transition: box-shadow 0.3s ease;
-        }
-        
-        @media (min-width: 768px) {
-            .sticky-step-nav { top: 56px; }
         }
         
         .step-nav-inner {
@@ -119,6 +82,9 @@
             white-space: nowrap;
             cursor: pointer;
             flex-shrink: 0;
+            font-family: inherit;
+            appearance: none;
+            -webkit-appearance: none;
         }
         
         .step-nav-item:hover:not(.locked) {
@@ -314,7 +280,7 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.65rem;
-            color: #9ca3af;
+            color: #6b7280;
             font-weight: 600;
             margin-top: 0.25rem;
             padding: 0 0.25rem;
@@ -377,6 +343,17 @@
             box-shadow: none;
         }
 
+        :focus-visible {
+            outline: 2px solid #1a3c5e;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .step-nav-item:focus-visible {
+            outline-offset: 1px;
+            border-radius: 999px;
+        }
+
         /* ============================================================
            SKELETON LOADING
            ============================================================ */
@@ -421,11 +398,11 @@
             padding: 1.25rem;
             margin-bottom: 1.25rem;
             transition: all 0.3s ease;
-            scroll-margin-top: 140px;
+            scroll-margin-top: calc(var(--nav-h, 57px) + 88px);
         }
         
         @media (min-width: 768px) {
-            .step-section { padding: 1.5rem; scroll-margin-top: 150px; }
+            .step-section { padding: 1.5rem; }
         }
         
         .step-section.locked {
@@ -475,7 +452,10 @@
            ============================================================ */
         .sidebar-sticky {
             position: sticky;
-            top: 140px;
+            top: calc(var(--nav-h, 57px) + 86px);
+            max-height: calc(100vh - var(--nav-h, 57px) - 96px);
+            overflow-y: auto;
+            scrollbar-width: thin;
         }
 
         /* ============================================================
@@ -745,6 +725,10 @@
             transition: all 0.2s ease;
         }
 
+        .search-input-wrapper input::placeholder {
+            color: #6b7280;
+        }
+
         .search-input-wrapper input:focus {
             border-color: #1a3c5e;
             background: white;
@@ -813,6 +797,25 @@
             border: 1.5px solid rgba(26, 60, 94, 0.1);
             border-radius: 14px;
             animation: fadeInUp 0.4s ease-out;
+        }
+
+        .use-case-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .use-case-card {
+            width: calc(50% - 0.25rem);
+        }
+
+        @media (min-width: 640px) {
+            .use-case-card { width: calc(33.333% - 0.333rem); }
+        }
+
+        @media (min-width: 1024px) {
+            .use-case-card { width: calc(20% - 0.4rem); }
         }
 
         .use-case-card {
@@ -922,35 +925,36 @@
         }
 
         /* ============================================================
-   NAVBAR — Pill Hover Effect
-   ============================================================ */
-.nav-link {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #4b5563;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
-    white-space: nowrap;
-}
-.nav-link:hover {
-    background-color: rgba(26, 60, 94, 0.08);
-    color: #0057ad;
-    transform: translateY(-1px);
-}
-.nav-link-active {
-    background-color: #0057ad;
-    color: white;
-    font-weight: 600;
-}
-.nav-link-active:hover {
-    background-color: #0057ad;
-    color: white;
-}
+           COARSE POINTER (touch) — target minimum 44px
+           ============================================================ */
+        @media (pointer: coarse) {
+            .step-nav-item {
+                min-height: 44px;
+            }
+            .search-toggle-btn {
+                width: 2.75rem;
+                height: 2.75rem;
+            }
+            .tier-filter-btn {
+                min-height: 40px;
+            }
+        }
+
+        /* ============================================================
+           FIXED CTA / SHEET / FOOTER — safe areas + ruang FAB
+           ============================================================ */
+        @media (max-width: 1023px) {
+            #mobileSummaryBtn {
+                bottom: calc(1.25rem + env(safe-area-inset-bottom));
+                right: calc(1rem + env(safe-area-inset-right));
+            }
+            #bottomSheet {
+                padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+            }
+            #footerSection {
+                padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
 <body class="font-sans page-bg">
@@ -958,44 +962,12 @@
 <!-- ============================================================ -->
 <!-- NAVIGATION (Rakit Komputer Aktif)                            -->
 <!-- ============================================================ -->
-<nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
-    <div class="container mx-auto px-4 flex items-center justify-between">
-        <a href="index.html" class="flex items-center gap-3 logo-shine">
-            <img src="assets/images/logo/imd.svg" alt="Logo IMDKOM" class="h-7 w-auto" loading="eager" />
-            <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
-        </a>
-        <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
-        <div id="mainNav" class="hidden md:flex items-center gap-2">
-    <a href="index.html" class="nav-link">Beranda</a>
-    <a href="kursus.html" class="nav-link">Kursus &amp; Pelatihan</a>
-    <a href="service.html" class="nav-link">Computer Service</a>
-    <a href="rakit-komputer.html" class="nav-link nav-link-active">Rakit Komputer</a>
-    <a href="tentang.html" class="nav-link">Tentang</a>
-    <a href="karir.html" class="nav-link">Karir</a>
-    <a href="kontak.html" class="nav-link">Kontak</a>
-</div>
-    </div>
-        
-        <!-- Mobile Menu -->
-        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-            <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="text-gray-600 hover:text-brand py-1.5">Computer Service</a>
-                <a href="rakit-komputer.html" class="text-brand font-semibold py-1.5">Rakit Komputer</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-                <a href="karir.html" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
-            </div>
-        </div>
-    </nav>
+<div id="navbarMount" data-variant="sticky"></div>
 
     <!-- ============================================================ -->
     <!-- HERO (compact)                                               -->
     <!-- ============================================================ -->
-    <section class="pt-20 pb-3 no-print">
+    <section class="pt-6 sm:pt-8 pb-3 no-print">
         <div class="container mx-auto px-4">
             <div class="text-center mb-4">
                 <div class="inline-flex items-center gap-2 glass px-3 py-1 rounded-full text-[11px] font-medium text-brand mb-3">
@@ -1060,20 +1032,21 @@
     <!-- ============================================================ -->
     <!-- MOBILE: FLOATING BUTTON + BOTTOM SHEET                       -->
     <!-- ============================================================ -->
-    <button id="mobileSummaryBtn" 
-            class="lg:hidden fixed bottom-5 right-4 z-40 bg-brand text-white rounded-full px-4 py-2.5 shadow-2xl flex items-center gap-2 font-semibold text-xs no-print">
+    <button id="mobileSummaryBtn"
+            class="lg:hidden fixed bottom-5 right-4 z-40 bg-brand text-white rounded-full px-4 py-2.5 shadow-2xl flex items-center gap-2 font-semibold text-xs no-print"
+            aria-controls="bottomSheet" aria-expanded="false">
         <i data-lucide="clipboard-list" class="w-4 h-4"></i>
         <span>Ringkasan</span>
         <span id="mobileSummaryCount" class="bg-white/20 backdrop-blur rounded-full px-2 py-0.5 text-[10px]">0/7</span>
     </button>
 
     <!-- BOTTOM SHEET -->
-    <div id="bottomSheetOverlay" class="bottom-sheet-overlay lg:hidden no-print"></div>
-    <div id="bottomSheet" class="bottom-sheet lg:hidden no-print">
+    <div id="bottomSheetOverlay" class="bottom-sheet-overlay lg:hidden no-print" aria-hidden="true"></div>
+    <div id="bottomSheet" class="bottom-sheet lg:hidden no-print" role="dialog" aria-modal="true" aria-labelledby="bottomSheetTitle" aria-hidden="true" inert>
         <div class="p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-bold text-brand">Ringkasan Build</h3>
-                <button onclick="closeBottomSheet()" class="text-gray-400 hover:text-gray-600 p-1">
+                <h3 id="bottomSheetTitle" class="text-lg font-bold text-brand">Ringkasan Build</h3>
+                <button onclick="closeBottomSheet()" class="text-gray-500 hover:text-gray-700 p-1" aria-label="Tutup ringkasan build">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -1101,7 +1074,7 @@
                     <p class="text-gray-500 text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
                 </div>
                 <div class="md:text-right">
-                    <p class="text-gray-400 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                    <p class="text-gray-500 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -1126,13 +1099,6 @@
             console.error('Failed to init PC Builder:', error);
         }
         
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', function() {
-                document.getElementById('mobileNav').classList.toggle('hidden');
-            });
-        }
         
         // (Kode Navbar scroll shadow yang error sudah dihapus)
     });

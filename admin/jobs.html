@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karir & Lowongan | Admin IMDKOM</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <link rel="stylesheet" href="./assets/css/admin.css">
+
+    <style>
+    /* NAV GROUP / SUBMENU */
+    .nav-group { margin: 0; }
+
+    .nav-group-toggle {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+    }
+
+    .nav-group-toggle .nav-chevron {
+        transition: transform 0.25s ease;
+        opacity: 0.6;
+    }
+
+    .nav-group-toggle.open .nav-chevron {
+        transform: rotate(180deg);
+        opacity: 1;
+    }
+
+    .nav-group-toggle.open {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-submenu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.25rem 0 0.5rem 0;
+        margin-left: 0.5rem;
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+        animation: submenuSlide 0.25s ease;
+    }
+
+    .nav-submenu.hidden { display: none; }
+
+    @keyframes submenuSlide {
+        from { opacity: 0; transform: translateY(-4px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-submenu-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        color: #d1d5db;
+        text-decoration: none;
+        border-radius: 0.375rem;
+        transition: all 0.2s ease;
+        margin-left: 0.25rem;
+    }
+
+    .nav-submenu-link:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+    }
+
+    .nav-submenu-link.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        font-weight: 600;
+    }
+
+    .nav-submenu-link i { opacity: 0.7; flex-shrink: 0; }
+    .nav-submenu-link.active i { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Karir & Lowongan</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+
+            <div class="nav-group">
+                <button type="button"
+                        class="nav-link nav-group-toggle w-full justify-between"
+                        data-target="submenu-program">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        Program Kursus
+                    </span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform nav-chevron"></i>
+                </button>
+
+                <div id="submenu-program" class="nav-submenu hidden">
+                    <a href="programs.html" class="nav-submenu-link">
+                        <i data-lucide="list" class="w-3.5 h-3.5"></i>
+                        Daftar Program
+                    </a>
+                    <a href="program-submissions.html" class="nav-submenu-link">
+                        <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                        Review Usulan
+                    </a>
+                    <a href="tentors.html" class="nav-submenu-link">
+                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+                        Tentor
+                    </a>
+                    <a href="registrations.html" class="nav-submenu-link">
+                        <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                        Registrasi
+                    </a>
+                    <a href="payment-settings.html" class="nav-submenu-link">
+                        <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                        Metode Pembayaran
+                    </a>
+                </div>
+            </div>
+
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pc-components.html" class="nav-link">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                PC Components
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="jobs.html" class="nav-link active">
+                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                Karir
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+
+        <div class="page-header">
+            <h2>Karir & Lowongan</h2>
+            <a href="job-form.html" class="btn-primary">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Tambah Lowongan
+            </a>
+        </div>
+
+        <div class="admin-card mb-4" style="background: rgba(26, 60, 94, 0.05); border-color: rgba(26, 60, 94, 0.15);">
+            <div class="flex items-start gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-brand flex-shrink-0 mt-0.5"></i>
+                <p class="text-sm text-gray-600">
+                    Lowongan yang <strong>Aktif</strong> akan tampil di halaman publik <code class="bg-white px-1.5 py-0.5 rounded border">karir.html</code>.
+                    Tulis satu butir per baris pada kolom Ketentuan, Tanggung Jawab, dan Kriteria.
+                </p>
+            </div>
+        </div>
+
+        <div class="admin-card" style="padding: 0; overflow: hidden;">
+            <div class="overflow-x-auto">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">Urutan</th>
+                            <th style="width: 90px;">Thumbnail</th>
+                            <th>Judul Posisi</th>
+                            <th>Tipe</th>
+                            <th>Kategori</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                            <th style="width: 120px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobsList">
+                        <tr>
+                            <td colspan="8" class="text-center text-gray-500 py-12">
+                                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-brand border-t-transparent"></div>
+                                <p class="mt-3 text-sm">Memuat lowongan...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut, db, collection, getDocs, query, orderBy, deleteDoc, doc } from './assets/js/firebase.js';
+        import { PLACEHOLDER_IMAGE } from './assets/js/placeholder.js';
+        import { optimizeCloudinaryUrl } from './assets/js/cloudinary.js';
+
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                loadJobs();
+                lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        async function loadJobs() {
+            const container = document.getElementById('jobsList');
+
+            try {
+                const q = query(collection(db, 'jobs'), orderBy('order', 'asc'));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <tr>
+                            <td colspan="8" class="text-center py-12">
+                                <i data-lucide="inbox" class="w-12 h-12 mx-auto text-gray-300 mb-3"></i>
+                                <p class="text-gray-500">Belum ada lowongan.</p>
+                                <a href="job-form.html" class="btn-primary mt-4 inline-flex">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                    Tambah Lowongan
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+
+                let html = '';
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const imageUrl = data.gambar
+                        ? optimizeCloudinaryUrl(data.gambar, { width: 140, height: 90, crop: 'fill' })
+                        : PLACEHOLDER_IMAGE;
+
+                    html += `
+                        <tr>
+                            <td data-label="Urutan">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-brand/10 text-brand font-bold text-sm rounded-lg">
+                                    ${data.order || '-'}
+                                </span>
+                            </td>
+                            <td data-label="Thumbnail">
+                                <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(data.judul || '')}"
+                                     class="w-20 h-12 object-cover rounded-lg border border-gray-200"
+                                     loading="lazy"
+                                     data-fallback="${PLACEHOLDER_IMAGE}"
+                                     onerror="this.onerror=null; this.src=this.dataset.fallback;" />
+                            </td>
+                            <td data-label="Judul">
+                                <div class="font-medium text-gray-800">${escapeHtml(data.judul || 'Tanpa judul')}</div>
+                                ${data.lokasi ? `<div class="text-xs text-gray-400 mt-0.5">${escapeHtml(data.lokasi)}</div>` : ''}
+                            </td>
+                            <td data-label="Tipe">
+                                <span class="badge badge-info">${escapeHtml(data.tipe || '-')}</span>
+                            </td>
+                            <td data-label="Kategori">
+                                <span class="text-sm text-gray-600">${escapeHtml(data.kategori || '-')}</span>
+                            </td>
+                            <td data-label="Deadline">
+                                <span class="text-sm text-gray-600">${escapeHtml(data.deadline || '-')}</span>
+                            </td>
+                            <td data-label="Status">
+                                <span class="badge ${data.aktif ? 'badge-success' : 'badge-gray'}">
+                                    ${data.aktif ? 'Aktif' : 'Nonaktif'}
+                                </span>
+                            </td>
+                            <td data-label="Aksi">
+                                <div class="flex gap-3">
+                                    <a href="job-form.html?id=${docSnap.id}"
+                                       class="text-brand hover:text-brand-light text-sm font-medium inline-flex items-center gap-1">
+                                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                        Edit
+                                    </a>
+                                    <button class="delete-btn text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center gap-1"
+                                            data-id="${docSnap.id}"
+                                            data-name="${escapeHtml(data.judul || '')}">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                container.innerHTML = html;
+                lucide.createIcons();
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const name = btn.dataset.name;
+
+                        if (confirm(`Hapus lowongan "${name}"?\n\nTindakan ini tidak dapat dibatalkan.`)) {
+                            try {
+                                btn.disabled = true;
+                                btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>`;
+                                lucide.createIcons();
+
+                                await deleteDoc(doc(db, 'jobs', id));
+                                loadJobs();
+                            } catch (error) {
+                                console.error('Error deleting:', error);
+                                alert('Gagal menghapus lowongan: ' + error.message);
+                                btn.disabled = false;
+                            }
+                        }
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-12">
+                            <i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-red-300 mb-3"></i>
+                            <p class="text-red-600 font-medium">Gagal memuat lowongan</p>
+                            <p class="text-gray-500 text-xs mt-1">${escapeHtml(error.message)}</p>
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.dataset.target;
+                const submenu = document.getElementById(targetId);
+                if (!submenu) return;
+
+                const isOpen = !submenu.classList.contains('hidden');
+
+                if (isOpen) {
+                    submenu.classList.add('hidden');
+                    toggle.classList.remove('open');
+                } else {
+                    submenu.classList.remove('hidden');
+                    toggle.classList.add('open');
+                }
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        });
+
+        document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
+            const submenu = activeLink.closest('.nav-submenu');
+            if (submenu) {
+                submenu.classList.remove('hidden');
+                const toggle = document.querySelector(`.nav-group-toggle[data-target="${submenu.id}"]`);
+                if (toggle) toggle.classList.add('open');
+            }
+        });
+    </script>
+
+</body>
+</html>

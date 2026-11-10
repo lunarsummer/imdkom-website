@@ -14,104 +14,10 @@
 
     <link rel="stylesheet" href="assets/css/theme.css">
     <link rel="stylesheet" href="assets/css/output.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <script src="assets/js/navbar.js" defer></script>
 
     <style>
-        /* ============================================================
-           LOGO SHINE
-           ============================================================ */
-        .logo-shine {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            overflow: hidden;
-            border-radius: 6px;
-            padding: 2px 4px;
-        }
-        .logo-shine::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 50%, transparent 70%);
-            animation: shine-sweep 3s infinite;
-            z-index: 2;
-            pointer-events: none;
-        }
-        @keyframes shine-sweep {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
-        .logo-shine img {
-            position: relative;
-            z-index: 1;
-            display: block;
-            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
-            transition: filter 0.3s ease;
-        }
-        .logo-shine:hover img {
-            filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
-        }
-
-        /* ============================================================
-           MOBILE MENU — HIGHLIGHT
-           ============================================================ */
-        .mobile-menu-highlight {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.85rem 1rem;
-            margin: 0.35rem 0;
-            border-radius: 12px;
-            overflow: hidden;
-            text-decoration: none;
-            font-weight: 600;
-            background: linear-gradient(135deg, rgba(26,60,94,0.12) 0%, rgba(26,60,94,0.06) 50%, rgba(26,60,94,0.12) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(26, 60, 94, 0.25);
-            box-shadow: 0 4px 20px rgba(26, 60, 94, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            color: #1a3c5e !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .mobile-menu-highlight::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.7) 50%, transparent 70%);
-            animation: mobile-shine 3.5s infinite;
-            z-index: 1;
-            pointer-events: none;
-        }
-        @keyframes mobile-shine {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
-        .mobile-menu-highlight > * { position: relative; z-index: 2; }
-        .mobile-menu-highlight .menu-icon-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-        .mobile-menu-highlight .menu-arrow {
-            width: 1rem; height: 1rem;
-            opacity: 0.6;
-            transition: all 0.3s ease;
-        }
-        .mobile-menu-highlight:hover,
-        .mobile-menu-highlight:active {
-            transform: translateX(4px) scale(1.01);
-            background: linear-gradient(135deg, rgba(26,60,94,0.18) 0%, rgba(26,60,94,0.1) 50%, rgba(26,60,94,0.18) 100%);
-            border-color: rgba(26, 60, 94, 0.4);
-            box-shadow: 0 6px 24px rgba(26,60,94,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
-        }
-        .mobile-menu-highlight:hover .menu-arrow,
-        .mobile-menu-highlight:active .menu-arrow {
-            opacity: 1;
-            transform: translateX(4px);
-        }
 
         /* ============================================================
            PROGRAM GRID
@@ -129,107 +35,82 @@
         }
 
         .program-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 16px;
             overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             display: flex;
             flex-direction: column;
             height: 100%;
         }
         .program-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 24px rgba(26, 60, 94, 0.12);
+            transform: translateY(-4px);
+            border-color: #0d0d0d;
+            box-shadow: 0 18px 40px rgba(13, 13, 13, 0.10);
         }
 
         .program-image-wrapper {
             position: relative;
             width: 100%;
             aspect-ratio: 4 / 5;
-            background: #f3f4f6;
+            background: #f1f2f4;
             overflow: hidden;
         }
         .program-image-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.5s ease;
         }
         .program-card:hover .program-image-wrapper img {
-            transform: scale(1.05);
+            transform: scale(1.04);
         }
         .program-image-link {
             display: block;
             cursor: pointer;
         }
         .program-image-link:hover {
-            opacity: 0.97;
+            opacity: 0.98;
         }
         .badge-promo {
             position: absolute;
-            top: 0.5rem;
-            left: 0.5rem;
-            background: hwb(0 0% 0%);
-            color: #fafbfc;
-            font-size: 0.6rem;
-            font-weight: 800;
-            padding: 0.2rem 0.5rem;
+            top: 0.6rem;
+            left: 0.6rem;
+            background: #0d0d0d;
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.3rem 0.65rem;
             border-radius: 999px;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            box-shadow: 0 2px 6px rgba(65, 64, 64, 0.3);
             z-index: 2;
+            max-width: calc(100% - 1.2rem);
             overflow: hidden;
-            isolation: isolate;
-            animation: badge-pulse 2.5s ease-in-out infinite;
-        }
-        .badge-promo::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.9) 50%, transparent 70%);
-            animation: badge-shine 2.5s ease-in-out infinite;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .badge-promo > * {
-            position: relative;
-            z-index: 2;
-        }
-        @keyframes badge-shine {
-            0% { left: -100%; }
-            40%, 100% { left: 100%; }
-        }
-        @keyframes badge-pulse {
-            0%, 100% { box-shadow: 0 2px 6px rgba(53, 53, 53, 0.3); }
-            50% {
-                box-shadow: 
-                    0 2px 6px rgba(41, 41, 41, 0.3),
-                    0 0 12px rgba(80, 79, 79, 0.5);
-            }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .badge-promo { animation: none; }
-            .badge-promo::before { animation: none; display: none; }
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .badge-kategori {
             position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: rgba(26, 60, 94, 0.85);
+            top: auto;
+            bottom: 0.6rem;
+            right: 0.6rem;
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            color: white;
-            font-size: 0.6rem;
-            font-weight: 700;
-            padding: 0.2rem 0.5rem;
+            color: #0d0d0d;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.3rem 0.65rem;
             border-radius: 999px;
+            border: 1px solid rgba(13, 13, 13, 0.08);
             z-index: 2;
+            max-width: calc(100% - 1.2rem);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .skeleton {
@@ -240,37 +121,6 @@
         @keyframes skeleton-loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
-        }
-
-        /* ============================================================
-           NAVBAR — Pill Hover Effect
-           ============================================================ */
-        .nav-link {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #4b5563;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .nav-link:hover {
-            background-color: rgba(26, 60, 94, 0.08);
-            color: #0057ad;
-            transform: translateY(-1px);
-        }
-        .nav-link-active {
-            background-color: #0057ad;
-            color: white;
-            font-weight: 600;
-        }
-        .nav-link-active:hover {
-            background-color: #0057ad;
-            color: white;
         }
 
         /* ============================================================
@@ -336,101 +186,282 @@
         animation-duration: 30s;
     }
 }
+
+        /* ============================================================
+           KURSUS HEADER (judul modern, tanpa hero)
+           ============================================================ */
+        .ant {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+        }
+        .kursus-head {
+            background-color: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            background-position: 50% 0;
+            border-bottom: 1px solid #efefef;
+            padding: 3rem 0 1.75rem;
+        }
+        .kursus-title {
+            font-size: clamp(2.1rem, 6vw, 3.6rem);
+            line-height: 1.03;
+            color: #0d0d0d;
+            margin: 0 0 0.85rem;
+        }
+        .kursus-title .accent { color: #0059ff; }
+        .kursus-lead {
+            max-width: 34rem;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #4b5563;
+            margin: 0 0 1.75rem;
+            text-wrap: pretty;
+        }
+        .kursus-toolbar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 18px;
+            padding: 0.65rem;
+            box-shadow: 0 10px 30px rgba(13, 13, 13, 0.06);
+        }
+        @media (min-width: 640px) {
+            .kursus-toolbar { flex-direction: row; align-items: center; }
+        }
+        .kursus-input,
+        .kursus-select {
+            width: 100%;
+            font-size: 0.875rem;
+            color: #0d0d0d;
+            background: #f7f7f8;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 0.72rem 0.9rem;
+            outline: none;
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .kursus-input { padding-left: 2.4rem; }
+        .kursus-input::placeholder { color: #6b7280; }
+        .kursus-input:focus,
+        .kursus-select:focus {
+            background: #ffffff;
+            border-color: #0059ff;
+            box-shadow: 0 0 0 3px rgba(0, 89, 255, 0.14);
+        }
+        @media (min-width: 640px) {
+            .kursus-select { width: 12rem; flex-shrink: 0; }
+        }
+        .kursus-track-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: #0d0d0d;
+            padding: 0.72rem 1.1rem;
+            border-radius: 12px;
+            white-space: nowrap;
+            transition: background 0.2s ease;
+        }
+        .kursus-track-btn:hover { background: #0059ff; }
+        .kursus-filter-info {
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        /* ============================================================
+           KARTU PROGRAM — BODY & TOMBOL
+           ============================================================ */
+        .program-card-body {
+            padding: 0.85rem 0.9rem 0.95rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .program-card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0d0d0d;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: color 0.2s ease;
+            margin-bottom: 0.2rem;
+        }
+        .program-card:hover .program-card-title { color: #0059ff; }
+
+        .program-btn-primary,
+        .program-btn-wa,
+        .program-btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+            border-radius: 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.55rem 0.5rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .program-btn-primary {
+            width: 100%;
+            color: #ffffff;
+            background: #0d0d0d;
+        }
+        .program-btn-primary:hover { background: #0059ff; }
+        .program-btn-wa {
+            color: #ffffff;
+            background: #075e54;
+        }
+        .program-btn-wa:hover { background: #043f36; }
+        .program-btn-ghost {
+            color: #0d0d0d;
+            background: #ffffff;
+            border-color: #d8d8d8;
+        }
+        .program-btn-ghost:hover {
+            color: #ffffff;
+            background: #0d0d0d;
+            border-color: #0d0d0d;
+        }
+
+        .kursus-loadmore {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #0d0d0d;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.8rem 1.6rem;
+            border-radius: 999px;
+            transition: background 0.2s ease;
+        }
+        .kursus-loadmore:hover { background: #0059ff; }
+
+        /* ============================================================
+           FOOTER (dimaksimalkan)
+           ============================================================ */
+        .kursus-footer {
+            border-top: 1px solid #e8e8e8;
+            background: #ffffff;
+            padding: 2.5rem 0 1.5rem;
+        }
+        .kursus-footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .kursus-footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; }
+        }
+        .kursus-footer-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 1.35rem;
+            color: #0d0d0d;
+        }
+        .kursus-footer-heading {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #0d0d0d;
+            margin-bottom: 0.85rem;
+        }
+        .kursus-footer-text {
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: #6b7280;
+            text-wrap: pretty;
+        }
+        .kursus-footer-link {
+            display: block;
+            font-size: 0.82rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            transition: color 0.2s ease;
+        }
+        .kursus-footer-link:hover { color: #0059ff; }
+        .kursus-footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #efefef;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        @media (min-width: 640px) {
+            .kursus-footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
     </style>
 </head>
-<body class="font-sans bg-gray-50">
+<body class="font-sans bg-white">
 
     <!-- NAVIGATION -->
-    <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
-        <div class="container mx-auto px-4 flex items-center justify-between">
-            
-            <a href="index.html" class="flex items-center gap-3 logo-shine">
-                <img src="assets/images/logo/imd.svg" 
-                     alt="Logo IMDKOM" 
-                     class="h-7 w-auto" 
-                     loading="eager" />
-                <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
-            </a>
-            
-            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
-            
-            <div id="mainNav" class="hidden md:flex items-center gap-2">
-                <a href="index.html" class="nav-link">Beranda</a>
-                <a href="kursus.html" class="nav-link nav-link-active">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="nav-link">Computer Service</a>
-                <a href="rakit-komputer.html" class="nav-link">Rakit Komputer</a>
-                <a href="tentang.html" class="nav-link">Tentang</a>
-                <a href="karir.html" class="nav-link">Karir</a>
-                <a href="kontak.html" class="nav-link">Kontak</a>
-            </div>
-        </div>
-        
-        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-            <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-                <a href="kursus.html" class="text-brand font-semibold py-1.5">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="mobile-menu-highlight">
-                    <span class="menu-icon-wrap">
-                        <i data-lucide="wrench" class="w-4 h-4"></i>
-                        Computer Service
-                    </span>
-                    <i data-lucide="arrow-right" class="menu-arrow"></i>
-                </a>
-                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-                <a href="karir.html" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
-            </div>
-        </div>
-    </nav>
+    <div id="navbarMount" data-variant="sticky"></div>
 
-    <!-- HEADER + SEARCH + FILTER -->
-    <section class="py-8 sm:py-12">
+    <!-- HEADER (judul modern, tanpa hero) -->
+    <section class="kursus-head">
         <div class="container mx-auto px-4">
-            
-            <div class="text-center mb-8">
-                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Kursus &amp; Pelatihan</h1>
-                <p class="text-sm sm:text-base text-gray-500 mt-2">Temukan program yang sesuai kebutuhan Anda.</p>
+
+            <div class="max-w-2xl">
+                <h1 class="kursus-title ant">Kursus &amp; <span class="accent">Pelatihan</span></h1>
+                <p class="kursus-lead">Temukan program yang sesuai kebutuhan Anda, mulai dari dasar komputer hingga keterampilan teknis siap kerja.</p>
             </div>
 
-            <div class="max-w-3xl mx-auto mb-6">
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <div class="relative flex-1">
-                        <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                        <input type="text" 
-                               id="searchInput"
-                               placeholder="Cari program kursus..." 
-                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" />
-                    </div>
-                    
-                    <select id="filterKategori"
-                            class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm bg-white">
-                        <option value="">Semua Kategori</option>
-                    </select>
+            <div class="kursus-toolbar mt-6">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                    <input type="text"
+                           id="searchInput"
+                           placeholder="Cari program kursus..."
+                           class="kursus-input" />
                 </div>
-                
-                <div id="filterInfo" class="text-xs text-gray-500 mt-2 text-center"></div>
+
+                <select id="filterKategori" class="kursus-select">
+                    <option value="">Semua Kategori</option>
+                </select>
+
+                <a href="tracking.html" class="kursus-track-btn">
+                    <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                    Lacak Status
+                </a>
             </div>
 
-            <div class="program-grid" id="allProgramsContainer">
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
-                <div class="skeleton rounded-xl" style="aspect-ratio: 4/5;"></div>
+            <div id="filterInfo" class="kursus-filter-info"></div>
+
+            <h2 class="sr-only">Daftar Program Kursus</h2>
+
+            <div class="program-grid mt-8" id="allProgramsContainer">
+                <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
+                <div class="skeleton rounded-2xl" style="aspect-ratio: 4/5;"></div>
             </div>
 
             <div class="text-center mt-10" id="loadMoreWrapper" style="display: none;">
-                <button id="loadMoreBtn" class="group inline-flex items-center gap-2 bg-white border-2 border-brand text-brand hover:bg-brand hover:text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
-                    <i data-lucide="chevron-down" class="w-5 h-5 group-hover:text-white transition-colors"></i>
-                    <span class="group-hover:text-white transition-colors">Tampilkan Lebih Banyak</span>
+                <button id="loadMoreBtn" class="kursus-loadmore">
+                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    <span>Tampilkan Lebih Banyak</span>
                 </button>
             </div>
 
@@ -461,29 +492,39 @@
     <!-- ============================================================ -->
     <!-- FOOTER                                                       -->
     <!-- ============================================================ -->
-    <footer class="py-8 sm:py-10 border-t border-gray-200 relative" id="footerSection">
+    <footer class="kursus-footer relative" id="footerSection">
         <div class="sticker-layer" data-section="footer"></div>
-        
+
         <div class="container mx-auto px-4 relative">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="kursus-footer-grid">
                 <div>
-                    <h5 class="text-xl font-bold text-brand">IMDKOM</h5>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Kursus &amp; Pelatihan • Service Komputer</p>
+                    <p class="kursus-footer-title">IMDKOM</p>
+                    <p class="kursus-footer-text mt-2">Kursus &amp; pelatihan komputer, service, dan perakitan PC di Yogyakarta. Belajar langsung dari praktisi.</p>
                 </div>
                 <div>
-                    <h6 class="font-medium text-gray-700 text-sm mb-2">Kontak</h6>
-                    <p class="text-gray-500 text-xs sm:text-sm" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
-                    <p class="text-gray-500 text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
+                    <p class="kursus-footer-heading">Jelajahi</p>
+                    <a class="kursus-footer-link" href="index.html">Beranda</a>
+                    <a class="kursus-footer-link" href="kursus.html">Kursus &amp; Pelatihan</a>
+                    <a class="kursus-footer-link" href="service.html">Service Komputer</a>
+                    <a class="kursus-footer-link" href="rakit-komputer.html">Rakit Komputer</a>
+                    <a class="kursus-footer-link" href="karir.html">Karir</a>
                 </div>
-                <div class="md:text-right">
-                    <p class="text-gray-400 text-xs" id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                <div>
+                    <p class="kursus-footer-heading">Kontak</p>
+                    <p class="kursus-footer-text" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="kursus-footer-text" id="footerInstagram">Instagram: @imdkom_yk</p>
+                    <a class="kursus-footer-link mt-1" href="tracking.html">Lacak Status Pendaftaran</a>
                 </div>
+            </div>
+            <div class="kursus-footer-bottom">
+                <p id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                <p>Dibuat di Yogyakarta.</p>
             </div>
         </div>
     </footer>
 
     <!-- FLOATING WHATSAPP -->
-    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#25d366] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
@@ -528,10 +569,6 @@
                 openWhatsAppGeneric();
             });
 
-            // Mobile menu toggle
-            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-                document.getElementById('mobileNav').classList.toggle('hidden');
-            });
         });
     </script>
 

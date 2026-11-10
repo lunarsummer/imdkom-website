@@ -3,244 +3,1074 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Karir | IMDKOM Yogyakarta</title>
-    <meta name="description" content="Informasi karir dan lowongan kerja di IMDKOM Yogyakarta." />
-    
-    <!-- Favicon -->
+    <title>Karir & Lowongan | IMDKOM Yogyakarta</title>
+    <meta name="description" content="Berkarir di IMDKOM Yogyakarta — lowongan IT support, teknisi hardware, program admin & magang. Lihat posisi terbuka, kirim CV spontan, atau ajukan kerja sama service & pelatihan." />
+    <meta property="og:title" content="Karir & Lowongan | IMDKOM Yogyakarta" />
+    <meta property="og:description" content="Bergabung bersama lembaga kursus & service komputer yang terdaftar di bawah naungan Dinas Pendidikan." />
+    <meta property="og:type" content="website" />
+
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
-    
-    <!-- Google Fonts: Poppins -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="assets/css/theme.css">
     <link rel="stylesheet" href="assets/css/output.css">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Tailwind Config -->
-    
+    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <script src="assets/js/navbar.js" defer></script>
 
     <style>
-        /* Logo Shine Effect */
-        .logo-shine {
+        /* ============================================================
+           CAREER PAGE — SAC-style: Anton display, white/black, accent
+           ============================================================ */
+        :root {
+            --c-bg: #ffffff;
+            --c-soft: #f6f6f5;
+            --c-ink: #0d0d0d;
+            --c-body: #232830;
+            --c-muted: #5b6169;
+            --c-line: #e4e4e2;
+            --c-accent: #0059ff;
+            --c-accent-dark: #0040c0;
+            --c-accent-light: #6ea3ff;
+            --c-black: #0d0d0d;
+            --c-card-dark: #161616;
+            --c-line-dark: #262626;
+        }
+
+        .career-page {
+            background: var(--c-bg);
+            color: var(--c-body);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .ant {
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .career-container {
+            width: 100%;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--c-accent);
+            outline-offset: 2px;
+            border-radius: 3px;
+        }
+
+        /* ============ HERO ============ */
+        .career-hero {
             position: relative;
+            background: var(--c-soft);
+            background-image: radial-gradient(#deded9 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: var(--c-ink);
+        }
+
+        .hero-inner {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 3rem;
+            align-items: center;
+            padding-top: 4rem;
+            padding-bottom: 4.5rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 11.5vw, 5.2rem);
+            line-height: 0.98;
+            color: var(--c-ink);
+            margin: 0 0 1.5rem;
+        }
+
+        .hero-title .accent { color: var(--c-accent); }
+
+        .hero-sub {
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: var(--c-muted);
+            max-width: 33rem;
+            text-wrap: pretty;
+        }
+
+        .hero-ctas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .cbtn {
             display: inline-flex;
             align-items: center;
-            overflow: hidden;
-            border-radius: 6px;
-            padding: 2px 4px;
-        }
-        .logo-shine::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.75) 50%, transparent 70%);
-            animation: shine-sweep 3s infinite;
-            z-index: 2;
-            pointer-events: none;
-        }
-        @keyframes shine-sweep {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
-        .logo-shine img {
-            position: relative;
-            z-index: 1;
-            display: block;
-            filter: drop-shadow(0 2px 4px rgba(26, 60, 94, 0.15));
-            transition: filter 0.3s ease;
-        }
-        .logo-shine:hover img {
-            filter: drop-shadow(0 4px 8px rgba(26, 60, 94, 0.3));
+            gap: 0.55rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 999px;
+            padding: 0.9rem 1.75rem;
+            text-decoration: none;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
         }
 
-        /* Mobile Menu Highlight */
-        .mobile-menu-highlight {
-            position: relative;
+        .cbtn-black { background: var(--c-ink); color: #fff; border-color: var(--c-ink); }
+        .cbtn-black:hover { background: #262626; border-color: #262626; transform: translateY(-1px); }
+
+        .cbtn-outline { background: transparent; color: var(--c-ink); border-color: var(--c-ink); }
+        .cbtn-outline:hover { background: var(--c-ink); color: #fff; transform: translateY(-1px); }
+
+        .hero-trust {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem 1.4rem;
+            margin-top: 2rem;
+            padding: 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--c-body);
+        }
+
+        .hero-trust li { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .hero-trust i { color: var(--c-accent); }
+
+        /* --- hero panel: sering dibuka --- */
+        .hero-panel {
+            background: #fff;
+            border: 1px solid var(--c-line);
+            border-top: 3px solid var(--c-ink);
+            border-radius: 4px;
+            padding: 1.5rem;
+            box-shadow: 0 18px 44px rgba(13, 13, 13, 0.08);
+        }
+
+        .hero-panel-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--c-muted);
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--c-line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero-panel-label         .open-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--c-accent);
+            letter-spacing: 0.1em;
+            font-size: 0.72rem;
+        }
+
+        .open-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 999px;
+            background: var(--c-accent);
+        }
+
+        .panel-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--c-line);
+        }
+
+        .panel-row:last-child { border-bottom: none; }
+
+        .panel-row-title {
+            font-size: 1.05rem;
+            color: var(--c-ink);
+            line-height: 1.2;
+        }
+
+        .panel-row-note { font-size: 0.75rem; color: var(--c-muted); margin-top: 0.2rem; }
+
+        .panel-row-type {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--c-body);
+            border: 1px solid var(--c-line);
+            border-radius: 4px;
+            padding: 0.3rem 0.6rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .hero-panel-foot {
+            margin-top: 0.9rem;
+            font-size: 0.78rem;
+            color: var(--c-muted);
+            text-wrap: pretty;
+        }
+
+        /* --- role strip (black) --- */
+        .role-strip {
+            background: var(--c-black);
+            padding: 0.75rem 0;
+        }
+
+        .role-strip p {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: #d4d4d4;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        /* ============ JOBS ============ */
+        .jobs-section { padding: 4rem 0 4rem; background: var(--c-bg); }
+
+        .section-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--c-ink);
+            padding-bottom: 1.25rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.6rem, 6vw, 3.6rem);
+            line-height: 1;
+            color: var(--c-ink);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0.85rem 1rem;
-            margin: 0.35rem 0;
-            border-radius: 12px;
-            overflow: hidden;
-            text-decoration: none;
+            gap: 0.9rem;
+        }
+
+        .count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2.1rem;
+            height: 2.1rem;
+            padding: 0 0.55rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #fff;
+            background: var(--c-ink);
+            border-radius: 6px;
+        }
+
+        .section-note {
+            max-width: 21rem;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--c-muted);
+        }
+
+        .jobs-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .jobs-search {
+            position: relative;
+            flex: 1 1 220px;
+        }
+
+        .jobs-search i {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--c-muted);
+            pointer-events: none;
+        }
+
+        .jobs-search input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.6rem;
+            border: 1px solid var(--c-line);
+            border-radius: 4px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 0.88rem;
+            color: var(--c-ink);
+            outline: none;
+            transition: border-color 0.18s ease;
+        }
+
+        .jobs-search input::placeholder { color: #6b7280; }
+        .jobs-search input:focus { border-color: var(--c-ink); }
+
+        .jobs-category {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--c-line);
+            border-radius: 4px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--c-ink);
+            outline: none;
+        }
+
+        .jobs-category:focus { border-color: var(--c-ink); }
+
+        .job-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            width: 100%;
+        }
+
+        .job-chip {
+            border: 1px solid var(--c-line);
+            background: #fff;
+            color: var(--c-body);
+            font-family: inherit;
+            font-size: 0.75rem;
             font-weight: 600;
-            background: linear-gradient(135deg, rgba(26,60,94,0.12) 0%, rgba(26,60,94,0.06) 50%, rgba(26,60,94,0.12) 100%);
-            border: 1px solid rgba(26, 60, 94, 0.25);
-            color: #1a3c5e !important;
-            transition: all 0.3s ease;
-        }
-        .mobile-menu-highlight:hover {
-            transform: translateX(4px);
-            background: rgba(26, 60, 94, 0.15);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border-radius: 999px;
+            padding: 0.45rem 1.1rem;
+            cursor: pointer;
+            transition: all 0.18s ease;
         }
 
-        /* Desain khusus untuk teks pemberitahuan */
-        .text-gradient {
-            background: linear-gradient(to right, #1a3c5e, #2a5a7a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .job-chip:hover { border-color: var(--c-ink); color: var(--c-ink); }
+        .job-chip.is-active { background: var(--c-ink); border-color: var(--c-ink); color: #fff; }
+
+        .filter-info { font-size: 0.75rem; color: var(--c-muted); min-height: 1.25rem; margin: 0.5rem 0 1rem; }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
         }
 
-        /* ============================================================
-   NAVBAR — Pill Hover Effect
-   ============================================================ */
-.nav-link {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #4b5563;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
-    white-space: nowrap;
-}
-.nav-link:hover {
-    background-color: rgba(26, 60, 94, 0.08);
-    color: #0057ad;
-    transform: translateY(-1px);
-}
-.nav-link-active {
-    background-color: #0057ad;
-    color: white;
-    font-weight: 600;
-}
-.nav-link-active:hover {
-    background-color: #0057ad;
-    color: white;
-}
+        @media (max-width: 1023px) { .jobs-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 639px) { .jobs-grid { grid-template-columns: 1fr; } }
+
+        .job-card {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid var(--c-line);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--c-ink);
+            box-shadow: 0 12px 32px rgba(13, 13, 13, 0.12);
+        }
+
+        .job-card-thumb { aspect-ratio: 16 / 9; overflow: hidden; background: var(--c-soft); }
+        .job-card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .job-card-body { display: flex; flex-direction: column; gap: 0.55rem; padding: 1rem 1.1rem 1.1rem; flex: 1; }
+        .job-card-topline { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+
+        .job-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 3px;
+            padding: 0.28rem 0.6rem;
+        }
+
+        .job-badge-tipe { background: var(--c-ink); color: #fff; }
+        .job-badge-kategori { background: transparent; color: var(--c-muted); padding-left: 0; padding-right: 0; }
+
+        .job-card-title {
+            font-size: 1.35rem;
+            line-height: 1.15;
+            color: var(--c-ink);
+        }
+
+        .job-card-meta {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.76rem;
+            color: var(--c-muted);
+        }
+
+        .job-card-meta li { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .job-card-meta i { color: var(--c-muted); flex-shrink: 0; }
+
+        .job-card-desc {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--c-muted);
+            flex: 1;
+        }
+
+        .job-card-actions {
+            display: flex;
+            gap: 0.45rem;
+            margin-top: 0.4rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--c-line);
+        }
+
+        .job-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-family: inherit;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 4px;
+            padding: 0.6rem 0.7rem;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid transparent;
+            transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+        }
+
+        .job-btn-primary { background: var(--c-ink); color: #fff; border-color: var(--c-ink); }
+        .job-btn-primary:hover { background: #2b2b2b; border-color: #2b2b2b; }
+
+        .job-btn-ghost { background: transparent; color: var(--c-ink); border-color: var(--c-ink); }
+        .job-btn-ghost:hover { background: var(--c-ink); color: #fff; }
+
+        .job-btn-outline { background: transparent; color: var(--c-ink); border-color: var(--c-ink); }
+        .job-btn-outline:hover { background: var(--c-ink); color: #fff; }
+
+        .job-btn-lg { padding: 0.75rem 1.4rem; font-size: 0.78rem; }
+
+        .job-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.35rem;
+            border: 1px solid var(--c-line);
+            border-radius: 4px;
+            background: #fff;
+            color: var(--c-body);
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .job-icon-btn:hover { border-color: var(--c-ink); color: var(--c-ink); }
+
+        .job-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 1rem;
+            background: var(--c-soft);
+            border: 1px dashed var(--c-line);
+            border-radius: 4px;
+            color: var(--c-muted);
+        }
+
+        .job-empty i { color: #c9c9c6; margin: 0 auto 1rem; display: block; }
+        .job-empty h3 { font-size: 1.6rem; color: var(--c-ink); margin-bottom: 0.4rem; }
+        .job-empty p { font-size: 0.85rem; max-width: 26rem; margin: 0 auto 1.25rem; line-height: 1.6; }
+
+        .job-skeleton {
+            border-radius: 4px;
+            aspect-ratio: 4 / 3.4;
+            background: linear-gradient(90deg, #efefec 25%, #f7f7f5 50%, #efefec 75%);
+            background-size: 200% 100%;
+            animation: skeletonMove 1.5s ease-in-out infinite;
+        }
+
+        @keyframes skeletonMove {
+            from { background-position: 200% 0; }
+            to { background-position: -200% 0; }
+        }
+
+        .load-more-wrap { text-align: center; margin-top: 1.5rem; }
+
+        /* ============ MODAL ============ */
+        .job-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .job-modal.is-open { display: flex; }
+
+        .job-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.66);
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .job-modal-panel {
+            position: relative;
+            width: 100%;
+            max-width: 880px;
+            max-height: 90vh;
+            background: #fff;
+            border-radius: 8px 8px 0 0;
+            animation: slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .job-modal { align-items: center; padding: 2rem; }
+            .job-modal-panel { border-radius: 8px; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(48px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .job-modal-close {
+            position: absolute;
+            top: 0.85rem;
+            right: 0.85rem;
+            z-index: 2;
+            width: 2.4rem;
+            height: 2.4rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            border: 1px solid var(--c-line);
+            background: #fff;
+            color: var(--c-ink);
+            cursor: pointer;
+        }
+
+        .job-modal-close:hover { border-color: var(--c-ink); }
+
+        .job-modal-scroll { overflow-y: auto; padding: 1.75rem 1.5rem 1.5rem; }
+        @media (min-width: 768px) { .job-modal-scroll { padding: 2.25rem 2.5rem 1.75rem; } }
+
+        .job-modal-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; align-items: center; }
+
+        .job-modal-title {
+            font-size: clamp(1.8rem, 4.2vw, 2.4rem);
+            line-height: 1;
+            color: var(--c-ink);
+            margin-bottom: 0.9rem;
+            padding-right: 2.5rem;
+        }
+
+        .job-modal-meta {
+            list-style: none;
+            margin: 0 0 1.1rem;
+            padding: 0.7rem 0.9rem;
+            background: var(--c-soft);
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.5rem;
+            font-size: 0.78rem;
+            color: var(--c-muted);
+        }
+
+        .job-modal-meta li { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .job-modal-meta strong { color: var(--c-ink); font-weight: 600; }
+        .job-modal-meta i { color: var(--c-body); }
+
+        .job-modal-section { margin-bottom: 1.25rem; }
+        .job-modal-section h3 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--c-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .job-modal-section p { font-size: 0.88rem; line-height: 1.7; color: var(--c-body); }
+
+        .job-modal-list { margin: 0; padding-left: 1.15rem; font-size: 0.86rem; line-height: 1.75; color: var(--c-body); }
+        .job-modal-list li { margin-bottom: 0.15rem; }
+        .job-modal-empty { font-size: 0.85rem; color: var(--c-muted); font-style: italic; }
+
+        .job-modal-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 700px) { .job-modal-cols { grid-template-columns: 1fr; } }
+
+        .job-modal-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--c-line);
+            padding-top: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ============ KERJASAMA (black) ============ */
+        .collab-section {
+            background: var(--c-black);
+            color: #d4d4d4;
+            padding: 4.5rem 0;
+        }
+
+        .collab-title {
+            font-size: clamp(2.6rem, 6vw, 4rem);
+            line-height: 0.98;
+            color: #ffffff;
+            max-width: 46rem;
+        }
+
+        .collab-title .accent { color: var(--c-accent-light); }
+
+        .collab-sub {
+            margin-top: 1rem;
+            max-width: 36rem;
+            color: #b5b5b5;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            text-wrap: pretty;
+        }
+
+        .collab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2.25rem;
+        }
+
+        @media (max-width: 820px) { .collab-grid { grid-template-columns: 1fr; } }
+
+        .collab-card {
+            background: var(--c-card-dark);
+            border: 1px solid var(--c-line-dark);
+            border-radius: 6px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .collab-card:hover { border-color: #3a3a3a; }
+
+        .collab-head {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .collab-glyph {
+            width: 2.75rem;
+            height: 2.75rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--c-accent);
+            border-radius: 6px;
+            color: #fff;
+        }
+
+        .collab-card h3 {
+            font-size: 1.25rem;
+            line-height: 1.15;
+            color: #fff;
+        }
+
+        .collab-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.83rem; color: #c9c9c9; }
+        .collab-list li { display: flex; gap: 0.5rem; align-items: flex-start; line-height: 1.5; }
+        .collab-list i { color: var(--c-accent-light); margin-top: 0.15rem; flex-shrink: 0; }
+
+        .collab-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: auto; padding-top: 0.5rem; }
+
+        .cbtn-white { background: #fff; color: var(--c-ink); border-color: #fff; }
+        .cbtn-white:hover { background: #e5e5e5; }
+
+        .cbtn-blue { background: var(--c-accent); color: #fff; border-color: var(--c-accent); }
+        .cbtn-blue:hover { background: var(--c-accent-dark); border-color: var(--c-accent-dark); }
+
+        .partner-strip {
+            margin-top: 1.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-top: 1px solid var(--c-line-dark);
+            padding-top: 1.4rem;
+            font-size: 0.82rem;
+            color: #9c9c9c;
+        }
+
+        .partner-strip strong { color: #fff; font-weight: 600; }
+
+        .partner-strip a {
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid var(--c-accent-light);
+        }
+
+        .partner-strip a:hover { color: var(--c-accent-light); }
+
+        /* ============ TOAST ============ */
+        .job-toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--c-ink);
+            color: #fff;
+            padding: 0.7rem 1.4rem;
+            border-radius: 4px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            z-index: 80;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+            max-width: 90vw;
+            text-align: center;
+        }
+
+        /* ============ RESPONSIVE HERO ============ */
+        @media (max-width: 1023px) {
+            .hero-inner { grid-template-columns: 1fr; padding-top: 3.25rem; padding-bottom: 3.5rem; gap: 2.25rem; }
+            .hero-panel { max-width: 480px; }
+        }
+
+        @media (max-width: 639px) {
+            .hero-ctas .cbtn { width: 100%; justify-content: center; }
+            .section-head { flex-direction: column; align-items: flex-start; }
+            .hero-panel { display: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .job-skeleton { animation: none; }
+            .job-modal-panel, .job-modal-backdrop { animation: none; }
+        }
     </style>
 </head>
-<body class="font-sans bg-gray-50 flex flex-col min-h-screen">
 
-    <!-- ============================================================ -->
-    <!-- NAVIGATION (Karir Aktif)                                     -->
-    <!-- ============================================================ -->
-    <nav class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
-        <div class="container mx-auto px-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3 logo-shine">
-                <img src="assets/images/logo/imd.svg" alt="Logo IMDKOM" class="h-7 w-auto" loading="eager" />
-                <span class="text-sm text-gray-500 hidden sm:inline">Kursus &amp; Pelatihan • Computer Service</span>
-            </a>
-            <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-            </button>
-            <div id="mainNav" class="hidden md:flex items-center gap-2">
-    <a href="index.html" class="nav-link">Beranda</a>
-    <a href="kursus.html" class="nav-link">Kursus &amp; Pelatihan</a>
-    <a href="service.html" class="nav-link">Computer Service</a>
-    <a href="rakit-komputer.html" class="nav-link">Rakit Komputer</a>
-    <a href="tentang.html" class="nav-link">Tentang</a>
-    <a href="karir.html" class="nav-link nav-link-active">Karir</a>
-    <a href="kontak.html" class="nav-link">Kontak</a>
-</div>
-        </div>
-        
-        <!-- MOBILE MENU -->
-        <div id="mobileNav" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-            <div class="container mx-auto px-4 flex flex-col gap-2">
-                <a href="index.html" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-                <a href="kursus.html" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-                <a href="service.html" class="mobile-menu-highlight">
-                    <span class="menu-icon-wrap flex items-center gap-2">
-                        <i data-lucide="wrench" class="w-4 h-4"></i> Computer Service
-                    </span>
-                    <i data-lucide="arrow-right" class="w-4 h-4 opacity-60"></i>
-                </a>
-                <a href="rakit-komputer.html" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
-                <a href="tentang.html" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-                <a href="karir.html" class="text-brand font-semibold py-1.5">Karir</a>
-                <a href="kontak.html" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+<body class="font-sans career-page flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <div id="navbarMount" data-variant="sticky"></div>
+
+    <!-- ============ HERO ============ -->
+    <header class="career-hero">
+        <div class="career-container hero-inner">
+            <div class="hero-copy">
+                <h1 class="hero-title ant">Bangun karier<br>di dunia<br><span class="accent">komputer.</span></h1>
+                <p class="hero-sub">
+                    Lowongan IT Support, teknisi hardware, administrasi, hingga magang —
+                    di lembaga kursus &amp; service komputer yang terdaftar di bawah naungan Dinas Pendidikan, Yogyakarta.
+                </p>
+                <div class="hero-ctas">
+                    <a href="#lowongan" class="cbtn cbtn-black">
+                        Lihat Lowongan <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                    </a>
+                    <button type="button" class="cbtn cbtn-outline" id="spontaneousHeroBtn">
+                        Kirim CV Spontan <i data-lucide="send-horizontal" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <ul class="hero-trust">
+                    <li><i data-lucide="check" class="w-4 h-4"></i> Terdaftar Dinas Pendidikan</li>
+                    <li><i data-lucide="check" class="w-4 h-4"></i> Magang SMK &amp; mahasiswa</li>
+                    <li><i data-lucide="check" class="w-4 h-4"></i> Belajar sambil bekerja</li>
+                </ul>
             </div>
+
+            <aside class="hero-panel" aria-label="Posisi yang sering dibuka">
+                <p class="hero-panel-label">
+                    Sering Dibuka
+                    <span class="open-count"><span class="open-dot"></span> Open</span>
+                </p>
+                <div class="panel-row">
+                    <div>
+                        <p class="panel-row-title ant">IT Support</p>
+                        <p class="panel-row-note">Diagnosa, perbaikan &amp; konsultasi PC/laptop</p>
+                    </div>
+                    <span class="panel-row-type">Full Time</span>
+                </div>
+                <div class="panel-row">
+                    <div>
+                        <p class="panel-row-title ant">Teknisi Hardware</p>
+                        <p class="panel-row-note">Rakit PC, upgrade &amp; service komponen</p>
+                    </div>
+                    <span class="panel-row-type">Freelance</span>
+                </div>
+                <div class="panel-row">
+                    <div>
+                        <p class="panel-row-title ant">Admin Kursus</p>
+                        <p class="panel-row-note">Pendaftaran siswa, jadwal &amp; dokumentasi</p>
+                    </div>
+                    <span class="panel-row-type">Magang</span>
+                </div>
+                <p class="hero-panel-foot">Semua posisi on-site, Yogyakarta. Detail &amp; cara melamar ada di bagian lowongan.</p>
+            </aside>
         </div>
-    </nav>
 
-    <!-- ============================================================ -->
-    <!-- KONTEN UTAMA (PEMBERITAHUAN)                                 -->
-    <!-- ============================================================ -->
-    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
-        
-        <!-- Ornamen Latar Belakang -->
-        <div class="absolute top-10 left-10 w-72 h-72 bg-brand/5 rounded-full blur-3xl -z-10"></div>
-        <div class="absolute bottom-10 right-10 w-96 h-96 bg-brand-dark/5 rounded-full blur-3xl -z-10"></div>
+        <div class="role-strip" aria-hidden="true">
+            <p>IT Support · Teknisi Hardware · Networking · Programming · Magang · Freelance</p>
+        </div>
+    </header>
 
-        <!-- Card Pemberitahuan -->
-        <div class="bg-white border border-gray-100 shadow-xl shadow-brand/5 rounded-3xl max-w-2xl w-full p-8 sm:p-12 text-center animate-fade-in-up relative z-10">
-            
-            <!-- Ikon Animasi -->
-            <div class="relative w-24 h-24 mx-auto mb-6">
-                <div class="absolute inset-0 bg-brand/10 rounded-full animate-pulse-slow"></div>
-                <div class="absolute inset-2 bg-brand/20 rounded-full animate-pulse-slow" style="animation-delay: 0.5s;"></div>
-                <div class="absolute inset-0 flex items-center justify-center text-brand">
-                    <i data-lucide="briefcase" class="w-10 h-10"></i>
+    <main class="flex-grow">
+
+        <!-- ============ LOWONGAN ============ -->
+        <section class="jobs-section" id="lowongan" aria-labelledby="jobsHeading">
+            <div class="career-container">
+
+                <div class="section-head">
+                    <h2 class="section-title ant" id="jobsHeading">Lowongan <span class="count-badge" id="jobCountBadge">0</span></h2>
+                    <p class="section-note">Klik kartu untuk detail lengkap — persyaratan, tanggung jawab, dan cara melamar.</p>
+                </div>
+
+                <div class="jobs-toolbar" role="search">
+                    <div class="jobs-search">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                        <input type="text" id="jobSearchInput" placeholder="Cari posisi, kategori, atau lokasi..." aria-label="Cari lowongan" />
+                    </div>
+                    <select id="jobCategoryFilter" class="jobs-category" aria-label="Filter kategori">
+                        <option value="">Semua Kategori</option>
+                    </select>
+                    <div class="job-chips" role="group" aria-label="Filter tipe kerja">
+                        <button type="button" class="job-chip is-active" data-tipe="" aria-pressed="true">Semua</button>
+                        <button type="button" class="job-chip" data-tipe="Full Time" aria-pressed="false">Full Time</button>
+                        <button type="button" class="job-chip" data-tipe="Part Time" aria-pressed="false">Part Time</button>
+                        <button type="button" class="job-chip" data-tipe="Freelance" aria-pressed="false">Freelance</button>
+                        <button type="button" class="job-chip" data-tipe="Magang" aria-pressed="false">Magang</button>
+                        <button type="button" class="job-chip" data-tipe="Kontrak" aria-pressed="false">Kontrak</button>
+                    </div>
+                </div>
+
+                <p class="filter-info" id="jobFilterInfo" aria-live="polite"></p>
+
+                <div class="jobs-grid" id="jobsContainer">
+                    <div class="job-skeleton"></div>
+                    <div class="job-skeleton"></div>
+                    <div class="job-skeleton"></div>
+                </div>
+
+                <div class="load-more-wrap" id="jobLoadMoreWrapper" style="display: none;">
+                    <button id="jobLoadMoreBtn" type="button" class="cbtn cbtn-outline">
+                        Tampilkan Lebih Banyak <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============ KERJASAMA (black) ============ -->
+        <section class="collab-section" id="kerjasama" aria-labelledby="collabHeading">
+            <div class="career-container">
+                <h2 class="collab-title ant" id="collabHeading">Tumbuh <span class="accent">bareng</span> IMDKOM.</h2>
+                <p class="collab-sub">
+                    Terbuka untuk sekolah, instansi, perusahaan, dan komunitas —
+                    di bidang service komputer maupun pelatihan &amp; kursus&nbsp;teknologi.
+                </p>
+
+                <div class="collab-grid">
+                    <article class="collab-card">
+                        <div class="collab-head">
+                            <span class="collab-glyph"><i data-lucide="wrench" class="w-5 h-5"></i></span>
+                            <h3 class="ant">Service Komputer</h3>
+                        </div>
+                        <ul class="collab-list">
+                            <li><i data-lucide="check" class="w-4 h-4"></i> Mitra perbaikan &amp; perawatan PC/laptop/printer untuk kantor, sekolah, dan instansi</li>
+                            <li><i data-lucide="check" class="w-4 h-4"></i> Kontrak maintenance berkala + kunjungan teknisi terjadwal</li>
+                            <li><i data-lucide="check" class="w-4 h-4"></i> Rakit &amp; upgrade unit komputer untuk kebutuhan instansi</li>
+                            <li><i data-lucide="check" class="w-4 h-4"></i> Konsultasi &amp; pengadaan perangkat / sparepart</li>
+                        </ul>
+                        <div class="collab-actions">
+                            <a href="service.html" class="cbtn cbtn-white">Lihat Layanan <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                            <button type="button" class="cbtn cbtn-blue collab-wa-btn" data-topic="Kerja Sama Service Komputer">Ajukan Kerja Sama <i data-lucide="send-horizontal" class="w-4 h-4"></i></button>
+                        </div>
+                    </article>
+
+                    <article class="collab-card">
+                        <div class="collab-head">
+                            <span class="collab-glyph"><i data-lucide="graduation-cap" class="w-5 h-5"></i></span>
+                            <h3 class="ant">Pelatihan &amp; Kursus</h3>
+                        </div>
+                        <ul class="collab-list">
+                            <li><i data-lucide="check" class="w-4 h-4"></i> Program pelatihan &amp; upskilling karyawan untuk perusahaan</li>
+                            <li><i data-lucide="check" class="w-4 h-4"></i> Kemitraan kurikulum, mentor, dan tempat praktik untuk SMK/kampus</li>
+                            <li><i data-lucide="check" class="w-4 h-4"></i> Kelas privat &amp; bootcamp untuk komunitas atau instansi</li>
+                            <li><i data-lucide="check" class="w-4 h-4"></i> Sertifikasi &amp; pelatihan software sesuai kebutuhan industri</li>
+                        </ul>
+                        <div class="collab-actions">
+                            <a href="kursus.html" class="cbtn cbtn-white">Lihat Kursus <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                            <button type="button" class="cbtn cbtn-blue collab-wa-btn" data-topic="Kerja Sama Pelatihan & Kursus">Ajukan Kerja Sama <i data-lucide="send-horizontal" class="w-4 h-4"></i></button>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="partner-strip">
+                    <span><strong>Terdaftar di bawah naungan Dinas Pendidikan</strong> — legal, aman, dan terpercaya untuk kerja sama institusional.</span>
+                    <a href="kontak.html">Hubungi tim kami →</a>
                 </div>
             </div>
+        </section>
 
-            <!-- Teks Pemberitahuan -->
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-brand mb-4 tracking-tight">
-                Halaman Karir <span class="text-gradient">Segera Hadir</span>
-            </h1>
-            
-            <p class="text-gray-600 text-base sm:text-lg leading-relaxed mb-8 max-w-lg mx-auto">
-                Saat ini kami sedang mempersiapkan halaman khusus untuk informasi lowongan pekerjaan dan karier di IMDKOM. 
-                Nantikan kesempatan untuk bergabung dengan tim kami!
-            </p>
-
-            <!-- Badge Info -->
-            <div class="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-4 py-2 rounded-full text-sm font-medium border border-yellow-200 mb-8">
-                <i data-lucide="hammer" class="w-4 h-4"></i>
-                Sedang dalam tahap pengembangan
-            </div>
-
-            <!-- Tombol Aksi -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="index.html" 
-                   class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-brand hover:bg-brand-light text-white font-semibold rounded-xl transition-all shadow-md shadow-brand/20 hover:shadow-lg hover:-translate-y-0.5">
-                    <i data-lucide="home" class="w-4 h-4"></i>
-                    Kembali ke Beranda
-                </a>
-                <a href="kontak.html" 
-                   class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all">
-                    <i data-lucide="mail" class="w-4 h-4"></i>
-                    Hubungi Kami
-                </a>
-            </div>
-
-        </div>
     </main>
 
-    <!-- ============================================================ -->
-    <!-- FOOTER (Sederhana)                                           -->
-    <!-- ============================================================ -->
-    <footer class="py-6 border-t border-gray-200 bg-white">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-400 text-sm">
-                &copy; 2026 IMDKOM Yogyakarta. All rights reserved.
-            </p>
+    <!-- ============ FOOTER (black) ============ -->
+    <footer class="py-8 sm:py-10 bg-[#0d0d0d] text-[#c9c9c9]" id="footerSection">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h5 class="ant text-2xl text-white">IMDKOM</h5>
+                    <p class="text-xs sm:text-sm mt-1 text-[#8f8f8f]">Kursus &amp; Pelatihan · Service Komputer</p>
+                </div>
+                <div>
+                    <h6 class="font-medium text-sm mb-2 text-white">Kontak</h6>
+                    <p class="text-xs sm:text-sm" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="text-xs sm:text-sm" id="footerInstagram">Instagram: @imdkom_yk</p>
+                </div>
+                <div class="md:text-right">
+                    <p class="text-xs text-[#7a7a7a]">&copy; 2026 IMDKOM. All rights reserved.</p>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- ============================================================ -->
-    <!-- JAVASCRIPT                                                   -->
-    <!-- ============================================================ -->
-    <script>
-        // Init Icons
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
+    <!-- FLOATING WHATSAPP -->
+    <a href="#" id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
+        </svg>
+    </a>
 
-        // Mobile Menu Toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('mobileNav').classList.toggle('hidden');
+    <!-- ============ MODAL DETAIL LOWONGAN ============ -->
+    <div class="job-modal" id="jobDetailModal" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle" aria-hidden="true">
+        <div class="job-modal-backdrop" data-close-modal></div>
+        <div class="job-modal-panel">
+            <button type="button" class="job-modal-close" id="jobModalClose" aria-label="Tutup detail lowongan">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="job-modal-scroll">
+                <div class="job-modal-badges">
+                    <span class="job-badge job-badge-tipe" id="jobModalTipe">Full Time</span>
+                    <span class="job-badge job-badge-kategori" id="jobModalKategori">Kategori</span>
+                </div>
+                <h2 class="job-modal-title ant" id="jobModalTitle">Judul Posisi</h2>
+                <ul class="job-modal-meta">
+                    <li><i data-lucide="map-pin" class="w-4 h-4"></i> Lokasi: <strong id="jobModalLokasi">Yogyakarta</strong></li>
+                    <li><i data-lucide="banknote" class="w-4 h-4"></i> Gaji: <strong id="jobModalGaji">-</strong></li>
+                    <li><i data-lucide="calendar-clock" class="w-4 h-4"></i> Deadline: <strong id="jobModalDeadline">-</strong></li>
+                </ul>
+
+                <div class="job-modal-section">
+                    <h3>Tentang Posisi</h3>
+                    <p id="jobModalDeskripsi"></p>
+                </div>
+
+                <div class="job-modal-cols">
+                    <div class="job-modal-section">
+                        <h3>Ketentuan &amp; Persyaratan</h3>
+                        <div id="jobModalKetentuan"></div>
+                    </div>
+                    <div class="job-modal-section">
+                        <h3>Tanggung Jawab</h3>
+                        <div id="jobModalTanggungJawab"></div>
+                    </div>
+                </div>
+                <div class="job-modal-section">
+                    <h3>Kriteria Kandidat</h3>
+                    <div id="jobModalKriteria"></div>
+                </div>
+
+                <div class="job-modal-footer">
+                    <button type="button" class="job-btn job-btn-ghost" id="jobShareBtn">
+                        <i data-lucide="share-2" class="w-4 h-4"></i> Bagikan
+                    </button>
+                    <button type="button" class="job-btn job-btn-primary job-btn-lg" id="jobApplyBtn">
+                        Lamar Via WhatsApp <i data-lucide="send-horizontal" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ JAVASCRIPT ============ -->
+    <script type="module">
+        import { openWhatsAppGeneric, openWhatsApp } from './assets/js/whatsapp.js';
+        import {
+            loadJobs, filterJobs, loadMoreJobs, setJobTipeFilter,
+            closeJobDetail, openSpontaneousApplication
+        } from './assets/js/jobs-katalog.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            await loadJobs();
+
+            document.getElementById('jobSearchInput')?.addEventListener('input', filterJobs);
+            document.getElementById('jobCategoryFilter')?.addEventListener('change', filterJobs);
+            document.getElementById('jobLoadMoreBtn')?.addEventListener('click', loadMoreJobs);
+            document.querySelectorAll('.job-chip[data-tipe]').forEach(chip => {
+                chip.addEventListener('click', () => setJobTipeFilter(chip.dataset.tipe));
+            });
+
+            document.getElementById('spontaneousHeroBtn')?.addEventListener('click', openSpontaneousApplication);
+            document.querySelectorAll('.collab-wa-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const topic = btn.dataset.topic || 'Kerja Sama';
+                    openWhatsApp(`Halo IMDKOM, saya ingin mengajukan *${topic}*. Mohon jadwalkan diskusinya. Terima kasih.`);
+                });
+            });
+
+            // Modal detail
+            const modal = document.getElementById('jobDetailModal');
+            document.getElementById('jobModalClose')?.addEventListener('click', closeJobDetail);
+            modal?.querySelector('[data-close-modal]')?.addEventListener('click', closeJobDetail);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal?.classList.contains('is-open')) {
+                    closeJobDetail();
+                }
+            });
+
+            // Floating WhatsApp
+            document.getElementById('floatingWhatsApp')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                openWhatsAppGeneric();
+            });
         });
     </script>
 

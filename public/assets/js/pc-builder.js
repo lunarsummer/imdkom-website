@@ -506,13 +506,16 @@ else if (bottleneckLevel === 'warning') {
     else title = '⚠️ Bottleneck ringan terdeteksi';
 }
 
+    const statusLabel = isDone ? 'selesai' : (!unlocked ? 'terkunci' : (isActive ? 'aktif' : ''));
     html += `
-        <div class="${cls}" data-cat="${cat.id}" title="${title}">
+        <button type="button" class="${cls}" data-cat="${cat.id}" title="${title}"
+                aria-label="${cat.label}${statusLabel ? ' — ' + statusLabel : ''}"
+                ${isActive ? 'aria-current="step" ' : ''}${!unlocked ? 'disabled' : ''}>
             <span class="step-nav-icon">
                 <i data-lucide="${cat.icon}" class="w-3 h-3"></i>
             </span>
             <span class="step-label">${cat.short}</span>
-        </div>
+        </button>
     `;
 });
     container.innerHTML = html;
@@ -645,7 +648,7 @@ function renderSteps() {
                         <div class="min-w-0">
                             <h3 class="font-bold text-brand text-base sm:text-lg truncate">
                                 ${i + 1}. ${cat.label}
-                                ${cat.required ? '<span class="text-red-500 text-sm">*</span>' : '<span class="text-gray-400 text-xs font-normal ml-2">(Opsional)</span>'}
+                                ${cat.required ? '<span class="text-red-500 text-sm">*</span>' : '<span class="text-gray-500 text-xs font-normal ml-2">(Opsional)</span>'}
                             </h3>
                             <p class="text-[11px] sm:text-xs text-gray-500 truncate">${getStepHint(cat.id)}</p>
                         </div>
@@ -660,7 +663,7 @@ function renderSteps() {
                             </button>
                         ` : ''}
                         ${selected ? `
-                            <button onclick="clearStep('${cat.id}')" class="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1 flex-shrink-0">
+                            <button onclick="clearStep('${cat.id}')" class="text-xs text-gray-600 hover:text-red-500 flex items-center gap-1 flex-shrink-0">
                                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Ganti</span>
                             </button>
                         ` : ''}
@@ -668,7 +671,7 @@ function renderSteps() {
                 </div>
 
                 ${!unlocked ? `
-                    <div class="text-center py-6 text-gray-400 text-sm">
+                    <div class="text-center py-6 text-gray-500 text-sm">
                         <i data-lucide="lock" class="w-5 h-5 mx-auto mb-2"></i>
                         ${getLockMessage(cat.id)}
                     </div>
@@ -724,7 +727,7 @@ function renderCpuUseCaseGuide() {
                 <i data-lucide="help-circle" class="w-4 h-4 text-brand"></i>
                 <span class="text-sm font-bold text-brand">Komputer ini akan digunakan untuk apa?</span>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+            <div class="use-case-grid">
                 ${CPU_USE_CASES.map(uc => `
                     <button onclick="selectCpuUseCase('${uc.id}')"
                             class="use-case-card"
@@ -823,6 +826,7 @@ function renderSearchForm(catId) {
                 <i data-lucide="search" class="w-4 h-4 search-icon-left"></i>
                 <input type="text"
                        id="search-input-${catId}"
+                       aria-label="Cari ${cat ? cat.label : ''}"
                        placeholder="Cari ${cat ? cat.label : ''}..."
                        value="${escapeHtml(value)}"
                        autocomplete="off"
@@ -1049,7 +1053,7 @@ function renderCategoryGrid(catId, status, tierFilterActive) {
             const maxGpu = c.spesifikasi.maxGpuLength || 0;
             if (vgaLen > maxGpu) {
                 html += `
-                    <div class="component-card disabled">
+                    <div class="component-card disabled" aria-disabled="true" title="Tidak kompatibel — casing terlalu kecil untuk VGA">
                         ${renderComponentInfo(c)}
                     </div>
                 `;
@@ -1064,7 +1068,7 @@ function renderCategoryGrid(catId, status, tierFilterActive) {
             <button onclick="showMore('${catId}')" class="show-more-btn">
                 <i data-lucide="chevron-down" class="w-4 h-4"></i>
                 Tampilkan ${Math.min(VISIBLE_INCREMENT, remaining)} lagi
-                <span class="text-xs text-gray-400 font-normal">(${remaining} tersisa)</span>
+                <span class="text-xs text-gray-500 font-normal">(${remaining} tersisa)</span>
             </button>
         `;
     }
@@ -1317,7 +1321,10 @@ window.setCpuBrand = function(brand) {
 // ============================================================
 function renderComponentCard(comp, categoryId) {
     return `
-        <div class="component-card" onclick="selectComponent('${categoryId}', '${comp.id}')">
+        <div class="component-card" role="button" tabindex="0"
+             onclick="selectComponent('${categoryId}', '${comp.id}')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectComponent('${categoryId}', '${comp.id}'); }"
+             aria-label="Pilih ${escapeHtml(comp.nama)}">
             ${renderComponentInfo(comp)}
         </div>
     `;
@@ -1335,7 +1342,7 @@ function renderComponentInfo(comp) {
                     ${specs.tahun ? `<span class="text-xs text-gray-500">${specs.tahun}</span>` : ''}
                     <span class="text-xs text-gray-500">· ${specs.socket} · ${specs.core}C/${specs.thread}T · ${specs.tdp}W</span>
                 </div>
-                <div class="text-xs mt-1 ${specs.igpu ? 'text-success' : 'text-gray-400'}">
+                <div class="text-xs mt-1 ${specs.igpu ? 'text-success' : 'text-gray-500'}">
                     ${specs.igpu ? '✓ Ada iGPU' : '✗ Tanpa iGPU (butuh VGA)'}
                 </div>
             `;
@@ -1406,7 +1413,7 @@ function renderComponentInfo(comp) {
 
     return `
         <div class="font-semibold text-gray-800 text-sm">${comp.nama}</div>
-        <div class="text-xs text-gray-400 mt-0.5">${comp.brand}</div>
+        <div class="text-xs text-gray-500 mt-0.5">${comp.brand}</div>
         ${specsHtml}
         <button type="button" onclick="event.stopPropagation(); searchGoogleImages('${comp.kategori}', '${comp.id}')"
                 class="google-search-btn mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 hover:border-brand/40 text-gray-500 hover:text-brand rounded-lg transition-all text-[11px] font-medium">
@@ -1676,7 +1683,7 @@ function renderEmptyState(categoryId, tierFilterActive) {
         return `
             <div class="col-span-full text-center py-8 px-4 mt-3">
                 <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gray-100 mb-3">
-                    <i data-lucide="search-x" class="w-7 h-7 text-gray-400"></i>
+                    <i data-lucide="search-x" class="w-7 h-7 text-gray-500"></i>
                 </div>
                 <h4 class="font-bold text-gray-800 text-sm mb-2">Tidak Ada Hasil</h4>
                 <p class="text-xs text-gray-500 max-w-md mx-auto">
@@ -1691,7 +1698,7 @@ function renderEmptyState(categoryId, tierFilterActive) {
 
     if (tierFilterActive) {
         return `
-            <div class="col-span-full text-center py-6 text-gray-400 text-sm mt-3">
+            <div class="col-span-full text-center py-6 text-gray-500 text-sm mt-3">
                 <i data-lucide="filter-x" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
                 Tidak ada komponen di <strong>Tier ${tierFilters[categoryId]}</strong>.
                 <button onclick="setTierFilter('${categoryId}', 'all')" class="text-brand hover:underline ml-1 font-medium">Reset filter</button>
@@ -1723,7 +1730,7 @@ function renderEmptyState(categoryId, tierFilterActive) {
     if (cpuUseCase && cpuUseCase !== 'custom') {
         const uc = USE_CASE_FILTERS[cpuUseCase];
         return `
-            <div class="col-span-full text-center py-6 text-gray-400 text-sm mt-3">
+            <div class="col-span-full text-center py-6 text-gray-500 text-sm mt-3">
                 <i data-lucide="inbox" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
                 Tidak ada komponen yang cocok untuk <strong>${uc.label}</strong>.
             </div>
@@ -1731,7 +1738,7 @@ function renderEmptyState(categoryId, tierFilterActive) {
     }
 
     return `
-        <div class="col-span-full text-center py-6 text-gray-400 text-sm mt-3">
+        <div class="col-span-full text-center py-6 text-gray-500 text-sm mt-3">
             <i data-lucide="inbox" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
             Tidak ada komponen yang kompatibel
         </div>
@@ -1906,7 +1913,7 @@ function renderSummary() {
     let html = `
         <div class="flex items-center justify-between mb-4">
             <h3 class="font-bold text-brand">Ringkasan Build</h3>
-            <button onclick="resetBuild()" class="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1">
+            <button onclick="resetBuild()" class="text-xs text-gray-600 hover:text-red-500 flex items-center gap-1">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
             </button>
         </div>
@@ -1928,7 +1935,7 @@ function renderSummary() {
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="font-semibold text-gray-500 text-[10px] uppercase tracking-wide">${cat.label}</div>
-                    <div class="text-gray-800 font-medium text-xs ${val ? '' : 'text-gray-400 italic'} truncate">
+                    <div class="text-gray-800 font-medium text-xs ${val ? '' : 'text-gray-500 italic'} truncate">
                         ${displayVal}
                     </div>
                 </div>
@@ -1973,7 +1980,7 @@ function renderSummary() {
 
     html += `
         <div class="space-y-2">
-            <button onclick="shareToWhatsApp()" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#25d366] hover:bg-[#1fb855] text-white rounded-xl text-sm font-semibold"
+            <button onclick="shareToWhatsApp()" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#075e54] hover:bg-[#043f36] text-white rounded-xl text-sm font-semibold"
                     ${!buildComplete ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
                 <i data-lucide="message-circle" class="w-4 h-4"></i>
                 Konsultasi via WhatsApp
@@ -2071,7 +2078,7 @@ window.printBuild = function() {
         const isLast = idx === CATEGORIES.length - 1;
         componentRows += `
             <div style="padding:6px 0;border-bottom:${isLast ? 'none' : '1px solid #f3f4f6'};">
-                <div style="color:#9ca3af;font-size:7pt;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px;">${cat.label.toUpperCase()}</div>
+                <div style="color:#6b7280;font-size:7pt;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px;">${cat.label.toUpperCase()}</div>
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                     <span style="color:#1f2937;font-size:10.5pt;font-weight:600;">${val.nama}</span>
                     ${tierBadge}
@@ -2124,7 +2131,7 @@ window.printBuild = function() {
         .consult-title { color: #1a3c5e; font-size: 9.5pt; font-weight: 700; margin-bottom: 3px; }
         .consult-desc { color: #6b7280; font-size: 8pt; margin-bottom: 3px; }
         .consult-contact { color: #1a3c5e; font-size: 11pt; font-weight: 700; }
-        .footer { border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 7.5pt; color: #9ca3af; }
+        .footer { border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 7.5pt; color: #6b7280; }
         .footer-brand { color: #1a3c5e; font-weight: 700; }
         .print-actions { text-align: center; margin-top: 18px; padding: 12px; background: #f9fafb; border-radius: 8px; }
         .print-actions button { font-family: inherit; font-size: 10pt; font-weight: 600; padding: 10px 24px; border-radius: 6px; cursor: pointer; margin: 0 4px; border: none; }
@@ -2220,17 +2227,53 @@ function tryRestoreFromSaved(catId) {
 // ============================================================
 // BOTTOM SHEET
 // ============================================================
+let lastFocusedBeforeSheet = null;
+
 window.openBottomSheet = function() {
-    document.getElementById('bottomSheet').classList.add('open');
-    document.getElementById('bottomSheetOverlay').classList.add('open');
+    const sheet = document.getElementById('bottomSheet');
+    const overlay = document.getElementById('bottomSheetOverlay');
+    const fab = document.getElementById('mobileSummaryBtn');
+    if (!sheet || !overlay) return;
+    lastFocusedBeforeSheet = document.activeElement;
+    sheet.classList.add('open');
+    overlay.classList.add('open');
+    sheet.removeAttribute('inert');
+    sheet.setAttribute('aria-hidden', 'false');
+    if (fab) fab.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
+    const closeBtn = sheet.querySelector('button[aria-label]');
+    if (closeBtn) closeBtn.focus();
 };
 
 window.closeBottomSheet = function() {
-    document.getElementById('bottomSheet').classList.remove('open');
-    document.getElementById('bottomSheetOverlay').classList.remove('open');
+    const sheet = document.getElementById('bottomSheet');
+    const overlay = document.getElementById('bottomSheetOverlay');
+    const fab = document.getElementById('mobileSummaryBtn');
+    if (!sheet || !overlay) return;
+    sheet.classList.remove('open');
+    overlay.classList.remove('open');
+    sheet.setAttribute('inert', '');
+    sheet.setAttribute('aria-hidden', 'true');
+    if (fab) fab.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    const restore = lastFocusedBeforeSheet;
+    const canRestore = restore &&
+        restore !== document.body &&
+        restore !== document.documentElement &&
+        !sheet.contains(restore);
+    if (canRestore && typeof restore.focus === 'function') {
+        restore.focus();
+    } else if (fab) {
+        fab.focus();
+    }
 };
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const sheet = document.getElementById('bottomSheet');
+        if (sheet && sheet.classList.contains('open')) closeBottomSheet();
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('mobileSummaryBtn');

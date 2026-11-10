@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Lowongan | Admin IMDKOM</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@1.70.0"></script>
+    <link rel="stylesheet" href="./assets/css/admin.css">
+
+    <style>
+        .form-preview-img {
+            max-height: 220px;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* NAV GROUP / SUBMENU */
+        .nav-group { margin: 0; }
+
+        .nav-group-toggle {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font: inherit;
+            color: inherit;
+        }
+
+        .nav-group-toggle .nav-chevron {
+            transition: transform 0.25s ease;
+            opacity: 0.6;
+        }
+
+        .nav-group-toggle.open .nav-chevron {
+            transform: rotate(180deg);
+            opacity: 1;
+        }
+
+        .nav-group-toggle.open { background: rgba(255, 255, 255, 0.08); }
+
+        .nav-submenu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.25rem 0 0.5rem 0;
+            margin-left: 0.5rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            animation: submenuSlide 0.25s ease;
+        }
+
+        .nav-submenu.hidden { display: none; }
+
+        @keyframes submenuSlide {
+            from { opacity: 0; transform: translateY(-4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-submenu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+            margin-left: 0.25rem;
+        }
+
+        .nav-submenu-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .nav-submenu-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-weight: 600;
+        }
+
+        .nav-submenu-link i { opacity: 0.7; flex-shrink: 0; }
+        .nav-submenu-link.active i { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <span class="text-white font-bold">Form Lowongan</span>
+        <div class="w-8"></div>
+    </div>
+
+    <div class="admin-overlay" id="overlay"></div>
+
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="brand">IMDKOM Admin</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Dashboard
+            </a>
+            <a href="landing-page.html" class="nav-link">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                Landing Page
+            </a>
+
+            <div class="nav-group">
+                <button type="button"
+                        class="nav-link nav-group-toggle w-full justify-between"
+                        data-target="submenu-program">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        Program Kursus
+                    </span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform nav-chevron"></i>
+                </button>
+
+                <div id="submenu-program" class="nav-submenu hidden">
+                    <a href="programs.html" class="nav-submenu-link">
+                        <i data-lucide="list" class="w-3.5 h-3.5"></i>
+                        Daftar Program
+                    </a>
+                    <a href="program-submissions.html" class="nav-submenu-link">
+                        <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+                        Review Usulan
+                    </a>
+                    <a href="tentors.html" class="nav-submenu-link">
+                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+                        Tentor
+                    </a>
+                    <a href="registrations.html" class="nav-submenu-link">
+                        <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                        Registrasi
+                    </a>
+                    <a href="payment-settings.html" class="nav-submenu-link">
+                        <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                        Metode Pembayaran
+                    </a>
+                </div>
+            </div>
+
+            <a href="services.html" class="nav-link">
+                <i data-lucide="wrench" class="w-4 h-4"></i>
+                Computer Service
+            </a>
+            <a href="pc-components.html" class="nav-link">
+                <i data-lucide="cpu" class="w-4 h-4"></i>
+                PC Components
+            </a>
+            <a href="pricelists.html" class="nav-link">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Pricelist
+            </a>
+            <a href="documentations.html" class="nav-link">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                Dokumentasi
+            </a>
+            <a href="testimonials.html" class="nav-link">
+                <i data-lucide="message-square" class="w-4 h-4"></i>
+                Testimoni
+            </a>
+            <a href="faq.html" class="nav-link">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                FAQ
+            </a>
+            <a href="consultations.html" class="nav-link">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Konsultasi
+            </a>
+            <a href="jobs.html" class="nav-link active">
+                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                Karir
+            </a>
+            <a href="settings.html" class="nav-link">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                Pengaturan
+            </a>
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+
+        <div class="page-header">
+            <h2 id="formTitle">Tambah Lowongan</h2>
+            <a href="jobs.html" class="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Kembali
+            </a>
+        </div>
+
+        <div class="admin-card max-w-3xl">
+            <form id="jobForm">
+                <input type="hidden" id="jobId" />
+
+                <!-- Judul & Tipe -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul Posisi *</label>
+                        <input type="text"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               id="judul"
+                               required
+                               placeholder="Contoh: IT Support Technician" />
+                    </div>
+                    <div>
+                        <label for="tipe" class="block text-sm font-medium text-gray-700 mb-1">Tipe Kerja *</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                                id="tipe"
+                                required>
+                            <option value="">Pilih tipe</option>
+                            <option value="Full Time">Full Time</option>
+                            <option value="Part Time">Part Time</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Magang">Magang</option>
+                            <option value="Kontrak">Kontrak</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Kategori & Lokasi -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label for="kategori" class="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
+                        <input type="text"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               id="kategori"
+                               required
+                               list="kategoriOptions"
+                               placeholder="Contoh: IT Support" />
+                        <datalist id="kategoriOptions">
+                            <option value="IT Support"></option>
+                            <option value="Hardware Repair"></option>
+                            <option value="Networking"></option>
+                            <option value="Programming"></option>
+                            <option value="Administrasi"></option>
+                            <option value="Content &amp; Marketing"></option>
+                            <option value="Pelayanan Pelanggan"></option>
+                            <option value="Lainnya"></option>
+                        </datalist>
+                    </div>
+                    <div>
+                        <label for="lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
+                        <input type="text"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               id="lokasi"
+                               placeholder="Yogyakarta (On-site)" />
+                    </div>
+                </div>
+
+                <!-- Gaji, Deadline, Urutan -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div>
+                        <label for="gaji" class="block text-sm font-medium text-gray-700 mb-1">Gaji / Kompensasi</label>
+                        <input type="text"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               id="gaji"
+                               placeholder="Rp 3.500.000 – Rp 5.000.000" />
+                        <p class="text-xs text-gray-400 mt-1">Kosongkan untuk dibahas saat interview.</p>
+                    </div>
+                    <div>
+                        <label for="deadline" class="block text-sm font-medium text-gray-700 mb-1">Deadline Lamaran</label>
+                        <input type="date"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               id="deadline" />
+                    </div>
+                    <div>
+                        <label for="order" class="block text-sm font-medium text-gray-700 mb-1">Urutan Tampil</label>
+                        <input type="number"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                               id="order"
+                               value="1"
+                               min="1" />
+                    </div>
+                </div>
+
+                <!-- Deskripsi Singkat -->
+                <div class="mt-4">
+                    <label for="deskripsiSingkat" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                              id="deskripsiSingkat"
+                              rows="2"
+                              maxlength="200"
+                              placeholder="Ringkasan posisi untuk kartu lowongan (maks. 200 karakter)..."></textarea>
+                </div>
+
+                <!-- Deskripsi Lengkap -->
+                <div class="mt-4">
+                    <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Lengkap</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm"
+                              id="deskripsi"
+                              rows="3"
+                              placeholder="Tentang posisi ini: tim, lingkup kerja, lingkungan..."></textarea>
+                </div>
+
+                <!-- Ketentuan -->
+                <div class="mt-4">
+                    <label for="ketentuan" class="block text-sm font-medium text-gray-700 mb-1">Ketentuan &amp; Persyaratan</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm font-mono"
+                              id="ketentuan"
+                              rows="4"
+                              placeholder="Satu butir per baris, contoh:&#10;Usia minimal 17 tahun&#10;Bersedia on-site di toko Yogyakarta&#10;Memiliki kendaraan sendiri (diutamakan)"></textarea>
+                    <p class="text-xs text-gray-400 mt-1">Tulis satu butir per baris. Akan ditampilkan sebagai daftar.</p>
+                </div>
+
+                <!-- Tanggung Jawab -->
+                <div class="mt-4">
+                    <label for="tanggungJawab" class="block text-sm font-medium text-gray-700 mb-1">Tanggung Jawab</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm font-mono"
+                              id="tanggungJawab"
+                              rows="4"
+                              placeholder="Satu butir per baris, contoh:&#10;Menerima &amp; mendiagnosa kerusakan PC/laptop&#10;Memberikan estimasi biaya ke pelanggan&#10;Mengupdate progres servis di sistem"></textarea>
+                </div>
+
+                <!-- Kriteria -->
+                <div class="mt-4">
+                    <label for="kriteria" class="block text-sm font-medium text-gray-700 mb-1">Kriteria Kandidat</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm font-mono"
+                              id="kriteria"
+                              rows="4"
+                              placeholder="Satu butir per baris, contoh:&#10;Menguasai troubleshooting Windows&#10;Komunikatif &amp; ramah&#10;Teliti dan bertanggung jawab"></textarea>
+                </div>
+
+                <!-- Thumbnail -->
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail / Cover</label>
+
+                    <div id="gambarPreviewWrapper" class="hidden mb-3">
+                        <img id="gambarPreview" src="" alt="Preview thumbnail" class="form-preview-img" />
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button"
+                                id="uploadGambarBtn"
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-sm font-medium transition-colors">
+                            <i data-lucide="upload" class="w-4 h-4"></i>
+                            <span id="uploadGambarText">Upload Thumbnail</span>
+                        </button>
+                        <button type="button"
+                                id="removeGambarBtn"
+                                class="hidden inline-flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-medium border border-red-200 transition-colors">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                            Hapus Thumbnail
+                        </button>
+                    </div>
+
+                    <input type="hidden" id="gambar" />
+                    <p class="text-xs text-gray-400 mt-2">Upload ke Cloudinary — otomatis dioptimasi (16:10).</p>
+                </div>
+
+                <!-- Status Aktif -->
+                <div class="mt-4 flex items-center gap-3">
+                    <input type="checkbox"
+                           class="w-4 h-4 text-brand focus:ring-brand border-gray-300 rounded"
+                           id="aktif"
+                           checked />
+                    <label for="aktif" class="text-sm text-gray-700">Aktif (tampil di halaman karir)</label>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex flex-wrap gap-3 mt-6 pt-4 border-t border-gray-200">
+                    <button type="submit" id="submitBtn" class="btn-primary">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span id="submitBtnText">Simpan Lowongan</span>
+                    </button>
+                    <a href="jobs.html" class="btn-secondary">Batal</a>
+                </div>
+
+                <div id="formMessage" class="mt-3"></div>
+            </form>
+        </div>
+    </main>
+
+    <script type="module">
+        import {
+            auth, onAuthStateChanged, signOut,
+            db, doc, getDoc, addDoc, updateDoc, collection
+        } from './assets/js/firebase.js';
+        import { setupImageUploadField, setExistingImagePreview } from './assets/js/cloudinary.js';
+
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        const GAMBAR_FIELD_CONFIG = {
+            uploadBtnId: 'uploadGambarBtn',
+            uploadTextId: 'uploadGambarText',
+            removeBtnId: 'removeGambarBtn',
+            inputId: 'gambar',
+            previewWrapperId: 'gambarPreviewWrapper',
+            previewImgId: 'gambarPreview',
+            folder: 'lowongan',
+            previewWidth: 640,
+            cropping: true,
+            croppingAspectRatio: 1.6
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupImageUploadField(GAMBAR_FIELD_CONFIG);
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                checkMode();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
+
+        async function checkMode() {
+            const id = new URLSearchParams(window.location.search).get('id');
+
+            if (id) {
+                document.getElementById('formTitle').textContent = 'Edit Lowongan';
+                document.getElementById('jobId').value = id;
+                document.getElementById('submitBtnText').textContent = 'Simpan Perubahan';
+                await loadJob(id);
+            }
+        }
+
+        async function loadJob(id) {
+            try {
+                const docSnap = await getDoc(doc(db, 'jobs', id));
+
+                if (!docSnap.exists()) {
+                    alert('Lowongan tidak ditemukan');
+                    window.location.href = 'jobs.html';
+                    return;
+                }
+
+                const data = docSnap.data();
+
+                document.getElementById('judul').value = data.judul || '';
+                document.getElementById('tipe').value = data.tipe || '';
+                document.getElementById('kategori').value = data.kategori || '';
+                document.getElementById('lokasi').value = data.lokasi || '';
+                document.getElementById('gaji').value = data.gaji || '';
+                document.getElementById('deadline').value = data.deadline || '';
+                document.getElementById('order').value = data.order || 1;
+                document.getElementById('deskripsiSingkat').value = data.deskripsiSingkat || '';
+                document.getElementById('deskripsi').value = data.deskripsi || '';
+                document.getElementById('ketentuan').value = data.ketentuan || '';
+                document.getElementById('tanggungJawab').value = data.tanggungJawab || '';
+                document.getElementById('kriteria').value = data.kriteria || '';
+                document.getElementById('aktif').checked = data.aktif !== false;
+                document.getElementById('gambar').value = data.gambar || '';
+
+                if (data.gambar) {
+                    setExistingImagePreview(GAMBAR_FIELD_CONFIG, data.gambar);
+                }
+
+            } catch (error) {
+                console.error('Error loading job:', error);
+                alert('Gagal memuat lowongan: ' + error.message);
+            }
+        }
+
+        document.getElementById('jobForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('jobId').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const messageEl = document.getElementById('formMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Menyimpan...`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            messageEl.innerHTML = '';
+
+            const data = {
+                judul: document.getElementById('judul').value.trim(),
+                tipe: document.getElementById('tipe').value,
+                kategori: document.getElementById('kategori').value.trim(),
+                lokasi: document.getElementById('lokasi').value.trim(),
+                gaji: document.getElementById('gaji').value.trim(),
+                deadline: document.getElementById('deadline').value,
+                order: parseInt(document.getElementById('order').value) || 1,
+                deskripsiSingkat: document.getElementById('deskripsiSingkat').value.trim(),
+                deskripsi: document.getElementById('deskripsi').value.trim(),
+                ketentuan: document.getElementById('ketentuan').value.trim(),
+                tanggungJawab: document.getElementById('tanggungJawab').value.trim(),
+                kriteria: document.getElementById('kriteria').value.trim(),
+                gambar: document.getElementById('gambar').value.trim(),
+                aktif: document.getElementById('aktif').checked,
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, 'jobs', id), data);
+                    messageEl.innerHTML = `<p class="text-green-600 font-medium">Lowongan berhasil diupdate.</p>`;
+                } else {
+                    data.createdAt = new Date().toISOString();
+                    await addDoc(collection(db, 'jobs'), data);
+                    messageEl.innerHTML = `<p class="text-green-600 font-medium">Lowongan berhasil ditambahkan.</p>`;
+                }
+
+                setTimeout(() => {
+                    window.location.href = 'jobs.html';
+                }, 1200);
+
+            } catch (error) {
+                console.error('Error saving job:', error);
+                messageEl.innerHTML = `<p class="text-red-600 font-medium">Gagal menyimpan: ${error.message}</p>`;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> <span id="submitBtnText">Simpan Lowongan</span>`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
+        document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.dataset.target;
+                const submenu = document.getElementById(targetId);
+                if (!submenu) return;
+
+                const isOpen = !submenu.classList.contains('hidden');
+
+                if (isOpen) {
+                    submenu.classList.add('hidden');
+                    toggle.classList.remove('open');
+                } else {
+                    submenu.classList.remove('hidden');
+                    toggle.classList.add('open');
+                }
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        });
+
+        document.querySelectorAll('.nav-submenu-link.active').forEach(activeLink => {
+            const submenu = activeLink.closest('.nav-submenu');
+            if (submenu) {
+                submenu.classList.remove('hidden');
+                const toggle = document.querySelector(`.nav-group-toggle[data-target="${submenu.id}"]`);
+                if (toggle) toggle.classList.add('open');
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -245,7 +245,7 @@ function createServiceCard(service) {
                     <span>Lihat Detail</span>
                 </a>
                 <button type="button"
-                        class="btn-action btn-wa bg-[#25d366] text-white hover:bg-[#1ebe5a]"
+                        class="btn-action btn-wa bg-[#075e54] text-white hover:bg-[#043f36]"
                         data-nama="${escapeHtml(nama)}"
                         title="Tanya via WhatsApp">
                     <i data-lucide="message-circle"></i>

@@ -1,81 +1,237 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
     // ============================================================
-    // FUNGSI BANTUAN
+    // HELPER FUNCTIONS
     // ============================================================
-    
-    // Cek apakah user sudah login (admin)
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
     function isAdmin() {
-      return request.auth != null && request.auth.uid != null;
+      return isSignedIn() && getUserData().role == 'admin';
     }
-    
-    // ============================================================
-    // SETTINGS
-    // ============================================================
-    match /settings/{document} {
-      allow read: if true;  // Semua orang bisa membaca
-      allow write: if isAdmin();  // Hanya admin yang bisa menulis
+
+    // ⭐ Support multiple status: active, aktif, approved
+    function isActive() {
+      return isSignedIn() && 
+             getUserData().status in ['active', 'aktif', 'approved'];
     }
-    
-    // ============================================================
-    // PROGRAMS (Kursus & Pelatihan)
-    // ============================================================
-    match /programs/{document} {
-      allow read: if true;  // Semua orang bisa membaca
-      allow create: if isAdmin();  // Hanya admin yang bisa membuat
-      allow update: if isAdmin();  // Hanya admin yang bisa mengupdate
-      allow delete: if isAdmin();  // Hanya admin yang bisa menghapus
+
+    function isTentor() {
+      return isSignedIn() && 
+             getUserData().role == 'tentor' && 
+             getUserData().status in ['active', 'aktif', 'approved'];
     }
-    
+
+    // ============================================================
+    // USERS
+    // ============================================================
+    match /users/{uid} {
+      // User bisa baca dokumennya sendiri, admin bisa baca semua
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+
+      // Registrasi tentor baru (status harus 'pending')
+      allow create: if isSignedIn() &&
+                       request.auth.uid == uid &&
+                       request.resource.data.role == 'tentor' &&
+                       request.resource.data.status == 'pending';
+
+      // User bisa update profil sendiri (kecuali role & status)
+      // Admin bisa update semua (termasuk approve/reject)
+      allow update: if isAdmin() ||
+                       (isSignedIn() &&
+                        request.auth.uid == uid &&
+                        request.resource.data.role == resource.data.role &&
+                        request.resource.data.status == resource.data.status);
+
+      // Hanya admin yang bisa hapus user
+      allow delete: if isAdmin();
+    }
+
+    // ============================================================
+    // PROGRAMS (Kursus)
+    // ============================================================
+    match /programs/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ============================================================
+    // JOBS (Karir / Lowongan)
+    // ============================================================
+    match /jobs/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // ============================================================
     // SERVICES (Computer Service)
     // ============================================================
-    match /services/{document} {
+    match /services/{id} {
       allow read: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
+      allow write: if isAdmin();
     }
-    
+
+    // ============================================================
+    // PC COMPONENTS (Rakit Komputer)
+    // ============================================================
+    match /pc_components/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ============================================================
+    // PRICELISTS
+    // ============================================================
+    match /pricelists/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ============================================================
+    // DOCUMENTATIONS
+    // ============================================================
+    match /documentations/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // ============================================================
     // TESTIMONIALS
     // ============================================================
-    match /testimonials/{document} {
+    match /testimonials/{id} {
       allow read: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
+      allow write: if isAdmin();
     }
-    
+
     // ============================================================
     // FAQS
     // ============================================================
-    match /faqs/{document} {
+    match /faqs/{id} {
       allow read: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
-    }
-    
-    // ============================================================
-    // LANDING PAGE CONTENT
-    // ============================================================
-    match /landingPage/{document} {
-      allow read: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
-    }
-    
-    // ============================================================
-    // USER DATA (untuk admin)
-    // ============================================================
-    match /users/{document} {
-      allow read: if isAdmin();
       allow write: if isAdmin();
     }
-    
+
+    // ============================================================
+    // LANDING PAGE (hero, sticker, about, contact, footer)
+    // ============================================================
+    match /landingPage/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ============================================================
+    // SETTINGS
+    // ============================================================
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ============================================================
+    // CONSULTATIONS (Konsultasi dari publik)
+    // ============================================================
+    match /consultations/{id} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // ============================================================
+    // PROGRAM SUBMISSIONS (Usulan program dari tentor)
+    // ============================================================
+    match /programSubmissions/{id} {
+      // Tentor bisa baca usulan miliknya sendiri, admin bisa baca semua
+      allow read: if isSignedIn() &&
+                     (resource.data.tentorId == request.auth.uid || isAdmin());
+
+      // Tentor bisa buat usulan dengan status draft/pending_review
+      allow create: if isTentor() &&
+                       request.resource.data.tentorId == request.auth.uid &&
+                       request.resource.data.status in ['draft', 'pending_review'];
+
+      // Tentor bisa update usulan sendiri (yang masih draft/rejected)
+      // tentorId tidak boleh diubah
+      // Admin bisa update semua (untuk approve/reject)
+      allow update: if (isTentor() &&
+                        resource.data.tentorId == request.auth.uid &&
+                        request.resource.data.tentorId == resource.data.tentorId &&
+                        resource.data.status in ['draft', 'rejected']) ||
+                       isAdmin();
+
+      // Tentor bisa hapus usulan sendiri (draft/rejected), admin bisa hapus semua
+      allow delete: if isAdmin() ||
+                       (isTentor() &&
+                        resource.data.tentorId == request.auth.uid &&
+                        resource.data.status in ['draft', 'rejected']);
+    }
+
+    // ============================================================
+    // SCHEDULES (Jadwal mengajar)
+    // Admin: CRUD penuh
+    // Tentor: hanya update sesi & penilaian (field lain tidak boleh berubah)
+    // ============================================================
+    match /schedules/{id} {
+      // Tentor hanya bisa baca jadwal miliknya, admin bisa baca semua
+      allow read: if isSignedIn() &&
+                     (resource.data.tentorId == request.auth.uid || isAdmin());
+
+      // Hanya admin yang bisa create/delete
+      allow create, delete: if isAdmin();
+
+      // Tentor update terbatas: hanya sesi, penilaian, status, updatedAt
+      // Field lain harus SAMA dengan nilai lama
+      allow update: if isAdmin() ||
+                       (isSignedIn() &&
+                        resource.data.tentorId == request.auth.uid &&
+                        request.resource.data.tentorId == resource.data.tentorId &&
+                        request.resource.data.tentorNama == resource.data.tentorNama &&
+                        request.resource.data.pesertaNama == resource.data.pesertaNama &&
+                        request.resource.data.programId == resource.data.programId &&
+                        request.resource.data.programNama == resource.data.programNama &&
+                        request.resource.data.totalPertemuan == resource.data.totalPertemuan &&
+                        request.resource.data.kelas == resource.data.kelas &&
+                        request.resource.data.jamMulai == resource.data.jamMulai &&
+                        request.resource.data.jamSelesai == resource.data.jamSelesai &&
+                        request.resource.data.durasiMenit == resource.data.durasiMenit &&
+                        request.resource.data.ruang == resource.data.ruang &&
+                        request.resource.data.catatan == resource.data.catatan &&
+                        request.resource.data.createdAt == resource.data.createdAt &&
+                        request.resource.data.createdBy == resource.data.createdBy);
+    }
+
+    // ============================================================
+    // REGISTRATIONS (Pendaftaran kursus online — tanpa login)
+    // ============================================================
+    match /registrations/{id} {
+      // Form pendaftaran publik (tanpa login) bisa membuat pengajuan
+      allow create: if true;
+
+      // Admin yang bisa membaca / memverifikasi / menghapus data pendaftaran
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ============================================================
+    // TRACKING (Peserta unduh status via token — doc id = token)
+    // ============================================================
+    match /tracking/{token} {
+      // Peserta yang tahu tokennya bisa membaca doc miliknya (tidak bisa list)
+      allow get: if true;
+      allow list: if false;
+
+      // Peserta membuat mirror statusnya sendiri saat registrasi
+      // (doc id = token, field tidak bisa menimpa data terverifikasi)
+      allow create: if request.resource.data.token == token
+                       && request.resource.data.jadwalTerbit == false;
+
+      // Admin yang memperbarui status verifikasi / jadwal
+      allow update, delete: if isAdmin();
+    }
   }
 }
