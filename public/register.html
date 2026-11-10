@@ -139,10 +139,49 @@
             padding: 1.25rem;
             box-shadow: 0 14px 34px rgba(13, 13, 13, 0.055);
         }
+        .reg-toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 80;
+            max-width: 24rem;
+            width: min(92vw, 24rem);
+            opacity: 0;
+            transform: translateY(-0.75rem);
+            pointer-events: none;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .reg-toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .reg-toast-body {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            border-radius: 0.95rem;
+            padding: 0.85rem 0.95rem;
+            box-shadow: 0 18px 40px rgba(13, 13, 13, 0.35);
+        }
+        .reg-toast-ok { background: #075e54; color: #ffffff; }
+        .reg-toast-err { background: #7f1d1d; color: #ffffff; }
+        .reg-toast-icon { flex-shrink: 0; width: 1.5rem; height: 1.5rem; margin-top: 0.1rem; }
+        .reg-toast-close { flex-shrink: 0; width: 1.75rem; height: 1.75rem; display: grid; place-items: center; border-radius: 0.5rem; color: rgba(255,255,255,0.85); background: transparent; border: none; cursor: pointer; }
+        .reg-toast-close:hover { background: rgba(255,255,255,0.15); color: #ffffff; }
     </style>
 </head>
 <body class="font-sans min-h-screen">
     <main class="max-w-3xl mx-auto px-4 py-10">
+        <div id="regQrisToast" class="reg-toast" role="status" aria-live="polite">
+            <div class="reg-toast-body reg-toast-ok" id="regQrisToastBody">
+                <svg id="regQrisToastIconOk" class="reg-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5.5"/></svg>
+                <svg id="regQrisToastIconErr" class="reg-toast-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5l5 5m0-5l-5 5"/></svg>
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm font-bold leading-snug" id="regQrisToastTitle">Pembayaran berhasil</p>
+                    <p class="text-xs leading-snug mt-1 text-emerald-50" id="regQrisToastDesc">Midtrans sudah memproses pembayaran Anda.</p>
+                </div>
+                <button type="button" id="regQrisToastClose" class="reg-toast-close" aria-label="Tutup notifikasi">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-4 h-4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
+            </div>
+        </div>
         <div class="mb-6">
             <a href="kursus.html" class="text-sm text-gray-500 hover:text-brand transition-colors">&larr; Kembali ke Kursus</a>
         </div>
@@ -556,6 +595,63 @@
 
         let qrisPollTimer = null;
         let qrisImageUrl = '';
+        let qrisToastShown = false;
+        let qrisToastTimer = null;
+
+        function playChime() {
+            try {
+                const Ctx = window.AudioContext || window.webkitAudioContext;
+                if (!Ctx) return;
+                const ctx = new Ctx();
+                const notes = [659.25, 987.77];
+                notes.forEach(function(freq, i) {
+                    const t0 = ctx.currentTime + i * 0.18;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    gain.gain.setValueAtTime(0.0001, t0);
+                    gain.gain.exponentialRampToValueAtTime(0.25, t0 + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.9);
+                    osc.start(t0);
+                    osc.stop(t0 + 0.9);
+                });
+            } catch (e) { /* abaikan jika audio diblokir */ }
+        }
+
+        function showQrisToast(kind, title, desc) {
+            if (qrisToastShown && kind === 'success') return;
+            qrisToastShown = true;
+            const toast = document.getElementById('regQrisToast');
+            const body = document.getElementById('regQrisToastBody');
+            const iconOk = document.getElementById('regQrisToastIconOk');
+            const iconErr = document.getElementById('regQrisToastIconErr');
+            const titleEl = document.getElementById('regQrisToastTitle');
+            const descEl = document.getElementById('regQrisToastDesc');
+            if (!toast || !body) return;
+            const isOk = kind === 'success';
+            body.classList.toggle('reg-toast-ok', isOk);
+            body.classList.toggle('reg-toast-err', !isOk);
+            if (iconOk) iconOk.classList.toggle('hidden', !isOk);
+            if (iconErr) iconErr.classList.toggle('hidden', isOk);
+            if (titleEl) titleEl.textContent = title;
+            if (descEl) descEl.textContent = desc;
+            toast.classList.add('show');
+            if (kind === 'success') playChime();
+            if (qrisToastTimer) clearTimeout(qrisToastTimer);
+            qrisToastTimer = setTimeout(function() { toast.classList.remove('show'); }, 12000);
+        }
+
+        function styleQrisNote(note, tone) {
+            if (!note) return;
+            note.className = 'mt-3 flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold '
+                + (tone === 'ok'
+                    ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
+                    : 'border-red-300 bg-red-50 text-red-800');
+            note.classList.remove('hidden');
+        }
 
         async function loadDynamicQris() {
             const nominal = parseAmount(currentHargaPromo) || parseAmount(currentHarga);
@@ -612,10 +708,14 @@
                 const st = String(data.transactionStatus || '').toLowerCase();
                 const note = document.getElementById('regQrisDynamicNote');
                 if (st === 'settlement') {
-                    if (note) { note.textContent = 'Pembayaran terkonfirmasi Midtrans.'; note.classList.remove('hidden'); }
+                    if (note) note.textContent = 'Pembayaran terkonfirmasi Midtrans.';
+                    styleQrisNote(note, 'ok');
+                    showQrisToast('success', 'Pembayaran berhasil', 'Midtrans sudah memproses pembayaran Anda. Silakan lanjut melengkapi & kirim formulir.');
                     clearInterval(qrisPollTimer); qrisPollTimer = null;
                 } else if (st === 'expire' || st === 'deny' || st === 'cancel') {
-                    if (note) { note.textContent = 'QRIS kedaluwarsa / tidak valid. Silakan refresh halaman.'; note.classList.remove('hidden'); }
+                    if (note) note.textContent = 'QRIS kedaluwarsa / tidak valid. Silakan refresh halaman untuk membuat QR baru.';
+                    styleQrisNote(note, 'err');
+                    showQrisToast('expired', 'QRIS kedaluwarsa', 'Kode QR pembayaran Anda tidak lagi valid. Silakan refresh halaman untuk membuat QR baru.');
                     clearInterval(qrisPollTimer); qrisPollTimer = null;
                 }
             } catch (e) { /* abaikan sementara */ }
@@ -676,6 +776,12 @@
             } else {
                 fallback();
             }
+        });
+
+        document.getElementById('regQrisToastClose').addEventListener('click', function() {
+            const toast = document.getElementById('regQrisToast');
+            if (toast) toast.classList.remove('show');
+            if (qrisToastTimer) { clearTimeout(qrisToastTimer); qrisToastTimer = null; }
         });
 
         document.getElementById('regDownloadQris').addEventListener('click', function() {
