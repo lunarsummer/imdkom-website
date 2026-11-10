@@ -41,15 +41,15 @@ function getServiceSlugFromUrl() {
 
     const slugMap = {
         'service-laptop': 'laptop',
-        'service-laptop.html': 'laptop',
+        '/service-laptop': 'laptop',
         'service-pc': 'pc',
-        'service-pc.html': 'pc',
+        '/service-pc': 'pc',
         'service-printer': 'printer',
-        'service-printer.html': 'printer',
+        '/service-printer': 'printer',
         'service-panggil': 'panggil',
-        'service-panggil.html': 'panggil',
+        '/service-panggil': 'panggil',
         'sparepart': 'sparepart',
-        'sparepart.html': 'sparepart',
+        '/sparepart': 'sparepart',
         'upgrade': 'upgrade',
         'upgrade.html': 'upgrade',
         'instalasi': 'instalasi',
@@ -108,7 +108,7 @@ export async function loadServiceDetail() {
             container.innerHTML = `
                 <div class="text-center py-12">
                     <p class="text-gray-500">Layanan tidak ditemukan.</p>
-                    <a href="service.html" class="text-brand hover:underline mt-2 inline-block">← Kembali ke Service</a>
+                    <a href="/service" class="text-brand hover:underline mt-2 inline-block">← Kembali ke Service</a>
                 </div>
             `;
             return;

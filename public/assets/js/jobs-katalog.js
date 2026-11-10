@@ -433,7 +433,7 @@ export function openSpontaneousApplication() {
 // SHARE
 // ============================================================
 export async function shareJob(job) {
-    const url = `${window.location.origin}/karir.html?job=${encodeURIComponent(job.id || '')}`;
+    const url = `${window.location.origin}/karir?job=${encodeURIComponent(job.id || '')}`;
     const title = `Lowongan: ${job.judul || ''} — IMDKOM`;
     const text = job.deskripsiSingkat || `Lowongan ${job.judul || ''} di IMDKOM Yogyakarta`;
 

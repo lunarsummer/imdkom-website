@@ -1,5 +1,5 @@
 // ============================================================
-// SERVICE DETAIL PAGE — service-detail.html?id=xxx
+// SERVICE DETAIL PAGE — /service-detail?id=xxx
 // Load service individual + modal konsultasi + modal booking
 // ============================================================
 import { db, doc, getDoc, collection, getDocs, query, where, orderBy } from './firebase.js';
@@ -12,16 +12,16 @@ import { formatRupiah, truncateText, escapeHtml } from './utils.js';
 // MAPPING KATEGORI → HALAMAN PRICELIST
 // ============================================================
 const KATEGORI_TO_URL = {
-    'Service Laptop': 'service-laptop.html',
-    'Service PC': 'service-pc.html',
-    'Service Printer': 'service-printer.html',
-    'Service Panggil': 'service-panggil.html',
-    'Sparepart': 'sparepart.html'
+    'Service Laptop': '/service-laptop',
+    'Service PC': '/service-pc',
+    'Service Printer': '/service-printer',
+    'Service Panggil': '/service-panggil',
+    'Sparepart': '/sparepart'
 };
 
 function getPricelistUrlByKategori(kategori) {
-    if (!kategori) return 'service.html';
-    return KATEGORI_TO_URL[kategori.trim()] || 'service.html';
+    if (!kategori) return '/service';
+    return KATEGORI_TO_URL[kategori.trim()] || '/service';
 }
 
 // ============================================================
@@ -74,7 +74,7 @@ export async function loadServiceDetail() {
     if (!id) {
         container.innerHTML = `
             <div class="detail-error">
-                <p>Layanan tidak ditemukan. <a href="service.html" class="text-brand underline">Kembali ke katalog</a></p>
+                <p>Layanan tidak ditemukan. <a href="/service" class="text-brand underline">Kembali ke katalog</a></p>
             </div>
         `;
         return;
@@ -85,7 +85,7 @@ export async function loadServiceDetail() {
         if (!docSnap.exists()) {
             container.innerHTML = `
                 <div class="detail-error">
-                    <p>Layanan tidak ditemukan. <a href="service.html" class="text-brand underline">Kembali ke katalog</a></p>
+                    <p>Layanan tidak ditemukan. <a href="/service" class="text-brand underline">Kembali ke katalog</a></p>
                 </div>
             `;
             return;
@@ -208,7 +208,7 @@ export async function loadServiceDetail() {
         console.error('Error loading service detail:', error);
         container.innerHTML = `
             <div class="detail-error">
-                <p>Gagal memuat layanan. <a href="service.html" class="text-brand underline">Kembali ke katalog</a></p>
+                <p>Gagal memuat layanan. <a href="/service" class="text-brand underline">Kembali ke katalog</a></p>
             </div>
         `;
     }
@@ -660,7 +660,7 @@ export async function loadRecommendations(currentId) {
                 ? optimizeCloudinaryUrl(service.gambar, { width: 600, height: 750, crop: 'fill' })
                 : PLACEHOLDER_IMAGE;
 
-            const detailUrl = `service-detail.html?id=${service.id}`;
+            const detailUrl = `/service-detail?id=${service.id}`;
             const nama = service.nama || 'Layanan';
             const deskripsi = service.deskripsiSingkat || service.deskripsi || '';
             const harga = service.hargaMulai || '';

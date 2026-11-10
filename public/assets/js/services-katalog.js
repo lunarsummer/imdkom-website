@@ -25,7 +25,7 @@ function getServiceDetailUrl(service) {
         console.warn('[services-katalog] Service tanpa id:', service);
         return '#';
     }
-    return `service-detail.html?id=${service.id}`;
+    return `/service-detail?id=${service.id}`;
 }
 
 function getServiceShareUrl(service) {

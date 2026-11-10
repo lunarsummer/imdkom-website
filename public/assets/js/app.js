@@ -76,7 +76,7 @@ function attachShareHandler(container) {
             const programDesc = this.dataset.programDesc;
 
             const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
-            const shareUrl = `${baseUrl}program-detail.html?id=${programId}`;
+            const shareUrl = `${baseUrl}/program-detail?id=${programId}`;
 
             const shareTitle = programName;
             const shareText = `Program Kursus IMDKOM: ${programName}`;
@@ -139,7 +139,7 @@ export async function loadCoursePreview() {
             
             html += `
     <div class="program-card">
-        <a href="program-detail.html?id=${docSnap.id}" class="block program-image-link" aria-label="Lihat detail ${escapeHtml(data.nama || 'Program')}">
+        <a href="/program-detail?id=${docSnap.id}" class="block program-image-link" aria-label="Lihat detail ${escapeHtml(data.nama || 'Program')}">
             <div class="program-image-wrapper">
                 <img src="${imageUrl}"
                      alt="${escapeHtml(data.nama || 'Program')}"
@@ -155,7 +155,7 @@ export async function loadCoursePreview() {
         </a>
 
         <div class="program-card-body">
-            <a href="program-detail.html?id=${docSnap.id}" class="block group">
+            <a href="/program-detail?id=${docSnap.id}" class="block group">
                 <h3 class="program-card-title">
                     ${escapeHtml(data.nama || 'Program')}
                 </h3>
@@ -168,7 +168,7 @@ export async function loadCoursePreview() {
                 ${renderHarga(data, { size: 'md' })}
             </div>
             <div class="mt-3 flex gap-1.5">
-                <a href="program-detail.html?id=${docSnap.id}" class="program-btn-primary" style="flex:1">
+                <a href="/program-detail?id=${docSnap.id}" class="program-btn-primary" style="flex:1">
                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     Lihat Detail
                 </a>
@@ -231,8 +231,8 @@ export async function loadServicePreview() {
             );
             const serviceName = escapeHtml(data.nama || 'Layanan');
             
-            // ⭐ Homepage card → service-detail.html?id=xxx
-            const targetUrl = `service-detail.html?id=${docSnap.id}`;
+            // ⭐ Homepage card → /service-detail?id=xxx
+            const targetUrl = `/service-detail?id=${docSnap.id}`;
             
             html += `
     <div class="program-card">
@@ -841,7 +841,7 @@ export async function loadProgramDetail() {
         const daftarBtn = container.querySelector('.daftar-program-btn');
         if (daftarBtn) {
             daftarBtn.addEventListener('click', function() {
-                window.location.href = 'register.html?program=' + this.dataset.programId;
+                window.location.href = '/register?program=' + this.dataset.programId;
             });
         }
 
@@ -912,7 +912,7 @@ async function loadRecommendations(currentId) {
             const promo = getPromoInfo(prog);
 
             html += `
-                <a href="program-detail.html?id=${prog.id}" class="rec-card">
+                <a href="/program-detail?id=${prog.id}" class="rec-card">
                     <div class="rec-media">
                         <img src="${imageUrl}" alt="${escapeHtml(prog.nama || 'Program')}"
                              class="rec-img" loading="eager" />
@@ -1029,7 +1029,7 @@ function renderProgramCards(programs, isInitialLoad = false) {
 
         html += `
     <div class="program-card">
-        <a href="program-detail.html?id=${data.id}" 
+        <a href="/program-detail?id=${data.id}" 
            class="block program-image-link"
            aria-label="Lihat detail ${escapeHtml(data.nama || 'Program')}">
             <div class="program-image-wrapper">
@@ -1046,7 +1046,7 @@ function renderProgramCards(programs, isInitialLoad = false) {
         </a>
 
         <div class="program-card-body">
-            <a href="program-detail.html?id=${data.id}" 
+            <a href="/program-detail?id=${data.id}" 
                class="block group">
                 <h3 class="program-card-title">
                     ${escapeHtml(data.nama || 'Program')}
@@ -1066,7 +1066,7 @@ function renderProgramCards(programs, isInitialLoad = false) {
                     ` : ''}
                     
                     <div class="mt-3 space-y-1.5">
-                        <a href="program-detail.html?id=${data.id}" 
+                        <a href="/program-detail?id=${data.id}" 
                            class="program-btn-primary">
                             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                             Lihat Detail
@@ -1255,7 +1255,7 @@ export async function loadAllServices() {
 document.addEventListener('DOMContentLoaded', async () => {
     const path = window.location.pathname;
     
-    if (path.endsWith('index.html') || path === '/' || path === '') {
+    if (path.endsWith('/') || path === '/' || path === '') {
         await loadLandingPageContent();
         await loadCoursePreview();
         await loadServicePreview();
@@ -1263,15 +1263,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadFaqs();
     }
     
-    if (path.endsWith('kursus.html')) {
+    if (path.endsWith('/kursus')) {
         await loadAllPrograms();
     }
     
-    if (path.endsWith('program-detail.html')) {
+    if (path.endsWith('/program-detail')) {
         await loadProgramDetail();
     }
     
-    if (path.endsWith('service.html')) {
+    if (path.endsWith('/service')) {
         await loadAllServices();
     }
 });
