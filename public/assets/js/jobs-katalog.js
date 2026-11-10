@@ -114,6 +114,17 @@ function formatDeadline(deadline) {
 }
 
 // ============================================================
+// DEEP LINK (?job=ID atau #/ID — dipakai oleh tombol Share)
+// ============================================================
+function getRequestedJobId() {
+    const params = new URLSearchParams(window.location.search);
+    const fromQuery = params.get('job');
+    if (fromQuery) return fromQuery;
+    const hashMatch = (window.location.hash || '').match(/^#\/(.+)$/);
+    return hashMatch ? decodeURIComponent(hashMatch[1]) : '';
+}
+
+// ============================================================
 // LOAD
 // ============================================================
 export async function loadJobs() {
@@ -144,6 +155,11 @@ export async function loadJobs() {
         populateKategoriFilter();
         renderJobs(true);
         updateFilterInfo();
+        const wantedId = getRequestedJobId();
+        if (wantedId) {
+            const wanted = state.allJobs.find(j => j.id === wantedId);
+            if (wanted) openJobDetail(wanted);
+        }
 
     } catch (error) {
         console.error('Load jobs error:', error);
@@ -417,7 +433,7 @@ export function openSpontaneousApplication() {
 // SHARE
 // ============================================================
 export async function shareJob(job) {
-    const url = `${window.location.origin}${window.location.pathname}#/${encodeURIComponent(job.id || '')}`;
+    const url = `${window.location.origin}/karir.html?job=${encodeURIComponent(job.id || '')}`;
     const title = `Lowongan: ${job.judul || ''} — IMDKOM`;
     const text = job.deskripsiSingkat || `Lowongan ${job.judul || ''} di IMDKOM Yogyakarta`;
 

@@ -20,6 +20,14 @@
 # EDGE FUNCTIONS
 # ============================================================
 [[edge_functions]]
+  path = "/karir.html"
+  function = "lowongan"
+
+[[edge_functions]]
+  path = "/karir"
+  function = "lowongan"
+
+[[edge_functions]]
   path = "/program-detail.html"
   function = "program-detail"
 
