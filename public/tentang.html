@@ -40,9 +40,9 @@
     </script>
     <title>Tentang IMDKOM | Lembaga Kursus & Service Komputer Yogyakarta</title>
     <meta name="description" content="Mengenal IMDKOM — lembaga kursus dan pelatihan komputer berizin Dinas Pendidikan (NPSN K0560748) yang berdiri sejak 1997 di Yogyakarta." />
-    
+
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -53,106 +53,129 @@
     <script src="assets/js/navbar.js" defer></script>
 
     <style>
-        
-        /* ============================================================
-           PAGE BACKGROUND
-           ============================================================ */
-        .page-bg {
-            background: 
-                radial-gradient(circle at 20% 0%, rgba(26, 60, 94, 0.04) 0%, transparent 40%),
-                radial-gradient(circle at 80% 100%, rgba(194, 65, 12, 0.03) 0%, transparent 40%),
-                linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
-            min-height: 100vh;
+        @keyframes pulse-wa {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
         }
-        
-        /* ============================================================
-           MISSION LIST
-           ============================================================ */
-        .mission-item {
-            transition: all 0.3s ease;
-        }
-        .mission-item:hover {
-            transform: translateX(4px);
-        }
-        .mission-number {
-            background: linear-gradient(135deg, #1a3c5e 0%, #2a5a7a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        /* ============================================================
-           LEGALITY BADGE
-           ============================================================ */
-        .legal-badge {
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.06) 0%, rgba(5, 150, 105, 0.02) 100%);
-            border: 1px solid rgba(5, 150, 105, 0.15);
-        }
-        
-        /* ============================================================
-           FADE IN ANIMATION
-           ============================================================ */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out;
+        .floating-wa { animation: pulse-wa 2s infinite; }
+        @media (max-width: 480px) {
+            .floating-wa {
+                width: 2.75rem !important;
+                height: 2.75rem !important;
+                bottom: 1.25rem !important;
+                right: 1.25rem !important;
+            }
         }
 
         /* ============================================================
-           COUNTER STATS STYLE
+           DISPLAY TOKENS (Anton + Poppins)
            ============================================================ */
-        .stat-counter {
-            font-variant-numeric: tabular-nums;
+        .ant {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
         }
+        .accent { color: #0059ff; }
 
         /* ============================================================
-           TENTANG MARQUEE — 2 Baris Galeri
+           HEADER (dot-grid)
            ============================================================ */
+        .kt-head {
+            background-color: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            background-position: 50% 0;
+            border-bottom: 1px solid #efefef;
+            padding: 2.75rem 0 2.25rem;
+        }
+        @media (min-width: 640px) {
+            .kt-head { padding: 3.5rem 0 2.75rem; }
+        }
+        .kt-title {
+            font-size: clamp(2.3rem, 8vw, 4rem);
+            line-height: 1;
+            color: #0d0d0d;
+            margin: 0 0 0.9rem;
+        }
+        .kt-lead {
+            max-width: 36rem;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #4b5563;
+            margin: 0;
+            text-wrap: pretty;
+        }
+        .kt-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        @media (min-width: 640px) {
+            .kt-actions { flex-direction: row; align-items: center; }
+        }
+        .kt-btn-dark,
+        .kt-btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.78rem 1.35rem;
+            border-radius: 0.85rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+        .kt-btn-dark {
+            background: #0d0d0d;
+            color: #ffffff;
+            border: 1px solid #0d0d0d;
+        }
+        .kt-btn-dark:hover { background: #0059ff; border-color: #0059ff; transform: translateY(-1px); }
+        .kt-btn-ghost {
+            background: #ffffff;
+            color: #0d0d0d;
+            border: 1px solid #e8e8e8;
+        }
+        .kt-btn-ghost:hover { border-color: #0059ff; color: #0059ff; }
+
+        /* ============================================================
+           MARQUEE GALERI — 2 BARIS
+           ============================================================ */
+        .galeri-section { padding: 1.25rem 0; border-bottom: 1px solid #efefef; }
         .tentang-marquee-wrapper {
             width: 100%;
             overflow: hidden;
             position: relative;
-            padding: 0.5rem 0;
+            padding: 0.35rem 0;
         }
-
         .tentang-marquee-track {
             display: flex;
             width: max-content;
             will-change: transform;
         }
-
-        /* Baris 1: kursus — jalan ke KIRI */
-        .tentang-marquee-track--kiri {
-            animation: scrollKiriTentang 40s linear infinite;
-        }
-
-        /* Baris 2: service — jalan ke KANAN */
-        .tentang-marquee-track--kanan {
-            animation: scrollKananTentang 40s linear infinite;
-        }
-
+        .tentang-marquee-track--kiri { animation: scrollKiriTentang 40s linear infinite; }
+        .tentang-marquee-track--kanan { animation: scrollKananTentang 40s linear infinite; }
         @keyframes scrollKiriTentang {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
-
         @keyframes scrollKananTentang {
             0% { transform: translateX(-50%); }
             100% { transform: translateX(0); }
         }
-
         .tentang-marquee-item {
             flex-shrink: 0;
             width: 220px;
             height: 220px;
-            margin-right: 0.75rem;
-            background-color: #f3f4f6;
+            margin-right: 0.85rem;
+            background-color: #f1f2f4;
             overflow: hidden;
-            border-radius: 0;
+            border-radius: 14px;
+            border: 1px solid #e8e8e8;
         }
-
         .tentang-marquee-item img {
             width: 100%;
             height: 100%;
@@ -161,320 +184,671 @@
             filter: grayscale(100%);
             transition: filter 0.4s ease;
         }
-
-        .tentang-marquee-item:hover img {
-            filter: grayscale(0%);
-        }
-
+        .tentang-marquee-item:hover img { filter: grayscale(0%); }
         @media (prefers-reduced-motion: reduce) {
-            .tentang-marquee-track {
-                animation: none !important;
-                overflow-x: auto;
-            }
+            .tentang-marquee-track { animation: none !important; overflow-x: auto; }
+        }
+        @media (max-width: 639px) {
+            .tentang-marquee-item { width: 160px; height: 160px; margin-right: 0.6rem; }
         }
 
-        @media (max-width: 639px) {
-            .tentang-marquee-item {
-                width: 160px;
-                height: 160px;
-                margin-right: 0.5rem;
-            }
+        /* ============================================================
+           STATS BAND (dark charcoal)
+           ============================================================ */
+        .about-stats {
+            background: #0d0d0d;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
+        .about-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .about-stat {
+            padding: 2.25rem 0.5rem;
+            text-align: center;
+        }
+        .about-stat + .about-stat { border-left: 1px solid rgba(255, 255, 255, 0.1); }
+        @media (min-width: 640px) {
+            .about-stat { padding: 3rem 1rem; }
+        }
+        .about-stat-num {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(2.1rem, 6vw, 3.25rem);
+            line-height: 1;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+        }
+        .about-stat-label {
+            margin-top: 0.4rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #8a94a6;
+        }
+        @media (min-width: 640px) {
+            .about-stat-label { font-size: 0.72rem; }
+        }
+
+        /* ============================================================
+           SECTIONS
+           ============================================================ */
+        .about-section { padding: 3rem 0; }
+        @media (min-width: 640px) {
+            .about-section { padding: 4.5rem 0; }
+        }
+        .section-title {
+            font-size: clamp(1.7rem, 4vw, 2.4rem);
+            line-height: 1.05;
+            color: #0d0d0d;
+            margin: 0;
+        }
+        .section-lead {
+            font-size: 0.98rem;
+            line-height: 1.75;
+            color: #374151;
+            text-wrap: pretty;
+        }
+        .text-brand-ink { color: #0059ff; }
+
+        /* ============================================================
+           VISI & MISI
+           ============================================================ */
+        .vm-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+        @media (min-width: 1024px) {
+            .vm-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 1.5rem; }
+        }
+        .vm-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(13, 13, 13, 0.06);
+        }
+        @media (min-width: 640px) {
+            .vm-card { padding: 1.75rem; }
+        }
+        .vm-card-visi {
+            background-color: #ffffff;
+            background-image: radial-gradient(#ececec 1px, transparent 1px);
+            background-size: 22px 22px;
+            background-position: 50% 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .vm-kicker {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            font-size: 1.05rem;
+            letter-spacing: 0.14em;
+            color: #0059ff;
+            margin: 0 0 1rem;
+        }
+        .vm-visi-text {
+            font-size: 1.25rem;
+            line-height: 1.4;
+            font-weight: 600;
+            color: #0d0d0d;
+            text-wrap: pretty;
+            margin: 0;
+        }
+        .mission-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        .mission-row + .mission-row { border-top: 1px solid #f0f0f0; }
+        .mission-num {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: 1.35rem;
+            line-height: 1;
+            color: #0059ff;
+            flex-shrink: 0;
+            padding-top: 0.15rem;
+        }
+        .mission-text {
+            font-size: 0.93rem;
+            line-height: 1.65;
+            color: #374151;
+            margin: 0;
+            text-wrap: pretty;
+        }
+
+        /* ============================================================
+           LEGALITAS
+           ============================================================ */
+        .legal-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .legal-grid { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+        }
+        .legal-card {
+            border: 1px solid #d1fae5;
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.07) 0%, rgba(5, 150, 105, 0.02) 100%);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+        }
+        .legal-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #047857;
+        }
+        .legal-value {
+            margin-top: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #111827;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            letter-spacing: 0.02em;
+        }
+        .legal-note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            line-height: 1.65;
+            color: #6b7280;
+        }
+
+        /* ============================================================
+           FINAL CTA (dark charcoal)
+           ============================================================ */
+        .svc-cta { padding: 0 0 3.5rem; background: #ffffff; }
+        .svc-cta-card {
+            background-color: #0d0d0d;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 1.5rem;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            overflow: hidden;
+        }
+        @media (min-width: 640px) {
+            .svc-cta-card { padding: 3rem 3rem; }
+        }
+        .svc-cta-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            line-height: 1.05;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0;
+        }
+        .svc-cta-text {
+            color: #a8b0bd;
+            max-width: 34rem;
+            margin: 0.6rem auto 0;
+            line-height: 1.6;
+            font-size: 0.92rem;
+        }
+        .svc-cta-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .svc-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: #0059ff;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.85rem 1.6rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .svc-cta-btn:hover { background: #0040c0; transform: translateY(-1px); }
+        .svc-cta-btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: transparent;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 0.85rem 1.6rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .svc-cta-btn-ghost:hover { border-color: #ffffff; background: rgba(255, 255, 255, 0.06); }
+
+        /* ============================================================
+           FOOTER (senada halaman lain)
+           ============================================================ */
+        .kursus-footer {
+            border-top: 1px solid #e8e8e8;
+            background: #ffffff;
+            padding: 2.5rem 0 1.5rem;
+        }
+        .kursus-footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .kursus-footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; }
+        }
+        .kursus-footer-title {
+            font-family: 'Anton', 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 1.35rem;
+            color: #0d0d0d;
+        }
+        .kursus-footer-heading {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #0d0d0d;
+            margin-bottom: 0.85rem;
+        }
+        .kursus-footer-text {
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: #6b7280;
+            text-wrap: pretty;
+        }
+        .kursus-footer-link {
+            display: block;
+            font-size: 0.82rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            transition: color 0.2s ease;
+        }
+        .kursus-footer-link:hover { color: #0059ff; }
+        .kursus-footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #efefef;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        @media (min-width: 640px) {
+            .kursus-footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        .footer-pricelist { margin-top: 0.25rem; }
+        .footer-pricelist > summary {
+            list-style: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.82rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .footer-pricelist > summary::-webkit-details-marker { display: none; }
+        .footer-pricelist > summary::marker { content: ""; }
+        .footer-pricelist > summary:hover { color: #0059ff; }
+        .footer-pricelist[open] > summary { color: #0059ff; font-weight: 600; }
+        .footer-pricelist .chev { transition: transform 0.2s ease; }
+        .footer-pricelist[open] .chev { transform: rotate(180deg); }
+        .footer-pricelist-menu {
+            margin-top: 0.35rem;
+            padding: 0.35rem 0 0.35rem 0.75rem;
+            border-left: 2px solid #efefef;
+        }
+        .footer-pricelist-link {
+            display: block;
+            font-size: 0.8rem;
+            color: #4b5563;
+            padding: 0.22rem 0;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer-pricelist-link:hover { color: #0059ff; }
     </style>
 </head>
-<body class="font-sans page-bg">
+<body class="font-sans bg-white">
 
     <!-- NAVIGATION -->
     <!-- NAVBAR:sticky -->
-<nav id="mainNavbar" class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
-    <div class="container mx-auto px-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-3 logo-shine">
-            <img src="assets/images/logo/imd.svg" alt="IMDKOM — Kursus & Service Komputer Yogyakarta" class="h-7 w-auto" loading="eager" />
-            <span class="text-sm text-gray-500 hidden xl:inline">Kursus &amp; Pelatihan · Computer Service</span>
-        </a>
-
-        <button id="mobileMenuBtn" class="lg:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
-            <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
-
-        <div id="mainNav" class="hidden lg:flex items-center gap-2">
-            <a href="/" class="nav-link">Beranda</a>
-            <a href="/kursus" class="nav-link">Kursus &amp; Pelatihan</a>
-            <a href="/service" class="nav-link">Computer Service</a>
-            <a href="/rakit-komputer" class="nav-link">Rakit Komputer</a>
-            <a href="/tentang" class="nav-link">Tentang</a>
-            <a href="/karir" class="nav-link">Karir</a>
-            <a href="/kontak" class="nav-link">Kontak</a>
-        </div>
-    </div>
-
-    <div id="mobileNav" class="hidden lg:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-        <div class="container mx-auto px-4 flex flex-col gap-2">
-            <a href="/" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
-            <a href="/kursus" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
-            <a href="/service" class="mobile-menu-highlight">
-                <span class="menu-icon-wrap">
-                    <i data-lucide="wrench" class="w-4 h-4"></i>
-                    Computer Service
-                </span>
-                <i data-lucide="arrow-right" class="menu-arrow"></i>
+    <nav id="mainNavbar" class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 logo-shine">
+                <img src="assets/images/logo/imd.svg" alt="IMDKOM — Kursus & Service Komputer Yogyakarta" class="h-7 w-auto" loading="eager" />
+                <span class="text-sm text-gray-500 hidden xl:inline">Kursus &amp; Pelatihan · Computer Service</span>
             </a>
-            <a href="/rakit-komputer" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
-            <a href="/tentang" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
-            <a href="/karir" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
-            <a href="/kontak" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+
+            <button id="mobileMenuBtn" class="lg:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+
+            <div id="mainNav" class="hidden lg:flex items-center gap-2">
+                <a href="/" class="nav-link">Beranda</a>
+                <a href="/kursus" class="nav-link">Kursus &amp; Pelatihan</a>
+                <a href="/service" class="nav-link">Computer Service</a>
+                <a href="/rakit-komputer" class="nav-link">Rakit Komputer</a>
+                <a href="/tentang" class="nav-link">Tentang</a>
+                <a href="/karir" class="nav-link">Karir</a>
+                <a href="/kontak" class="nav-link">Kontak</a>
+            </div>
         </div>
-    </div>
-</nav>
 
-<!-- /NAVBAR -->
+        <div id="mobileNav" class="hidden lg:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
+            <div class="container mx-auto px-4 flex flex-col gap-2">
+                <a href="/" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
+                <a href="/kursus" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
+                <a href="/service" class="mobile-menu-highlight">
+                    <span class="menu-icon-wrap">
+                        <i data-lucide="wrench" class="w-4 h-4"></i>
+                        Computer Service
+                    </span>
+                    <i data-lucide="arrow-right" class="menu-arrow"></i>
+                </a>
+                <a href="/rakit-komputer" class="text-gray-600 hover:text-brand py-1.5">Rakit Komputer</a>
+                <a href="/tentang" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
+                <a href="/karir" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
+                <a href="/kontak" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+            </div>
+        </div>
+    </nav>
 
-    <!-- HERO SECTION -->
-    <section class="pt-20 sm:pt-28 md:pt-36 pb-16 sm:pb-20 fade-in-up">
+    <!-- /NAVBAR -->
+
+    <!-- ============================================================ -->
+    <!-- HEADER (dot-grid)                                               -->
+    <!-- ============================================================ -->
+    <section class="kt-head">
+        <div class="container mx-auto px-4">
+            <h1 class="kt-title ant">Tentang <span class="accent">IMDKOM.</span></h1>
+            <p class="kt-lead">Lembaga kursus &amp; layanan komputer yang dipercaya sejak 1997 — berizin Dinas Pendidikan dan dipimpin praktisi. Belajar langsung ke intinya, atau perbaiki perangkat Anda hari ini.</p>
+            <div class="kt-actions">
+                <a href="/kursus" class="kt-btn-dark">
+                    Lihat Program Kursus
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+                <button id="ktCtaWaBtn" class="kt-btn-ghost">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    Konsultasi Gratis
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- GALERI 2 BARIS MARQUEE                                        -->
+    <!-- ============================================================ -->
+    <section class="galeri-section" aria-label="Galeri dokumentasi IMDKOM">
+        <!-- Baris 1: Kursus — jalan ke KIRI -->
+        <div class="tentang-marquee-wrapper">
+            <div class="tentang-marquee-track tentang-marquee-track--kiri" id="dokumentasiKursusTrack">
+                <!-- Diisi via JS -->
+            </div>
+        </div>
+
+        <!-- Baris 2: Service — jalan ke KANAN -->
+        <div class="tentang-marquee-wrapper">
+            <div class="tentang-marquee-track tentang-marquee-track--kanan" id="dokumentasiServiceTrack">
+                <!-- Diisi via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATS BAND (dark charcoal)                                     -->
+    <!-- ============================================================ -->
+    <section class="about-stats" aria-label="Statistik IMDKOM">
+        <div class="container mx-auto px-4">
+            <div class="about-stats-grid">
+                <div class="about-stat">
+                    <div class="about-stat-num stat-counter" data-target="25" data-suffix="+">0</div>
+                    <div class="about-stat-label">Tahun</div>
+                </div>
+                <div class="about-stat">
+                    <div class="about-stat-num stat-counter" data-target="1000" data-suffix="+">0</div>
+                    <div class="about-stat-label">Alumni</div>
+                </div>
+                <div class="about-stat">
+                    <div class="about-stat-num stat-counter" data-target="5000" data-suffix="+">0</div>
+                    <div class="about-stat-label">Servis</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- CERITA KAMI                                                   -->
+    <!-- ============================================================ -->
+    <section class="about-section">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl">
-                
-                <div class="flex items-center gap-3 mb-10">
-                    <span class="w-12 h-px bg-brand-dark"></span>
-                    <span class="text-xs font-medium tracking-[0.3em] uppercase text-brand-dark">Sejak 1997</span>
-                </div>
-                
-                <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-brand leading-[1.05] tracking-tight">
-                    Tentang<br />
-                    <span class="text-brand">IMDKOM.</span>
-                </h1>
-                
-                <p class="text-lg sm:text-xl text-gray-500 mt-10 max-w-xl leading-relaxed font-light">
-                    Lembaga kursus &amp; layanan komputer yang telah dipercaya selama lebih dari <strong class="font-semibold text-gray-700">25 tahun</strong>.
-                </p>
-                
-                <div class="mt-12 sm:mt-16 w-full h-px bg-gradient-to-r from-gray-300 via-gray-200 to-transparent"></div>
-                
-            </div>
-        </div>
-
-        <!-- ⭐ GALERI 2 BARIS MARQUEE -->
-        <div class="mt-12 sm:mt-16 space-y-3">
-            <!-- Baris 1: Kursus — jalan ke KIRI -->
-            <div class="tentang-marquee-wrapper">
-                <div class="tentang-marquee-track tentang-marquee-track--kiri" id="dokumentasiKursusTrack">
-                    <!-- Diisi via JS -->
-                </div>
-            </div>
-
-            <!-- Baris 2: Service — jalan ke KANAN -->
-            <div class="tentang-marquee-wrapper">
-                <div class="tentang-marquee-track tentang-marquee-track--kanan" id="dokumentasiServiceTrack">
-                    <!-- Diisi via JS -->
+                <h2 class="section-title ant">Cerita <span class="accent">Kami</span></h2>
+                <div class="mt-6 space-y-5">
+                    <p class="section-lead">
+                        <strong class="text-brand-ink">IMDKOM</strong> hadir dari keyakinan sederhana: setiap orang berhak menguasai teknologi. Kami melihat banyak orang punya semangat belajar, tapi terkendala akses dan biaya — dari situlah IMDKOM lahir sebagai jembatan antara keinginan dan kemampuan.
+                    </p>
+                    <p class="section-lead">
+                        Hari ini, IMDKOM bukan hanya tempat belajar, tapi juga partner terpercaya untuk solusi perangkat komputer. Dua layanan utama kami — <strong>kursus &amp; pelatihan</strong> dan <strong>computer service</strong> — saling melengkapi sejak 1997.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- STORY SECTION -->
-    <section class="py-12 sm:py-20">
+    <!-- ============================================================ -->
+    <!-- VISI & MISI                                                    -->
+    <!-- ============================================================ -->
+    <section class="about-section" style="padding-top: 0;">
         <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto">
-                
-                <div class="text-xs font-medium tracking-[0.3em] uppercase text-gray-400 mb-8">
-                    Cerita Kami
+            <h2 class="section-title ant mb-6 sm:mb-8">Visi <span class="accent">&amp; Misi</span></h2>
+            <div class="vm-grid">
+                <div class="vm-card vm-card-visi">
+                    <p class="vm-kicker">Visi</p>
+                    <p class="vm-visi-text">Menjadi lembaga pendidikan dan layanan teknologi <span class="text-brand-ink">terpercaya</span> yang memberdayakan masyarakat melalui keterampilan digital.</p>
                 </div>
-                
-                <div class="space-y-6">
-                    <p class="text-lg sm:text-xl text-gray-700 leading-relaxed font-light">
-                        <strong class="font-semibold text-brand">IMDKOM</strong> hadir dari sebuah keyakinan sederhana: setiap orang berhak menguasai teknologi. Kami melihat banyak orang memiliki semangat untuk belajar, namun terkendala akses dan biaya. Dari situlah IMDKOM lahir — sebagai jembatan antara keinginan dan kemampuan.
-                    </p>
-                    <p class="text-lg sm:text-xl text-gray-700 leading-relaxed font-light">
-                        Hari ini, IMDKOM tidak hanya menjadi tempat belajar, tetapi juga menjadi partner terpercaya bagi mereka yang membutuhkan solusi perangkat komputer. Dua layanan utama kami — <strong class="font-semibold text-gray-700">kursus &amp; pelatihan</strong> dan <strong class="font-semibold text-gray-700">computer service</strong> — saling melengkapi.
-                    </p>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-4 sm:gap-8 mt-16 pt-12 border-t border-gray-200">
-                    <div class="text-center sm:text-left">
-                        <div class="text-4xl sm:text-5xl font-extrabold text-brand stat-counter" data-target="25" data-suffix="+">0</div>
-                        <div class="text-xs sm:text-sm text-gray-500 mt-2 uppercase tracking-wider font-medium">Tahun</div>
-                    </div>
-                    <div class="text-center sm:text-left">
-                        <div class="text-4xl sm:text-5xl font-extrabold text-brand stat-counter" data-target="1000" data-suffix="+">0</div>
-                        <div class="text-xs sm:text-sm text-gray-500 mt-2 uppercase tracking-wider font-medium">Alumni</div>
-                    </div>
-                    <div class="text-center sm:text-left">
-                        <div class="text-4xl sm:text-5xl font-extrabold text-brand stat-counter" data-target="5000" data-suffix="+">0</div>
-                        <div class="text-xs sm:text-sm text-gray-500 mt-2 uppercase tracking-wider font-medium">Servis</div>
+                <div class="vm-card">
+                    <p class="vm-kicker">Misi</p>
+                    <div>
+                        <div class="mission-row">
+                            <span class="mission-num">01</span>
+                            <p class="mission-text">Menyediakan program pelatihan komputer yang <strong>relevan</strong> dengan kebutuhan industri.</p>
+                        </div>
+                        <div class="mission-row">
+                            <span class="mission-num">02</span>
+                            <p class="mission-text">Memberikan layanan computer service yang <strong>cepat, tepat, dan profesional</strong>.</p>
+                        </div>
+                        <div class="mission-row">
+                            <span class="mission-num">03</span>
+                            <p class="mission-text">Membangun <strong>ekosistem belajar</strong> yang mendukung pengembangan keterampilan digital.</p>
+                        </div>
                     </div>
                 </div>
-                
             </div>
         </div>
     </section>
 
-    <!-- VISI & MISI -->
-    <section class="py-16 sm:py-24 bg-white/40 backdrop-blur-sm">
+    <!-- ============================================================ -->
+    <!-- LEGALITAS RESMI                                                 -->
+    <!-- ============================================================ -->
+    <section class="about-section" style="padding-top: 0;">
         <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto">
-                
-                <div class="text-xs font-medium tracking-[0.3em] uppercase text-gray-400 mb-8">Arah &amp; Tujuan</div>
-                
-                <div class="mb-16">
-                    <h2 class="text-2xl sm:text-3xl font-bold text-brand mb-4">Visi</h2>
-                    <p class="text-lg sm:text-xl text-gray-700 leading-relaxed font-light">
-                        Menjadi lembaga pendidikan dan layanan teknologi <strong class="font-semibold text-gray-800">terpercaya</strong> yang memberdayakan masyarakat melalui keterampilan digital.
-                    </p>
+            <h2 class="section-title ant">Legalitas <span class="accent">Resmi</span></h2>
+            <div class="legal-grid">
+                <div class="legal-card">
+                    <p class="legal-label"><i data-lucide="shield-check" class="w-4 h-4"></i>Izin Dinas Pendidikan</p>
+                    <p class="legal-value">098/Kpts/2021</p>
                 </div>
-                
+                <div class="legal-card">
+                    <p class="legal-label"><i data-lucide="shield-check" class="w-4 h-4"></i>NPSN</p>
+                    <p class="legal-value">K0560748</p>
+                </div>
+            </div>
+            <p class="legal-note">IMDKOM terdaftar resmi di bawah naungan Dinas Pendidikan. Kami berkomitmen memberikan layanan yang legal, aman, dan terpercaya untuk seluruh pelanggan.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- CTA                                                              -->
+    <!-- ============================================================ -->
+    <section class="svc-cta" id="aboutCtaSection">
+        <div class="container mx-auto px-4">
+            <div class="svc-cta-card">
+                <h2 class="svc-cta-title">Siap <span style="color:#6ea3ff">Mulai</span>?</h2>
+                <p class="svc-cta-text">Bergabung dengan ribuan alumni yang telah membuktikan manfaat belajar dan layanan IMDKOM.</p>
+                <div class="svc-cta-actions">
+                    <a href="/kursus" class="svc-cta-btn">
+                        Lihat Program Kursus
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="/service" class="svc-cta-btn-ghost">
+                        Butuh Service?
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER                                                           -->
+    <!-- ============================================================ -->
+    <footer class="kursus-footer" id="footerSection">
+        <div class="container mx-auto px-4">
+            <div class="kursus-footer-grid">
                 <div>
-                    <h2 class="text-2xl sm:text-3xl font-bold text-brand mb-8">Misi</h2>
-                    <div class="space-y-6">
-                        <div class="mission-item flex items-start gap-6">
-                            <div class="text-2xl sm:text-3xl font-extrabold mission-number flex-shrink-0 w-12">01</div>
-                            <div class="flex-1 border-b border-gray-200 pb-6">
-                                <p class="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
-                                    Menyediakan program pelatihan komputer yang <strong class="font-semibold text-gray-800">relevan</strong> dengan kebutuhan industri.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="mission-item flex items-start gap-6">
-                            <div class="text-2xl sm:text-3xl font-extrabold mission-number flex-shrink-0 w-12">02</div>
-                            <div class="flex-1 border-b border-gray-200 pb-6">
-                                <p class="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
-                                    Memberikan layanan computer service yang <strong class="font-semibold text-gray-800">cepat, tepat, dan profesional</strong>.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="mission-item flex items-start gap-6">
-                            <div class="text-2xl sm:text-3xl font-extrabold mission-number flex-shrink-0 w-12">03</div>
-                            <div class="flex-1">
-                                <p class="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
-                                    Membangun <strong class="font-semibold text-gray-800">ekosistem belajar</strong> yang mendukung pengembangan keterampilan digital.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <p class="kursus-footer-title">IMDKOM</p>
+                    <p class="kursus-footer-text mt-2">Kursus &amp; pelatihan komputer, service, dan perakitan PC di Yogyakarta. Belajar langsung dari praktisi.</p>
                 </div>
-                
-            </div>
-        </div>
-    </section>
-
-    <!-- LEGALITAS -->
-    <section class="py-16 sm:py-24">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto">
-                
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-8 h-8 bg-success rounded-lg flex items-center justify-center">
-                        <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
-                    </div>
-                    <div class="text-xs font-medium tracking-[0.3em] uppercase text-success">Terverifikasi &amp; Legal</div>
+                <div>
+                    <p class="kursus-footer-heading">Jelajahi</p>
+                    <a class="kursus-footer-link" href="/">Beranda</a>
+                    <a class="kursus-footer-link" href="/kursus">Kursus &amp; Pelatihan</a>
+                    <a class="kursus-footer-link" href="/service">Service Komputer</a>
+                    <a class="kursus-footer-link" href="/karir">Karir</a>
                 </div>
-                
-                <h2 class="text-2xl sm:text-3xl font-bold text-brand mb-10">Legalitas Resmi</h2>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="legal-badge rounded-2xl p-6">
-                        <div class="text-xs font-medium text-success uppercase tracking-wider mb-3">Izin Dinas Pendidikan</div>
-                        <div class="text-xl font-bold text-gray-800 font-mono">098/Kpts/2021</div>
-                    </div>
-                    <div class="legal-badge rounded-2xl p-6">
-                        <div class="text-xs font-medium text-success uppercase tracking-wider mb-3">NPSN</div>
-                        <div class="text-xl font-bold text-gray-800 font-mono">K0560748</div>
-                    </div>
-                </div>
-                
-                <p class="text-sm text-gray-500 mt-8 leading-relaxed font-light">
-                    IMDKOM terdaftar resmi di bawah naungan Dinas Pendidikan. Kami berkomitmen memberikan layanan yang legal, aman, dan terpercaya untuk seluruh pelanggan.
-                </p>
-                
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA SECTION -->
-    <section class="pb-20 sm:pb-28">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto">
-                <div class="border-t border-gray-200 pt-12">
-                    <h2 class="text-2xl sm:text-3xl font-bold text-brand mb-3">Siap memulai?</h2>
-                    <p class="text-base sm:text-lg text-gray-500 font-light mb-8">
-                        Bergabunglah dengan ribuan orang yang telah merasakan manfaat layanan IMDKOM.
-                    </p>
-                    <div class="flex flex-wrap gap-3">
-                        <a href="/kursus" class="inline-flex items-center gap-2 bg-brand hover:bg-brand-light text-white font-medium px-6 py-3 rounded-lg transition-all text-sm">
-                            Lihat Program <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                        <a href="/service" class="inline-flex items-center gap-2 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-6 py-3 rounded-lg transition-all text-sm">
-                            Lihat Service <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                    </div>
+                <div>
+                    <p class="kursus-footer-heading">Kontak</p>
+                    <p class="kursus-footer-text" id="footerWhatsApp">WhatsApp: 0856-0191-3435</p>
+                    <p class="kursus-footer-text">Jl. Kaliurang Km 7,3 No 38, Yogyakarta</p>
+                    <p class="kursus-footer-text" id="footerInstagram">Instagram: @imdkom_yk</p>
+                    <details class="footer-pricelist">
+                        <summary>Pricelist
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 chev"></i>
+                        </summary>
+                        <div class="footer-pricelist-menu">
+                            <a class="footer-pricelist-link" href="/service-laptop">Service Laptop</a>
+                            <a class="footer-pricelist-link" href="/service-pc">Service PC</a>
+                            <a class="footer-pricelist-link" href="/service-printer">Service Printer</a>
+                            <a class="footer-pricelist-link" href="/service-panggil">Service Panggil</a>
+                            <a class="footer-pricelist-link" href="/sparepart">Sparepart</a>
+                        </div>
+                    </details>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="py-6 sm:py-8 border-t border-gray-200 bg-gray-50">
-        <div class="container mx-auto px-4 text-center text-xs sm:text-sm text-gray-500">
-            <p>&copy; 2026 IMDKOM. All rights reserved.</p>
+            <div class="kursus-footer-bottom">
+                <p id="footerCopyright">&copy; 2026 IMDKOM. All rights reserved.</p>
+                <p>Dibuat di Yogyakarta.</p>
+            </div>
         </div>
     </footer>
 
-    <!-- FLOATING WHATSAPP -->
-    <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20bertanya." id="floatingWhatsApp" class="floating-wa fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16">
+    <!-- ============================================================ -->
+    <!-- FLOATING WHATSAPP                                                -->
+    <!-- ============================================================ -->
+    <a href="https://wa.me/6285601913435?text=Halo%20IMDKOM%2C%20saya%20ingin%20bertanya." id="floatingWhatsApp" class="floating-wa fixed bottom-5 right-5 sm:bottom-6 sm:right-6 bg-[#075e54] text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg z-50" aria-label="Hubungi via WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.174-1.095c1.159.633 2.466.967 3.817.967h.003c4.366 0 7.926-3.558 7.93-7.93 0-2.118-.826-4.11-2.323-5.607zM7.994 14.407c-1.19 0-2.357-.319-3.365-.91l-.241-.144-2.478.65.662-2.415-.157-.251a6.545 6.545 0 0 1-.999-3.492c0-3.618 2.944-6.563 6.563-6.563 1.752 0 3.399.683 4.636 1.92a6.515 6.515 0 0 1 1.921 4.637c-.002 3.619-2.947 6.564-6.564 6.564zM11.256 9.426c-.174-.087-1.028-.507-1.187-.565-.159-.058-.275-.087-.391.087-.116.174-.449.565-.55.681-.101.116-.203.13-.377.043-.174-.087-.736-.271-1.402-.865-.519-.462-.869-1.033-.97-1.208-.101-.174-.011-.268.076-.355.078-.078.174-.203.261-.304.087-.101.116-.174.174-.29.058-.116.029-.217-.014-.304-.043-.087-.391-.943-.536-1.291-.141-.338-.283-.282-.391-.287-.101-.005-.217-.006-.333-.006-.116 0-.304.043-.464.217-.159.174-.609.595-.609 1.452s.624 1.684.711 1.8c.087.116 1.228 1.875 2.975 2.629.416.18.741.287 1.005.369.422.132.806.113 1.109.068.338-.05 1.028-.42 1.173-.825.145-.405.145-.752.101-.825-.043-.073-.159-.116-.333-.203z"/>
         </svg>
     </a>
 
-    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT                                                       -->
+    <!-- ============================================================ -->
     <script type="module">
         import { openWhatsAppGeneric } from './assets/js/whatsapp.js';
         import { loadDokumentasiBySlug, loadDokumentasiService } from './assets/js/services-katalog.js';
+        import { db, getDoc, doc } from './assets/js/firebase.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
 
-            // ⭐ Load galeri kursus (baris 1 — kiri)
-            await loadDokumentasiBySlug('kursus', 'dokumentasiKursusTrack');
-
-            // ⭐ Load galeri service (baris 2 — kanan)
-            await loadDokumentasiService('dokumentasiServiceTrack');
+            const ktCtaWa = document.getElementById('ktCtaWaBtn');
+            if (ktCtaWa) ktCtaWa.addEventListener('click', () => openWhatsAppGeneric());
 
             document.getElementById('floatingWhatsApp').addEventListener('click', (e) => {
                 e.preventDefault();
                 openWhatsAppGeneric();
             });
+
+            // Gallery: baris 1 kursus (kiri), baris 2 service (kanan)
+            await loadDokumentasiBySlug('kursus', 'dokumentasiKursusTrack');
+            await loadDokumentasiService('dokumentasiServiceTrack');
+
+            // Sinkron footer WA/Instagram dari Firestore
+            try {
+                const docSnap = await getDoc(doc(db, 'settings', 'general'));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.whatsapp) {
+                        const footerWa = document.getElementById('footerWhatsApp');
+                        if (footerWa) footerWa.textContent = 'WhatsApp: ' + data.whatsapp;
+                    }
+                    if (data.instagram) {
+                        const footerIg = document.getElementById('footerInstagram');
+                        if (footerIg) footerIg.textContent = 'Instagram: ' + data.instagram;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading contact data:', error);
+            }
         });
     </script>
-    
-    <!-- Mobile Menu Toggle -->
 
     <!-- ANIMASI COUNTING ANGKA -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const counters = document.querySelectorAll('.stat-counter');
-            
+
             const animateCounter = (counter) => {
                 const target = +counter.getAttribute('data-target');
                 const suffix = counter.getAttribute('data-suffix') || '';
                 const duration = 2000;
                 const startTime = performance.now();
-                
+
                 const updateCount = (currentTime) => {
                     const elapsedTime = currentTime - startTime;
                     const progress = Math.min(elapsedTime / duration, 1);
                     const easeOutProgress = 1 - Math.pow(1 - progress, 4);
                     const currentCount = Math.floor(easeOutProgress * target);
                     counter.innerText = currentCount.toLocaleString('id-ID') + suffix;
-                    
+
                     if (progress < 1) {
                         requestAnimationFrame(updateCount);
                     } else {
                         counter.innerText = target.toLocaleString('id-ID') + suffix;
                     }
                 };
-                
+
                 requestAnimationFrame(updateCount);
             };
 
@@ -487,9 +861,7 @@
                 });
             }, { threshold: 0.5 });
 
-            counters.forEach(counter => {
-                observer.observe(counter);
-            });
+            counters.forEach(counter => observer.observe(counter));
         });
     </script>
 
