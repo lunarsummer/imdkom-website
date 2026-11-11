@@ -210,19 +210,19 @@
         .receipt-card { background: #ffffff; border: 1px solid #e3e6eb; border-radius: 1rem; overflow: hidden; box-shadow: 0 14px 34px rgba(13, 13, 13, 0.10); }
         .receipt-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem 0.8rem; background: #0d0d0d; }
         .receipt-brand { font-family: 'Anton', sans-serif; font-size: 1.35rem; line-height: 1; letter-spacing: 0.04em; color: #ffffff; margin: 0; }
-        .receipt-doc { font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: #9aa3af; margin: 0.32rem 0 0; }
-        .receipt-status { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.18em; color: #065f46; background: #34d399; border-radius: 999px; padding: 0.38rem 0.85rem 0.32rem; line-height: 1; }
+        .receipt-doc { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa3af; margin: 0.32rem 0 0; text-wrap: pretty; }
+        .receipt-status { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.18em; color: #065f46; background: #34d399; border-radius: 999px; padding: 0.42rem 0.9rem 0.38rem; line-height: 1; text-wrap: balance; }
         .receipt-total { text-align: center; padding: 0.95rem 1rem 0.8rem; border-bottom: 1px dashed #d9dde3; }
-        .receipt-label { display: block; font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; }
+        .receipt-label { display: block; font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6b7280; line-height: 1.35; text-wrap: pretty; }
         .receipt-total-value { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 2.1rem; line-height: 1.1; color: #0d0d0d; margin: 0.3rem 0 0; letter-spacing: -0.01em; }
-        .receipt-total-sub { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: #6b7280; margin: 0.28rem 0 0; }
+        .receipt-total-sub { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: #6b7280; margin: 0.28rem 0 0; text-wrap: pretty; }
         .receipt-rows { padding: 0.7rem 1rem; border-bottom: 1px dashed #d9dde3; display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1rem; }
         .receipt-row { border-bottom: 1px solid #f1f1f1; padding-bottom: 0.4rem; }
         .receipt-row-span-2 { grid-column: span 2; border-bottom: 1px solid #f1f1f1; padding-bottom: 0.4rem; }
-        .receipt-row p, .receipt-meta p { font-family: 'Inter', sans-serif; font-size: 0.77rem; color: #1f2937; font-weight: 600; margin: 0.14rem 0 0; overflow-wrap: anywhere; }
+        .receipt-row p, .receipt-meta p { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #1f2937; font-weight: 600; margin: 0.18rem 0 0; overflow-wrap: anywhere; line-height: 1.4; text-wrap: pretty; }
         .receipt-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; padding: 0.65rem 1rem; border-bottom: 1px dashed #d9dde3; }
         .receipt-token { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.6rem 1rem; border-bottom: 1px dashed #d9dde3; }
-        .receipt-token strong { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.74rem; letter-spacing: 0.1em; color: #111827; }
+        .receipt-token strong { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.82rem; letter-spacing: 0.08em; color: #111827; overflow-wrap: anywhere; }
         .pay-await { display: flex; gap: 0.75rem; align-items: center; background: #ffffff; border: 1px solid #e3e6eb; border-radius: 1rem; padding: 0.85rem 1rem; box-shadow: 0 12px 30px rgba(13, 13, 13, 0.07); }
         .pay-await-spinner { width: 2.5rem; height: 2.5rem; border-radius: 9999px; border: 3px solid #e5e7eb; border-top-color: #0059ff; animation: payAwaitSpin 0.8s linear infinite; flex-shrink: 0; }
         @keyframes payAwaitSpin { to { transform: rotate(360deg); } }
@@ -231,7 +231,7 @@
         .pay-await-text { font-size: 0.74rem; color: #6b7280; margin-top: 0.2rem; }
         .pay-await-note { font-size: 0.72rem; font-weight: 600; color: #92400e; margin-top: 0.35rem; }
 
-        .receipt-web { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: #6b7280; text-align: center; padding: 0.55rem 1rem 0.7rem; margin: 0; }
+        .receipt-web { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #6b7280; text-align: center; padding: 0.55rem 1rem 0.75rem; margin: 0; text-wrap: pretty; }
     </style>
 </head>
 <body class="font-sans min-h-screen">
@@ -1221,18 +1221,18 @@
             const navy = [26, 60, 94], ink = [17, 24, 39], gray = [107, 114, 128], light = [236, 236, 236];
             const line = function (y) { doc.setDrawColor(light[0], light[1], light[2]); doc.setLineWidth(0.35); doc.line(M, y, W - M, y); };
             let y = 17;
-            doc.setFont('helvetica', 'bold'); doc.setFontSize(21); doc.setTextColor(navy[0], navy[1], navy[2]);
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(22); doc.setTextColor(navy[0], navy[1], navy[2]);
             doc.text('IMDKOM', M, y);
-            doc.setFontSize(6.2); doc.setTextColor(gray[0], gray[1], gray[2]);
-            doc.text('K W I T A N S I   P E M B A Y A R A N', M, y + 5);
+            doc.setFontSize(9); doc.setTextColor(gray[0], gray[1], gray[2]);
+            doc.text('K W I T A N S I   P E M B A Y A R A N', M, y + 6);
             doc.setFillColor(209, 250, 229); doc.setDrawColor(167, 243, 208); doc.setLineWidth(0.4);
-            doc.roundedRect(W - M - 23, y - 5.2, 23, 7.6, 3.8, 3.8, 'FD');
-            doc.setTextColor(6, 95, 70); doc.setFontSize(8.2); doc.setFont('helvetica', 'bold');
-            doc.text('LUNAS', W - M - 11.5, y - 0.6, { align: 'center' });
-            y += 8.5;
+            doc.roundedRect(W - M - 23, y - 5, 23, 7.6, 3.8, 3.8, 'FD');
+            doc.setTextColor(6, 95, 70); doc.setFontSize(9.5); doc.setFont('helvetica', 'bold');
+            doc.text('LUNAS', W - M - 11.5, y - 0.5, { align: 'center' });
+            y += 9;
             line(y);
-            const label = function (txt, x, yy) { doc.setFont('helvetica', 'bold'); doc.setFontSize(6.1); doc.setTextColor(156, 163, 175); doc.text(txt.toUpperCase(), x, yy); };
-            const value = function (txt, x, yy, size) { doc.setFont('helvetica', 'normal'); doc.setFontSize(size || 8.2); doc.setTextColor(ink[0], ink[1], ink[2]); doc.text(String(txt || '-'), x, yy); };
+            const label = function (txt, x, yy) { doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(156, 163, 175); doc.text(txt.toUpperCase(), x, yy); };
+            const value = function (txt, x, yy, size) { doc.setFont('helvetica', 'normal'); doc.setFontSize(size || 9); doc.setTextColor(ink[0], ink[1], ink[2]); doc.text(String(txt || '-'), x, yy); };
             y += 6;
             label('ID Transaksi', M, y);
             label('Tanggal Bayar', M + CW * 0.5, y);
@@ -1246,7 +1246,7 @@
             y += 3;
             doc.setFont('helvetica', 'bold'); doc.setFontSize(23); doc.setTextColor(ink[0], ink[1], ink[2]);
             doc.text(String(d.nominal || 'Rp 0'), M, y + 7);
-            doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(gray[0], gray[1], gray[2]);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(gray[0], gray[1], gray[2]);
             doc.text('Metode: ' + (d.metode || 'Snap (Midtrans)') + (d.referral ? '   ·   Referral: ' + d.referral : ''), M, y + 12);
             y += 17;
             line(y);
@@ -1258,17 +1258,17 @@
                 [{ label: 'Alamat', value: d.alamat || '-' }],
                 [{ label: 'Pekerjaan', value: d.pekerjaan || '-' }]
             ];
-            y += 5.5;
+            y += 6.2;
             rows.forEach(function (pair) {
                 if (pair.length === 1) {
                     label(pair[0].label, M, y);
                     y += 4;
                     const lines = doc.splitTextToSize(String(pair[0].value), CW);
-                    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.2); doc.setTextColor(ink[0], ink[1], ink[2]);
+                    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(ink[0], ink[1], ink[2]);
                     doc.text(lines, M, y);
-                    y += lines.length * 4.1 + 2.6;
+                    y += lines.length * 4.6 + 2.6;
                     line(y);
-                    y += 5.5;
+                    y += 6.2;
                 } else {
                     const half = CW * 0.48;
                     label(pair[0].label, M, y);
@@ -1276,20 +1276,20 @@
                     y += 4;
                     const lines0 = doc.splitTextToSize(String(pair[0].value), half);
                     const lines1 = doc.splitTextToSize(String(pair[1].value), half);
-                    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.2); doc.setTextColor(ink[0], ink[1], ink[2]);
+                    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(ink[0], ink[1], ink[2]);
                     doc.text(lines0, M, y);
                     doc.text(lines1, M + CW * 0.52, y);
-                    y += Math.max(lines0.length, lines1.length) * 4.1 + 2.6;
+                    y += Math.max(lines0.length, lines1.length) * 4.6 + 2.6;
                     line(y);
-                    y += 5.5;
+                    y += 6.2;
                 }
             });
             label('Token', M, y);
             y += 4;
-            doc.setFont('courier', 'bold'); doc.setFontSize(9.5); doc.setTextColor(ink[0], ink[1], ink[2]);
+            doc.setFont('courier', 'bold'); doc.setFontSize(10); doc.setTextColor(ink[0], ink[1], ink[2]);
             doc.text(String(d.token || '-'), M, y);
             y += 5;
-            doc.setFont('helvetica', 'normal'); doc.setFontSize(6.3); doc.setTextColor(gray[0], gray[1], gray[2]);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(gray[0], gray[1], gray[2]);
             doc.text('Simpan kwitansi ini sebagai bukti pembayaran  ·  imdkomyogyakarta.netlify.app', W / 2, y + 2, { align: 'center' });
             return doc;
         };
