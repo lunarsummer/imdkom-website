@@ -24,7 +24,7 @@
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/theme.css">
     <link rel="stylesheet" href="assets/css/output.css">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" defer></script>
@@ -178,24 +178,58 @@
         .reg-toast-icon { flex-shrink: 0; width: 1.5rem; height: 1.5rem; margin-top: 0.1rem; }
         .reg-toast-close { flex-shrink: 0; width: 1.75rem; height: 1.75rem; display: grid; place-items: center; border-radius: 0.5rem; color: rgba(255,255,255,0.85); background: transparent; border: none; cursor: pointer; }
         .reg-toast-close:hover { background: rgba(255,255,255,0.15); color: #ffffff; }
-        .receipt { margin-top: 1.25rem; max-width: 30rem; }
-        .receipt-card { background: #ffffff; border: 1px solid #e5e5e5; border-radius: 1rem; padding: 1.15rem 1.15rem 0.85rem; }
-        .receipt-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid #ececec; }
-        .receipt-brand { font-family: 'Anton', sans-serif; font-size: 1.45rem; line-height: 1; letter-spacing: 0.04em; color: #1a3c5e; margin: 0; }
-        .receipt-doc { font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: #6b7280; margin: 0.35rem 0 0; }
-        .receipt-status { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em; color: #065f46; background: #d1fae5; border: 1px solid #a7f3d0; border-radius: 999px; padding: 0.32rem 0.8rem 0.28rem; line-height: 1; }
-        .receipt-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #ececec; }
-        .receipt-label { display: block; font-size: 0.55rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: #9ca3af; }
-        .receipt-meta p, .receipt-row p { font-size: 0.82rem; color: #1f2937; font-weight: 600; margin: 0.18rem 0 0; overflow-wrap: anywhere; }
-        .receipt-amount { padding: 0.8rem 0; border-bottom: 1px solid #ececec; }
-        .receipt-amount-value { font-family: 'Anton', sans-serif; font-size: 2rem; line-height: 1.05; color: #0d0d0d; margin: 0.2rem 0 0; }
-        .receipt-amount-sub { font-size: 0.74rem; color: #6b7280; margin: 0.25rem 0 0; }
-        .receipt-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.25rem; padding: 0.75rem 0; border-bottom: 1px solid #ececec; }
-        .receipt-row { border-bottom: 1px solid #f3f3f3; padding-bottom: 0.4rem; }
-        .receipt-row-span-2 { grid-column: span 2; border-bottom: 1px solid #f3f3f3; padding-bottom: 0.4rem; }
-        .receipt-token { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.7rem; }
-        .receipt-token strong { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 0.78rem; letter-spacing: 0.08em; color: #111827; }
-        .receipt-web { font-size: 0.6rem; color: #9ca3af; text-align: center; margin: 0.55rem 0 0; }
+        /* ============================================================
+           PAYMENT PLATFORM PREMIUM (checkout + kwitansi)
+           Font: Inter (UI), JetBrains Mono (angka/IDN)
+           ============================================================ */
+        .pay-checkout { background: #ffffff; border: 1px solid #e3e6eb; border-radius: 1rem; overflow: hidden; box-shadow: 0 12px 30px rgba(13, 13, 13, 0.07); }
+        .pay-checkout-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 1rem; background: #0d0d0d; }
+        .pay-checkout-merchant { display: flex; align-items: center; gap: 0.6rem; }
+        .pay-checkout-logo { font-family: 'Anton', sans-serif; font-size: 0.9rem; letter-spacing: 0.06em; color: #ffffff; background: #0059ff; border-radius: 0.4rem; padding: 0.3rem 0.55rem 0.26rem; line-height: 1; }
+        .pay-checkout-merchant-name { font-size: 0.8rem; font-weight: 700; color: #ffffff; margin: 0; line-height: 1.25; }
+        .pay-checkout-merchant-sub { font-size: 0.62rem; color: #9aa3af; margin: 0.12rem 0 0; }
+        .pay-checkout-secure { display: flex; align-items: center; gap: 0.3rem; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; color: #34d399; text-transform: uppercase; }
+        .pay-checkout-secure svg { width: 0.8rem; height: 0.8rem; }
+        .pay-checkout-body { padding: 1.05rem 1.15rem 1.1rem; text-align: center; }
+        .pay-checkout-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #6b7280; margin: 0; }
+        .pay-checkout-amount { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: clamp(1.9rem, 7vw, 2.5rem); color: #0d0d0d; margin: 0.32rem 0 0; letter-spacing: -0.01em; }
+        .pay-checkout-note { font-size: 0.7rem; color: #6b7280; margin: 0.2rem 0 0; }
+        .pay-checkout-divider { border-top: 1px dashed #d9dde3; }
+
+        .pay-btn-primary { display: flex; width: 100%; align-items: center; justify-content: center; gap: 0.55rem; background: #0059ff; color: #ffffff; font-size: 0.92rem; font-weight: 700; border: none; border-radius: 0.75rem; padding: 0.85rem 1rem; margin-top: 0.85rem; cursor: pointer; transition: background 0.2s ease, transform 0.15s ease; }
+        .pay-btn-primary:hover { background: #0040c0; transform: translateY(-1px); }
+        .pay-btn-primary:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+
+        .reg-submit:disabled { background: #9ca3af; cursor: not-allowed; }
+        .reg-submit:disabled:hover { background: #9ca3af; }
+        .reg-submit-hint { text-align: center; font-size: 0.75rem; color: #6b7280; margin-top: 0.4rem; }
+
+        .receipt { margin-top: 1.1rem; max-width: 28.5rem; }
+        .receipt-card { background: #ffffff; border: 1px solid #e3e6eb; border-radius: 1rem; overflow: hidden; box-shadow: 0 14px 34px rgba(13, 13, 13, 0.10); }
+        .receipt-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem 0.8rem; background: #0d0d0d; }
+        .receipt-brand { font-family: 'Anton', sans-serif; font-size: 1.35rem; line-height: 1; letter-spacing: 0.04em; color: #ffffff; margin: 0; }
+        .receipt-doc { font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: #9aa3af; margin: 0.32rem 0 0; }
+        .receipt-status { font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.18em; color: #065f46; background: #34d399; border-radius: 999px; padding: 0.38rem 0.85rem 0.32rem; line-height: 1; }
+        .receipt-total { text-align: center; padding: 0.95rem 1rem 0.8rem; border-bottom: 1px dashed #d9dde3; }
+        .receipt-label { display: block; font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; }
+        .receipt-total-value { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 2.1rem; line-height: 1.1; color: #0d0d0d; margin: 0.3rem 0 0; letter-spacing: -0.01em; }
+        .receipt-total-sub { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: #6b7280; margin: 0.28rem 0 0; }
+        .receipt-rows { padding: 0.7rem 1rem; border-bottom: 1px dashed #d9dde3; display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1rem; }
+        .receipt-row { border-bottom: 1px solid #f1f1f1; padding-bottom: 0.4rem; }
+        .receipt-row-span-2 { grid-column: span 2; border-bottom: 1px solid #f1f1f1; padding-bottom: 0.4rem; }
+        .receipt-row p, .receipt-meta p { font-family: 'Inter', sans-serif; font-size: 0.77rem; color: #1f2937; font-weight: 600; margin: 0.14rem 0 0; overflow-wrap: anywhere; }
+        .receipt-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; padding: 0.65rem 1rem; border-bottom: 1px dashed #d9dde3; }
+        .receipt-token { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.6rem 1rem; border-bottom: 1px dashed #d9dde3; }
+        .receipt-token strong { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.74rem; letter-spacing: 0.1em; color: #111827; }
+        .pay-await { display: flex; gap: 0.75rem; align-items: center; background: #ffffff; border: 1px solid #e3e6eb; border-radius: 1rem; padding: 0.85rem 1rem; box-shadow: 0 12px 30px rgba(13, 13, 13, 0.07); }
+        .pay-await-spinner { width: 2.5rem; height: 2.5rem; border-radius: 9999px; border: 3px solid #e5e7eb; border-top-color: #0059ff; animation: payAwaitSpin 0.8s linear infinite; flex-shrink: 0; }
+        @keyframes payAwaitSpin { to { transform: rotate(360deg); } }
+        .pay-await-body { min-width: 0; flex: 1; }
+        .pay-await-title { font-size: 0.88rem; font-weight: 700; color: #0d0d0d; }
+        .pay-await-text { font-size: 0.74rem; color: #6b7280; margin-top: 0.2rem; }
+        .pay-await-note { font-size: 0.72rem; font-weight: 600; color: #92400e; margin-top: 0.35rem; }
+
+        .receipt-web { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: #6b7280; text-align: center; padding: 0.55rem 1rem 0.7rem; margin: 0; }
     </style>
 </head>
 <body class="font-sans min-h-screen">
@@ -240,7 +274,8 @@
                 </div>
                 <div id="regNikWrap" class="hidden reg-field">
                     <label class="reg-label" for="regNik">NIK <span class="text-red-700" aria-hidden="true">*</span></label>
-                    <input id="regNik" class="reg-input" type="text" placeholder="Nomor Induk Kependudukan" />
+                    <input id="regNik" class="reg-input font-mono" type="text" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" autocomplete="off" placeholder="Masukkan 16 digit NIK Anda" />
+                    <p id="regNikError" class="hidden text-xs font-semibold text-red-700 mt-1.5">NIK harus tepat 16 digit angka.</p>
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regJk">Jenis Kelamin <span class="text-red-700" aria-hidden="true">*</span></label>
@@ -337,10 +372,25 @@
                     <p id="paymentLockedHint" class="text-xs font-semibold text-brand mt-2"></p>
                 </div>
                 <div id="paymentBody" class="hidden space-y-4">
-                <div id="paymentBiayaWrap" class="hidden">
-                    <p class="text-xs text-gray-500 mb-1">Biaya yang harus dibayar</p>
-                    <div id="paymentBiaya" class="text-lg font-bold text-brand"></div>
-                    <p id="paymentBiayaNote" class="hidden text-xs font-semibold text-emerald-700 mt-1.5"></p>
+                <div id="paymentBiayaWrap" class="pay-checkout">
+                    <div class="pay-checkout-top">
+                        <div class="pay-checkout-merchant">
+                            <span class="pay-checkout-logo">IMDKOM</span>
+                            <div>
+                                <p class="pay-checkout-merchant-name">IMDKOM Yogyakarta</p>
+                                <p class="pay-checkout-merchant-sub">Kursus &amp; Computer Service</p>
+                            </div>
+                        </div>
+                        <div class="pay-checkout-secure">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                            Midtrans Secured
+                        </div>
+                    </div>
+                    <div class="pay-checkout-body">
+                        <p class="pay-checkout-label">Total Pembayaran</p>
+                        <p class="pay-checkout-amount" id="paymentBiaya">-</p>
+                        <p id="paymentBiayaNote" class="pay-checkout-note hidden"></p>
+                    </div>
                 </div>
                 <div class="reg-field" id="referralWrap">
                     <label class="reg-label" for="regKodeReferral">Kode Referral</label>
@@ -352,11 +402,12 @@
                     <p id="regReferralError" class="hidden text-xs font-semibold text-red-700 mt-1.5"></p>
                     <p id="regReferralHint" class="text-xs text-gray-400 mt-1.5">Masukkan kode sebelum pembayaran.</p>
                 </div>
-                <p class="text-sm text-gray-600">Setelah formulir terkirim, tekan <strong>Bayar via Midtrans</strong> untuk membayar (QRIS, GoPay, transfer bank &amp; lainnya). Pembayaran terverifikasi otomatis, tanpa perlu unggah bukti.</p>
+                <p class="text-sm text-gray-600">Klik <strong>Bayar via Midtrans</strong> untuk membayar (QRIS, GoPay, transfer bank &amp; lainnya). Pembayaran terverifikasi otomatis, tanpa perlu unggah bukti.</p>
                 <div class="reg-field">
                     <label class="reg-label" for="regCatatan">Catatan untuk Admin <span class="font-normal text-gray-400">(opsional)</span></label>
                     <textarea id="regCatatan" class="reg-textarea" rows="2" placeholder="Mis. saya ingin kelas mulai bulan depan"></textarea>
                 </div>
+                <button type="button" id="payNowBtn" class="pay-btn-primary"><span>Bayar via Midtrans</span></button>
                 </div>
             </div>
 
@@ -367,25 +418,28 @@
                 </label>
             </div>
 
-            <button type="submit" id="regSubmit" class="reg-submit">Lanjut ke Pembayaran</button>
             <div id="regMessage" class="text-sm" role="alert"></div>
         </form>
+        <button type="button" id="regSubmit" class="reg-submit mt-4 w-full" disabled>Lanjut ke Pembayaran</button>
+        <p id="regSubmitHint" class="reg-submit-hint">Selesaikan pembayaran terlebih dahulu untuk melihat kwitansi.</p>
 
         <div id="regSuccess" class="reg-success hidden mt-6" role="status">
-            <p class="text-lg text-emerald-800 font-bold">Pendaftaran berhasil diajukan!</p>
-            <p class="text-sm text-gray-700 mt-1">Data Anda sudah tersimpan. Lanjutkan pembayaran di bawah — kwitansi dan tombol konfirmasi WhatsApp akan muncul setelah pembayaran berhasil terverifikasi.</p>
-            <p class="text-sm text-gray-600 mt-2">Simpan <strong>TOKEN PENDAFTARAN</strong> Anda &mdash; dipakai untuk tracking status dan melihat jadwal kursus:</p>
+            <p class="text-lg text-emerald-800 font-bold">Pendaftaran tersimpan!</p>
+            <p class="text-sm text-gray-700 mt-1">Lanjutkan pembayaran di bawah — kwitansi &amp; konfirmasi WhatsApp muncul setelah pembayaran berhasil terverifikasi.</p>
+            <p class="text-sm text-gray-600 mt-2">Simpan <strong>TOKEN PENDAFTARAN</strong> di bawah &mdash; dipakai untuk tracking di <a class="text-brand underline" href="/tracking">/tracking</a> (dengan 4 digit terakhir WhatsApp Anda) dan juga saat konfirmasi ke WhatsApp admin:</p>
             <div class="flex items-center gap-2 mt-2 max-w-md">
                 <input id="regToken" class="reg-input bg-transparent font-mono text-lg tracking-widest" readonly aria-label="Token pendaftaran" />
                 <button type="button" id="regCopyToken" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold px-3 py-2 rounded-lg">Salin</button>
             </div>
 
-            <div id="regPaymentPanel" class="mt-5 rounded-xl border border-emerald-200 bg-white p-4 sm:p-5">
-                <p class="text-sm font-bold text-gray-800">Pembayaran</p>
-                <p class="text-sm text-gray-600 mt-1">Nominal: <span id="payPanelNominal" class="font-bold text-brand">-</span></p>
-                <p class="text-xs text-gray-500 mt-1">Pembayaran diproses oleh Midtrans. Metode (QRIS, GoPay, transfer bank, dan lainnya) dipilih di pop-up pembayaran. Status terverifikasi otomatis, Anda tidak perlu unggah bukti.</p>
-                <button type="button" id="payNowBtn" class="reg-submit mt-3">Bayar via Midtrans</button>
-                <p id="payNowNote" class="hidden text-xs font-semibold mt-2 text-amber-800"></p>
+            <div id="regPaymentPanel" class="pay-await mt-4">
+                <div class="pay-await-spinner" aria-hidden="true"></div>
+                <div class="pay-await-body">
+                    <p class="pay-await-title">Menunggu pembayaran</p>
+                    <p class="pay-await-text">Pop-up Snap akan terbuka otomatis. Jika tertutup, klik tombol di bawah.</p>
+                    <button type="button" id="payNowRetryBtn" class="pay-btn-primary" style="margin-top:0.6rem"><span>Bayar via Midtrans</span></button>
+                    <p id="payNowNote" class="pay-await-note hidden"></p>
+                </div>
             </div>
             <div class="receipt mt-5 hidden" id="regTicket" aria-label="Kwitansi pembayaran">
                 <div class="receipt-card">
@@ -396,14 +450,14 @@
                         </div>
                         <span class="receipt-status">LUNAS</span>
                     </div>
+                    <div class="receipt-total">
+                        <span class="receipt-label">Total Dibayarkan</span>
+                        <p class="receipt-total-value" id="ticketNominal">-</p>
+                        <p class="receipt-total-sub"><span id="ticketMetode">-</span><span id="ticketReferralWrap" class="hidden"> &middot; Referral <span id="ticketReferral">-</span></span></p>
+                    </div>
                     <div class="receipt-meta">
                         <div><span class="receipt-label">ID Transaksi</span><p id="ticketTransactionId">-</p></div>
                         <div><span class="receipt-label">Tanggal Bayar</span><p id="ticketPaidAt">-</p></div>
-                    </div>
-                    <div class="receipt-amount">
-                        <span class="receipt-label">Jumlah Dibayarkan</span>
-                        <p class="receipt-amount-value" id="ticketNominal">-</p>
-                        <p class="receipt-amount-sub"><span id="ticketMetode">-</span><span id="ticketReferralWrap" class="hidden"> &middot; Referral <span id="ticketReferral">-</span></span></p>
                     </div>
                     <div class="receipt-rows">
                         <div class="receipt-row-span-2"><span class="receipt-label">Program</span><p id="ticketProgram">-</p></div>
@@ -573,7 +627,6 @@
         const programInfo = document.getElementById('regProgramInfo');
         const programDetail = document.getElementById('regProgramDetail');
         const form = document.getElementById('regForm');
-        const submitBtn = document.getElementById('regSubmit');
         const messageEl = document.getElementById('regMessage');
         const successEl = document.getElementById('regSuccess');
         const tokenEl = document.getElementById('regToken');
@@ -855,14 +908,16 @@
             });
         }
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // ================= REGISTRASI (reusable) =================
+        let registrationDone = false;
+        const doRegister = async function () {
+            if (registrationDone) return true;
+            // Validasi
             if (!document.getElementById('regAgreement').checked) {
                 messageEl.innerHTML = '<p class="reg-error">Anda wajib mencentang persetujuan terlebih dahulu.</p>';
-                return;
+                return false;
             }
             const nama = document.getElementById('regNama').value.trim();
-            // Normalisasi: hanya simpan digit (sesuai validasi Firestore)
             const wa = document.getElementById('regWa').value.replace(/\D/g, '').trim();
             const email = document.getElementById('regEmail').value.trim().toLowerCase();
             const tempatLahir = document.getElementById('regTempat').value.trim();
@@ -878,26 +933,16 @@
             const sumber = document.getElementById('regSumber').value;
             const alasan = Array.from(document.querySelectorAll('#regAlasan .reg-checkbox:checked')).filter(function(c) { return c.checked; }).map(function(c) { return c.value; });
             const emailError = validateEmailField(email);
-            if (emailError) {
-                messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(emailError) + '</p>';
-                return;
-            }
+            if (emailError) { messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(emailError) + '</p>'; return false; }
             if (nik) {
                 const nikError = validateNikField(nik, jenisKelamin, tanggalLahir);
-                if (nikError) {
-                    messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(nikError) + '</p>';
-                    return;
-                }
+                if (nikError) { messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(nikError) + '</p>'; return false; }
             }
-            if (!nama || !wa || alasan.length === 0) {
-                messageEl.innerHTML = '<p class="reg-error">Mohon lengkapi data wajib.</p>';
-                return;
-            }
+            if (!nama || !wa || alasan.length === 0) { messageEl.innerHTML = '<p class="reg-error">Mohon lengkapi data wajib.</p>'; return false; }
             if (!wil.provinsi || !wil.kabupaten || !wil.kecamatan || !wil.kelurahan || !alamatDetail) {
                 messageEl.innerHTML = '<p class="reg-error">Mohon lengkapi alamat (provinsi, kabupaten/kota, kecamatan, kelurahan, dan detail).</p>';
-                return;
+                return false;
             }
-            submitBtn.disabled = true;
             try {
                 const kodeReferral = document.getElementById('regKodeReferral').value.trim();
                 const catatan = document.getElementById('regCatatan').value.trim();
@@ -977,27 +1022,13 @@
                 form.classList.add('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 messageEl.innerHTML = '';
+                registrationDone = true;
+                return true;
             } catch (err) {
-                messageEl.innerHTML = '<p class="reg-error">Gagal mengirim pendaftaran: ' + err.message + '</p>';
+                messageEl.innerHTML = '<p class="reg-error">Gagal menyimpan pendaftaran: ' + err.message + '</p>';
+                return false;
             }
-            submitBtn.disabled = false;
-        });
-
-        // ================= SNAP PAYMENT =================
-        let snapJsPromise = null;
-        function loadSnapJs(jsUrl, clientKey) {
-            if (window.snap) return Promise.resolve();
-            if (snapJsPromise) return snapJsPromise;
-            snapJsPromise = new Promise(function(resolve, reject) {
-                const s = document.createElement('script');
-                s.src = jsUrl;
-                s.setAttribute('data-client-key', clientKey);
-                s.onload = function() { resolve(); };
-                s.onerror = function() { reject(new Error('Gagal memuat Snap.js')); };
-                document.head.appendChild(s);
-            });
-            return snapJsPromise;
-        }
+        };
 
         // ================= KWITANSI: deteksi lunas via status Midtrans =================
         const waConfirmBtn = document.getElementById('regWaConfirmBtn');
@@ -1085,18 +1116,23 @@
         };
 
         const onPaymentLunas = function () {
-            if (!lastTicketData || !lastTicketData.token) fillReceipt(lastTicketData || {});
-            fillReceipt(lastTicketData);
+            fillReceipt(lastTicketData || {});
+            const waitPanel = document.getElementById('regPaymentPanel');
+            if (waitPanel) waitPanel.classList.add('hidden');
             const receipt = document.getElementById('regTicket');
             if (receipt) receipt.classList.remove('hidden');
             if (downloadTicketBtn) downloadTicketBtn.classList.remove('hidden');
             if (waConfirmBtn) waConfirmBtn.classList.remove('hidden');
-            const btn = document.getElementById('payNowBtn');
-            if (btn) { btn.disabled = true; btn.textContent = 'Terbayar'; }
-            const payNowNote = document.getElementById('payNowNote');
-            if (payNowNote) { payNowNote.textContent = 'Pembayaran sudah berhasil terverifikasi.'; payNowNote.classList.remove('hidden'); }
+            setBothPayButtons(true, 'Terbayar');
+            const bottomBtn = document.getElementById('regSubmit');
+            if (bottomBtn) {
+                bottomBtn.disabled = false;
+                bottomBtn.textContent = 'Lihat Kwitansi Pembayaran';
+            }
+            const hint = document.getElementById('regSubmitHint');
+            if (hint) hint.classList.add('hidden');
             qrisToastShown = false;
-            showQrisToast('success', 'Pembayaran terverifikasi', 'Pembayaran Anda sudah berhasil. Kwitansi dan konfirmasi WhatsApp tersedia di bawah.');
+            showQrisToast('success', 'Pembayaran terverifikasi', 'Pembayaran Anda sudah berhasil. Klik "Lihat Kwitansi Pembayaran" untuk kwitansi & konfirmasi WhatsApp.');
         };
 
         const buildWaMessage = function (d) {
@@ -1200,31 +1236,22 @@
             return doc;
         };
 
-        if (downloadTicketBtn) downloadTicketBtn.addEventListener('click', function () {
-            if (!lastTicketData) return;
-            try {
-                const doc = buildReceiptPdf(lastTicketData);
-                doc.save('kwitansi-' + (lastTicketData.token || 'imdkom') + '.pdf');
-            } catch (err) {
-                console.error('Gagal membuat PDF:', err);
-                showQrisToast('error', 'Gagal membuat PDF', String((err && err.message) || err));
-            }
-        });
 
-        if (waConfirmBtn) waConfirmBtn.addEventListener('click', function () {
-            if (!lastTicketData) return;
-            openWhatsApp(buildWaMessage(lastTicketData));
-        });
-
+        // ================= BAYAR (registrasi + buka Snap) =================
         const payNowBtn = document.getElementById('payNowBtn');
+        const payNowRetryBtn = document.getElementById('payNowRetryBtn');
         const payNowNote = document.getElementById('payNowNote');
         let snapTokenCache = null;
-        if (payNowBtn) payNowBtn.addEventListener('click', async function() {
-            if (this.disabled) return;
-            const btn = this;
-            btn.disabled = true;
-            btn.textContent = 'Memproses...';
-            if (payNowNote) payNowNote.classList.add('hidden');
+
+        const setBothPayButtons = function (disabled, label) {
+            [payNowBtn, payNowRetryBtn].forEach(function (b) {
+                if (!b) return;
+                b.disabled = disabled;
+                if (label) b.innerHTML = '<span>' + label + '</span>';
+            });
+        };
+
+        const openSnap = async function (btn) {
             try {
                 if (!snapTokenCache) {
                     const wilNow = getWilayah();
@@ -1255,37 +1282,53 @@
                     throw new Error('Snap.js gagal dimuat. Muat ulang halaman lalu coba lagi.');
                 }
                 window.snap.pay(snapTokenCache.snapToken, {
-                    onSuccess: function() {
+                    onSuccess: function () {
                         showQrisToast('success', 'Pembayaran berhasil', 'Kami sedang memverifikasi pembayaran Anda. Kwitansi akan muncul setelah lunas.');
-                        btn.textContent = 'Menunggu verifikasi...';
+                        setBothPayButtons(true, 'Menunggu verifikasi...');
                         if (payNowNote) { payNowNote.textContent = 'Pembayaran sedang diverifikasi...'; payNowNote.classList.remove('hidden'); }
                         startSettlementWatch();
                     },
-                    onPending: function() {
+                    onPending: function () {
                         showQrisToast('pending', 'Menunggu pembayaran', 'Selesaikan pembayaran Anda sebelum kedaluwarsa. Status diverifikasi otomatis oleh Midtrans.');
-                        btn.disabled = false;
-                        btn.textContent = 'Bayar via Midtrans';
+                        setBothPayButtons(false, 'Bayar via Midtrans');
                         if (payNowNote) { payNowNote.textContent = 'Selesaikan pembayaran Anda sebelum kedaluwarsa.'; payNowNote.classList.remove('hidden'); }
                         startSettlementWatch();
                     },
-                    onError: function() {
+                    onError: function () {
                         showQrisToast('error', 'Pembayaran gagal', 'Pembayaran tidak berhasil. Silakan coba lagi.');
-                        btn.disabled = false;
-                        btn.textContent = 'Coba Lagi';
+                        setBothPayButtons(false, 'Bayar via Midtrans');
                     },
-                    onClose: function() {
-                        btn.disabled = false;
-                        btn.textContent = 'Bayar via Midtrans';
+                    onClose: function () {
+                        setBothPayButtons(false, 'Bayar via Midtrans');
                         if (payNowNote) { payNowNote.textContent = 'Pembayaran belum selesai. Klik "Bayar via Midtrans" untuk mencoba lagi.'; payNowNote.classList.remove('hidden'); }
                     }
                 });
             } catch (err) {
                 console.error('Snap gagal:', err);
                 showQrisToast('error', 'Pembayaran gagal', String((err && err.message) || err));
-                btn.disabled = false;
-                btn.textContent = 'Coba Lagi';
+                setBothPayButtons(false, 'Bayar via Midtrans');
             }
-        });
+        };
+
+        const handlePayNow = async function (btn) {
+            if (!btn || btn.disabled) return;
+            if (!registrationDone) {
+                btn.disabled = true;
+                btn.innerHTML = '<span>Memproses pendaftaran...</span>';
+                const ok = await doRegister();
+                if (!ok) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Bayar via Midtrans</span>';
+                    return;
+                }
+            }
+            btn.disabled = true;
+            btn.innerHTML = '<span>Memuat pop-up pembayaran...</span>';
+            await openSnap(btn);
+        };
+
+        if (payNowBtn) payNowBtn.addEventListener('click', function () { handlePayNow(payNowBtn); });
+        if (payNowRetryBtn) payNowRetryBtn.addEventListener('click', function () { handlePayNow(payNowRetryBtn); });
 
         async function sha256hex(str) {
             const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -1362,6 +1405,32 @@
                 setTimeout(function() { copyTokenBtn.innerText = 'Salin'; }, 2000);
             });
         });
+
+        const bottomBtnEl = document.getElementById('regSubmit');
+        if (bottomBtnEl) bottomBtnEl.addEventListener('click', function () {
+            const target = document.getElementById('regTicket');
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        const nikInputEl = document.getElementById('regNik');
+        const nikErrorEl = document.getElementById('regNikError');
+        const checkNikLive = function () {
+            if (!nikInputEl || !nikErrorEl) return;
+            const digits = nikInputEl.value.replace(/\D+/g, '').slice(0, 16);
+            if (digits !== nikInputEl.value) nikInputEl.value = digits;
+            const v = nikInputEl.value;
+            if (v.length === 0) { nikErrorEl.classList.add('hidden'); return; }
+            if (v.length !== 16) {
+                nikErrorEl.textContent = 'NIK harus tepat 16 digit (saat ini ' + v.length + ' digit).';
+                nikErrorEl.classList.remove('hidden');
+            } else {
+                nikErrorEl.classList.add('hidden');
+            }
+        };
+        if (nikInputEl) {
+            nikInputEl.addEventListener('input', checkNikLive);
+            nikInputEl.addEventListener('blur', checkNikLive);
+        }
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
         await loadProgramInfo();

@@ -103,6 +103,8 @@
         .cta:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 10px 22px rgba(29,78,216,0.32); }
         .cta:active { transform: translateY(0); box-shadow: 0 4px 10px rgba(29,78,216,0.3); }
         .cta:disabled { background: #94a3b8; box-shadow: none; cursor: not-allowed; transform: none; }
+        .wa-confirm-btn { background: #075e54; box-shadow: 0 6px 16px rgba(7,94,84,0.3); margin-top: 0.75rem; }
+        .wa-confirm-btn:hover { background: #064e45; box-shadow: 0 10px 22px rgba(7,94,84,0.35); }
 
         .security-note { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.9rem; font-size: 0.72rem; color: #64748b; }
 
@@ -217,6 +219,11 @@
                 <p class="empty-text">Admin akan menerbitkan jadwal setelah verifikasi data dan pembayaran Anda selesai.</p>
             </div>
 
+            <button type="button" id="trackWaConfirm" class="cta wa-confirm-btn" hidden>
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                Konfirmasi Pembayaran &amp; Pendaftaran via WhatsApp
+            </button>
+
             <button id="trackBack" class="reset-link"><i data-lucide="search" class="w-4 h-4"></i>Cek pendaftaran lain</button>
         </section>
     </main>
@@ -243,6 +250,20 @@
         const jadwalDetail = document.getElementById('jadwalDetail');
         const emptyBox = document.getElementById('trackEmpty');
         const backBtn = document.getElementById('trackBack');
+        const waConfirmBtn = document.getElementById('trackWaConfirm');
+        let lastTracked = null;
+        const WA_ADMIN = '6285601913435';
+
+        const openWaConfirm = function () {
+            const d = lastTracked || {};
+            const msg = '*KONFIRMASI PEMBAYARAN DAN PENDAFTARAN IMDKOM*\n\n'
+                + 'Token: ' + (d.token || '') + '\n'
+                + 'Program: ' + (d.programNama || '') + '\n'
+                + 'Nama: ' + (d.nama || '') + '\n'
+                + 'Status Pembayaran: ' + (d.statusPembayaran || 'Menunggu') + '\n\n'
+                + 'Mohon konfirmasi pendaftaran dan jadwal kursusnya. Terima kasih.';
+            window.open('https://wa.me/' + WA_ADMIN + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+        };
 
         async function sha256hex(str) {
             const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -365,7 +386,9 @@
                     renderError('Nomor WhatsApp tidak cocok dengan data pendaftaran ini.');
                     return;
                 }
-                renderTracking(Object.assign({ token: token }, data));
+                lastTracked = Object.assign({ token: token }, data);
+                if (waConfirmBtn) waConfirmBtn.hidden = false;
+                renderTracking(lastTracked);
             } catch (error) {
                 console.error('Tracking error:', error);
                 if (error && error.code === 'permission-denied') {
@@ -385,8 +408,12 @@
             tokenInput.value = '';
             wa4Input.value = '';
             message.innerHTML = '';
+            if (waConfirmBtn) waConfirmBtn.hidden = true;
+            lastTracked = null;
             tokenInput.focus();
         });
+
+        if (waConfirmBtn) waConfirmBtn.addEventListener('click', openWaConfirm);
     </script>
 </body>
 </html>
