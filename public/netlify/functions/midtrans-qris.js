@@ -1,9 +1,18 @@
 // ============================================================
 // NETLIFY FUNCTION - QRIS Dinamis (Midtrans)
 // POST /.netlify/functions/midtrans-qris
-// Body: { token, amount, description, nama, wa }
+// Body: { token, programId, kodeReferral?, nama?, wa? }
+//
+// Harga diverifikasi & dihitung di SERVER dari Firestore (public read),
+// client TIDAK lagi menentukan nominal pembayaran.
+//
 // Env:  MIDTRANS_SERVER_KEY (server key)
 //       MIDTRANS_ENV = sandbox | production (default: sandbox)
+//
+// CATATAN: URL notifikasi Midtrans di-set di Merchant Dashboard
+// (Settings > Configuration > Payment Notification URL) ke:
+//   https://<domain-anda>/.netlify/functions/midtrans-notify
+// Midtrans tidak menerima notify_url per-transaksi charge QRIS.
 // ============================================================
 
 const json = (statusCode, body) => ({
@@ -11,6 +20,45 @@ const json = (statusCode, body) => ({
     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
     body: JSON.stringify(body)
 });
+
+const PROJECT_ID = 'imdkomyk-9695a';
+const FIRESTORE = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
+
+const TOKEN_RE = /^IMDKOM-[A-Z]{10}$/;
+const PROGRAM_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
+const REFERRAL_RE = /^[A-Z0-9_-]{3,32}$/;
+
+const parsePrice = (v) => {
+    const digits = String(v == null ? '' : v).replace(/[^0-9]/g, '');
+    const n = parseInt(digits, 10);
+    return Number.isFinite(n) ? n : 0;
+};
+
+const firestoreGet = async (path) => {
+    const res = await fetch(`${FIRESTORE}/${path}`);
+    if (!res.ok) return null;
+    const data = await res.json().catch(() => null);
+    return data;
+};
+
+const fieldString = (fields, key) => {
+    const f = fields && fields[key];
+    return f && f.stringValue !== undefined ? f.stringValue : '';
+};
+
+const fieldBool = (fields, key) => {
+    const f = fields && fields[key];
+    return !!(f && f.booleanValue === true);
+};
+
+const fieldNumber = (fields, key) => {
+    const f = fields && fields[key];
+    if (!f) return 0;
+    if (f.integerValue !== undefined) return parseInt(f.integerValue, 10) || 0;
+    if (f.doubleValue !== undefined) return parseFloat(f.doubleValue) || 0;
+    if (f.stringValue !== undefined) return parsePrice(f.stringValue);
+    return 0;
+};
 
 exports.handler = async function (event) {
     if (event.httpMethod !== 'POST') return json(405, { error: 'Method Not Allowed' });
@@ -21,7 +69,7 @@ exports.handler = async function (event) {
 
     let rawBody = event.body || '{}';
     if (event.isBase64Encoded && rawBody) {
-        try { rawBody = Buffer.from(rawBody, 'base64').toString('utf8'); } catch (e) { /* biarkan gagal di bawah */ }
+        try { rawBody = Buffer.from(rawBody, 'base64').toString('utf8'); } catch (e) { /* lanjut gagal di bawah */ }
     }
     if (rawBody && rawBody.charCodeAt(0) === 0xFEFF) rawBody = rawBody.slice(1);
     const bodyText = rawBody.trim();
@@ -31,23 +79,77 @@ exports.handler = async function (event) {
         return json(400, { error: 'Body JSON tidak valid' });
     }
 
-    const token = String(body.token || '').trim();
-    const amount = Math.round(Number(String(body.amount ?? '').replace(/[^0-9]/g, '')));
-    const description = String(body.description || 'Pendaftaran Kursus IMDKOM').slice(0, 50);
+    const token = String(body.token || '').trim().toUpperCase();
+    const programId = String(body.programId || '').trim();
+    const kodeReferral = String(body.kodeReferral || '').trim().toUpperCase();
     const nama = String(body.nama || 'Peserta').slice(0, 50);
     const wa = String(body.wa || '').slice(0, 20);
 
-    if (!token) return json(400, { error: 'token wajib diisi' });
-    if (!amount || amount < 1) return json(400, { error: 'nominal pembayaran tidak valid' });
+    if (!TOKEN_RE.test(token)) return json(400, { error: 'Token tidak valid. Refresh halaman.' });
+    if (!PROGRAM_ID_RE.test(programId)) return json(400, { error: 'Program ID tidak valid.' });
+    if (kodeReferral && !REFERRAL_RE.test(kodeReferral)) return json(400, { error: 'Kode referral tidak valid.' });
     if (!SERVER_KEY) return json(500, { error: 'MIDTRANS_SERVER_KEY belum diset di Netlify.' });
 
-    const orderId = token.slice(0, 50);
+    // ---------- 1. Ambil harga program dari Firestore (public read) ----------
+    let programDoc;
+    try {
+        programDoc = await firestoreGet(`programs/${encodeURIComponent(programId)}`);
+    } catch (e) {
+        return json(502, { error: 'Gagal membaca data program.' });
+    }
+    if (!programDoc || !programDoc.fields) {
+        return json(404, { error: 'Program tidak ditemukan.' });
+    }
+    if (fieldBool(programDoc.fields, 'aktif') === false) {
+        return json(409, { error: 'Program sedang tidak tersedia.' });
+    }
+
+    const hargaNum = parsePrice(fieldString(programDoc.fields, 'harga'));
+    const hargaPromoNum = parsePrice(fieldString(programDoc.fields, 'hargaPromo'));
+    const namaProgram = fieldString(programDoc.fields, 'nama') || 'Program Kursus';
+
+    // Pakai harga promo jika lebih murah & valid
+    let base = (hargaPromoNum > 0 && hargaNum > 0 && hargaPromoNum !== hargaNum)
+        ? hargaPromoNum
+        : (hargaPromoNum > 0 && hargaNum === 0 ? hargaPromoNum : hargaNum);
+    if (base <= 0) return json(422, { error: 'Harga program belum diatur admin.' });
+
+    // ---------- 2. Hitung diskon referral (jika ada) ----------
+    let potongan = 0;
+    if (kodeReferral) {
+        let refDoc = null;
+        try {
+            refDoc = await firestoreGet(`referrals/${encodeURIComponent(kodeReferral)}`);
+        } catch (e) {
+            return json(502, { error: 'Gagal membaca kode referral.' });
+        }
+        if (!refDoc || !refDoc.fields) return json(404, { error: 'Kode referral tidak ditemukan.' });
+        if (refDoc.fields.active && refDoc.fields.active.booleanValue === false) {
+            return json(409, { error: 'Kode referral sudah tidak aktif.' });
+        }
+        const refProgramId = fieldString(refDoc.fields, 'programId');
+        if (refProgramId && refProgramId !== programId) {
+            return json(409, { error: 'Kode referral tidak berlaku untuk program ini.' });
+        }
+        const type = fieldString(refDoc.fields, 'type') === 'flat' ? 'flat' : 'percent';
+        let value = fieldNumber(refDoc.fields, 'value');
+        if (type === 'percent') value = Math.min(100, Math.max(0, value));
+        if (value > 0) {
+            potongan = type === 'percent'
+                ? Math.min(base, Math.round(base * value / 100))
+                : Math.min(base, value);
+        }
+    }
+
+    const grossAmount = Math.max(1, base - potongan);
+
+    const orderId = token;
     const auth = 'Basic ' + Buffer.from(SERVER_KEY + ':').toString('base64');
 
     const payload = {
         payment_type: 'qris',
-        transaction_details: { order_id: orderId, gross_amount: amount },
-        item_details: [{ id: 'KURSUS', price: amount, quantity: 1, name: description }],
+        transaction_details: { order_id: orderId, gross_amount: grossAmount },
+        item_details: [{ id: 'KURSUS', price: grossAmount, quantity: 1, name: namaProgram.slice(0, 50) }],
         customer_details: { first_name: nama, phone: wa },
         qris: {}
     };
@@ -89,7 +191,8 @@ exports.handler = async function (event) {
         orderId,
         transactionId: data.transaction_id || '',
         transactionStatus: data.transaction_status || 'pending',
-        grossAmount: data.gross_amount || String(amount),
+        grossAmount: data.gross_amount || String(grossAmount),
+        potonganReferral: potongan,
         qrString: data.qr_string || '',
         qrDataUrl,
         qrImageUrl: qrAction && qrAction.url ? qrAction.url : '',

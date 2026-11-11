@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
@@ -233,7 +233,7 @@
                 <h2 class="reg-section-title">Data Pribadi</h2>
                 <div class="reg-field">
                     <label class="reg-label" for="regNama">Nama Peserta <span class="text-red-700" aria-hidden="true">*</span></label>
-                    <input id="regNama" class="reg-input" type="text" placeholder="Nama lengkap" required />
+                    <input id="regNama" class="reg-input" type="text" placeholder="Nama lengkap" maxlength="100" required />
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regTempat">Tempat Lahir <span class="text-red-700" aria-hidden="true">*</span></label>
@@ -261,7 +261,7 @@
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regWa">Nomor WhatsApp <span class="text-red-700" aria-hidden="true">*</span></label>
-                    <input id="regWa" class="reg-input" type="tel" placeholder="08xxxxxxxxxx" required />
+                    <input id="regWa" class="reg-input" type="tel" placeholder="08xxxxxxxxxx" maxlength="15" minlength="9" pattern="[0-9]{9,15}" inputmode="numeric" required />
                 </div>
             </div>
 
@@ -690,7 +690,20 @@
         let currentHargaPromo = '';
         let lastTicketData = null;
         const programId = params.get('program') || localStorage.getItem('imdkom_reg_program') || '';
-        const token = 'IMDKOM-' + Math.random().toString(36).slice(2, 10).toUpperCase();
+        function generateToken() {
+            // CSPRNG — unguessable token (order_id Midtrans + akses tracking)
+            // 10 huruf A-Z dari crypto.getRandomValues (~47 bit entropy)
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const bytes = new Uint8Array(10);
+            crypto.getRandomValues(bytes);
+            let s = '';
+            for (let i = 0; i < bytes.length; i++) {
+                s += alphabet[bytes[i] % alphabet.length];
+            }
+            return 'IMDKOM-' + s;
+        }
+
+        const token = generateToken();
         localStorage.setItem('imdkom_reg_token', token);
 
         const programInfo = document.getElementById('regProgramInfo');
@@ -1005,7 +1018,8 @@
                 return;
             }
             const nama = document.getElementById('regNama').value.trim();
-            const wa = document.getElementById('regWa').value.trim();
+            // Normalisasi: hanya simpan digit (sesuai validasi Firestore)
+            const wa = document.getElementById('regWa').value.replace(/\D/g, '').trim();
             const tempatLahir = document.getElementById('regTempat').value.trim();
             const tanggalLahir = document.getElementById('regTanggalLahir').value;
             const jenisKelamin = document.getElementById('regJk').value;
@@ -1219,15 +1233,15 @@
         async function loadDynamicQris() {
             const nominal = getFinalBiaya();
             if (!nominal) return false;
-            const programName = (programDetail && programDetail.textContent || 'Pendaftaran Kursus IMDKOM').replace('Nama:', '').trim().slice(0, 50);
+            const kodeReferralCharge = appliedReferral ? appliedReferral.code : '';
             try {
                 const res = await fetch('/.netlify/functions/midtrans-qris', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         token: token,
-                        amount: String(nominal),
-                        description: programName,
+                        programId: programId,
+                        kodeReferral: kodeReferralCharge,
                         nama: (document.getElementById('regNama') || {}).value || 'Peserta',
                         wa: (document.getElementById('regWa') || {}).value || ''
                     })

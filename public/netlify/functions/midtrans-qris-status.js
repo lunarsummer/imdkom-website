@@ -19,10 +19,14 @@ exports.handler = async function (event) {
     if (!SERVER_KEY) return json(500, { error: 'MIDTRANS_SERVER_KEY belum diset di Netlify.' });
 
     const params = event.queryStringParameters || {};
-    const orderId = String(params.orderId || params.order_id || '').trim().slice(0, 50);
+    const orderId = String(params.orderId || params.order_id || '').trim().toUpperCase();
 
-    if (!orderId) return json(400, { error: 'orderId wajib diisi' });
-    if (!SERVER_KEY) return json(500, { error: 'MIDTRANS_SERVER_KEY belum diset di Netlify.' });
+    // Hanya terima format token internal — mencegah enumerasi order Midtrans
+    // (Midtrans menerima order_id custom dari merchant; verifikasi yang ketat
+    //  juga membatasi info yang terekspos).
+    if (!/^IMDKOM-[A-Z]{10}$/.test(orderId)) {
+        return json(400, { error: 'orderId tidak valid.' });
+    }
 
     const auth = 'Basic ' + Buffer.from(SERVER_KEY + ':').toString('base64');
 

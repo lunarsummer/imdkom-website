@@ -219,10 +219,39 @@ service cloud.firestore {
 
     // ============================================================
     // REGISTRATIONS (Pendaftaran kursus online — tanpa login)
+    // Validasi ketat agar client tidak bisa menyuntik field aneh /
+    // data palsu (mis. nominalPembayaran "1").
     // ============================================================
+    function isValidRegistration() {
+      let d = request.resource.data;
+      return d.token is string
+          && d.token.matches('^IMDKOM-[A-Z]{10}$')
+          && d.programId is string
+          && d.programId.size() >= 6 && d.programId.size() <= 64
+          && d.programNama is string
+          && d.programNama.size() <= 100
+          && d.nama is string
+          && d.nama.size() >= 2 && d.nama.size() <= 100
+          && d.whatsapp is string
+          && d.whatsapp.matches('^[0-9]{9,15}$')
+          && d.status == 'Menunggu'
+          && d.metodePembayaran in ['qris', 'transfer']
+          && d.nominalPembayaran is string
+          && d.nominalPembayaran.matches('^[0-9]{1,12}$')
+          && d.hargaSebelumDiskon is string
+          && d.potonganReferral is string
+          && d.potonganReferral.matches('^[0-9]{1,12}$')
+          && d.buktiUrl is string
+          && d.buktiUrl.size() <= 400
+          && d.buktiUrl.matches('^https://res\\.cloudinary\\.com/')
+          && d.createdAt is string
+          && d.updatedAt is string;
+    }
+
     match /registrations/{id} {
-      // Form pendaftaran publik (tanpa login) bisa membuat pengajuan
-      allow create: if true;
+      // Form publik (tanpa login) bisa membuat pendaftaran,
+      // TANPA bisa menentukan status/nominal sembarangan.
+      allow create: if isValidRegistration();
 
       // Admin yang bisa membaca / memverifikasi / menghapus data pendaftaran
       allow read, update, delete: if isAdmin();
@@ -239,7 +268,12 @@ service cloud.firestore {
       // Peserta membuat mirror statusnya sendiri saat registrasi
       // (doc id = token, field tidak bisa menimpa data terverifikasi)
       allow create: if request.resource.data.token == token
-                       && request.resource.data.jadwalTerbit == false;
+                       && request.resource.data.token.matches('^IMDKOM-[A-Z]{10}$')
+                       && request.resource.data.jadwalTerbit == false
+                       && request.resource.data.nama is string
+                       && request.resource.data.nama.size() <= 100
+                       && request.resource.data.programNama is string
+                       && request.resource.data.programNama.size() <= 100;
 
       // Admin yang memperbarui status verifikasi / jadwal
       allow update, delete: if isAdmin();
