@@ -94,8 +94,11 @@ exports.handler = async function (event) {
     if (!TOKEN_RE.test(token)) return json(400, { error: 'Token tidak valid. Refresh halaman.' });
     if (!PROGRAM_ID_RE.test(programId)) return json(400, { error: 'Program ID tidak valid.' });
     if (kodeReferral && !REFERRAL_RE.test(kodeReferral)) return json(400, { error: 'Kode referral tidak valid.' });
-    if (!SERVER_KEY) return json(500, { error: 'MIDTRANS_SERVER_KEY belum diset di Netlify.' });
-    if (!CLIENT_KEY) return json(500, { error: 'MIDTRANS_CLIENT_KEY belum diset di Netlify.' });
+    if (!SERVER_KEY || !CLIENT_KEY) {
+        const present = Object.keys(process.env).filter(k => k.indexOf('MIDTRANS') === 0).sort();
+        console.error('midtrans-snap env cek. Variabel MIDTRANS terbaca:', present.join(', ') || '(tidak ada)', '| SERVER_KEY set:', !!SERVER_KEY, '| CLIENT_KEY set:', !!CLIENT_KEY);
+        return json(500, { error: 'MIDTRANS_SERVER_KEY / MIDTRANS_CLIENT_KEY belum diset di Netlify.', envTerbaca: present, serverKeySet: !!SERVER_KEY, clientKeySet: !!CLIENT_KEY });
+    }
 
     // ---------- 1. Ambil harga program dari Firestore (public read) ----------
     let programDoc;
