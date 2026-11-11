@@ -124,7 +124,14 @@
 
         .step-title-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.75rem; }
         .step-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #5f7086; margin: 0; }
+        .step-actions { display: flex; align-items: center; gap: 0.5rem; }
         .step-summary { font-size: 0.72rem; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+        .refresh-btn { display: inline-flex; align-items: center; gap: 0.35rem; background: #ffffff; border: 1px solid #d1d5db; color: #374151; font-family: inherit; font-size: 0.82rem; font-weight: 600; padding: 0.34rem 0.7rem; border-radius: 8px; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .refresh-btn:hover { background: #f3f4f6; border-color: #9ca3af; }
+        .refresh-btn:disabled { opacity: 0.7; cursor: wait; }
+        .refresh-btn .refresh-icon { animation: none; transition: transform 0.2s ease; }
+        .refresh-btn.loading .refresh-icon { animation: refreshSpin 0.8s linear infinite; }
+        @keyframes refreshSpin { to { transform: rotate(360deg); } }
 
         .timeline { list-style: none; padding: 0; margin: 0; }
         .step { display: flex; gap: 0.75rem; align-items: stretch; padding: 0.55rem 0; }
@@ -205,7 +212,13 @@
 
             <div class="step-title-row">
                 <p class="step-title">Status proses</p>
-                <span id="stepSummary" class="step-summary">0/4</span>
+                <div class="step-actions">
+                    <span id="stepSummary" class="step-summary">0/4</span>
+                    <button type="button" id="trackRefresh" class="refresh-btn" aria-label="Refresh status">
+                        <i data-lucide="refresh-cw" class="w-4 h-4 refresh-icon"></i>
+                        <span class="refresh-text">Refresh</span>
+                    </button>
+                </div>
             </div>
             <ol id="trackStepper" class="timeline"></ol>
 
@@ -251,6 +264,7 @@
         const emptyBox = document.getElementById('trackEmpty');
         const backBtn = document.getElementById('trackBack');
         const waConfirmBtn = document.getElementById('trackWaConfirm');
+        const refreshBtn = document.getElementById('trackRefresh');
         let lastTracked = null;
         const WA_ADMIN = '6285601913435';
 
@@ -363,6 +377,33 @@
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
+        async function refreshTrack() {
+            const token = lastTracked ? lastTracked.token : '';
+            if (!token) return;
+            if (refreshBtn) {
+                refreshBtn.disabled = true;
+                refreshBtn.classList.add('loading');
+            }
+            try {
+                const snap = await getDoc(doc(db, 'tracking', token));
+                if (snap.exists()) {
+                    lastTracked = Object.assign({ token: token }, snap.data());
+                    renderTracking(lastTracked);
+                } else {
+                    renderError('Token tidak ditemukan lagi. Muat ulang halaman.');
+                }
+            } catch (e) {
+                console.error('Refresh error:', e);
+                renderError('Gagal memuat data. Periksa koneksi Anda lalu coba lagi.');
+            } finally {
+                if (refreshBtn) {
+                    refreshBtn.disabled = false;
+                    refreshBtn.classList.remove('loading');
+                }
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             message.innerHTML = '';
@@ -414,6 +455,7 @@
         });
 
         if (waConfirmBtn) waConfirmBtn.addEventListener('click', openWaConfirm);
+        if (refreshBtn) refreshBtn.addEventListener('click', refreshTrack);
     </script>
 </body>
 </html>
