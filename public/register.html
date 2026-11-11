@@ -436,6 +436,7 @@
                     <p class="pay-await-title">Menunggu pembayaran</p>
                     <p class="pay-await-text">Pop-up Snap akan terbuka otomatis. Jika tertutup, klik tombol di bawah.</p>
                     <button type="button" id="payNowRetryBtn" class="pay-btn-primary" style="margin-top:0.6rem"><span>Bayar via Midtrans</span></button>
+                    <button type="button" id="payCheckStatusBtn" class="pay-btn-primary hidden" style="margin-top:0.5rem;background:#0d0d0d;"><span>Periksa Status Pembayaran</span></button>
                     <p id="payNowNote" class="pay-await-note hidden"></p>
                 </div>
             </div>
@@ -1093,40 +1094,103 @@
             }
         };
 
+        // ================= KWITANSI: deteksi lunas (primary: webhook Firestore; fallback: Midtrans) =================
         let settlementWatcher = null;
+        const CHECK_BTN_ID = 'payCheckStatusBtn';
+        const MIN_TRIES_BEFORE_HINT = 24;   // ~2 menit @5s
+        const MAX_TRIES = 72;               // ~6 menit @5s
+
         const stopSettlementWatch = function () {
             if (settlementWatcher) { clearInterval(settlementWatcher); settlementWatcher = null; }
         };
+
+        // Cek sekali ke dua sumber. Mengembalikan { lunas, expired, paidAt, txId }.
+        const checkSettlementOnce = async function () {
+            // 1. Primary: Firestore tracking/{token} — webhook menulis statusPembayaran:'Terverifikasi'
+            try {
+                const trSnap = await getDoc(doc(db, 'tracking', token));
+                if (trSnap.exists()) {
+                    const td = trSnap.data();
+                    if (td.statusPembayaran === 'Terverifikasi') {
+                        return { lunas: true, via: 'webhook', paidAt: td.settlementTime || '', txId: td.transactionId || '' };
+                    }
+                }
+            } catch (e) { /* abaikan, coba fallback Midtrans */ }
+
+            // 2. Fallback: status endpoint Midtrans
+            const oid = (snapTokenCache && snapTokenCache.orderId) ? snapTokenCache.orderId : token;
+            try {
+                const res = await fetch('/.netlify/functions/midtrans-qris-status?orderId=' + encodeURIComponent(oid));
+                const data = await res.json();
+                if (res.ok) {
+                    const st = String(data.transactionStatus || '').toLowerCase();
+                    if (st === 'settlement' || (st === 'capture' && String(data.fraudStatus || '').toLowerCase() !== 'challenge')) {
+                        return { lunas: true, via: 'midtrans', paidAt: data.settlementTime || data.transactionTime || '', txId: data.transactionId || '' };
+                    }
+                    const dead = st === 'expire' || st === 'deny' || st === 'cancel' || st === 'failure';
+                    return { lunas: false, expired: dead };
+                }
+            } catch (e) { /* abaikan, coba lagi siklus berikutnya */ }
+
+            return { lunas: false };
+        };
+
+        const applyLunasResult = function (result) {
+            if (!lastTicketData) lastTicketData = {};
+            lastTicketData.paidAt = result.paidAt || '';
+            lastTicketData.idTransaksi = result.txId || '';
+            stopSettlementWatch();
+            onPaymentLunas();
+        };
+
         const startSettlementWatch = function () {
             if (settlementWatcher) return;
             let tries = 0;
             settlementWatcher = setInterval(async function () {
                 tries++;
-                const oid = (snapTokenCache && snapTokenCache.orderId) ? snapTokenCache.orderId : token;
-                try {
-                    const res = await fetch('/.netlify/functions/midtrans-qris-status?orderId=' + encodeURIComponent(oid));
-                    const data = await res.json();
-                    if (!res.ok) {
-                        if (tries > 36) stopSettlementWatch();
-                        return;
-                    }
-                    const st = String(data.transactionStatus || '').toLowerCase();
-                    if (st === 'settlement' || (st === 'capture' && String(data.fraudStatus || '').toLowerCase() !== 'challenge')) {
-                        stopSettlementWatch();
-                        if (!lastTicketData) lastTicketData = {};
-                        lastTicketData.paidAt = data.settlementTime || data.transactionTime || '';
-                        lastTicketData.idTransaksi = data.transactionId || '';
-                        onPaymentLunas();
-                    } else if (st === 'expire' || st === 'deny' || st === 'cancel') {
-                        stopSettlementWatch();
-                        showQrisToast('error', 'Pembayaran gagal', 'Transaksi kedaluwarsa atau ditolak. Buat pembayaran baru dari awal.');
-                    } else if (tries > 36) {
-                        stopSettlementWatch();
-                    }
-                } catch (e) {
-                    if (tries > 36) stopSettlementWatch();
+                const result = await checkSettlementOnce();
+                if (result.lunas) {
+                    applyLunasResult(result);
+                    return;
+                }
+                if (result.expired) {
+                    stopSettlementWatch();
+                    showQrisToast('error', 'Pembayaran gagal', 'Transaksi kedaluwarsa atau ditolak. Buat pembayaran baru dari awal.');
+                    return;
+                }
+                if (tries >= MIN_TRIES_BEFORE_HINT) {
+                    const note = document.getElementById('payNowNote');
+                    const btn = document.getElementById(CHECK_BTN_ID);
+                    if (note) { note.textContent = 'Pembayaran belum terdeteksi otomatis. Klik tombol di bawah untuk periksa status.'; note.classList.remove('hidden'); }
+                    if (btn) btn.classList.remove('hidden');
+                }
+                if (tries >= MAX_TRIES) {
+                    stopSettlementWatch();
+                    const note = document.getElementById('payNowNote');
+                    const btn = document.getElementById(CHECK_BTN_ID);
+                    if (note) { note.textContent = 'Klik Periksa Status atau muat ulang halaman — pembayaran tetap terverifikasi server-side.'; note.classList.remove('hidden'); }
+                    if (btn) btn.classList.remove('hidden');
                 }
             }, 5000);
+        };
+
+        const manualCheckStatus = async function () {
+            const btn = document.getElementById(CHECK_BTN_ID);
+            if (btn) { btn.disabled = true; btn.innerHTML = '<span>Memeriksa...</span>'; }
+            const result = await checkSettlementOnce();
+            if (result.lunas) {
+                applyLunasResult(result);
+                return;
+            }
+            if (result.expired) {
+                stopSettlementWatch();
+                showQrisToast('error', 'Pembayaran gagal', 'Transaksi kedaluwarsa atau ditolak. Buat pembayaran baru dari awal.');
+                if (btn) { btn.disabled = false; btn.innerHTML = '<span>Periksa Status Pembayaran</span>'; }
+                return;
+            }
+            const note = document.getElementById('payNowNote');
+            if (note) { note.textContent = 'Pembayaran belum terdeteksi. Simpan Halaman Ini — kami pantau otomatis.'; note.classList.remove('hidden'); }
+            if (btn) { btn.disabled = false; btn.innerHTML = '<span>Periksa Status Pembayaran</span>'; }
         };
 
         const onPaymentLunas = function () {
@@ -1336,6 +1400,8 @@
 
         if (payNowBtn) payNowBtn.addEventListener('click', function () { handlePayNow(payNowBtn); });
         if (payNowRetryBtn) payNowRetryBtn.addEventListener('click', function () { handlePayNow(payNowRetryBtn); });
+        const payCheckBtn = document.getElementById('payCheckStatusBtn');
+        if (payCheckBtn) payCheckBtn.addEventListener('click', manualCheckStatus);
 
         async function sha256hex(str) {
             const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));

@@ -156,6 +156,8 @@ exports.handler = async function (event) {
 
     const patchFields = {
         statusPembayaran: { stringValue: 'Terverifikasi' },
+        transactionId: { stringValue: String(body.transaction_id || '') },
+        settlementTime: { stringValue: String(body.settlement_time || body.transaction_time || '') },
         updatedAt: { stringValue: new Date().toISOString() }
     };
 
