@@ -420,12 +420,10 @@
 
             <div id="regMessage" class="text-sm" role="alert"></div>
         </form>
-        <button type="button" id="regSubmit" class="reg-submit mt-4 w-full" disabled>Lanjut ke Pembayaran</button>
-        <p id="regSubmitHint" class="reg-submit-hint">Selesaikan pembayaran terlebih dahulu untuk melihat kwitansi.</p>
 
-        <div id="regSuccess" class="reg-success hidden mt-6" role="status">
-            <p class="text-lg text-emerald-800 font-bold">Pendaftaran tersimpan!</p>
-            <p class="text-sm text-gray-700 mt-1">Lanjutkan pembayaran di bawah — kwitansi &amp; konfirmasi WhatsApp muncul setelah pembayaran berhasil terverifikasi.</p>
+            <div id="regSuccess" class="reg-success hidden mt-6" role="status">
+            <p class="text-lg text-emerald-800 font-bold">Pembayaran hampir selesai!</p>
+            <p class="text-sm text-gray-700 mt-1">Tekan <strong>Bayar via Midtrans</strong> di bawah ini untuk lanjut membayar. Kwitansi &amp; konfirmasi WhatsApp muncul setelah pembayaran berhasil.</p>
             <p class="text-sm text-gray-600 mt-2">Simpan <strong>TOKEN PENDAFTARAN</strong> di bawah &mdash; dipakai untuk tracking di <a class="text-brand underline" href="/tracking">/tracking</a> (dengan 4 digit terakhir WhatsApp Anda) dan juga saat konfirmasi ke WhatsApp admin:</p>
             <div class="flex items-center gap-2 mt-2 max-w-md">
                 <input id="regToken" class="reg-input bg-transparent font-mono text-lg tracking-widest" readonly aria-label="Token pendaftaran" />
@@ -1030,6 +1028,22 @@
             }
         };
 
+        // ================= SNAP PAYMENT: lazy-load snap.js =================
+        let snapJsPromise = null;
+        function loadSnapJs(jsUrl, clientKey) {
+            if (window.snap) return Promise.resolve();
+            if (snapJsPromise) return snapJsPromise;
+            snapJsPromise = new Promise(function(resolve, reject) {
+                const s = document.createElement('script');
+                s.src = jsUrl;
+                s.setAttribute('data-client-key', clientKey);
+                s.onload = function() { resolve(); };
+                s.onerror = function() { reject(new Error('Gagal memuat Snap.js')); };
+                document.head.appendChild(s);
+            });
+            return snapJsPromise;
+        }
+
         // ================= KWITANSI: deteksi lunas via status Midtrans =================
         const waConfirmBtn = document.getElementById('regWaConfirmBtn');
         const downloadTicketBtn = document.getElementById('regDownloadTicketBtn');
@@ -1124,15 +1138,8 @@
             if (downloadTicketBtn) downloadTicketBtn.classList.remove('hidden');
             if (waConfirmBtn) waConfirmBtn.classList.remove('hidden');
             setBothPayButtons(true, 'Terbayar');
-            const bottomBtn = document.getElementById('regSubmit');
-            if (bottomBtn) {
-                bottomBtn.disabled = false;
-                bottomBtn.textContent = 'Lihat Kwitansi Pembayaran';
-            }
-            const hint = document.getElementById('regSubmitHint');
-            if (hint) hint.classList.add('hidden');
             qrisToastShown = false;
-            showQrisToast('success', 'Pembayaran terverifikasi', 'Pembayaran Anda sudah berhasil. Klik "Lihat Kwitansi Pembayaran" untuk kwitansi & konfirmasi WhatsApp.');
+            showQrisToast('success', 'Pembayaran terverifikasi', 'Pembayaran Anda sudah berhasil. Kwitansi dan konfirmasi WhatsApp tersedia di bawah.');
         };
 
         const buildWaMessage = function (d) {
@@ -1404,12 +1411,6 @@
                 copyTokenBtn.innerText = 'Tersalin';
                 setTimeout(function() { copyTokenBtn.innerText = 'Salin'; }, 2000);
             });
-        });
-
-        const bottomBtnEl = document.getElementById('regSubmit');
-        if (bottomBtnEl) bottomBtnEl.addEventListener('click', function () {
-            const target = document.getElementById('regTicket');
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
         const nikInputEl = document.getElementById('regNik');
