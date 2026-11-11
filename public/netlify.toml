@@ -9,8 +9,8 @@
 
 # ============================================================
 # FUNCTIONS (serverless Node) — dipanggil dari register.html
-#   POST /.netlify/functions/midtrans-qris
-#   GET  /.netlify/functions/midtrans-qris-status?orderId=...
+#   POST /.netlify/functions/midtrans-snap
+#   GET  /.netlify/functions/midtrans-qris-status?orderId=... (Snap order_id)
 # Set env MIDTRANS_SERVER_KEY & MIDTRANS_ENV=sandbox|production
 # ============================================================
 [functions]

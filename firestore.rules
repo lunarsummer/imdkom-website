@@ -244,15 +244,12 @@ service cloud.firestore {
           && d.alamatDetail is string && d.alamatDetail.size() >= 5 && d.alamatDetail.size() <= 200
           && (d.nik == '' || (d.nik is string && d.nik.matches('^[0-9]{16}$')))
           && d.status == 'Menunggu'
-          && d.metodePembayaran in ['qris', 'transfer']
+          && d.metodePembayaran == 'snap'
           && d.nominalPembayaran is string
           && d.nominalPembayaran.matches('^[0-9]{1,12}$')
           && d.hargaSebelumDiskon is string
           && d.potonganReferral is string
           && d.potonganReferral.matches('^[0-9]{1,12}$')
-          && d.buktiUrl is string
-          && d.buktiUrl.size() <= 400
-          && d.buktiUrl.matches('^https://res\\.cloudinary\\.com/')
           && d.createdAt is string
           && d.updatedAt is string;
     }

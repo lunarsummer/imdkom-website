@@ -1,18 +1,20 @@
 // ============================================================
-// NETLIFY FUNCTION - QRIS Dinamis (Midtrans)
-// POST /.netlify/functions/midtrans-qris
+// NETLIFY FUNCTION - Midtrans Snap (Pop Up)
+// POST /.netlify/functions/midtrans-snap
 // Body: { token, programId, kodeReferral?, nama?, wa? }
 //
 // Harga diverifikasi & dihitung di SERVER dari Firestore (public read),
-// client TIDAK lagi menentukan nominal pembayaran.
+// client TIDAK menentukan nominal pembayaran.
+// Mengembalikan Snap token untuk window.snap.pay() di frontend.
 //
 // Env:  MIDTRANS_SERVER_KEY (server key)
+//       MIDTRANS_CLIENT_KEY (client key - publik by design, dipakai snap.js)
 //       MIDTRANS_ENV = sandbox | production (default: sandbox)
 //
-// CATATAN: URL notifikasi Midtrans di-set di Merchant Dashboard
-// (Settings > Configuration > Payment Notification URL) ke:
-//   https://<domain-anda>/.netlify/functions/midtrans-notify
-// Midtrans tidak menerima notify_url per-transaksi charge QRIS.
+// CATATAN DOMAIN: Snap API memakai app.sandbox.midtrans.com (sandbox)
+// / app.midtrans.com (production) - BUKAN api.sandbox.midtrans.com
+// (itu hanya untuk Core API). snap.js di-load frontend dari URL yang
+// sama environment-nya.
 // ============================================================
 
 const json = (statusCode, body) => ({
@@ -64,8 +66,12 @@ exports.handler = async function (event) {
     if (event.httpMethod !== 'POST') return json(405, { error: 'Method Not Allowed' });
 
     const SERVER_KEY = process.env.MIDTRANS_SERVER_KEY || '';
+    const CLIENT_KEY = process.env.MIDTRANS_CLIENT_KEY || '';
     const env = (process.env.MIDTRANS_ENV || 'sandbox').toLowerCase();
-    const API = env === 'production' ? 'https://api.midtrans.com' : 'https://api.sandbox.midtrans.com';
+    const HOST = env === 'production' ? 'https://app.midtrans.com' : 'https://app.sandbox.midtrans.com';
+    const SNAP_JS = env === 'production'
+        ? 'https://app.midtrans.com/snap/snap.js'
+        : 'https://app.sandbox.midtrans.com/snap/snap.js';
 
     let rawBody = event.body || '{}';
     if (event.isBase64Encoded && rawBody) {
@@ -89,6 +95,7 @@ exports.handler = async function (event) {
     if (!PROGRAM_ID_RE.test(programId)) return json(400, { error: 'Program ID tidak valid.' });
     if (kodeReferral && !REFERRAL_RE.test(kodeReferral)) return json(400, { error: 'Kode referral tidak valid.' });
     if (!SERVER_KEY) return json(500, { error: 'MIDTRANS_SERVER_KEY belum diset di Netlify.' });
+    if (!CLIENT_KEY) return json(500, { error: 'MIDTRANS_CLIENT_KEY belum diset di Netlify.' });
 
     // ---------- 1. Ambil harga program dari Firestore (public read) ----------
     let programDoc;
@@ -147,16 +154,14 @@ exports.handler = async function (event) {
     const auth = 'Basic ' + Buffer.from(SERVER_KEY + ':').toString('base64');
 
     const payload = {
-        payment_type: 'qris',
         transaction_details: { order_id: orderId, gross_amount: grossAmount },
         item_details: [{ id: 'KURSUS', price: grossAmount, quantity: 1, name: namaProgram.slice(0, 50) }],
-        customer_details: { first_name: nama, phone: wa },
-        qris: {}
+        customer_details: { first_name: nama, phone: wa }
     };
 
     let resp;
     try {
-        resp = await fetch(`${API}/v2/charge`, {
+        resp = await fetch(`${HOST}/snap/v1/transactions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': auth },
             body: JSON.stringify(payload)
@@ -167,49 +172,22 @@ exports.handler = async function (event) {
 
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {
-        return json(resp.status, { error: data?.status_message || 'Midtrans menolak transaksi', details: data });
+        return json(resp.status, { error: data?.error_messages ? (Array.isArray(data.error_messages) ? data.error_messages.join(' | ') : String(data.error_messages)) : (data?.status_message || 'Midtrans menolak transaksi') });
     }
 
-    // PERTAHANAN TERAKHIR: jika Midtrans membalas 200 tapi tanpa detail transaksi
-    // (mis. channel belum diaktifkan untuk Core API di production — dokumentasi
-    //  Midtrans: aktifkan Core API QRIS lewat support@midtrans.com), tampilkan
-    //  alasan aslinya alih-alih gagal diam-diam.
-    if (!data.transaction_id && !data.qr_string && !(Array.isArray(data.actions) && data.actions.length)) {
+    if (!data.token) {
         console.error('Midtrans aneh:', resp.status, JSON.stringify(data));
-        return json(502, {
-            error: data?.status_message || 'Respons Midtrans tidak lengkap (transaksi tidak dibuat). Hubungi support Midtrans untuk aktivasi Core API QRIS di production.',
-            midtrans: { statusCode: resp.status, body: data }
-        });
-    }
-
-    // Ambil gambar QR dari action generate-qr-code (butuh auth) lalu unduh & kembalikan sebagai data URL
-    let qrDataUrl = '';
-    const qrAction = (Array.isArray(data.actions) ? data.actions : []).find(a => a && a.name === 'generate-qr-code')
-        || (Array.isArray(data.actions) ? data.actions[0] : null);
-    if (qrAction && qrAction.url) {
-        try {
-            const imgRes = await fetch(qrAction.url, { headers: { 'Authorization': auth } });
-            if (imgRes.ok) {
-                const buf = Buffer.from(await imgRes.arrayBuffer());
-                const ctype = imgRes.headers.get('content-type') || 'image/png';
-                qrDataUrl = 'data:' + ctype + ';base64,' + buf.toString('base64');
-            }
-        } catch (err) {
-            console.error('Gagal unduh QR image:', err.message);
-        }
+        return json(502, { error: 'Respons Midtrans tidak lengkap (token tidak dibuat).', midtrans: { statusCode: resp.status, body: data } });
     }
 
     return json(200, {
         orderId,
-        transactionId: data.transaction_id || '',
-        transactionStatus: data.transaction_status || 'pending',
-        grossAmount: data.gross_amount || String(grossAmount),
+        snapToken: data.token,
+        redirectUrl: data.redirect_url || '',
+        grossAmount: String(grossAmount),
         potonganReferral: potongan,
-        qrString: data.qr_string || '',
-        qrDataUrl,
-        qrImageUrl: qrAction && qrAction.url ? qrAction.url : '',
         env,
-        expireTime: data.expire_time || '',
-        acquirer: data.acquirer || ''
+        snapJsUrl: SNAP_JS,
+        clientKey: CLIENT_KEY
     });
 };
