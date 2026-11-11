@@ -234,6 +234,15 @@ service cloud.firestore {
           && d.nama.size() >= 2 && d.nama.size() <= 100
           && d.whatsapp is string
           && d.whatsapp.matches('^[0-9]{9,15}$')
+          && d.email is string
+          && d.email.size() <= 100
+          && d.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+          && d.provinsi is string && d.provinsi.size() >= 2 && d.provinsi.size() <= 100
+          && d.kabupaten is string && d.kabupaten.size() >= 2 && d.kabupaten.size() <= 100
+          && d.kecamatan is string && d.kecamatan.size() >= 2 && d.kecamatan.size() <= 100
+          && d.kelurahan is string && d.kelurahan.size() >= 2 && d.kelurahan.size() <= 100
+          && d.alamatDetail is string && d.alamatDetail.size() >= 5 && d.alamatDetail.size() <= 200
+          && (d.nik == '' || (d.nik is string && d.nik.matches('^[0-9]{16}$')))
           && d.status == 'Menunggu'
           && d.metodePembayaran in ['qris', 'transfer']
           && d.nominalPembayaran is string

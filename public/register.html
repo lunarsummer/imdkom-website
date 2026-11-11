@@ -256,12 +256,40 @@
                     </select>
                 </div>
                 <div class="reg-field">
-                    <label class="reg-label" for="regAlamat">Alamat Saat Ini <span class="text-red-700" aria-hidden="true">*</span></label>
-                    <textarea id="regAlamat" class="reg-textarea" rows="2" placeholder="Alamat lengkap" required></textarea>
+                    <label class="reg-label" for="regProvinsi">Alamat — Provinsi <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <select id="regProvinsi" class="reg-select" required>
+                        <option value="">Memuat daftar provinsi...</option>
+                    </select>
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regKabupaten">Kabupaten / Kota <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <select id="regKabupaten" class="reg-select" required disabled>
+                        <option value="">Pilih provinsi dahulu</option>
+                    </select>
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regKecamatan">Kecamatan <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <select id="regKecamatan" class="reg-select" required disabled>
+                        <option value="">Pilih kabupaten/kota dahulu</option>
+                    </select>
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regKelurahan">Kelurahan / Desa <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <select id="regKelurahan" class="reg-select" required disabled>
+                        <option value="">Pilih kecamatan dahulu</option>
+                    </select>
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regAlamatDetail">Detail Alamat <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <textarea id="regAlamatDetail" class="reg-textarea" rows="2" placeholder="Jalan, nomor, RT/RW, patokan (mis. Jl. Kaliurang km 7, no 38, RT 03/RW 02)" maxlength="200" required></textarea>
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regWa">Nomor WhatsApp <span class="text-red-700" aria-hidden="true">*</span></label>
                     <input id="regWa" class="reg-input" type="tel" placeholder="08xxxxxxxxxx" maxlength="15" minlength="9" pattern="[0-9]{9,15}" inputmode="numeric" required />
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regEmail">Email <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <input id="regEmail" class="reg-input" type="email" placeholder="nama@email.com" maxlength="100" required />
                 </div>
             </div>
 
@@ -425,6 +453,7 @@
                     <div class="ticket-grid">
                         <div><span class="ticket-label">Nama Peserta</span><p id="ticketNama">-</p></div>
                         <div><span class="ticket-label">WhatsApp</span><p id="ticketWa">-</p></div>
+                        <div class="ticket-span-2"><span class="ticket-label">Email</span><p id="ticketEmail">-</p></div>
                         <div><span class="ticket-label">Tempat, Tgl Lahir</span><p id="ticketLahir">-</p></div>
                         <div><span class="ticket-label">Jenis Kelamin</span><p id="ticketJk">-</p></div>
                         <div class="ticket-span-2"><span class="ticket-label">Alamat</span><p id="ticketAlamat">-</p></div>
@@ -525,6 +554,7 @@
                 setText('ticketMetode', d.metode || '-');
                 setText('ticketNama', d.nama || '-');
                 setText('ticketWa', d.wa || '-');
+                setText('ticketEmail', d.email || '-');
                 setText('ticketLahir', (d.tempatLahir || '-') + ', ' + fmtShortDate(d.tanggalLahir));
                 setText('ticketJk', d.jenisKelamin || '-');
                 setText('ticketAlamat', d.alamat || '-');
@@ -685,6 +715,121 @@
         import { openWhatsApp } from './assets/js/whatsapp.js';
         import { formatRupiah, escapeHtml } from './assets/js/utils.js';
 
+        // ============================================================
+        // WILAYAH — cascade dropdown Provinsi > Kabupaten > Kecamatan > Kelurahan
+        // Data: izzulabadi/api-wilayah-indonesia-2026 (MIT License), di-bundle ke assets/data/wilayah/
+        // ============================================================
+        const WILAYAH_BASE = 'assets/data/wilayah';
+        let wilData = { provinces: [], regencies: [], districts: [], villagesByProvince: {} };
+
+        const setSelectOptions = function (select, items, placeholder, keyId, keyName) {
+            select.innerHTML = '<option value="">' + placeholder + '</option>' + items.map(function (it) {
+                return '<option value="' + escapeHtml(it[keyId]) + '">' + escapeHtml(it[keyName]) + '</option>';
+            }).join('');
+            select.disabled = items.length === 0;
+        };
+
+        const loadWilayahBase = async function () {
+            try {
+                const [provRes, kabRes, kecRes] = await Promise.all([
+                    fetch(WILAYAH_BASE + '/provinces.json'),
+                    fetch(WILAYAH_BASE + '/regencies.json'),
+                    fetch(WILAYAH_BASE + '/districts.json')
+                ]);
+                if (!provRes.ok || !kabRes.ok || !kecRes.ok) throw new Error('Gagal memuat data wilayah');
+                wilData.provinces = await provRes.json();
+                wilData.regencies = await kabRes.json();
+                wilData.districts = await kecRes.json();
+                wilData.provinces.sort(function (a, b) { return a.name.localeCompare(b.name); });
+                setSelectOptions(document.getElementById('regProvinsi'), wilData.provinces, 'Pilih provinsi', 'id', 'name');
+            } catch (e) {
+                console.error('Gagal memuat data wilayah:', e);
+                const sel = document.getElementById('regProvinsi');
+                if (sel) { sel.innerHTML = '<option value="">Data wilayah tidak tersedia</option>'; sel.disabled = true; }
+            }
+        };
+
+        const loadVillagesForProvince = async function (provId) {
+            if (wilData.villagesByProvince[provId]) return wilData.villagesByProvince[provId];
+            try {
+                const res = await fetch(WILAYAH_BASE + '/villages/villages-' + provId + '.json');
+                if (!res.ok) throw new Error('Gagal memuat kelurahan: HTTP ' + res.status);
+                const data = await res.json();
+                wilData.villagesByProvince[provId] = data;
+                return data;
+            } catch (e) {
+                console.error('Gagal memuat kelurahan:', e);
+                return [];
+            }
+        };
+
+        const sortedByName = function (arr) {
+            return arr.slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+        };
+
+        const onProvinsiChange = async function () {
+            const provId = document.getElementById('regProvinsi').value;
+            const kabEl = document.getElementById('regKabupaten');
+            const kecEl = document.getElementById('regKecamatan');
+            const kelEl = document.getElementById('regKelurahan');
+            if (!provId) {
+                setSelectOptions(kabEl, [], 'Pilih provinsi dahulu', 'id', 'name'); kabEl.disabled = true;
+                setSelectOptions(kecEl, [], 'Pilih kabupaten/kota dahulu', 'id', 'name'); kecEl.disabled = true;
+                setSelectOptions(kelEl, [], 'Pilih kecamatan dahulu', 'id', 'name'); kelEl.disabled = true;
+                return;
+            }
+            const list = sortedByName(wilData.regencies.filter(function (r) { return String(r.provinceId) === String(provId); }));
+            setSelectOptions(kabEl, list, 'Pilih kabupaten/kota', 'id', 'name'); kabEl.disabled = list.length === 0;
+            setSelectOptions(kecEl, [], 'Pilih kabupaten/kota dahulu', 'id', 'name'); kecEl.disabled = true;
+            setSelectOptions(kelEl, [], 'Pilih kecamatan dahulu', 'id', 'name'); kelEl.disabled = true;
+        };
+
+        const onKabupatenChange = function () {
+            const kabId = document.getElementById('regKabupaten').value;
+            const kecEl = document.getElementById('regKecamatan');
+            const kelEl = document.getElementById('regKelurahan');
+            if (!kabId) {
+                setSelectOptions(kecEl, [], 'Pilih kabupaten/kota dahulu', 'id', 'name'); kecEl.disabled = true;
+                setSelectOptions(kelEl, [], 'Pilih kecamatan dahulu', 'id', 'name'); kelEl.disabled = true;
+                return;
+            }
+            const list = sortedByName(wilData.districts.filter(function (d) { return String(d.regencyId) === String(kabId); }));
+            setSelectOptions(kecEl, list, 'Pilih kecamatan', 'id', 'name'); kecEl.disabled = list.length === 0;
+            setSelectOptions(kelEl, [], 'Pilih kecamatan dahulu', 'id', 'name'); kelEl.disabled = true;
+        };
+
+        const onKecamatanChange = async function () {
+            const provId = document.getElementById('regProvinsi').value;
+            const kecId = document.getElementById('regKecamatan').value;
+            const kelEl = document.getElementById('regKelurahan');
+            if (!kecId) {
+                setSelectOptions(kelEl, [], 'Pilih kecamatan dahulu', 'id', 'name'); kelEl.disabled = true;
+                return;
+            }
+            kelEl.innerHTML = '<option value="">Memuat kelurahan...</option>';
+            kelEl.disabled = true;
+            const villages = await loadVillagesForProvince(provId);
+            const list = sortedByName(villages.filter(function (v) { return String(v.districtId) === String(kecId); }));
+            setSelectOptions(kelEl, list, 'Pilih kelurahan/desa', 'id', 'name'); kelEl.disabled = list.length === 0;
+        };
+
+        const getWilayah = function () {
+            const provEl = document.getElementById('regProvinsi');
+            const kabEl = document.getElementById('regKabupaten');
+            const kecEl = document.getElementById('regKecamatan');
+            const kelEl = document.getElementById('regKelurahan');
+            const provName = provEl.options[provEl.selectedIndex] ? provEl.options[provEl.selectedIndex].textContent : '';
+            const kabName = kabEl.options[kabEl.selectedIndex] ? kabEl.options[kabEl.selectedIndex].textContent : '';
+            const kecName = kecEl.options[kecEl.selectedIndex] ? kecEl.options[kecEl.selectedIndex].textContent : '';
+            const kelName = kelEl.options[kelEl.selectedIndex] ? kelEl.options[kelEl.selectedIndex].textContent : '';
+            return { provinsiId: provEl.value, kabupatenId: kabEl.value, kecamatanId: kecEl.value, kelurahanId: kelEl.value, provinsi: provName, kabupaten: kabName, kecamatan: kecName, kelurahan: kelName };
+        };
+
+        document.getElementById('regProvinsi').addEventListener('change', onProvinsiChange);
+        document.getElementById('regKabupaten').addEventListener('change', onKabupatenChange);
+        document.getElementById('regKecamatan').addEventListener('change', onKecamatanChange);
+        loadWilayahBase();
+
         const params = new URLSearchParams(window.location.search);
         let currentHarga = '';
         let currentHargaPromo = '';
@@ -830,6 +975,40 @@
             return age;
         }
 
+        function validateNikField(nik, jenisKelamin, tanggalLahir) {
+            const cleaned = String(nik || '').replace(/\D/g, '');
+            if (cleaned.length !== 16) return 'NIK harus tepat 16 digit angka.';
+            const dd = parseInt(cleaned.substr(6, 2), 10);
+            const mm = parseInt(cleaned.substr(8, 2), 10);
+            const yy = parseInt(cleaned.substr(10, 2), 10);
+            if (mm < 1 || mm > 12) return 'NIK: bulan lahir tidak valid.';
+            const isFemaleNik = dd > 40;
+            const ddReal = isFemaleNik ? dd - 40 : dd;
+            if (ddReal < 1 || ddReal > 31) return 'NIK: tanggal lahir tidak valid.';
+            if (tanggalLahir) {
+                const parts = tanggalLahir.split('-');
+                if (parts.length === 3) {
+                    const ty = parseInt(parts[0], 10) % 100;
+                    const tm = parseInt(parts[1], 10);
+                    const td = parseInt(parts[2], 10);
+                    if (td !== ddReal || tm !== mm || ty !== yy) {
+                        return 'NIK tidak sesuai dengan tanggal lahir yang Anda isi.';
+                    }
+                    if (jenisKelamin && ((isFemaleNik && jenisKelamin !== 'P') || (!isFemaleNik && jenisKelamin !== 'L'))) {
+                        return 'NIK tidak sesuai dengan jenis kelamin yang Anda pilih.';
+                    }
+                }
+            }
+            return null;
+        }
+
+        function validateEmailField(email) {
+            if (!email) return 'Email wajib diisi.';
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Format email tidak valid.';
+            if (email.length > 100) return 'Email maksimal 100 karakter.';
+            return null;
+        }
+
         function toggleNik() {
             const age = calcAge(document.getElementById('regTanggalLahir').value);
             const wrap = document.getElementById('regNikWrap');
@@ -850,8 +1029,9 @@
             { id: 'regTempat', label: 'Tempat Lahir' },
             { id: 'regTanggalLahir', label: 'Tanggal Lahir' },
             { id: 'regJk', label: 'Jenis Kelamin' },
-            { id: 'regAlamat', label: 'Alamat' },
-            { id: 'regWa', label: 'Nomor WhatsApp' }
+            { id: 'regAlamatDetail', label: 'Detail Alamat' },
+            { id: 'regWa', label: 'Nomor WhatsApp' },
+            { id: 'regEmail', label: 'Email' }
         ];
 
         function getMissingFields() {
@@ -860,6 +1040,11 @@
                 const el = document.getElementById(f.id);
                 if (!el || !String(el.value || '').trim()) missing.push(f.label);
             });
+            const wil = getWilayah();
+            if (!wil.provinsi) missing.push('Provinsi');
+            if (!wil.kabupaten) missing.push('Kabupaten/Kota');
+            if (!wil.kecamatan) missing.push('Kecamatan');
+            if (!wil.kelurahan) missing.push('Kelurahan/Desa');
             if (document.querySelectorAll('#regAlasan .reg-checkbox:checked').length === 0) {
                 missing.push('Alasan Memilih\u00A0Program');
             }
@@ -1028,19 +1213,38 @@
             const nama = document.getElementById('regNama').value.trim();
             // Normalisasi: hanya simpan digit (sesuai validasi Firestore)
             const wa = document.getElementById('regWa').value.replace(/\D/g, '').trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
             const tempatLahir = document.getElementById('regTempat').value.trim();
             const tanggalLahir = document.getElementById('regTanggalLahir').value;
             const jenisKelamin = document.getElementById('regJk').value;
-            const nik = document.getElementById('regNik').value.trim();
-            const alamat = document.getElementById('regAlamat').value.trim();
+            const nik = document.getElementById('regNik').value.replace(/\D/g, '').trim();
+            const wil = getWilayah();
+            const alamatDetail = document.getElementById('regAlamatDetail').value.trim();
+            const alamat = [alamatDetail, wil.kelurahan, wil.kecamatan, wil.kabupaten, wil.provinsi].filter(Boolean).join(', ');
             const pendidikan = document.getElementById('regPendidikan').value.trim();
             const jurusan = document.getElementById('regJurusan').value.trim();
             const pekerjaan = document.getElementById('regPekerjaan').value.trim();
             const sumber = document.getElementById('regSumber').value;
-            const alasan = Array.from(document.querySelectorAll('#regAlasan .reg-checkbox')).filter(function(c) { return c.checked; }).map(function(c) { return c.value; });
+            const alasan = Array.from(document.querySelectorAll('#regAlasan .reg-checkbox:checked')).filter(function(c) { return c.checked; }).map(function(c) { return c.value; });
             const buktiUrl = document.getElementById('regBuktiUrl').value;
+            const emailError = validateEmailField(email);
+            if (emailError) {
+                messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(emailError) + '</p>';
+                return;
+            }
+            if (nik) {
+                const nikError = validateNikField(nik, jenisKelamin, tanggalLahir);
+                if (nikError) {
+                    messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(nikError) + '</p>';
+                    return;
+                }
+            }
             if (!nama || !wa || alasan.length === 0) {
                 messageEl.innerHTML = '<p class="reg-error">Mohon lengkapi data wajib.</p>';
+                return;
+            }
+            if (!wil.provinsi || !wil.kabupaten || !wil.kecamatan || !wil.kelurahan || !alamatDetail) {
+                messageEl.innerHTML = '<p class="reg-error">Mohon lengkapi alamat (provinsi, kabupaten/kota, kecamatan, kelurahan, dan detail).</p>';
                 return;
             }
             if (!buktiUrl) {
@@ -1057,6 +1261,7 @@
                 lastTicketData = {
                     token: token,
                     nama: nama,
+                    email: email,
                     tempatLahir: tempatLahir,
                     tanggalLahir: tanggalLahir,
                     jenisKelamin: jenisKelamin === 'L' ? 'Laki-laki' : (jenisKelamin === 'P' ? 'Perempuan' : ''),
@@ -1077,11 +1282,17 @@
                     programNama: programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : '',
                     nama: nama,
                     whatsapp: wa,
+                    email: email,
                     tempatLahir: tempatLahir,
                     tanggalLahir: tanggalLahir,
                     jenisKelamin: jenisKelamin,
                     nik: nik,
                     alamat: alamat,
+                    alamatDetail: alamatDetail,
+                    provinsi: wil.provinsi,
+                    kabupaten: wil.kabupaten,
+                    kecamatan: wil.kecamatan,
+                    kelurahan: wil.kelurahan,
                     pendidikan: pendidikan,
                     jurusan: jurusan,
                     pekerjaan: pekerjaan,
@@ -1119,7 +1330,7 @@
                 }
                 clearInterval(qrisPollTimer);
                 qrisPollTimer = null;
-                openWhatsApp('*KONFIRMASI PENDAFTARAN IMDKOM*\n\nToken: ' + token + '\nProgram: ' + (programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId) + '\nNama: ' + nama + '\nPembayaran: ' + (getFinalBiaya() ? formatRupiah(getFinalBiaya()) : '-') + (appliedReferral ? '\nKode Referral: ' + appliedReferral.code + ' (potongan ' + formatRupiah(referralDiscount(getBaseBiaya())) + ')' : '') + '\n\n*SIMPAN TOKEN* ini baik-baik! Token digunakan untuk tracking status pendaftaran dan melihat jadwal kursus Anda.\n\nStatus: Menunggu verifikasi.');
+                openWhatsApp('*KONFIRMASI PENDAFTARAN IMDKOM*\n\nToken: ' + token + '\nProgram: ' + (programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId) + '\nNama: ' + nama + '\nEmail: ' + email + '\nPembayaran: ' + (getFinalBiaya() ? formatRupiah(getFinalBiaya()) : '-') + (appliedReferral ? '\nKode Referral: ' + appliedReferral.code + ' (potongan ' + formatRupiah(referralDiscount(getBaseBiaya())) + ')' : '') + '\n\n*SIMPAN TOKEN* ini baik-baik! Token digunakan untuk tracking status pendaftaran dan melihat jadwal kursus Anda.\n\nStatus: Menunggu verifikasi.');
                 successEl.classList.remove('hidden');
                 try { window.IMDKOMTicket && window.IMDKOMTicket.render(lastTicketData); } catch (ticketErr) { console.warn('Gagal menampilkan tiket:', ticketErr); }
                 form.classList.add('hidden');
