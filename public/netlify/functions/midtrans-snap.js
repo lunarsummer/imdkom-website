@@ -90,6 +90,8 @@ exports.handler = async function (event) {
     const kodeReferral = String(body.kodeReferral || '').trim().toUpperCase();
     const nama = String(body.nama || 'Peserta').slice(0, 50);
     const wa = String(body.wa || '').slice(0, 20);
+    const email = String(body.email || '').slice(0, 100).trim().toLowerCase();
+    const alamat = String(body.alamat || '').slice(0, 200).trim();
 
     if (!TOKEN_RE.test(token)) return json(400, { error: 'Token tidak valid. Refresh halaman.' });
     if (!PROGRAM_ID_RE.test(programId)) return json(400, { error: 'Program ID tidak valid.' });
@@ -153,13 +155,42 @@ exports.handler = async function (event) {
 
     const grossAmount = Math.max(1, base - potongan);
 
-    const orderId = token;
+    // order_id unik per transaksi Snap: token dasar + suffix "~" + timestamp
+    // (token dasar tetap untuk tracking/registrations; suffix agar user bisa
+    // membuat transaksi Snap baru tanpa menabrak order_id lama).
+    const suffix = Date.now().toString(36);
+    const orderId = token + '~' + suffix;
     const auth = 'Basic ' + Buffer.from(SERVER_KEY + ':').toString('base64');
+
+    // Pecah nama jadi first_name/last_name
+    const nameParts = nama.trim().split(/\s+/).filter(Boolean);
+    const firstName = nameParts.shift() || 'Peserta';
+    const lastName = nameParts.join(' ');
+
+    const customer_details = {
+        first_name: firstName,
+        last_name: lastName
+    };
+    if (email) customer_details.email = email;
+    if (wa) customer_details.phone = wa;
+
+    // billing_address (docs Snap): alamat lengkap peserta
+    if (alamat || email || wa) {
+        const addr = {
+            first_name: firstName,
+            last_name: lastName,
+            country_code: 'IDN'
+        };
+        if (email) addr.email = email;
+        if (wa) addr.phone = wa;
+        if (alamat) addr.address = alamat;
+        customer_details.billing_address = addr;
+    }
 
     const payload = {
         transaction_details: { order_id: orderId, gross_amount: grossAmount },
         item_details: [{ id: 'KURSUS', price: grossAmount, quantity: 1, name: namaProgram.slice(0, 50) }],
-        customer_details: { first_name: nama, phone: wa }
+        customer_details
     };
 
     let resp;

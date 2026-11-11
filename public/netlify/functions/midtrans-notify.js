@@ -109,6 +109,10 @@ exports.handler = async function (event) {
     const statusCode = String(body.status_code || '');
     const grossAmount = String(body.gross_amount || '');
     const signature = String(body.signature_key || '');
+    // order_id Snap = token Dasar + "~" + suffix; token dasar (untuk
+    // tracking/registrations) adalah bagian sebelum "~".
+    const baseMatch = orderId.match(/^IMDKOM-[A-Z]{10}/);
+    const baseToken = baseMatch ? baseMatch[0] : '';
 
     // ---------- 1. Verifikasi signature — WAJIB ----------
     const expected = crypto.createHash('sha512').update(orderId + statusCode + grossAmount + SERVER_KEY).digest('hex');
@@ -121,7 +125,11 @@ exports.handler = async function (event) {
     const fraud = String(body.fraud_status || '').toLowerCase();
     const isPaid = status === 'settlement' || (status === 'capture' && (fraud === '' || fraud === 'accept'));
 
-    console.log('Notify: order_id=%s status=%s paid=%s', orderId, status, isPaid);
+    console.log('Notify: order_id=%s baseToken=%s status=%s paid=%s', orderId, baseToken || '(invalid)', status, isPaid);
+    if (!baseToken) {
+        console.error('Notify: order_id bukan format IMDKOM valid:', orderId);
+        return json(400, { error: 'order_id tidak dikenali.' });
+    }
 
     // ---------- 2. Tandai dokumen jika lunas ----------
     const SA_RAW = process.env.FIREBASE_SERVICE_ACCOUNT;
@@ -153,13 +161,13 @@ exports.handler = async function (event) {
 
     const fullPath = (docName) => `projects/${PROJECT_ID}/databases/(default)/documents/${docName}`;
 
-    // 2a. Update tracking mirror (doc id = order_id)
-    await firestorePatch(accessToken, `projects/${PROJECT_ID}/databases/(default)/documents/tracking/${orderId}`, patchFields)
+    // 2a. Update tracking mirror (doc id = token dasar)
+    await firestorePatch(accessToken, `projects/${PROJECT_ID}/databases/(default)/documents/tracking/${baseToken}`, patchFields)
         .catch(e => console.error('Notify: gagal update tracking:', e.message));
 
     // 2b. Registrations: doc id acak, cari berdasar field token
     try {
-        const docs = await findDocumentByField(accessToken, 'registrations', 'token', orderId);
+        const docs = await findDocumentByField(accessToken, 'registrations', 'token', baseToken);
         for (const docName of docs) {
             const rel = docName.split('/documents/')[1];
             await firestorePatch(accessToken, `projects/${PROJECT_ID}/databases/(default)/documents/${rel}`, patchFields)

@@ -1235,6 +1235,7 @@
 
         const payNowBtn = document.getElementById('payNowBtn');
         const payNowNote = document.getElementById('payNowNote');
+        let snapTokenCache = null;
         if (payNowBtn) payNowBtn.addEventListener('click', async function() {
             if (this.disabled) return;
             const btn = this;
@@ -1242,26 +1243,35 @@
             btn.textContent = 'Memproses...';
             if (payNowNote) payNowNote.classList.add('hidden');
             try {
-                const res = await fetch('/.netlify/functions/midtrans-snap', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        token: token,
-                        programId: programId,
-                        kodeReferral: appliedReferral ? appliedReferral.code : '',
-                        nama: (document.getElementById('regNama') || {}).value || 'Peserta',
-                        wa: (document.getElementById('regWa') || {}).value || ''
-                    })
-                });
-                const data = await res.json();
-                if (!res.ok || !data.snapToken) {
-                    throw new Error((data && data.error) || ('HTTP ' + res.status));
+                if (!snapTokenCache) {
+                    const wilNow = getWilayah();
+                    const alamatValNow = document.getElementById('regAlamatDetail') ? document.getElementById('regAlamatDetail').value.trim() : '';
+                    const alamatVal = [alamatValNow, wilNow.kelurahan, wilNow.kecamatan, wilNow.kabupaten, wilNow.provinsi].filter(Boolean).join(', ');
+                    const emailVal = (document.getElementById('regEmail') || {}).value || '';
+                    const res = await fetch('/.netlify/functions/midtrans-snap', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            token: token,
+                            programId: programId,
+                            kodeReferral: appliedReferral ? appliedReferral.code : '',
+                            nama: (document.getElementById('regNama') || {}).value || 'Peserta',
+                            wa: (document.getElementById('regWa') || {}).value || '',
+                            email: emailVal,
+                            alamat: alamatVal
+                        })
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.snapToken) {
+                        throw new Error((data && data.error) || ('HTTP ' + res.status));
+                    }
+                    snapTokenCache = { snapToken: data.snapToken, jsUrl: data.snapJsUrl, clientKey: data.clientKey, orderId: data.orderId };
                 }
-                await loadSnapJs(data.snapJsUrl, data.clientKey);
+                await loadSnapJs(snapTokenCache.jsUrl, snapTokenCache.clientKey);
                 if (typeof window.snap === 'undefined') {
                     throw new Error('Snap.js gagal dimuat. Muat ulang halaman lalu coba lagi.');
                 }
-                window.snap.pay(data.snapToken, {
+                window.snap.pay(snapTokenCache.snapToken, {
                     onSuccess: function() {
                         showQrisToast('success', 'Pembayaran berhasil', 'Pembayaran sudah berhasil. Admin akan memverifikasi pendaftaran Anda.');
                         btn.textContent = 'Terbayar';

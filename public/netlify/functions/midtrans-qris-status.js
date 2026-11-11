@@ -21,10 +21,11 @@ exports.handler = async function (event) {
     const params = event.queryStringParameters || {};
     const orderId = String(params.orderId || params.order_id || '').trim().toUpperCase();
 
-    // Hanya terima format token internal — mencegah enumerasi order Midtrans
+    // Hanya terima format token internal (dengan suffix "~" opsional untuk
+    // transaksi Snap) - mencegah enumerasi order Midtrans
     // (Midtrans menerima order_id custom dari merchant; verifikasi yang ketat
     //  juga membatasi info yang terekspos).
-    if (!/^IMDKOM-[A-Z]{10}$/.test(orderId)) {
+    if (!/^IMDKOM-[A-Z]{10}(~[A-Za-z0-9]{4,12})?$/.test(orderId)) {
         return json(400, { error: 'orderId tidak valid.' });
     }
 
