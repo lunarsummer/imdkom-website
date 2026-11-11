@@ -348,8 +348,8 @@
                             <p class="text-xs text-gray-500">Mohon tunggu sebentar.</p>
                         </div>
                         <div id="qrisError" class="hidden text-center py-4">
-                            <p class="text-sm font-semibold" style="color:#b91c1c">Gagal memuat kode QR pembayaran.</p>
-                            <p class="text-xs text-gray-500 mt-1">Periksa koneksi internet Anda, lalu coba lagi.</p>
+                            <p class="text-sm font-semibold" style="color:#b91c1c">Pembayaran QRIS tidak dapat dimuat.</p>
+                            <p class="text-xs text-gray-500 mt-1" id="qrisErrorDesc">Periksa koneksi internet Anda, lalu coba lagi.</p>
                             <button type="button" id="qrisRetryBtn" class="reg-upload-btn shrink-0 mt-3" style="width:auto;padding-left:1.5rem;padding-right:1.5rem">Coba Lagi</button>
                         </div>
                         <img id="qrisImage" alt="QRIS Pembayaran" style="max-width:220px;width:100%;border-radius:0.5rem;border:1px solid #e5e7eb;display:none;" />
@@ -961,9 +961,17 @@
             loadingEl.classList.toggle('flex', !!show);
         }
 
-        function showQrisError(show) {
+        let qrisUnavailableReason = '';
+        function showQrisError(show, message) {
             const errEl = document.getElementById('qrisError');
             if (errEl) errEl.classList.toggle('hidden', !show);
+            const descEl = document.getElementById('qrisErrorDesc');
+            if (descEl) {
+                const friendly = /not activated|402|channel/i.test(qrisUnavailableReason)
+                    ? 'Pembayaran QRIS sedang tidak tersedia dari penyedia. Gunakan metode Transfer, atau hubungi admin.'
+                    : 'Gagal memuat kode QR. Periksa koneksi Anda, lalu coba lagi.';
+                descEl.textContent = message || friendly;
+            }
         }
 
         const showQrisBtn = document.getElementById('regShowQrisBtn');
@@ -1248,9 +1256,11 @@
                 });
                 const data = await res.json();
                 if (!res.ok || !data.qrDataUrl) {
+                    qrisUnavailableReason = (data && data.error) ? String(data.error) : 'HTTP ' + res.status;
                     console.warn('QR dinamis tidak tersedia.', data);
                     return false;
                 }
+                qrisUnavailableReason = '';
                 const img = document.getElementById('qrisImage');
                 if (img) {
                     img.src = data.qrDataUrl;
