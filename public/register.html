@@ -1193,7 +1193,10 @@
             if (btn) { btn.disabled = false; btn.innerHTML = '<span>Periksa Status Pembayaran</span>'; }
         };
 
+        let lunasRendered = false;
         const onPaymentLunas = function () {
+            if (lunasRendered) return;
+            lunasRendered = true;
             fillReceipt(lastTicketData || {});
             const waitPanel = document.getElementById('regPaymentPanel');
             if (waitPanel) waitPanel.classList.add('hidden');
@@ -1353,11 +1356,15 @@
                     throw new Error('Snap.js gagal dimuat. Muat ulang halaman lalu coba lagi.');
                 }
                 window.snap.pay(snapTokenCache.snapToken, {
-                    onSuccess: function () {
-                        showQrisToast('success', 'Pembayaran berhasil', 'Kami sedang memverifikasi pembayaran Anda. Kwitansi akan muncul setelah lunas.');
-                        setBothPayButtons(true, 'Menunggu verifikasi...');
-                        if (payNowNote) { payNowNote.textContent = 'Pembayaran sedang diverifikasi...'; payNowNote.classList.remove('hidden'); }
-                        startSettlementWatch();
+                    onSuccess: function (result) {
+                        const res = result || {};
+                        if (!lastTicketData) lastTicketData = {};
+                        lastTicketData.paidAt = res.settlement_time || res.transaction_time || new Date().toISOString();
+                        lastTicketData.idTransaksi = res.transaction_id || '';
+                        stopSettlementWatch();
+                        lunasRendered = false;
+                        onPaymentLunas();
+                        showQrisToast('success', 'Pembayaran terverifikasi', 'Kwitansi dan konfirmasi WhatsApp tersedia di bawah.');
                     },
                     onPending: function () {
                         showQrisToast('pending', 'Menunggu pembayaran', 'Selesaikan pembayaran Anda sebelum kedaluwarsa. Status diverifikasi otomatis oleh Midtrans.');
