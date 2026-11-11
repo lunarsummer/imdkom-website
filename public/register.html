@@ -121,6 +121,8 @@
             font-size: 0.7rem;
             font-weight: 700;
         }
+        .hidden { display: none !important; }
+
         .reg-submit {
             width: 100%;
             background: var(--reg-ink);
@@ -484,7 +486,6 @@
 
     <script type="module">
         import { db, collection, addDoc, setDoc, getDoc, doc, getDocs, query, where } from './assets/js/firebase.js';
-        import { openWhatsApp } from './assets/js/whatsapp.js';
         import { formatRupiah, escapeHtml } from './assets/js/utils.js';
 
         // ============================================================
@@ -744,30 +745,9 @@
             return age;
         }
 
-        function validateNikField(nik, jenisKelamin, tanggalLahir) {
+        function validateNikField(nik) {
             const cleaned = String(nik || '').replace(/\D/g, '');
-            if (cleaned.length !== 16) return 'NIK harus tepat 16 digit angka.';
-            const dd = parseInt(cleaned.substr(6, 2), 10);
-            const mm = parseInt(cleaned.substr(8, 2), 10);
-            const yy = parseInt(cleaned.substr(10, 2), 10);
-            if (mm < 1 || mm > 12) return 'NIK: bulan lahir tidak valid.';
-            const isFemaleNik = dd > 40;
-            const ddReal = isFemaleNik ? dd - 40 : dd;
-            if (ddReal < 1 || ddReal > 31) return 'NIK: tanggal lahir tidak valid.';
-            if (tanggalLahir) {
-                const parts = tanggalLahir.split('-');
-                if (parts.length === 3) {
-                    const ty = parseInt(parts[0], 10) % 100;
-                    const tm = parseInt(parts[1], 10);
-                    const td = parseInt(parts[2], 10);
-                    if (td !== ddReal || tm !== mm || ty !== yy) {
-                        return 'NIK tidak sesuai dengan tanggal lahir yang Anda isi.';
-                    }
-                    if (jenisKelamin && ((isFemaleNik && jenisKelamin !== 'P') || (!isFemaleNik && jenisKelamin !== 'L'))) {
-                        return 'NIK tidak sesuai dengan jenis kelamin yang Anda pilih.';
-                    }
-                }
-            }
+            if (!/^[0-9]{16}$/.test(cleaned)) return 'NIK harus tepat 16 digit angka.';
             return null;
         }
 
@@ -934,7 +914,7 @@
             const emailError = validateEmailField(email);
             if (emailError) { messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(emailError) + '</p>'; return false; }
             if (nik) {
-                const nikError = validateNikField(nik, jenisKelamin, tanggalLahir);
+                const nikError = validateNikField(nik);
                 if (nikError) { messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(nikError) + '</p>'; return false; }
             }
             if (!nama || !wa || alasan.length === 0) { messageEl.innerHTML = '<p class="reg-error">Mohon lengkapi data wajib.</p>'; return false; }
@@ -1310,6 +1290,61 @@
             return doc;
         };
 
+        const printReceiptFallback = function (d) {
+            const wa = d || {};
+            const rows = [
+                ['Program', wa.programNama || '-'],
+                ['Nama', wa.nama || '-'],
+                ['Email', wa.email || '-'],
+                ['WhatsApp', wa.wa || '-'],
+                ['Alamat', wa.alamat || '-'],
+                ['Jumlah', wa.nominal || '-'],
+                ['Tanggal Bayar', fmtTanggalBayar(wa.paidAt)],
+                ['ID Transaksi', wa.idTransaksi || '-'],
+                ['Metode', wa.metode || 'Snap (Midtrans)'],
+                ['Token', wa.token || '-']
+            ];
+            const body = rows.map(function(pair) { return '<tr><th style="text-align:left;padding:6px 10px;border-bottom:1px solid #eee;color:#6b7280;font-size:12px;">' + escapeHtml(pair[0]) + '</th><td style="padding:6px 10px;border-bottom:1px solid #eee;font-size:13px;">' + escapeHtml(pair[1]) + '</td></tr>'; }).join('');
+            const html = '<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><title>Kwitansi</title>' +
+                '<style>body{font-family:Arial,sans-serif;margin:24px;}h1{font-size:22px;margin:0 0 4px;}p{margin:2px 0 16px;color:#6b7280;font-size:12px;}table{width:100%;border-collapse:collapse;margin-top:12px;}.token{font-family:monospace;letter-spacing:.1em;background:#f7f7f8;padding:6px 10px;border-radius:6px;}.lunas{display:inline-block;background:#d1fae5;color:#065f46;border-radius:999px;padding:4px 14px;font-size:12px;font-weight:bold;letter-spacing:.15em;}</style></head><body>' +
+                '<span class="lunas">LUNAS</span>' +
+                '<h1>IMDKOM</h1>' +
+                '<p>KWITANSI PEMBAYARAN</p>' +
+                '<table>' + body + '</table>' +
+                '<p style="margin-top:18px;font-size:11px;color:#9ca3af;">Simpan kwitansi ini sebagai bukti pembayaran &middot; imdkomyogyakarta.netlify.app</p>' +
+                '<script>window.onload = function() { window.print(); }<\/script>' +
+                '</body></html>';
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const win = window.open(url, '_blank');
+            if (!win) { window.open('about:blank', '_blank'); try { win.document.write(html); win.document.close(); } catch (e) { /* popup diblokir */ } }
+        };
+
+        // Download Kwitansi & Konfirmasi WA — wire-up yang sebelumnya HILANG
+        if (downloadTicketBtn) downloadTicketBtn.addEventListener('click', function () {
+            if (!lastTicketData || !lastTicketData.token) {
+                showQrisToast('error', 'Kwitansi belum siap', 'Kwitansi baru bisa diunduh setelah pembayaran terverifikasi lunas.');
+                return;
+            }
+            try {
+                const doc = buildReceiptPdf(lastTicketData);
+                doc.save('kwitansi-' + lastTicketData.token + '.pdf');
+            } catch (err) {
+                console.error('PDF gagal, pakai cetak:', err);
+                printReceiptFallback(lastTicketData);
+            }
+        });
+
+        if (waConfirmBtn) waConfirmBtn.addEventListener('click', function () {
+            if (!lastTicketData || !lastTicketData.token) {
+                showQrisToast('error', 'Kwitansi belum siap', 'Kwitansi baru bisa dikonfirmasi setelah pembayaran terverifikasi lunas.');
+                return;
+            }
+            const url = 'https://wa.me/6285601913435?text=' + encodeURIComponent(buildWaMessage(lastTicketData));
+            const win = window.open(url, '_blank', 'noopener,noreferrer');
+            if (!win) { window.location.href = url; }
+        });
+
 
         // ================= BAYAR (registrasi + buka Snap) =================
         const payNowBtn = document.getElementById('payNowBtn');
@@ -1478,6 +1513,14 @@
                 try { this.setSelectionRange(start, start); } catch (e) { /* noop */ }
             });
         });
+        const regEmailLower = document.getElementById('regEmail');
+        if (regEmailLower) {
+            regEmailLower.addEventListener('input', function() {
+                const start = this.selectionStart;
+                this.value = this.value.toLowerCase();
+                try { this.setSelectionRange(start, start); } catch (e) { /* noop */ }
+            });
+        }
 
         copyTokenBtn.addEventListener('click', function() {
             navigator.clipboard.writeText(token).then(function() {
