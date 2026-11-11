@@ -170,6 +170,18 @@ exports.handler = async function (event) {
         return json(resp.status, { error: data?.status_message || 'Midtrans menolak transaksi', details: data });
     }
 
+    // PERTAHANAN TERAKHIR: jika Midtrans membalas 200 tapi tanpa detail transaksi
+    // (mis. channel belum diaktifkan untuk Core API di production — dokumentasi
+    //  Midtrans: aktifkan Core API QRIS lewat support@midtrans.com), tampilkan
+    //  alasan aslinya alih-alih gagal diam-diam.
+    if (!data.transaction_id && !data.qr_string && !(Array.isArray(data.actions) && data.actions.length)) {
+        console.error('Midtrans aneh:', resp.status, JSON.stringify(data));
+        return json(502, {
+            error: data?.status_message || 'Respons Midtrans tidak lengkap (transaksi tidak dibuat). Hubungi support Midtrans untuk aktivasi Core API QRIS di production.',
+            midtrans: { statusCode: resp.status, body: data }
+        });
+    }
+
     // Ambil gambar QR dari action generate-qr-code (butuh auth) lalu unduh & kembalikan sebagai data URL
     let qrDataUrl = '';
     const qrAction = (Array.isArray(data.actions) ? data.actions : []).find(a => a && a.name === 'generate-qr-code')
