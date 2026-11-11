@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "node scripts/sync-navbar.mjs",
     "build": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
