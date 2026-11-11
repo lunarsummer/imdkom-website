@@ -424,8 +424,8 @@
         </form>
 
             <div id="regSuccess" class="reg-success hidden mt-6" role="status">
-            <p class="text-lg text-emerald-800 font-bold">Pembayaran hampir selesai!</p>
-            <p class="text-sm text-gray-700 mt-1">Tekan <strong>Bayar via Midtrans</strong> di bawah ini untuk lanjut membayar. Kwitansi &amp; konfirmasi WhatsApp muncul setelah pembayaran berhasil.</p>
+            <p class="text-lg text-emerald-800 font-bold" id="regSuccessTitle">Pembayaran hampir selesai!</p>
+            <p class="text-sm text-gray-700 mt-1" id="regSuccessHint">Tekan <strong>Bayar via Midtrans</strong> di bawah ini untuk lanjut membayar. Kwitansi &amp; konfirmasi WhatsApp muncul setelah pembayaran berhasil.</p>
             <p class="text-sm text-gray-600 mt-2">Simpan <strong>TOKEN PENDAFTARAN</strong> di bawah &mdash; dipakai untuk tracking di <a class="text-brand underline" href="/tracking">/tracking</a> (dengan 4 digit terakhir WhatsApp Anda) dan juga saat konfirmasi ke WhatsApp admin:</p>
             <div class="flex items-center gap-2 mt-2 max-w-md">
                 <input id="regToken" class="reg-input bg-transparent font-mono text-lg tracking-widest" readonly aria-label="Token pendaftaran" />
@@ -1185,6 +1185,10 @@
             if (downloadTicketBtn) downloadTicketBtn.classList.remove('hidden');
             if (waConfirmBtn) waConfirmBtn.classList.remove('hidden');
             setBothPayButtons(true, 'Terbayar');
+            const successTitle = document.getElementById('regSuccessTitle');
+            const successHint = document.getElementById('regSuccessHint');
+            if (successTitle) { successTitle.textContent = 'Pembayaran Anda Sukses!'; successTitle.style.color = '#047857'; }
+            if (successHint) { successHint.textContent = 'Pembayaran sudah lunas dan terverifikasi. Kwitansi & konfirmasi WhatsApp tersedia di bawah.'; }
             qrisToastShown = false;
             showQrisToast('success', 'Pembayaran terverifikasi', 'Pembayaran Anda sudah berhasil. Kwitansi dan konfirmasi WhatsApp tersedia di bawah.');
         };
