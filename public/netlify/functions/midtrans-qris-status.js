@@ -55,6 +55,8 @@ exports.handler = async function (event) {
         fraudStatus: data.fraud_status || '',
         grossAmount: data.gross_amount || '',
         paymentType: data.payment_type || '',
-        expireTime: data.expire_time || ''
+        expireTime: data.expire_time || '',
+        settlementTime: data.settlement_time || '',
+        transactionTime: data.transaction_time || ''
     });
 };
