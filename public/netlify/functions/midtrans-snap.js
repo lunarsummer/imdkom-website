@@ -139,6 +139,18 @@ exports.handler = async function (event) {
         if (refDoc.fields.active && refDoc.fields.active.booleanValue === false) {
             return json(409, { error: 'Kode referral sudah tidak aktif.' });
         }
+        if (refDoc.fields.expiresAt && refDoc.fields.expiresAt.stringValue) {
+            const raw = String(refDoc.fields.expiresAt.stringValue).trim();
+            const d = new Date(raw);
+            if (!isNaN(d.getTime()) && d.getTime() <= Date.now()) {
+                return json(409, { error: 'Kode referral sudah kedaluwarsa.' });
+            }
+        }
+        const maxUse = fieldNumber(refDoc.fields, 'maxUsage');
+        const used = fieldNumber(refDoc.fields, 'usageCount');
+        if (maxUse > 0 && used >= maxUse) {
+            return json(409, { error: 'Kuota kode referral sudah habis.' });
+        }
         const refProgramId = fieldString(refDoc.fields, 'programId');
         if (refProgramId && refProgramId !== programId) {
             return json(409, { error: 'Kode referral tidak berlaku untuk program ini.' });

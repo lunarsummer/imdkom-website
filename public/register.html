@@ -882,11 +882,28 @@
             if (refApplyBtn) refApplyBtn.disabled = true;
             try {
                 const snap = await getDoc(doc(db, 'referrals', code));
-                if (!snap.exists() || snap.data().active === false) {
-                    setReferralState('error', 'Kode tidak valid atau sudah tidak aktif.');
+                if (!snap.exists()) {
+                    setReferralState('error', 'Kode tidak valid.');
                     return;
                 }
                 const d = snap.data();
+                if (d.active === false) {
+                    setReferralState('error', 'Kode tidak aktif. Hubungi admin jika ini error.');
+                    return;
+                }
+                if (d.expiresAt) {
+                    const exp = new Date(d.expiresAt);
+                    if (!isNaN(exp.getTime()) && exp.getTime() <= Date.now()) {
+                        setReferralState('error', 'Kode referral sudah kedaluwarsa.');
+                        return;
+                    }
+                }
+                const maxUse = Number(d.maxUsage || 0);
+                const used = Number(d.usageCount || 0);
+                if (maxUse > 0 && used >= maxUse) {
+                    setReferralState('error', 'Kuota kode ini sudah habis.');
+                    return;
+                }
                 const refProgramId = d.programId || '';
                 if (refProgramId && refProgramId !== programId) {
                     setReferralState('error', 'Kode ini hanya berlaku untuk program ' + (d.programNama || 'tertentu') + '.');

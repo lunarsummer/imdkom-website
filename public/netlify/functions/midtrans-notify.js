@@ -85,7 +85,29 @@ const findDocumentByField = async (accessToken, collectionId, fieldPath, value) 
     if (!res.ok) return [];
     const arr = await res.json().catch(() => []);
     if (!Array.isArray(arr)) return [];
-    return arr.map(r => r.document && r.document.name).filter(Boolean);
+    return arr.map(r => (r.document && r.document.name) ? { name: r.document.name, fields: r.document.fields || {} } : null).filter(Boolean);
+};
+
+const firestoreGet = async (accessToken, fullPath) => {
+    const res = await fetch(`https://firestore.googleapis.com/v1/${fullPath}`, {
+        headers: { Authorization: 'Bearer ' + accessToken }
+    });
+    if (!res.ok) return null;
+    return res.json().catch(() => null);
+};
+
+// Increment referral usageCount using Firestore :commit transform (atomic)
+const incrementReferralCount = async (accessToken, code) => {
+    if (!code) return false;
+    const target = `projects/${PROJECT_ID}/databases/(default)/documents/referrals/${encodeURIComponent(code)}`;
+    const res = await fetch(`https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents:commit`, {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            writes: [{ transform: { document: target, fieldTransforms: [{ fieldPath: 'usageCount', increment: { integerValue: '1' } }] } }]
+        })
+    });
+    return res.ok;
 };
 
 exports.handler = async function (event) {
@@ -167,16 +189,30 @@ exports.handler = async function (event) {
     await firestorePatch(accessToken, `projects/${PROJECT_ID}/databases/(default)/documents/tracking/${baseToken}`, patchFields)
         .catch(e => console.error('Notify: gagal update tracking:', e.message));
 
-    // 2b. Registrations: doc id acak, cari berdasar field token
+    // 2b. Registrations: doc id acak, cari berdasar field token; increment usageCount kodeReferral
+    let usedReferralCode = '';
     try {
         const docs = await findDocumentByField(accessToken, 'registrations', 'token', baseToken);
-        for (const docName of docs) {
-            const rel = docName.split('/documents/')[1];
+        for (const docRef of docs) {
+            const rel = String(docRef.name).split('/documents/')[1];
             await firestorePatch(accessToken, `projects/${PROJECT_ID}/databases/(default)/documents/${rel}`, patchFields)
                 .catch(e => console.error('Notify: gagal update registrasi:', e.message));
+            const kdField = docRef.fields && docRef.fields.kodeReferral;
+            const kdr = kdField && kdField.stringValue ? String(kdField.stringValue).trim() : '';
+            if (kdr) usedReferralCode = kdr;
         }
     } catch (e) {
         console.error('Notify: gagal cari registrasi:', e.message);
+    }
+
+    // 2c. Increment usageCount di referrals (atomic via transform)
+    if (usedReferralCode) {
+        try {
+            await incrementReferralCount(accessToken, usedReferralCode);
+            console.log('Notify: usageCount++ untuk kode %s', usedReferralCode);
+        } catch (e) {
+            console.error('Notify: gagal increment referral:', e.message);
+        }
     }
 
     return json(200, { received: true, status: 'paid' });

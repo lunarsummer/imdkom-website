@@ -520,44 +520,106 @@
             if (typeof lucide !== 'undefined') lucide.createIcons();
         };
 
+        function isoLocalInputValue(iso) {
+            if (!iso) return '';
+            try {
+                const d = new Date(iso);
+                if (isNaN(d.getTime())) return '';
+                const pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+                return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+            } catch (e) { return ''; }
+        }
+
+        function addDaysExp(days) {
+            const d = new Date();
+            d.setDate(d.getDate() + days);
+            d.setHours(23, 59, 0, 0);
+            return isoLocalInputValue(d.toISOString());
+        }
+
+        function isDead(ref) {
+            if (!ref) return false;
+            if (ref.active === false) return true;
+            if (ref.expiresAt) {
+                const d = new Date(ref.expiresAt);
+                if (!isNaN(d.getTime()) && d.getTime() <= Date.now()) return true;
+            }
+            const max = Number(ref.maxUsage || 0);
+            const used = Number(ref.usageCount || 0);
+            if (max > 0 && used >= max) return true;
+            return false;
+        }
+
         function createReferralRow(ref) {
             const id = 'referral-' + (++referralCounter);
             const wrapper = document.createElement('div');
-            wrapper.className = 'border border-gray-200 rounded-xl p-3 grid grid-cols-1 sm:grid-cols-6 gap-3 items-end';
+            const dead = isDead(ref);
+            wrapper.className = 'border ' + (dead ? 'border-red-200 bg-red-50/40' : 'border-gray-200') + ' rounded-xl p-3 grid grid-cols-1 sm:grid-cols-6 gap-3 items-end';
             wrapper.dataset.row = id;
             wrapper.dataset.original = ref.code || '';
-            wrapper.innerHTML = `
-                <div>
-                    <label class="block text-xs text-gray-500 mb-1">Kode</label>
-                    <input class="ref-code w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono uppercase" type="text" placeholder="Mis. SAHABAT10" maxlength="24" autocapitalize="characters" value="${escapeAttr(ref.code || '')}" />
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-500 mb-1">Tipe Potongan</label>
-                    <select class="ref-type w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        <option value="percent"${ref.type === 'percent' ? ' selected' : ''}>Persen (%)</option>
-                        <option value="flat"${ref.type === 'flat' ? ' selected' : ''}>Nominal (Rp)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-500 mb-1">Nilai</label>
-                    <input class="ref-value w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" type="number" min="0" step="1" placeholder="10" value="${ref.value !== undefined && ref.value !== null ? String(ref.value) : ''}" />
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-500 mb-1">Berlaku Untuk</label>
-                    <select class="ref-program w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        ${programOptionsHtml(ref.programId || '')}
-                    </select>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                    <label class="flex items-center gap-2 text-sm text-gray-700">
-                        <input class="ref-active" type="checkbox" ${ref.active !== false ? 'checked' : ''} />
-                        Aktif
-                    </label>
-                    <button type="button" class="remove-referral text-red-600 hover:text-red-800 text-sm">Hapus</button>
-                </div>
-            `;
+            const expiresVal = isoLocalInputValue(ref.expiresAt || '');
+            const usage = Number(ref.usageCount || 0);
+            const maxTxt = ref.maxUsage != null ? String(ref.maxUsage) : '';
+            const usagePct = (Number(ref.maxUsage || 0) > 0) ? Math.min(100, Math.round((usage / Number(ref.maxUsage)) * 100)) : 0;
+            wrapper.innerHTML = '<div>' +
+                '<label class="block text-xs text-gray-500 mb-1">Kode</label>' +
+                '<input class="ref-code w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono uppercase" type="text" placeholder="Mis. SAHABAT10" maxlength="24" autocapitalize="characters" value="' + escapeAttr(ref.code || '') + '" />' +
+                (dead ? '<p class="text-[10px] font-semibold text-red-700 mt-1">EXPIRED / HABIS</p>' : '') +
+            '</div><div>' +
+                '<label class="block text-xs text-gray-500 mb-1">Tipe Potongan</label>' +
+                '<select class="ref-type w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">' +
+                    '<option value="percent"' + (ref.type === 'percent' ? ' selected' : '') + '>Persen (%)</option>' +
+                    '<option value="flat"' + (ref.type === 'flat' ? ' selected' : '') + '>Nominal (Rp)</option>' +
+                '</select>' +
+            '</div><div>' +
+                '<label class="block text-xs text-gray-500 mb-1">Nilai</label>' +
+                '<input class="ref-value w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" type="number" min="0" step="1" placeholder="10" value="' + (ref.value !== undefined && ref.value !== null ? String(ref.value) : '') + '" />' +
+            '</div><div>' +
+                '<label class="block text-xs text-gray-500 mb-1">Berlaku Untuk</label>' +
+                '<select class="ref-program w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">' +
+                    programOptionsHtml(ref.programId || '') +
+                '</select>' +
+            '</div><div class="flex flex-col gap-1.5">' +
+                '<label class="block text-xs text-gray-500">Berakhir</label>' +
+                '<input class="ref-expires w-full px-2 py-1.5 border border-gray-300 rounded-lg text-xs" type="datetime-local" value="' + expiresVal + '" />' +
+                '<div class="flex flex-wrap gap-1">' +
+                    '<button type="button" class="ref-exp-quick text-[10px] px-1.5 py-0.5 rounded border border-gray-300 hover:bg-gray-100" data-days="1">+1 hari</button>' +
+                    '<button type="button" class="ref-exp-quick text-[10px] px-1.5 py-0.5 rounded border border-gray-300 hover:bg-gray-100" data-days="7">+7 hari</button>' +
+                    '<button type="button" class="ref-exp-quick text-[10px] px-1.5 py-0.5 rounded border border-gray-300 hover:bg-gray-100" data-days="30">+1 bulan</button>' +
+                    '<button type="button" class="ref-exp-quick text-[10px] px-1.5 py-0.5 rounded border border-gray-300 hover:bg-gray-100" data-days="90">+3 bulan</button>' +
+                    '<button type="button" class="ref-exp-clear text-[10px] px-1.5 py-0.5 rounded text-gray-500 hover:bg-gray-100">Bersihkan</button>' +
+                '</div>' +
+            '</div><div class="flex flex-col gap-1.5">' +
+                '<label class="block text-xs text-gray-500">Max Pemakaian (kosong = ∞)</label>' +
+                '<input class="ref-maxusage w-full px-2 py-1.5 border border-gray-300 rounded-lg text-xs" type="number" min="0" step="1" placeholder="mis. 5" value="' + maxTxt + '" />' +
+                '<div class="flex items-center justify-between gap-2">' +
+                    '<div class="flex-1">' +
+                        '<div class="flex items-center justify-between text-[10px] text-gray-500">' +
+                            '<span>Terpakai: <strong class="text-gray-800">' + usage + '</strong></span>' +
+                            (ref.maxUsage ? '<span>/ ' + ref.maxUsage + '</span>' : '<span>&infin;</span>') +
+                        '</div>' +
+                        '<div class="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden mt-0.5"><div class="h-full bg-emerald-500" style="width:' + usagePct + '%"></div></div>' +
+                    '</div>' +
+                    '<label class="flex items-center gap-2 text-xs text-gray-700 shrink-0">' +
+                        '<input class="ref-active" type="checkbox" ' + (ref.active !== false ? 'checked' : '') + ' />' +
+                        'Aktif' +
+                    '</label>' +
+                '</div>' +
+                '<div class="flex items-center justify-end">' +
+                    '<button type="button" class="remove-referral text-red-600 hover:text-red-800 text-xs">Hapus</button>' +
+                '</div>' +
+            '</div>';
             wrapper.querySelector('.ref-code').addEventListener('input', function() {
                 this.value = this.value.toUpperCase().replace(/\s+/g, '');
+            });
+            wrapper.querySelectorAll('.ref-exp-quick').forEach(function(b) {
+                b.addEventListener('click', function() {
+                    const days = parseInt(b.dataset.days, 10);
+                    wrapper.querySelector('.ref-expires').value = addDaysExp(days);
+                });
+            });
+            wrapper.querySelector('.ref-exp-clear').addEventListener('click', function() {
+                wrapper.querySelector('.ref-expires').value = '';
             });
             wrapper.querySelector('.remove-referral').addEventListener('click', async function() {
                 const code = wrapper.dataset.original || '';
@@ -604,7 +666,20 @@
                         return;
                     }
                     const original = row.dataset.original || '';
-                    await setDoc(doc(db, 'referrals', code), { code: code, type: type, value: value, active: active, programId: programIdSel, programNama: programNamaSel, updatedAt: new Date().toISOString() }, { merge: true });
+                    const expiresAtEl = row.querySelector('.ref-expires');
+                    const expiresAtRaw = expiresAtEl ? String(expiresAtEl.value || '').trim() : '';
+                    let expiresAt = '';
+                    if (expiresAtRaw) {
+                        const d = new Date(expiresAtRaw);
+                        if (!isNaN(d.getTime())) expiresAt = d.toISOString();
+                    }
+                    const maxUsageEl = row.querySelector('.ref-maxusage');
+                    const maxUsageRaw = maxUsageEl ? String(maxUsageEl.value || '').trim() : '';
+                    const maxUsage = maxUsageRaw === '' ? null : Math.max(0, Math.round(Number(maxUsageRaw) || 0));
+                    const refPayload = { code: code, type: type, value: value, active: active, programId: programIdSel, programNama: programNamaSel, updatedAt: new Date().toISOString() };
+                    if (expiresAt) refPayload.expiresAt = expiresAt;
+                    if (maxUsage !== null) refPayload.maxUsage = maxUsage;
+                    await setDoc(doc(db, 'referrals', code), refPayload, { merge: true });
                     if (original && original !== code) {
                         try { await deleteDoc(doc(db, 'referrals', original)); } catch (e) { console.error('Gagal hapus kode lama:', e); }
                     }
