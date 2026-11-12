@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="assets/css/theme.css">
     <link rel="stylesheet" href="assets/css/output.css">
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
     <script src="https://unpkg.com/lucide@1.70.0" defer></script>
     <style>
         :root {
@@ -1031,6 +1032,9 @@
                         jadwalTerbit: false,
                         jadwal: null,
                         wa4hash: wa4hash,
+                        nominalPembayaran: String(getFinalBiaya() || (parseDigits(currentHargaPromo) || parseDigits(currentHarga)) || ''),
+                        metodePembayaran: 'Snap (Midtrans)',
+                        kodeReferral: kodeReferral || '',
                         updatedAt: new Date().toISOString()
                     }, { merge: true });
                 } catch (trackingError) {
@@ -1254,6 +1258,26 @@
             return m ? fmtTanggalID(v) : String(v || '-');
         };
 
+        const buildReceiptPdfFromDom = async function () {
+            const JsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+            if (!JsPDFCtor || !window.html2canvas) throw new Error('Library PDF belum termuat. Refresh halaman lalu coba lagi.');
+            const target = document.querySelector('#regTicket .receipt-card');
+            if (!target) throw new Error('Kwitansi belum siap.');
+            const doc = new JsPDFCtor({ unit: 'mm', format: 'a5', orientation: 'portrait' });
+            const canvas = await window.html2canvas(target, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false
+            });
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 148; // a5 width in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const M = 13;
+            doc.addImage(imgData, 'PNG', M, M, imgWidth - 2 * M, Math.min(imgHeight, 210 - 2 * M));
+            return doc;
+        };
+
         const buildReceiptPdf = function (d) {
             const JsPDFCtor = window.jspdf && window.jspdf.jsPDF;
             if (!JsPDFCtor) throw new Error('Library PDF belum termuat. Refresh halaman lalu coba lagi.');
@@ -1366,17 +1390,23 @@
         };
 
         // Download Kwitansi & Konfirmasi WA — wire-up yang sebelumnya HILANG
-        if (downloadTicketBtn) downloadTicketBtn.addEventListener('click', function () {
+        if (downloadTicketBtn) downloadTicketBtn.addEventListener('click', async function () {
             if (!lastTicketData || !lastTicketData.token) {
                 showQrisToast('error', 'Kwitansi belum siap', 'Kwitansi baru bisa diunduh setelah pembayaran terverifikasi lunas.');
                 return;
             }
             try {
-                const doc = buildReceiptPdf(lastTicketData);
+                const doc = await buildReceiptPdfFromDom();
                 doc.save('kwitansi-' + lastTicketData.token + '.pdf');
             } catch (err) {
-                console.error('PDF gagal, pakai cetak:', err);
-                printReceiptFallback(lastTicketData);
+                // Fallback: style text-based jsPDF (seleksi & ringannya beda brand)
+                try {
+                    const fallbackDoc = buildReceiptPdf(lastTicketData);
+                    fallbackDoc.save('kwitansi-' + lastTicketData.token + '.pdf');
+                } catch (err2) {
+                    console.error('PDF gagal total, pakai cetak:', err2);
+                    printReceiptFallback(lastTicketData);
+                }
             }
         });
 

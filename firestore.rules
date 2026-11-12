@@ -279,7 +279,10 @@ service cloud.firestore {
                        && request.resource.data.nama is string
                        && request.resource.data.nama.size() <= 100
                        && request.resource.data.programNama is string
-                       && request.resource.data.programNama.size() <= 100;
+                       && request.resource.data.programNama.size() <= 100
+                       && (!request.resource.data.keys().hasAny(['nominalPembayaran']) || (request.resource.data.nominalPembayaran is string && request.resource.data.nominalPembayaran.size() <= 30))
+                       && (!request.resource.data.keys().hasAny(['metodePembayaran']) || (request.resource.data.metodePembayaran is string && request.resource.data.metodePembayaran.size() <= 30))
+                       && (!request.resource.data.keys().hasAny(['kodeReferral']) || (request.resource.data.kodeReferral is string && request.resource.data.kodeReferral.size() <= 40));
 
       // Admin yang memperbarui status verifikasi / jadwal
       allow update, delete: if isAdmin();

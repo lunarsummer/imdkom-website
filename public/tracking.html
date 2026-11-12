@@ -25,6 +25,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
     <script src="https://unpkg.com/lucide@1.70.0" defer></script>
     <style>
         :root {
@@ -105,6 +107,28 @@
         .cta:disabled { background: #94a3b8; box-shadow: none; cursor: not-allowed; transform: none; }
         .wa-confirm-btn { background: #075e54; box-shadow: 0 6px 16px rgba(7,94,84,0.3); margin-top: 0.75rem; }
         .wa-confirm-btn:hover { background: #064e45; box-shadow: 0 10px 22px rgba(7,94,84,0.35); }
+        .dl-receipt-btn { background: #0d0d0d; margin-top: 0.75rem; }
+        .dl-receipt-btn:hover { background: #000000; }
+
+        /* === RECEIPT (mirror of register.html kwitansi card) === */
+        .track-receipt-wrap { position: fixed; left: -10000px; top: 0; width: 460px; }
+        .receipt-card { background: #ffffff; border: 1px solid #e3e6eb; border-radius: 1rem; overflow: hidden; box-shadow: 0 14px 34px rgba(13, 13, 13, 0.10); font-family: 'Inter', 'Poppins', sans-serif; max-width: 460px; }
+        .receipt-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem 0.8rem; background: #0d0d0d; }
+        .receipt-brand { font-family: 'Anton', sans-serif; font-size: 1.35rem; line-height: 1; letter-spacing: 0.04em; color: #ffffff; margin: 0; }
+        .receipt-doc { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa3af; margin: 0.32rem 0 0; }
+        .receipt-status { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.18em; color: #065f46; background: #34d399; border-radius: 999px; padding: 0.42rem 0.9rem 0.38rem; line-height: 1; }
+        .receipt-total { text-align: center; padding: 0.95rem 1rem 0.8rem; border-bottom: 1px dashed #d9dde3; }
+        .receipt-label { display: block; font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6b7280; line-height: 1.35; }
+        .receipt-total-value { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 2.1rem; line-height: 1.1; color: #0d0d0d; margin: 0.3rem 0 0; letter-spacing: -0.01em; }
+        .receipt-total-sub { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: #6b7280; margin: 0.28rem 0 0; }
+        .receipt-rows { padding: 0.75rem 1rem; border-bottom: 1px dashed #d9dde3; display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1rem; }
+        .receipt-row { border-bottom: 1px solid #f1f1f1; padding-bottom: 0.4rem; }
+        .receipt-row p, .receipt-meta p { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #1f2937; font-weight: 600; margin: 0.18rem 0 0; overflow-wrap: anywhere; line-height: 1.4; }
+        .receipt-row-span-2 { grid-column: span 2; border-bottom: 1px solid #f1f1f1; padding-bottom: 0.4rem; }
+        .receipt-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; padding: 0.65rem 1rem; border-bottom: 1px dashed #d9dde3; }
+        .receipt-token { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.6rem 1rem; border-bottom: 1px dashed #d9dde3; }
+        .receipt-token strong { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.82rem; letter-spacing: 0.08em; color: #111827; overflow-wrap: anywhere; }
+        .receipt-web { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #6b7280; text-align: center; padding: 0.55rem 1rem 0.75rem; margin: 0; }
 
         .security-note { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.9rem; font-size: 0.72rem; color: #64748b; }
 
@@ -232,6 +256,11 @@
                 <p class="empty-text">Admin akan menerbitkan jadwal setelah verifikasi data dan pembayaran Anda selesai.</p>
             </div>
 
+            <button type="button" id="trackDownloadBtn" class="cta dl-receipt-btn" hidden>
+                <i data-lucide="download" class="w-4 h-4"></i>
+                Download Kwitansi (PDF)
+            </button>
+
             <button type="button" id="trackWaConfirm" class="cta wa-confirm-btn" hidden>
                 <i data-lucide="message-circle" class="w-4 h-4"></i>
                 Konfirmasi Pembayaran &amp; Pendaftaran via WhatsApp
@@ -245,6 +274,37 @@
         <span>IMDKOM YOGYAKARTA &bull; Kursus &amp; Service Komputer</span>
         <span class="secure"><i data-lucide="lock" class="w-3.5 h-3.5"></i>Verifikasi token</span>
     </footer>
+
+    <!-- Receipt template for PDF download (mirrored from register.html) -->
+    <div class="track-receipt-wrap" aria-hidden="true">
+        <div class="receipt-card" id="trackReceipt">
+            <div class="receipt-head">
+                <div>
+                    <p class="receipt-brand">IMDKOM</p>
+                    <p class="receipt-doc">Kwitansi Pembayaran</p>
+                </div>
+                <span class="receipt-status">LUNAS</span>
+            </div>
+            <div class="receipt-total">
+                <span class="receipt-label">Total Dibayarkan</span>
+                <p class="receipt-total-value" id="trNominal">-</p>
+                <p class="receipt-total-sub"><span id="trMetode">-</span></p>
+            </div>
+            <div class="receipt-meta">
+                <div><span class="receipt-label">ID Transaksi</span><p id="trTransactionId">-</p></div>
+                <div><span class="receipt-label">Tanggal Bayar</span><p id="trPaidAt">-</p></div>
+            </div>
+            <div class="receipt-rows">
+                <div class="receipt-row-span-2"><span class="receipt-label">Program</span><p id="trProgram">-</p></div>
+                <div class="receipt-row-span-2"><span class="receipt-label">Nama Peserta</span><p id="trNama">-</p></div>
+            </div>
+            <div class="receipt-token">
+                <span class="receipt-label" style="margin: 0;">Token</span>
+                <strong id="trToken">-</strong>
+            </div>
+            <p class="receipt-web">imdkomyogyakarta.netlify.app</p>
+        </div>
+    </div>
 
     <script type="module">
         import { db, doc, getDoc } from './assets/js/firebase.js';
@@ -264,6 +324,7 @@
         const emptyBox = document.getElementById('trackEmpty');
         const backBtn = document.getElementById('trackBack');
         const waConfirmBtn = document.getElementById('trackWaConfirm');
+        const downloadBtn = document.getElementById('trackDownloadBtn');
         const refreshBtn = document.getElementById('trackRefresh');
         let lastTracked = null;
         const WA_ADMIN = '6285601913435';
@@ -373,6 +434,9 @@
                 emptyBox.hidden = false;
             }
 
+            const isPaid = data.statusPembayaran === 'Terverifikasi';
+            if (downloadBtn) downloadBtn.hidden = !isPaid;
+            if (waConfirmBtn) waConfirmBtn.hidden = !isPaid;
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
@@ -428,7 +492,6 @@
                     return;
                 }
                 lastTracked = Object.assign({ token: token }, data);
-                if (waConfirmBtn) waConfirmBtn.hidden = false;
                 renderTracking(lastTracked);
             } catch (error) {
                 console.error('Tracking error:', error);
@@ -450,11 +513,64 @@
             wa4Input.value = '';
             message.innerHTML = '';
             if (waConfirmBtn) waConfirmBtn.hidden = true;
+            if (downloadBtn) downloadBtn.hidden = true;
             lastTracked = null;
             tokenInput.focus();
         });
 
+        const fillTrackReceipt = function () {
+            if (!lastTracked) return;
+            const d = lastTracked;
+            const fmtPaid = function (v) {
+                const s = String(v || '').trim();
+                const m = s.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/);
+                if (!m) return s || '-';
+                const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                const day = parseInt(m[3], 10), mo = months[parseInt(m[2], 10) - 1] || '-';
+                return day + ' ' + mo + ' ' + m[1] + ' ' + m[4] + ':' + m[5];
+            };
+            const setT = function (id, v) { const el = document.getElementById(id); if (el) el.textContent = v || '-'; };
+            setT('trProgram', d.programNama || '-');
+            setT('trNama', d.nama || '-');
+            setT('trNominal', d.nominalPembayaran || '-');
+            setT('trMetode', d.metodePembayaran || 'Snap (Midtrans)');
+            setT('trTransactionId', d.transactionId || '-');
+            setT('trPaidAt', fmtPaid(d.settlementTime || d.transactionTime || ''));
+            setT('trToken', d.token || '-');
+        };
+
+        const handleTrackDownload = async function () {
+            if (!lastTracked) return;
+            fillTrackReceipt();
+            const source = document.getElementById('trackReceipt');
+            if (!source) return;
+            if (downloadBtn) {
+                downloadBtn.disabled = true;
+                downloadBtn.innerHTML = '<i data-lucide="loader" class="w-4 h-4"></i> Menyiapkan PDF...';
+            }
+            try {
+                const JsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+                if (!JsPDFCtor || !window.html2canvas) throw new Error('Library PDF belum termuat. Refresh halaman lalu coba lagi.');
+                const canvas = await window.html2canvas(source, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false });
+                const imgData = canvas.toDataURL('image/png');
+                const doc = new JsPDFCtor({ unit: 'mm', format: 'a5', orientation: 'portrait' });
+                const imgW = 148, imgH = (canvas.height * imgW) / canvas.width;
+                doc.addImage(imgData, 'PNG', 0, 0, imgW, Math.min(imgH, 210));
+                doc.save('kwitansi-' + (lastTracked.token || 'imdkom') + '.pdf');
+            } catch (err) {
+                console.error('Gagal membuat PDF:', err);
+                renderError('Gagal membuat PDF. ' + ((err && err.message) || 'Coba lagi.'));
+            } finally {
+                if (downloadBtn) {
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = '<i data-lucide="download" class="w-4 h-4"></i> Download Kwitansi (PDF)';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }
+            }
+        };
+
         if (waConfirmBtn) waConfirmBtn.addEventListener('click', openWaConfirm);
+        if (downloadBtn) downloadBtn.addEventListener('click', handleTrackDownload);
         if (refreshBtn) refreshBtn.addEventListener('click', refreshTrack);
     </script>
 </body>
