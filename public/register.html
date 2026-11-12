@@ -154,6 +154,38 @@
         .reg-success {
             padding: 0.5rem 0 0.25rem;
         }
+        .pay-loading-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(13, 13, 13, 0.62);
+            padding: 1.5rem;
+        }
+        .pay-loading-card {
+            max-width: 22rem;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+            padding: 1.75rem 1.5rem;
+            text-align: center;
+        }
+        .pay-loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #0059ff;
+            animation: payLoadingSpin 0.75s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes payLoadingSpin { to { transform: rotate(360deg); } }
+        .pay-loading-title { font-family: 'Anton', 'Poppins', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; font-size: 1.25rem; color: #0d0d0d; margin: 0; }
+        .pay-loading-text { font-size: 0.85rem; color: #4b5563; margin-top: 0.45rem; line-height: 1.55; }
+        .pay-loading-hint { font-size: 0.72rem; color: #9ca3af; margin: 0.6rem 0 0; }
         .reg-toast {
             position: fixed;
             top: 1rem;
@@ -423,7 +455,16 @@
             <div id="regMessage" class="text-sm" role="alert"></div>
         </form>
 
-            <div id="regSuccess" class="reg-success hidden mt-6" role="status">
+            <div id="regLoadingOverlay" class="pay-loading-overlay hidden" role="status" aria-live="polite" aria-label="Sedang menyiapkan pembayaran Midtrans">
+            <div class="pay-loading-card">
+                <div class="pay-loading-spinner" aria-hidden="true"></div>
+                <p class="pay-loading-title">Tunggu sebentar</p>
+                <p class="pay-loading-text">Sedang menyiapkan pembayaran. Pop-up Midtrans akan terbuka otomatis.</p>
+                <p class="pay-loading-hint">Jangan tutup halaman ini</p>
+            </div>
+        </div>
+
+        <div id="regSuccess" class="reg-success hidden mt-6" role="status">
             <p class="text-lg text-emerald-800 font-bold" id="regSuccessTitle">Pembayaran hampir selesai!</p>
             <p class="text-sm text-gray-700 mt-1" id="regSuccessHint">Tekan <strong>Bayar via Midtrans</strong> di bawah ini untuk lanjut membayar. Kwitansi &amp; konfirmasi WhatsApp muncul setelah pembayaran berhasil.</p>
             <p class="text-sm text-gray-600 mt-2">Simpan <strong>TOKEN PENDAFTARAN</strong> di bawah &mdash; dipakai untuk tracking di <a class="text-brand underline" href="/tracking">/tracking</a> (dengan 4 digit terakhir WhatsApp Anda) dan juga saat konfirmasi ke WhatsApp admin:</p>
@@ -999,7 +1040,7 @@
                 const payPanelNominal = document.getElementById('payPanelNominal');
                 if (payPanelNominal) payPanelNominal.textContent = getFinalBiaya() ? formatRupiah(getFinalBiaya()) : '-';
                 form.classList.add('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 messageEl.innerHTML = '';
                 registrationDone = true;
                 return true;
@@ -1394,6 +1435,7 @@
                 if (typeof window.snap === 'undefined') {
                     throw new Error('Snap.js gagal dimuat. Muat ulang halaman lalu coba lagi.');
                 }
+                hideLoadingOverlay();
                 window.snap.pay(snapTokenCache.snapToken, {
                     onSuccess: function (result) {
                         const res = result || {};
@@ -1427,8 +1469,13 @@
             }
         };
 
+        const loadingOverlay = document.getElementById('regLoadingOverlay');
+        const showLoadingOverlay = function () { if (loadingOverlay) loadingOverlay.classList.remove('hidden'); };
+        const hideLoadingOverlay = function () { if (loadingOverlay) loadingOverlay.classList.add('hidden'); };
+
         const handlePayNow = async function (btn) {
             if (!btn || btn.disabled) return;
+            showLoadingOverlay();
             if (!registrationDone) {
                 btn.disabled = true;
                 btn.innerHTML = '<span>Memproses pendaftaran...</span>';
@@ -1436,6 +1483,7 @@
                 if (!ok) {
                     btn.disabled = false;
                     btn.innerHTML = '<span>Bayar via Midtrans</span>';
+                    hideLoadingOverlay();
                     return;
                 }
             }
