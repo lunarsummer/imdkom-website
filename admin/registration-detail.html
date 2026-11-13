@@ -106,21 +106,21 @@
             #printArea { display: block; position: absolute; top: 0; left: 0; width: 100%; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0f172a; font-size: 8.5pt; line-height: 1.35; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
-        .pf-letterhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+        .pf-letterhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; background: #1a3c5e; padding: 4mm 5mm; }
         .pf-brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
-        .pf-logo { width: 15mm; height: auto; display: block; }
-        .pf-wordmark { font-family: 'Poppins', 'Inter', sans-serif; font-weight: 800; font-size: 15pt; color: #1a3c5e; letter-spacing: 0.02em; line-height: 1; }
-        .pf-tagline { font-size: 5.4pt; letter-spacing: 2.4px; color: #64748b; text-transform: uppercase; font-weight: 700; margin: 2pt 0 0; }
+        .pf-logo { width: 15mm; height: auto; display: block; filter: brightness(0) invert(1); }
+        .pf-wordmark { font-family: 'Poppins', 'Inter', sans-serif; font-weight: 800; font-size: 15pt; color: #ffffff; letter-spacing: 0.02em; line-height: 1; }
+        .pf-tagline { font-size: 5.4pt; letter-spacing: 2.4px; color: rgba(255, 255, 255, 0.78); text-transform: uppercase; font-weight: 700; margin: 2pt 0 0; }
         .pf-meta { text-align: right; }
-        .pf-doc-title { font-size: 9.6pt; color: #1a3c5e; margin: 0; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-        .pf-doc-no { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 6.6pt; color: #334155; margin: 1.5pt 0 0; letter-spacing: 0.06em; }
-        .pf-doc-date { font-size: 6.2pt; color: #94a3b8; margin: 1.5pt 0 0; letter-spacing: 0.04em; }
-        .pf-rule { border: 0; border-top: 1.6pt solid #1a3c5e; margin: 5mm 0 4mm; position: relative; }
-        .pf-rule::after { content: ''; position: absolute; left: 0; top: -1.6pt; width: 34mm; border-top: 1.6pt solid #b45309; }
+        .pf-doc-title { font-size: 9.6pt; color: #ffffff; margin: 0; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+        .pf-doc-no { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 6.6pt; color: rgba(255, 255, 255, 0.88); margin: 1.5pt 0 0; letter-spacing: 0.06em; }
+        .pf-doc-date { font-size: 6.2pt; color: rgba(255, 255, 255, 0.64); margin: 1.5pt 0 0; letter-spacing: 0.04em; }
+        .pf-rule { border: 0; margin: 0 0 4.5mm; height: 2.2mm; background: #b45309; }
+
 
         .pf-status { display: inline-block; font-size: 7.5pt; font-weight: 800; letter-spacing: 0.22em; border-radius: 2pt; padding: 3pt 12pt 2.4pt; }
-        .pf-status-lunas { background: #065f46; color: #ecfdf5; }
-        .pf-status-wait { background: #92400e; color: #fefce8; }
+        .pf-status-lunas { background: #ecfdf5; color: #065f46; }
+        .pf-status-wait { background: #fef3c7; color: #92400e; }
 
         .pf-sec { border-bottom: 1px dashed #cbd5e1; padding-bottom: 2.2pt; margin: 4.5mm 0 2mm; font-size: 6.6pt; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #1a3c5e; }
         .pf-sec:first-of-type { margin-top: 0; }
