@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./assets/css/admin.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         /* NAV GROUP / SUBMENU */
         .nav-group { margin: 0; }
@@ -106,23 +106,24 @@
             #printArea { display: block; position: absolute; top: 0; left: 0; width: 100%; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0f172a; font-size: 8.5pt; line-height: 1.35; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
-        .pf-letterhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; background: #1a3c5e; padding: 4mm 5mm; }
-        .pf-brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
-        .pf-logo { width: 15mm; height: auto; display: block; filter: brightness(0) invert(1); }
-        .pf-wordmark { font-family: 'Poppins', 'Inter', sans-serif; font-weight: 800; font-size: 15pt; color: #ffffff; letter-spacing: 0.02em; line-height: 1; }
-        .pf-tagline { font-size: 5.4pt; letter-spacing: 2.4px; color: rgba(255, 255, 255, 0.78); text-transform: uppercase; font-weight: 700; margin: 2pt 0 0; }
+        .pf-letterhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+        .pf-brand { display: flex; align-items: center; gap: 6mm; min-width: 0; }
+        .pf-logo { width: 16mm; height: auto; display: block; }
+        .pf-wordmark { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 700; font-size: 15.5pt; color: #0f172a; letter-spacing: 0.04em; line-height: 0.95; margin: 0; }
+        .pf-tagline { font-family: 'Inter', sans-serif; font-size: 5.6pt; letter-spacing: 0.34em; color: #b45309; text-transform: uppercase; font-weight: 700; margin: 2.2pt 0 0; }
         .pf-meta { text-align: right; }
-        .pf-doc-title { font-size: 9.6pt; color: #ffffff; margin: 0; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-        .pf-doc-no { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 6.6pt; color: rgba(255, 255, 255, 0.88); margin: 1.5pt 0 0; letter-spacing: 0.06em; }
-        .pf-doc-date { font-size: 6.2pt; color: rgba(255, 255, 255, 0.64); margin: 1.5pt 0 0; letter-spacing: 0.04em; }
-        .pf-rule { border: 0; margin: 0 0 4.5mm; height: 2.2mm; background: #b45309; }
+        .pf-doc-title { font-family: 'Fraunces', 'Space Grotesk', serif; font-weight: 560; font-size: 13.2pt; line-height: 1.12; color: #1a3c5e; margin: 0; letter-spacing: 0.005em; }
+        .pf-doc-no { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 6.4pt; color: #334155; margin: 2.2pt 0 0; letter-spacing: 0.05em; }
+        .pf-doc-date { font-family: 'Inter', sans-serif; font-size: 5.9pt; color: #94a3b8; margin: 1pt 0 0; letter-spacing: 0.03em; }
+        .pf-rule { border: 0; border-top: 1.5pt solid #1a3c5e; margin: 4mm 0 5mm; position: relative; }
+        .pf-rule::after { content: ''; position: absolute; left: 0; top: -1.5pt; width: 30mm; border-top: 2.4pt solid #b45309; }
 
 
         .pf-status { display: inline-block; font-size: 7.5pt; font-weight: 800; letter-spacing: 0.22em; border-radius: 2pt; padding: 3pt 12pt 2.4pt; }
         .pf-status-lunas { background: #ecfdf5; color: #065f46; }
         .pf-status-wait { background: #fef3c7; color: #92400e; }
 
-        .pf-sec { border-bottom: 1px dashed #cbd5e1; padding-bottom: 2.2pt; margin: 4.5mm 0 2mm; font-size: 6.6pt; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #1a3c5e; }
+        .pf-sec { border-bottom: 1px solid #e2e8f0; padding-bottom: 3pt; margin: 5.5mm 0 2.4mm; font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: 6.6pt; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #1a3c5e; }
         .pf-sec:first-of-type { margin-top: 0; }
         .pf-sec + .pf-grid { margin-top: 0; }
 
@@ -138,8 +139,9 @@
         .pf-sign .line { border-top: 1.1pt solid #0f172a; padding-top: 2.5pt; margin-top: 15mm; }
         .pf-sign .line strong { font-size: 8.2pt; }
 
-        .pf-foot { display: flex; justify-content: space-between; align-items: center; gap: 10mm; margin-top: 5mm; border-top: 0.6pt solid #e2e8f0; padding-top: 2.2mm; font-size: 5.9pt; color: #94a3b8; letter-spacing: 0.03em; }
-        .pf-foot .pf-foot-brand { font-weight: 700; color: #64748b; }
+        .pf-foot { display: flex; justify-content: space-between; align-items: center; gap: 8mm; margin-top: 6mm; border-top: 0.5pt solid #e2e8f0; padding-top: 3mm; font-size: 5.9pt; color: #94a3b8; letter-spacing: 0.03em; }
+        .pf-foot-brand { display: flex; align-items: center; gap: 2mm; font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: #334155; letter-spacing: 0.04em; }
+        .pf-foot-logo { width: 4.2mm; height: auto; display: block; }
 
         .print-avoid-break { break-inside: avoid; page-break-inside: avoid; }
 
@@ -1125,7 +1127,7 @@
 
         function pfFootHtml(docNo, d) {
             return '<div class="pf-foot">' +
-                '<span class="pf-foot-brand">IMDKOM Yogyakarta</span>' +
+                '<span class="pf-foot-brand"><img class="pf-foot-logo" src="assets/images/logo/imd.svg" alt="" />IMDKOM YOGYAKARTA</span>' +
                 '<span>WA 0856-0191-3435 &middot; @imdkom_yk &middot; imdkomyogyakarta.netlify.app</span>' +
                 '<span>' + escapeHtmlText(docNo) + ' &middot; ' + escapeHtmlText(d.token || '-') + '</span>' +
             '</div>';
