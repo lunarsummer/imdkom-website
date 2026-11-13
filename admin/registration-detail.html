@@ -107,10 +107,9 @@
         }
 
         .pf-letterhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
-        .pf-brand { display: flex; align-items: center; gap: 6mm; min-width: 0; }
-        .pf-logo { width: 16mm; height: auto; display: block; }
-        .pf-wordmark { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 700; font-size: 15.5pt; color: #0f172a; letter-spacing: 0.04em; line-height: 0.95; margin: 0; }
-        .pf-tagline { font-family: 'Inter', sans-serif; font-size: 5.6pt; letter-spacing: 0.34em; color: #b45309; text-transform: uppercase; font-weight: 700; margin: 2.2pt 0 0; }
+        .pf-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 1.6mm; min-width: 0; }
+        .pf-logo { width: 24mm; height: auto; display: block; }
+        .pf-tagline { font-family: 'Inter', sans-serif; font-size: 5.8pt; letter-spacing: 0.36em; color: #b45309; text-transform: uppercase; font-weight: 700; margin: 0; }
         .pf-meta { text-align: right; }
         .pf-doc-title { font-family: 'Fraunces', 'Space Grotesk', serif; font-weight: 560; font-size: 13.2pt; line-height: 1.12; color: #1a3c5e; margin: 0; letter-spacing: 0.005em; }
         .pf-doc-no { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 6.4pt; color: #334155; margin: 2.2pt 0 0; letter-spacing: 0.05em; }
@@ -1105,8 +1104,8 @@
             const printed = new Date().toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             return '<div class="pf-letterhead">' +
                 '<div class="pf-brand">' +
-                    '<img class="pf-logo" src="assets/images/logo/imd.svg" alt="Logo IMDKOM" />' +
-                    '<div><p class="pf-wordmark">IMDKOM</p><p class="pf-tagline">Kursus &amp; Computer Service</p></div>' +
+                    '<img class="pf-logo" src="assets/images/logo/imdkom.svg" alt="IMDKOM" />' +
+                    '<p class="pf-tagline">Kursus &amp; Computer Service</p>' +
                 '</div>' +
                 '<div class="pf-meta">' +
                     '<p class="pf-doc-title">' + escapeHtmlText(docTitle) + '</p>' +
