@@ -109,15 +109,21 @@
         .wa-confirm-btn:hover { background: #064e45; box-shadow: 0 10px 22px rgba(7,94,84,0.35); }
         .dl-receipt-btn { background: #0d0d0d; margin-top: 0.75rem; }
         .dl-receipt-btn:hover { background: #000000; }
-        .pay-pending { margin-top: 0.9rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 1rem; padding: 0.9rem 1rem; text-align: left; }
-        .pay-pending-title { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #92400e; margin: 0; }
-        .pay-pending-title svg { width: 1.05rem; height: 1.05rem; }
-        .pay-pending-text { font-size: 0.8rem; color: #78350f; margin: 0.4rem 0 0; line-height: 1.5; }
-        .pay-pending-btn { margin-top: 0.6rem; background: #d97706; box-shadow: 0 6px 16px rgba(217,119,6,0.3); }
-        .pay-pending-btn:hover { background: #b45309; box-shadow: 0 10px 22px rgba(217,119,6,0.35); }
-        .pay-pending-note { font-size: 0.72rem; font-weight: 600; color: #92400e; margin: 0.5rem 0 0; }
-        .pay-pending-note.error { color: #b91c1c; }
-        .pay-pending-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+        .pay-receipt { margin-top: 0.9rem; background: #ffffff; border: 1px solid #d8d4cc; border-radius: 0; padding: 0.95rem 1.05rem; text-align: left; box-shadow: 6px 6px 0 rgba(13, 13, 13, 0.07); }
+        .pay-receipt-eyebrow { font-family: 'Anton', 'Poppins', sans-serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: #92400e; background: #fef3c7; display: inline-block; padding: 0.28rem 0.55rem 0.24rem; margin: 0; border-radius: 0; }
+        .pay-receipt-program { font-size: 0.92rem; font-weight: 800; line-height: 1.35; color: #0d0d0d; text-transform: uppercase; margin: 0.5rem 0 0; }
+        .pay-receipt-rule { border: 0; border-top: 1px dashed #d8d4cc; margin: 0.6rem 0 0; }
+        .pay-receipt-label { display: block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #6b7280; margin-top: 0.6rem; }
+        .pay-receipt-total-old { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8rem; color: #9ca3af; text-decoration: line-through; margin: 0.3rem 0 0; }
+        .pay-receipt-amount { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 1.6rem; line-height: 1.1; letter-spacing: -0.01em; color: #0d0d0d; margin: 0.25rem 0 0; }
+        .pay-receipt-disc { font-size: 0.72rem; font-weight: 600; color: #b45309; margin: 0.35rem 0 0; }
+        .pay-receipt-btn { display: flex; width: 100%; align-items: center; justify-content: center; gap: 0.5rem; background: #0d0d0d; color: #ffffff; font-family: 'Inter', 'Poppins', sans-serif; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; font-size: 0.8rem; border: none; border-radius: 0; padding: 0.9rem 1rem; margin-top: 0.8rem; cursor: pointer; transition: background .15s ease; }
+        .pay-receipt-btn:hover { background: #1d4ed8; }
+        .pay-receipt-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+        .pay-receipt-btn svg { width: 1.05rem; height: 1.05rem; }
+        .pay-receipt-note { font-size: 0.72rem; font-weight: 600; color: #92400e; margin: 0.5rem 0 0; }
+        .pay-receipt-note.error { color: #b91c1c; }
+        .pay-receipt-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
         /* === RECEIPT (mirror of register.html kwitansi card) === */
         .track-receipt-wrap { position: fixed; left: -10000px; top: 0; width: 460px; }
@@ -265,14 +271,19 @@
                 <p class="empty-text">Admin akan menerbitkan jadwal setelah verifikasi data dan pembayaran Anda selesai.</p>
             </div>
 
-            <div id="trackPayPending" class="pay-pending" hidden>
-                <p class="pay-pending-title"><i data-lucide="clock-3" class="w-4 h-4"></i>Pembayaran belum selesai</p>
-                <p class="pay-pending-text">Total tagihan Anda: <strong id="trackPayPendingNominal">-</strong>. Klik tombol di bawah untuk membuka kembali pop-up pembayaran Midtrans &mdash; tidak perlu mengisi formulir dari awal.</p>
-                <button type="button" id="trackPayBtn" class="cta pay-pending-btn">
+            <div id="trackPayPending" class="pay-receipt" hidden>
+                <p class="pay-receipt-eyebrow">Menunggu Pembayaran</p>
+                <p class="pay-receipt-program" id="trackPayProgram">-</p>
+                <hr class="pay-receipt-rule" />
+                <span class="pay-receipt-label">Total Tagihan</span>
+                <p class="pay-receipt-total-old" id="trackPayTotalOld" hidden>-</p>
+                <p class="pay-receipt-amount" id="trackPayNominal">-</p>
+                <p class="pay-receipt-disc" id="trackPayDiscWrap" hidden>Potongan referral <strong id="trackPayReferral">-</strong>: -<span id="trackPayDisc">-</span></p>
+                <button type="button" id="trackPayBtn" class="pay-receipt-btn">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
                     <span>Lanjutkan Pembayaran</span>
                 </button>
-                <p id="trackPayNote" class="pay-pending-note" hidden></p>
+                <p id="trackPayNote" class="pay-receipt-note" hidden></p>
             </div>
 
             <button type="button" id="trackDownloadBtn" class="cta dl-receipt-btn" hidden>
@@ -346,7 +357,12 @@
         const downloadBtn = document.getElementById('trackDownloadBtn');
         const refreshBtn = document.getElementById('trackRefresh');
         const payPendingBox = document.getElementById('trackPayPending');
-        const payPendingNominal = document.getElementById('trackPayPendingNominal');
+        const payProgramEl = document.getElementById('trackPayProgram');
+        const payTotalOldEl = document.getElementById('trackPayTotalOld');
+        const payNominalEl = document.getElementById('trackPayNominal');
+        const payDiscWrap = document.getElementById('trackPayDiscWrap');
+        const payReferralEl = document.getElementById('trackPayReferral');
+        const payDiscEl = document.getElementById('trackPayDisc');
         const payContinueBtn = document.getElementById('trackPayBtn');
         const payNote = document.getElementById('trackPayNote');
         let lastTracked = null;
@@ -368,9 +384,12 @@
             window.open('https://wa.me/' + WA_ADMIN + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
         };
 
-        const formatNominalPending = function (v) {
-            const n = parseInt(String(v == null ? '' : v).replace(/[^0-9]/g, ''), 10);
-            return isNaN(n) ? '-' : 'Rp ' + n.toLocaleString('id-ID');
+        const parseDigitsTrack = function (v) {
+            return Math.round(Number(String(v == null ? '' : v).replace(/[^0-9]/g, '')) || 0);
+        };
+
+        const formatRpTrack = function (n) {
+            return 'Rp ' + n.toLocaleString('id-ID');
         };
 
         const setPayNote = function (text, isError) {
@@ -599,7 +618,24 @@
             if (payPendingBox) {
                 payPendingBox.hidden = isPaid;
                 if (!isPaid) {
-                    if (payPendingNominal) payPendingNominal.textContent = formatNominalPending(data.nominalPembayaran);
+                    if (payProgramEl) payProgramEl.textContent = data.programNama || '-';
+                    const finalDigits = parseDigitsTrack(data.nominalPembayaran);
+                    const baseDigits = parseDigitsTrack(data.hargaSebelumDiskon);
+                    const discDigits = parseDigitsTrack(data.potonganReferral);
+                    if (payNominalEl) payNominalEl.textContent = finalDigits > 0 ? formatRpTrack(finalDigits) : '-';
+                    if (payTotalOldEl) {
+                        const showOld = baseDigits > 0 && finalDigits > 0 && baseDigits !== finalDigits;
+                        payTotalOldEl.hidden = !showOld;
+                        if (showOld) payTotalOldEl.textContent = formatRpTrack(baseDigits);
+                    }
+                    if (payDiscWrap) {
+                        const showDisc = discDigits > 0 && String(data.kodeReferral || '').trim() !== '';
+                        payDiscWrap.hidden = !showDisc;
+                        if (showDisc) {
+                            if (payReferralEl) payReferralEl.textContent = String(data.kodeReferral || '').trim();
+                            if (payDiscEl) payDiscEl.textContent = formatRpTrack(discDigits);
+                        }
+                    }
                     if (payNote) { payNote.hidden = true; payNote.textContent = ''; payNote.classList.remove('error'); }
                     if (payContinueBtn) { payContinueBtn.disabled = false; payBtnLabel('Lanjutkan Pembayaran'); }
                 }

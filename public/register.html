@@ -1098,6 +1098,8 @@
                         jadwal: null,
                         wa4hash: wa4hash,
                         nominalPembayaran: String(getFinalBiaya() || (parseDigits(currentHargaPromo) || parseDigits(currentHarga)) || ''),
+                        hargaSebelumDiskon: String(getBaseBiaya() || ''),
+                        potonganReferral: String(referralDiscount(getBaseBiaya()) || 0),
                         metodePembayaran: 'Snap (Midtrans)',
                         kodeReferral: kodeReferral || '',
                         updatedAt: new Date().toISOString()
