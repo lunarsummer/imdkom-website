@@ -6,7 +6,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebas
 import { 
     getFirestore, 
     collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, 
-    query, where, orderBy, setDoc, limit,
+    query, where, orderBy, setDoc, limit, startAfter,
     writeBatch
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 import { 
@@ -37,7 +37,7 @@ const auth = getAuth(app);
 export { 
     app, db, auth,
     collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, setDoc,
-    query, where, orderBy, limit,
+    query, where, orderBy, limit, startAfter,
     writeBatch,
     signInWithEmailAndPassword, onAuthStateChanged, signOut,
     createUserWithEmailAndPassword   // ← TAMBAH

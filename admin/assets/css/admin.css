@@ -420,6 +420,393 @@ body {
 }
 
 /* ============================================================
+   QUEUE LIST (Registrasi — antrean pendaftar)
+   ============================================================ */
+.queue-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.queue-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    align-items: center;
+    column-gap: 0.9rem;
+    row-gap: 0.4rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 0.7rem 0.9rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.queue-row:hover {
+    border-color: #1a3c5e;
+    box-shadow: 0 4px 14px rgba(26, 60, 94, 0.12);
+}
+
+.queue-row:focus-visible {
+    outline: 2px solid #1a3c5e;
+    outline-offset: 2px;
+}
+
+.queue-main {
+    min-width: 0;
+}
+
+.queue-program {
+    display: inline-block;
+    max-width: 100%;
+    background: #dbeafe;
+    color: #1e40af;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.14rem 0.5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+.queue-name {
+    display: block;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #111827;
+    margin-top: 0.32rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.queue-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
+    margin-top: 0.22rem;
+    font-size: 0.72rem;
+    color: #6b7280;
+}
+
+.queue-meta .meta-token {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: #0f172a;
+    letter-spacing: 0.06em;
+}
+
+.queue-pills {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.queue-time {
+    font-size: 0.7rem;
+    color: #6b7280;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.queue-detail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #1a3c5e;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.queue-row:hover .queue-detail {
+    background: #2a5a7a;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.status-pill.ok { background: #d1fae5; color: #047857; }
+.status-pill.wait { background: #fef3c7; color: #b45309; }
+.status-pill svg { width: 0.68rem; height: 0.68rem; flex-shrink: 0; }
+
+@media (max-width: 768px) {
+    .queue-row {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0.35rem;
+        padding: 0.75rem 0.8rem;
+    }
+
+    .queue-pills {
+        justify-content: flex-start;
+    }
+
+    .queue-time {
+        text-align: left;
+    }
+
+    .queue-detail {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+/* ============================================================
+   SEARCH / TOOLBAR
+   ============================================================ */
+.admin-search {
+    position: relative;
+    flex: 1 1 16rem;
+    min-width: 0;
+    max-width: 30rem;
+}
+
+.admin-search input {
+    width: 100%;
+    font-size: 0.85rem;
+    color: #111827;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.6rem 2.4rem 0.6rem 2.2rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-search input::placeholder {
+    color: #9ca3af;
+}
+
+.admin-search input:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.15);
+}
+
+.admin-search .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.admin-search .search-clear {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.admin-search .search-clear:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.admin-search input:not(:placeholder-shown) ~ .search-clear {
+    display: inline-flex;
+}
+
+.list-meta {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.load-more {
+    display: block;
+    margin: 0.9rem auto 0;
+}
+
+/* ============================================================
+   DETAIL PAGE — 2 kolom + action rail
+   ============================================================ */
+.detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.detail-section {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem 1.15rem;
+}
+
+.detail-section + .detail-section {
+    margin-top: 0.9rem;
+}
+
+.detail-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1a3c5e;
+    margin: 0 0 0.6rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem 1rem;
+}
+
+.detail-field {
+    min-width: 0;
+}
+
+.detail-field .field-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.detail-field .field-value {
+    display: block;
+    font-size: 0.85rem;
+    color: #111827;
+    margin-top: 0.15rem;
+    overflow-wrap: anywhere;
+}
+
+.detail-span-2 {
+    grid-column: span 2;
+}
+
+.action-rail {
+    position: sticky;
+    top: 1rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.action-rail-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin: 0 0 0.2rem;
+}
+
+.action-rail .rail-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.rail-btn-outline-red {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    width: 100%;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #dc2626;
+    background: #ffffff;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.rail-btn-outline-red:hover {
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.rail-verified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 100%;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #047857;
+    background: #d1fae5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+    padding: 0.55rem 1rem;
+}
+
+.rail-divider {
+    border: 0;
+    border-top: 1px solid #eef2f7;
+    margin: 0.25rem 0;
+}
+
+.rail-meta {
+    font-size: 0.7rem;
+    color: #9ca3af;
+    text-align: center;
+    margin-top: 0.15rem;
+}
+
+@media (max-width: 1024px) {
+    .detail-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .action-rail {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 640px) {
+    .detail-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .detail-span-2 {
+        grid-column: auto;
+    }
+}
+
+/* ============================================================
    TENTOR BRAND (sidebar tentor)
    ============================================================ */
 .tentor-brand {
