@@ -755,6 +755,7 @@ body {
 .rail-btn-outline-red:hover {
     background: #fef2f2;
     border-color: #fca5a5;
+    color: #b91c1c;
 }
 
 .rail-verified {

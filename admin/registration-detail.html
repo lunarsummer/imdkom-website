@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./assets/css/admin.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* NAV GROUP / SUBMENU */
         .nav-group { margin: 0; }
@@ -97,33 +97,51 @@
             white-space: nowrap;
         }
 
-        /* PRINT — sama seperti halaman lama, dipakai oleh Form & Kwitansi */
+        /* PRINT — letterhead IMDKOM + grid ringkas, dipakai oleh Form & Kwitansi */
         #printArea { display: none; }
+        @page { size: A4; margin: 11mm 12mm; }
         @media print {
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
-            #printArea { display: block; position: absolute; top: 0; left: 0; width: 100%; padding: 24px 28px; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0f172a; }
+            #printArea { display: block; position: absolute; top: 0; left: 0; width: 100%; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0f172a; font-size: 8.5pt; line-height: 1.35; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
-        .doc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-        .doc-org { font-size: 9px; letter-spacing: 2.5px; color: #64748b; text-transform: uppercase; font-weight: 700; margin: 0; }
-        .doc-title { font-size: 21px; color: #0f172a; margin: 5px 0 0; font-weight: 800; letter-spacing: -0.3px; line-height: 1.15; }
-        .doc-sub { font-size: 10.5px; color: #64748b; margin: 3px 0 0; }
-        .doc-contact { text-align: right; font-size: 9.5px; color: #64748b; line-height: 1.7; }
-        .doc-accent { width: 56px; height: 5px; border-radius: 999px; background: #1a3c5e; border: 0; margin: 16px 0 16px; }
-        .doc-meta { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 10px; }
-        .doc-meta .label { font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 1.4px; margin: 0; }
-        .doc-meta .value { font-size: 11px; color: #0f172a; font-weight: 600; margin: 3px 0 0; }
-        .doc-token { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11.5px; background: #f1f5f9; border: 1px solid #e2e8f0; color: #0f172a; padding: 7px 12px; border-radius: 8px; letter-spacing: 0.5px; font-weight: 600; white-space: nowrap; }
-        .doc-status { font-size: 10px; font-weight: 800; letter-spacing: 0.2em; border-radius: 999px; padding: 6px 16px 5px; white-space: nowrap; }
-        .doc-status-lunas { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-        .doc-status-wait { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
-        .print-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11.5px; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
-        .print-table td { border-bottom: 1px solid #eef2f7; padding: 9px 12px; vertical-align: top; }
-        .print-table tr:last-child td { border-bottom: 0; }
-        .print-table td:first-child { width: 34%; background: #f8fafc; color: #64748b; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; }
-        .print-sign { display: flex; justify-content: space-between; gap: 48px; margin-top: 38px; font-size: 10.5px; color: #0f172a; text-align: center; }
-        .print-sign .line { border-top: 1.5px solid #0f172a; padding-top: 6px; margin-top: 44px; }
-        .print-foot { display: flex; justify-content: space-between; gap: 20px; margin-top: 18px; font-size: 8.5px; color: #94a3b8; letter-spacing: 0.4px; border-top: 1px solid #eef2f7; padding-top: 10px; }
+
+        .pf-letterhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+        .pf-brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
+        .pf-logo { width: 15mm; height: auto; display: block; }
+        .pf-wordmark { font-family: 'Poppins', 'Inter', sans-serif; font-weight: 800; font-size: 15pt; color: #1a3c5e; letter-spacing: 0.02em; line-height: 1; }
+        .pf-tagline { font-size: 5.4pt; letter-spacing: 2.4px; color: #64748b; text-transform: uppercase; font-weight: 700; margin: 2pt 0 0; }
+        .pf-meta { text-align: right; }
+        .pf-doc-title { font-size: 9.6pt; color: #1a3c5e; margin: 0; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+        .pf-doc-no { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 6.6pt; color: #334155; margin: 1.5pt 0 0; letter-spacing: 0.06em; }
+        .pf-doc-date { font-size: 6.2pt; color: #94a3b8; margin: 1.5pt 0 0; letter-spacing: 0.04em; }
+        .pf-rule { border: 0; border-top: 1.6pt solid #1a3c5e; margin: 5mm 0 4mm; position: relative; }
+        .pf-rule::after { content: ''; position: absolute; left: 0; top: -1.6pt; width: 34mm; border-top: 1.6pt solid #b45309; }
+
+        .pf-status { display: inline-block; font-size: 7.5pt; font-weight: 800; letter-spacing: 0.22em; border-radius: 2pt; padding: 3pt 12pt 2.4pt; }
+        .pf-status-lunas { background: #065f46; color: #ecfdf5; }
+        .pf-status-wait { background: #92400e; color: #fefce8; }
+
+        .pf-sec { border-bottom: 1px dashed #cbd5e1; padding-bottom: 2.2pt; margin: 4.5mm 0 2mm; font-size: 6.6pt; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #1a3c5e; }
+        .pf-sec:first-of-type { margin-top: 0; }
+        .pf-sec + .pf-grid { margin-top: 0; }
+
+        .pf-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.2mm 5mm; }
+        .pf-cell { min-width: 0; border-bottom: 0.5pt solid #eef2f7; padding-bottom: 1.4pt; }
+        .pf-cell span.l { display: block; font-size: 5.4pt; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #64748b; }
+        .pf-cell span.v { display: block; font-size: 8.4pt; color: #0f172a; margin-top: 0.6pt; overflow-wrap: anywhere; }
+        .pf-span-2 { grid-column: span 2; }
+        .pf-span-3 { grid-column: span 3; }
+
+        .pf-sign { display: flex; justify-content: space-between; gap: 54mm; margin-top: 8mm; font-size: 7.5pt; color: #0f172a; text-align: center; }
+        .pf-sign .pf-sign-box { flex: 1; }
+        .pf-sign .line { border-top: 1.1pt solid #0f172a; padding-top: 2.5pt; margin-top: 15mm; }
+        .pf-sign .line strong { font-size: 8.2pt; }
+
+        .pf-foot { display: flex; justify-content: space-between; align-items: center; gap: 10mm; margin-top: 5mm; border-top: 0.6pt solid #e2e8f0; padding-top: 2.2mm; font-size: 5.9pt; color: #94a3b8; letter-spacing: 0.03em; }
+        .pf-foot .pf-foot-brand { font-weight: 700; color: #64748b; }
+
+        .print-avoid-break { break-inside: avoid; page-break-inside: avoid; }
 
         .loading-shell {
             display: flex;
@@ -1075,101 +1093,118 @@
         // ============================================================
         // PRINT — Form & Kwitansi
         // ============================================================
+        function pfCell(label, value, span, mono) {
+            const cls = span === 3 ? 'pf-cell pf-span-3' : (span === 2 ? 'pf-cell pf-span-2' : 'pf-cell');
+            const v = escapeHtmlText(value == null || value === '' ? '-' : value);
+            return '<div class="' + cls + '"><span class="l">' + escapeHtmlText(label) + '</span><span class="v"' + (mono ? ' style="font-family:\'JetBrains Mono\',monospace;letter-spacing:0.06em"' : '') + '>' + v + '</span></div>';
+        }
+
+        function pfHeadHtml(docTitle, docNo, extraRight) {
+            const printed = new Date().toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            return '<div class="pf-letterhead">' +
+                '<div class="pf-brand">' +
+                    '<img class="pf-logo" src="assets/images/logo/imd.svg" alt="Logo IMDKOM" />' +
+                    '<div><p class="pf-wordmark">IMDKOM</p><p class="pf-tagline">Kursus &amp; Computer Service</p></div>' +
+                '</div>' +
+                '<div class="pf-meta">' +
+                    '<p class="pf-doc-title">' + escapeHtmlText(docTitle) + '</p>' +
+                    '<p class="pf-doc-no">' + escapeHtmlText(docNo) + '</p>' +
+                    '<p class="pf-doc-date">Dicetak ' + escapeHtmlText(printed) + '</p>' +
+                    (extraRight || '') +
+                '</div>' +
+            '</div>' +
+            '<hr class="pf-rule" />';
+        }
+
+        function pfSignHtml(d) {
+            return '<div class="pf-sign print-avoid-break">' +
+                '<div class="pf-sign-box"><p style="margin:0;font-size:7pt;color:#64748b;letter-spacing:0.08em;text-transform:uppercase;">Peserta</p><div class="line"><strong>' + escapeHtmlText(d.nama || '......................................') + '</strong></div></div>' +
+                '<div class="pf-sign-box"><p style="margin:0;font-size:7pt;color:#64748b;letter-spacing:0.08em;text-transform:uppercase;">Admin IMDKOM</p><div class="line"><strong>( .................................... )</strong></div></div>' +
+            '</div>';
+        }
+
+        function pfFootHtml(docNo, d) {
+            return '<div class="pf-foot">' +
+                '<span class="pf-foot-brand">IMDKOM Yogyakarta</span>' +
+                '<span>WA 0856-0191-3435 &middot; @imdkom_yk &middot; imdkomyogyakarta.netlify.app</span>' +
+                '<span>' + escapeHtmlText(docNo) + ' &middot; ' + escapeHtmlText(d.token || '-') + '</span>' +
+            '</div>';
+        }
+
         function buildPrintFormHtml(d) {
             const alasan = Array.isArray(d.alasan) ? d.alasan.join(', ') : (d.alasan || '-');
             const jenisKelamin = d.jenisKelamin === 'L' ? 'Laki-laki' : (d.jenisKelamin === 'P' ? 'Perempuan' : (d.jenisKelamin || '-'));
-            const rows = [
-                ['Program', d.programNama || d.programId],
-                ['Nama Peserta', d.nama],
-                ['No. WhatsApp', d.whatsapp],
-                ['Email', d.email || '-'],
-                ['Tempat Lahir', d.tempatLahir],
-                ['Tanggal Lahir', d.tanggalLahir],
-                ['Jenis Kelamin', jenisKelamin],
-                ['NIK', d.nik],
-                ['Alamat Detail', d.alamatDetail || d.alamat || '-'],
-                ['Kelurahan / Desa', d.kelurahan || '-'],
-                ['Kecamatan', d.kecamatan || '-'],
-                ['Kabupaten / Kota', d.kabupaten || '-'],
-                ['Provinsi', d.provinsi || '-'],
-                ['Alamat (Gabungan)', d.alamat],
-                ['Pendidikan', d.pendidikan],
-                ['Jurusan', d.jurusan],
-                ['Pekerjaan', d.pekerjaan],
-                ['Alasan Memilih Program', alasan],
-                ['Sumber Informasi', d.sumber],
-                ['Metode Pembayaran', (d.metodePembayaran === 'snap' ? 'Snap (Midtrans)' : (d.metodePembayaran || '-'))],
-                ['Nominal Pembayaran', formatRpFromDigits(d.nominalPembayaran)],
-                ['Harga Sebelum Diskon', formatRpFromDigits(d.hargaSebelumDiskon)],
-                ['Potongan Referral', formatRpFromDigits(d.potonganReferral)],
-                ['Kode Referral', d.kodeReferral],
-                ['Catatan Peserta', d.catatan],
-                ['Status Pendaftaran', d.status || 'Menunggu'],
-                ['Status Pembayaran', d.statusPembayaran || 'Menunggu'],
-                ['Status Verifikasi Data', d.statusVerifikasiData || 'Menunggu']
-            ];
-            const trs = rows.map(function(r) {
-                return '<tr><td>' + escapeHtmlText(r[0]) + '</td><td>' + escapeHtmlText(r[1] || '-') + '</td></tr>';
-            }).join('');
-            const date = new Date().toLocaleString('id-ID');
-            return '<div class="doc-top">' +
-                '<div><p class="doc-org">IMDKOM Yogyakarta</p><h1 class="doc-title">Form Pendaftaran Kursus</h1><p class="doc-sub">Registrasi peserta kursus IMDKOM</p></div>' +
-                '<div class="doc-contact">WA 0856-0191-3435<br>@imdkom_yk<br>Yogyakarta</div>' +
-            '</div>' +
-            '<hr class="doc-accent" />' +
-            '<div class="doc-meta">' +
-                '<div><p class="label">Dokumen</p><p class="value">FORM-PDK/' + escapeHtmlText(d.token || '-') + '</p></div>' +
-                '<div class="doc-token">No. ' + escapeHtmlText(d.token || '-') + '</div>' +
-            '</div>' +
-            '<table class="print-table">' + trs + '</table>' +
-            '<div class="print-sign">' +
-                '<div><p style="margin:0;font-size:10px;color:#64748b">Peserta</p><div class="line"><strong>' + escapeHtmlText(d.nama || '......................................') + '</strong></div></div>' +
-                '<div><p style="margin:0;font-size:10px;color:#64748b">Admin IMDKOM</p><div class="line"><strong>( .................................... )</strong></div></div>' +
-            '</div>' +
-            '<div class="print-foot">' +
-                '<span>Dicetak pada ' + escapeHtmlText(date) + '</span>' +
-                '<span>Dokumen diterbitkan otomatis oleh sistem &bull; IMDKOM Yogyakarta</span>' +
+            const metode = d.metodePembayaran === 'snap' ? 'Snap (Midtrans)' : (d.metodePembayaran || '-');
+            const lahir = [d.tempatLahir, d.tanggalLahir ? fmtDateID(d.tanggalLahir) : ''].filter(Boolean).join(', ');
+            const potongan = formatRpFromDigits(d.potonganReferral) + (d.kodeReferral ? ' (Kode: ' + String(d.kodeReferral).trim().toUpperCase() + ')' : '');
+            const catatan = String(d.catatan || '').trim();
+
+            let html = pfHeadHtml('Form Pendaftaran Kursus', 'NO. FORM-PDK/' + (d.token || '-'), '');
+            html += '<div class="pf-sec">Data Diri</div><div class="pf-grid">' +
+                pfCell('Nama Peserta', d.nama, 3) +
+                pfCell('No. WhatsApp', d.whatsapp) +
+                pfCell('Email', d.email) +
+                pfCell('Sumber Informasi', d.sumber) +
+                pfCell('Tempat, Tanggal Lahir', lahir, 2) +
+                pfCell('Jenis Kelamin', jenisKelamin) +
+                pfCell('NIK', d.nik, 3, true) +
             '</div>';
+            html += '<div class="pf-sec">Alamat</div><div class="pf-grid">' +
+                pfCell('Detail Alamat', d.alamatDetail || d.alamat, 2) +
+                pfCell('Kelurahan / Desa', d.kelurahan) +
+                pfCell('Kecamatan', d.kecamatan) +
+                pfCell('Kabupaten / Kota', d.kabupaten) +
+                pfCell('Provinsi', d.provinsi) +
+            '</div>';
+            html += '<div class="pf-sec">Pendidikan &amp; Pekerjaan</div><div class="pf-grid">' +
+                pfCell('Pendidikan — Jurusan', [d.pendidikan, d.jurusan].filter(Boolean).join(' — ') || '-', 2) +
+                pfCell('Pekerjaan', d.pekerjaan) +
+                pfCell('Alasan Memilih Program', alasan, 3) +
+            '</div>';
+            html += '<div class="pf-sec">Program &amp; Pembayaran</div><div class="pf-grid">' +
+                pfCell('Program Kursus', d.programNama || d.programId, 3) +
+                pfCell('Metode Pembayaran', metode) +
+                pfCell('Nominal Pembayaran', formatRpFromDigits(d.nominalPembayaran)) +
+                pfCell('Harga Sebelum Diskon', formatRpFromDigits(d.hargaSebelumDiskon)) +
+                pfCell('Potongan Referral', potongan, 2) +
+                pfCell('Kode Referral', d.kodeReferral || '-') +
+                pfCell('Status Pendaftaran', d.status || 'Menunggu') +
+                pfCell('Status Pembayaran', d.statusPembayaran || 'Menunggu') +
+                pfCell('Status Verifikasi Data', d.statusVerifikasiData || 'Menunggu') +
+            '</div>';
+            if (catatan) {
+                html += '<div class="pf-sec">Catatan Peserta</div><div class="pf-grid">' + pfCell('Catatan', catatan, 3) + '</div>';
+            }
+            html += pfSignHtml(d);
+            html += pfFootHtml('FORM-PDK/' + (d.token || '-'), d);
+            return html;
         }
 
         function buildPrintReceiptHtml(d) {
             const bayarOk = String(d.statusPembayaran || '') === 'Terverifikasi';
             const metode = d.metodePembayaran === 'snap' ? 'Snap (Midtrans)' : (d.metodePembayaran || '-');
-            const rows = [
-                ['Program', d.programNama || d.programId],
-                ['Nama Peserta', d.nama],
-                ['No. WhatsApp', d.whatsapp],
-                ['Email', d.email || '-'],
-                ['Metode Pembayaran', metode],
-                ['Nominal', formatRpFromDigits(d.nominalPembayaran)],
-                ['Harga Sebelum Diskon', formatRpFromDigits(d.hargaSebelumDiskon)],
-                ['Potongan Referral', (formatRpFromDigits(d.potonganReferral) + (d.kodeReferral ? ' (Kode: ' + d.kodeReferral + ')' : ''))],
-                ['Tanggal Daftar', fmtDateTime(d.createdAt)],
-                ['Tanggal Verifikasi', bayarOk ? fmtDateTime(d.updatedAt) : '-'],
-                ['Token Pendaftaran', d.token]
-            ];
-            const trs = rows.map(function(r) {
-                return '<tr><td>' + escapeHtmlText(r[0]) + '</td><td>' + escapeHtmlText(r[1] || '-') + '</td></tr>';
-            }).join('');
-            const printed = new Date().toLocaleString('id-ID');
-            return '<div class="doc-top">' +
-                '<div><p class="doc-org">IMDKOM Yogyakarta</p><h1 class="doc-title">Kwitansi Pembayaran</h1><p class="doc-sub">Bukti pembayaran peserta kursus</p></div>' +
-                '<div class="doc-contact">WA 0856-0191-3435<br>@imdkom_yk<br>Yogyakarta</div>' +
-            '</div>' +
-            '<hr class="doc-accent" />' +
-            '<div class="doc-meta">' +
-                '<div><p class="label">Dokumen</p><p class="value">KWT-' + escapeHtmlText(d.token || '-') + '</p></div>' +
-                '<span class="doc-status ' + (bayarOk ? 'doc-status-lunas' : 'doc-status-wait') + '">' + (bayarOk ? 'LUNAS' : 'MENUNGGU') + '</span>' +
-            '</div>' +
-            '<table class="print-table">' + trs + '</table>' +
-            '<div class="print-sign">' +
-                '<div><p style="margin:0;font-size:10px;color:#64748b">Peserta</p><div class="line"><strong>' + escapeHtmlText(d.nama || '......................................') + '</strong></div></div>' +
-                '<div><p style="margin:0;font-size:10px;color:#64748b">Admin IMDKOM</p><div class="line"><strong>( .................................... )</strong></div></div>' +
-            '</div>' +
-            '<div class="print-foot">' +
-                '<span>Dicetak pada ' + escapeHtmlText(printed) + '</span>' +
-                '<span>Kwitansi sah dengan stempel IMDKOM &bull; IMDKOM Yogyakarta</span>' +
+            const statusHtml = '<span class="pf-status ' + (bayarOk ? 'pf-status-lunas' : 'pf-status-wait') + '">' + (bayarOk ? 'LUNAS' : 'MENUNGGU') + '</span>';
+            const potongan = formatRpFromDigits(d.potonganReferral);
+
+            let html = pfHeadHtml('Kwitansi Pembayaran', 'NO. KWT-' + (d.token || '-'), statusHtml);
+            html += '<div class="pf-sec">Peserta &amp; Program</div><div class="pf-grid">' +
+                pfCell('Program Kursus', d.programNama || d.programId, 3) +
+                pfCell('Nama Peserta', d.nama, 2) +
+                pfCell('No. WhatsApp', d.whatsapp) +
+                pfCell('Email', d.email, 2) +
+                pfCell('Metode Pembayaran', metode) +
             '</div>';
+            html += '<div class="pf-sec">Pembayaran</div><div class="pf-grid">' +
+                pfCell('Nominal Pembayaran', formatRpFromDigits(d.nominalPembayaran)) +
+                pfCell('Harga Sebelum Diskon', formatRpFromDigits(d.hargaSebelumDiskon)) +
+                pfCell('Potongan Referral', potongan + (d.kodeReferral ? ' (Kode: ' + String(d.kodeReferral).trim().toUpperCase() + ')' : '')) +
+                pfCell('Tanggal Daftar', fmtDateTime(d.createdAt)) +
+                pfCell('Tanggal Verifikasi', bayarOk ? fmtDateTime(d.updatedAt) : '-') +
+                pfCell('No. Token', d.token, 1, true) +
+            '</div>';
+            html += pfSignHtml(d);
+            html += pfFootHtml('KWT-' + (d.token || '-'), d);
+            return html;
         }
 
         function printDocument(kind) {
