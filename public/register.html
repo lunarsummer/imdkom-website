@@ -484,6 +484,7 @@
                     <p id="payNowNote" class="pay-await-note hidden"></p>
                 </div>
             </div>
+            <p id="regResumeResetWrap" class="hidden mt-2"><button type="button" id="regResumeResetBtn" class="text-xs font-semibold text-gray-500 underline underline-offset-2 hover:text-brand">Bukan Anda? / Daftar program lain &mdash; mulai pendaftaran baru</button></p>
             <div class="receipt mt-5 hidden" id="regTicket" aria-label="Kwitansi pembayaran">
                 <div class="receipt-card">
                     <div class="receipt-head">
@@ -649,7 +650,53 @@
         let currentHarga = '';
         let currentHargaPromo = '';
         let lastTicketData = null;
-        const programId = params.get('program') || localStorage.getItem('imdkom_reg_program') || '';
+
+        // ============================================================
+        // RESUME: pendaftaran yang belum dibayar disimpan di localStorage
+        // supaya user bisa lanjut bayar setelah menutup pop-up / refresh.
+        // Dihapus otomatis saat pembayaran lunas atau umur > 24 jam.
+        // ============================================================
+        const PENDING_KEY = 'imdkom_pending_payment';
+        const PENDING_MAX_AGE_MS = 24 * 3600 * 1000;
+        function loadPendingPayment() {
+            try {
+                const raw = localStorage.getItem(PENDING_KEY);
+                if (!raw) return null;
+                const p = JSON.parse(raw);
+                if (!p || !/^IMDKOM-[A-Z]{10}$/.test(String(p.token || ''))) return null;
+                const created = Number(p.createdAt || 0);
+                if (!Number.isFinite(created) || created <= 0 || (Date.now() - created) > PENDING_MAX_AGE_MS) {
+                    localStorage.removeItem(PENDING_KEY);
+                    return null;
+                }
+                return p;
+            } catch (e) {
+                try { localStorage.removeItem(PENDING_KEY); } catch (e2) { /* noop */ }
+                return null;
+            }
+        }
+        function savePendingPayment(rec) {
+            pendingPayment = Object.assign({}, pendingPayment || {}, rec || {});
+            if (!pendingPayment.createdAt) pendingPayment.createdAt = Date.now();
+            try { localStorage.setItem(PENDING_KEY, JSON.stringify(pendingPayment)); } catch (e) { /* noop */ }
+        }
+        function clearPendingPayment() {
+            pendingPayment = null;
+            try { localStorage.removeItem(PENDING_KEY); } catch (e) { /* noop */ }
+        }
+
+        let pendingPayment = loadPendingPayment();
+        // Jika program yang dipilih (URL atau localStorage) berbeda dari pendaftaran pending,
+        // lupakan pending itu (masih bisa dibuka lagi via /tracking) — mencegah sesi Snap
+        // dibuat dengan harga program yang salah.
+        const urlProgram = params.get('program');
+        const lsProgram = localStorage.getItem('imdkom_reg_program') || '';
+        const preProgramId = urlProgram || lsProgram;
+        if (pendingPayment && preProgramId && pendingPayment.programId && preProgramId !== pendingPayment.programId) {
+            try { localStorage.removeItem(PENDING_KEY); } catch (e) { /* noop */ }
+            pendingPayment = null;
+        }
+        const programId = preProgramId || (pendingPayment && pendingPayment.programId) || '';
         function generateToken() {
             // CSPRNG — unguessable token (order_id Midtrans + akses tracking)
             // 10 huruf A-Z dari crypto.getRandomValues (~47 bit entropy)
@@ -663,7 +710,7 @@
             return 'IMDKOM-' + s;
         }
 
-        const token = generateToken();
+        const token = (pendingPayment && pendingPayment.token) ? pendingPayment.token : generateToken();
         localStorage.setItem('imdkom_reg_token', token);
 
         const programInfo = document.getElementById('regProgramInfo');
@@ -1042,6 +1089,7 @@
                     const programName = programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId;
                     await setDoc(doc(db, 'tracking', token), {
                         token: token,
+                        programId: programId || '',
                         nama: nama,
                         programNama: programName,
                         statusPembayaran: 'Menunggu',
@@ -1057,6 +1105,25 @@
                 } catch (trackingError) {
                     console.error('Gagal menulis mirror tracking:', trackingError);
                 }
+                try {
+                    savePendingPayment({
+                        token: token,
+                        programId: programId || '',
+                        programNama: (programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : '') || programId,
+                        nama: nama,
+                        email: email,
+                        wa: wa,
+                        tempatLahir: tempatLahir,
+                        tanggalLahir: tanggalLahir,
+                        jenisKelamin: jenisKelamin === 'L' ? 'Laki-laki' : (jenisKelamin === 'P' ? 'Perempuan' : ''),
+                        alamat: alamat,
+                        pendidikan: pendidikan + (jurusan ? ' - ' + jurusan : ''),
+                        pekerjaan: pekerjaan || '-',
+                        nominalRaw: String(getFinalBiaya() || 0),
+                        kodeReferral: (appliedReferral ? appliedReferral.code : '') || String(kodeReferral || '').trim().toUpperCase(),
+                        createdAt: Date.now()
+                    });
+                } catch (e) { /* abaikan — resume hanya fitur kenyamanan */ }
                 successEl.classList.remove('hidden');
                 const payPanelNominal = document.getElementById('payPanelNominal');
                 if (payPanelNominal) payPanelNominal.textContent = getFinalBiaya() ? formatRupiah(getFinalBiaya()) : '-';
@@ -1197,7 +1264,8 @@
                 }
                 if (result.expired) {
                     stopSettlementWatch();
-                    showQrisToast('error', 'Pembayaran gagal', 'Transaksi kedaluwarsa atau ditolak. Buat pembayaran baru dari awal.');
+                    invalidateResumeSnapSession();
+                    showQrisToast('error', 'Pembayaran gagal', 'Transaksi kedaluwarsa atau ditolak. Klik tombol Bayar lagi untuk membuat sesi pembayaran baru.');
                     return;
                 }
                 if (tries >= MIN_TRIES_BEFORE_HINT) {
@@ -1226,7 +1294,8 @@
             }
             if (result.expired) {
                 stopSettlementWatch();
-                showQrisToast('error', 'Pembayaran gagal', 'Transaksi kedaluwarsa atau ditolak. Buat pembayaran baru dari awal.');
+                invalidateResumeSnapSession();
+                showQrisToast('error', 'Pembayaran gagal', 'Transaksi kedaluwarsa atau ditolak. Klik tombol Bayar lagi untuk membuat sesi pembayaran baru.');
                 if (btn) { btn.disabled = false; btn.innerHTML = '<span>Periksa Status Pembayaran</span>'; }
                 return;
             }
@@ -1239,6 +1308,9 @@
         const onPaymentLunas = function () {
             if (lunasRendered) return;
             lunasRendered = true;
+            clearPendingPayment();
+            const resetWrap = document.getElementById('regResumeResetWrap');
+            if (resetWrap) resetWrap.classList.add('hidden');
             fillReceipt(lastTicketData || {});
             const waitPanel = document.getElementById('regPaymentPanel');
             if (waitPanel) waitPanel.classList.add('hidden');
@@ -1443,6 +1515,16 @@
         const payNowRetryBtn = document.getElementById('payNowRetryBtn');
         const payNowNote = document.getElementById('payNowNote');
         let snapTokenCache = null;
+        let snapTokenCacheSource = null; // 'fresh' | 'resume' — sesi resume bisa kedaluwarsa & harus bisa disegarkan
+
+        // Buang cache sesi Snap resume agar klik berikutnya membuat sesi baru (referral dire-validasi server)
+        const invalidateResumeSnapSession = function () {
+            if (snapTokenCacheSource === 'resume') {
+                snapTokenCache = null;
+                snapTokenCacheSource = null;
+                savePendingPayment({ snapSession: null });
+            }
+        };
 
         const setBothPayButtons = function (disabled, label) {
             [payNowBtn, payNowRetryBtn].forEach(function (b) {
@@ -1454,20 +1536,28 @@
 
         const openSnap = async function (btn) {
             try {
+                // Resume: pakai sesi Snap yang tersimpan (< 6 jam) bila ada —
+                // transaksi Midtrans & diskon referral tetap sama seperti sebelum refresh.
+                if (!snapTokenCache && pendingPayment && pendingPayment.snapSession && (Date.now() - (pendingPayment.snapSession.createdAt || 0)) < 6 * 3600 * 1000) {
+                    snapTokenCache = pendingPayment.snapSession;
+                    snapTokenCacheSource = 'resume';
+                }
                 if (!snapTokenCache) {
                     const wilNow = getWilayah();
                     const alamatValNow = document.getElementById('regAlamatDetail') ? document.getElementById('regAlamatDetail').value.trim() : '';
-                    const alamatVal = [alamatValNow, wilNow.kelurahan, wilNow.kecamatan, wilNow.kabupaten, wilNow.provinsi].filter(Boolean).join(', ');
-                    const emailVal = (document.getElementById('regEmail') || {}).value || '';
+                    let alamatVal = [alamatValNow, wilNow.kelurahan, wilNow.kecamatan, wilNow.kabupaten, wilNow.provinsi].filter(Boolean).join(', ');
+                    if (!alamatVal && pendingPayment && pendingPayment.alamat) alamatVal = pendingPayment.alamat;
+                    const emailVal = (document.getElementById('regEmail') || {}).value || (pendingPayment && pendingPayment.email) || '';
+                    const kodeReferralSnap = appliedReferral ? appliedReferral.code : ((pendingPayment && pendingPayment.kodeReferral) || '');
                     const res = await fetch('/.netlify/functions/midtrans-snap', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             token: token,
                             programId: programId,
-                            kodeReferral: appliedReferral ? appliedReferral.code : '',
-                            nama: (document.getElementById('regNama') || {}).value || 'Peserta',
-                            wa: (document.getElementById('regWa') || {}).value || '',
+                            kodeReferral: kodeReferralSnap,
+                            nama: (document.getElementById('regNama') || {}).value || (pendingPayment && pendingPayment.nama) || 'Peserta',
+                            wa: (document.getElementById('regWa') || {}).value || (pendingPayment && pendingPayment.wa) || '',
                             email: emailVal,
                             alamat: alamatVal
                         })
@@ -1476,7 +1566,9 @@
                     if (!res.ok || !data.snapToken) {
                         throw new Error((data && data.error) || ('HTTP ' + res.status));
                     }
-                    snapTokenCache = { snapToken: data.snapToken, jsUrl: data.snapJsUrl, clientKey: data.clientKey, orderId: data.orderId };
+                    snapTokenCache = { snapToken: data.snapToken, jsUrl: data.snapJsUrl, clientKey: data.clientKey, orderId: data.orderId, createdAt: Date.now() };
+                    snapTokenCacheSource = 'fresh';
+                    savePendingPayment({ snapSession: snapTokenCache });
                 }
                 await loadSnapJs(snapTokenCache.jsUrl, snapTokenCache.clientKey);
                 if (typeof window.snap === 'undefined') {
@@ -1501,6 +1593,7 @@
                         startSettlementWatch();
                     },
                     onError: function () {
+                        invalidateResumeSnapSession();
                         showQrisToast('error', 'Pembayaran gagal', 'Pembayaran tidak berhasil. Silakan coba lagi.');
                         setBothPayButtons(false, 'Bayar via Midtrans');
                     },
@@ -1511,6 +1604,7 @@
                 });
             } catch (err) {
                 console.error('Snap gagal:', err);
+                hideLoadingOverlay();
                 showQrisToast('error', 'Pembayaran gagal', String((err && err.message) || err));
                 setBothPayButtons(false, 'Bayar via Midtrans');
             }
@@ -1648,11 +1742,67 @@
             nikInputEl.addEventListener('blur', checkNikLive);
         }
 
+        // ================= RESUME: lanjutkan pendaftaran yang belum dibayar =================
+        const setupResume = async function () {
+            lastTicketData = {
+                token: token,
+                nama: pendingPayment.nama || '',
+                email: pendingPayment.email || '',
+                tempatLahir: pendingPayment.tempatLahir || '',
+                tanggalLahir: pendingPayment.tanggalLahir || '',
+                jenisKelamin: pendingPayment.jenisKelamin || '',
+                alamat: pendingPayment.alamat || '',
+                pendidikan: pendingPayment.pendidikan || '',
+                pekerjaan: pendingPayment.pekerjaan || '-',
+                wa: pendingPayment.wa || '',
+                programNama: pendingPayment.programNama || '',
+                nominal: pendingPayment.nominalRaw ? formatRupiah(pendingPayment.nominalRaw) : '-',
+                metode: 'Snap (Midtrans)',
+                referral: pendingPayment.kodeReferral || '',
+                timestamp: new Date(pendingPayment.createdAt || Date.now())
+            };
+            registrationDone = true;
+            form.classList.add('hidden');
+            const titleEl = document.getElementById('regSuccessTitle');
+            const hintEl = document.getElementById('regSuccessHint');
+            if (titleEl) { titleEl.textContent = 'Pendaftaran Menunggu Pembayaran'; titleEl.style.color = '#92400e'; }
+            if (hintEl) { hintEl.innerHTML = 'Pendaftaran program <strong>' + escapeHtml(pendingPayment.programNama || '-') + '</strong> tersimpan di perangkat ini. Klik <strong>Bayar via Midtrans</strong> di bawah untuk menyelesaikan pembayaran sesuai program yang dipilih.'; }
+            successEl.classList.remove('hidden');
+            const resetWrap = document.getElementById('regResumeResetWrap');
+            if (resetWrap) resetWrap.classList.remove('hidden');
+            const note = document.getElementById('payNowNote');
+            if (note) { note.textContent = 'Sesi pembayaran sebelumnya belum selesai. Klik tombol di bawah untuk membuka kembali pop-up Midtrans.'; note.classList.remove('hidden'); }
+            try {
+                const snap = await getDoc(doc(db, 'tracking', token));
+                if (snap.exists() && snap.data().statusPembayaran === 'Terverifikasi') {
+                    const td = snap.data();
+                    lastTicketData.paidAt = td.settlementTime || '';
+                    lastTicketData.idTransaksi = td.transactionId || '';
+                    onPaymentLunas();
+                    return;
+                }
+            } catch (e) { /* abaikan — user tetap bisa klik Bayar */ }
+            successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        const resumeResetBtn = document.getElementById('regResumeResetBtn');
+        if (resumeResetBtn) {
+            resumeResetBtn.addEventListener('click', function () {
+                const pid = pendingPayment && pendingPayment.programId;
+                clearPendingPayment();
+                try { localStorage.removeItem('imdkom_reg_token'); } catch (e) { /* noop */ }
+                window.location.href = '/register' + (pid ? '?program=' + encodeURIComponent(pid) : '');
+            });
+        }
+
         if (typeof lucide !== 'undefined') lucide.createIcons();
-        await loadProgramInfo();
+        if (pendingPayment) {
+            await setupResume();
+        } else {
+            await loadProgramInfo();
+        }
         toggleNik();
         updatePaymentGate();
     </script>
 </body>
 </html>
-

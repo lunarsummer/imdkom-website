@@ -109,6 +109,15 @@
         .wa-confirm-btn:hover { background: #064e45; box-shadow: 0 10px 22px rgba(7,94,84,0.35); }
         .dl-receipt-btn { background: #0d0d0d; margin-top: 0.75rem; }
         .dl-receipt-btn:hover { background: #000000; }
+        .pay-pending { margin-top: 0.9rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 1rem; padding: 0.9rem 1rem; text-align: left; }
+        .pay-pending-title { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #92400e; margin: 0; }
+        .pay-pending-title svg { width: 1.05rem; height: 1.05rem; }
+        .pay-pending-text { font-size: 0.8rem; color: #78350f; margin: 0.4rem 0 0; line-height: 1.5; }
+        .pay-pending-btn { margin-top: 0.6rem; background: #d97706; box-shadow: 0 6px 16px rgba(217,119,6,0.3); }
+        .pay-pending-btn:hover { background: #b45309; box-shadow: 0 10px 22px rgba(217,119,6,0.35); }
+        .pay-pending-note { font-size: 0.72rem; font-weight: 600; color: #92400e; margin: 0.5rem 0 0; }
+        .pay-pending-note.error { color: #b91c1c; }
+        .pay-pending-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
         /* === RECEIPT (mirror of register.html kwitansi card) === */
         .track-receipt-wrap { position: fixed; left: -10000px; top: 0; width: 460px; }
@@ -256,6 +265,16 @@
                 <p class="empty-text">Admin akan menerbitkan jadwal setelah verifikasi data dan pembayaran Anda selesai.</p>
             </div>
 
+            <div id="trackPayPending" class="pay-pending" hidden>
+                <p class="pay-pending-title"><i data-lucide="clock-3" class="w-4 h-4"></i>Pembayaran belum selesai</p>
+                <p class="pay-pending-text">Total tagihan Anda: <strong id="trackPayPendingNominal">-</strong>. Klik tombol di bawah untuk membuka kembali pop-up pembayaran Midtrans &mdash; tidak perlu mengisi formulir dari awal.</p>
+                <button type="button" id="trackPayBtn" class="cta pay-pending-btn">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    <span>Lanjutkan Pembayaran</span>
+                </button>
+                <p id="trackPayNote" class="pay-pending-note" hidden></p>
+            </div>
+
             <button type="button" id="trackDownloadBtn" class="cta dl-receipt-btn" hidden>
                 <i data-lucide="download" class="w-4 h-4"></i>
                 Download Kwitansi (PDF)
@@ -326,7 +345,16 @@
         const waConfirmBtn = document.getElementById('trackWaConfirm');
         const downloadBtn = document.getElementById('trackDownloadBtn');
         const refreshBtn = document.getElementById('trackRefresh');
+        const payPendingBox = document.getElementById('trackPayPending');
+        const payPendingNominal = document.getElementById('trackPayPendingNominal');
+        const payContinueBtn = document.getElementById('trackPayBtn');
+        const payNote = document.getElementById('trackPayNote');
         let lastTracked = null;
+        let lastWa4 = '';
+        let lastResumeOrderId = '';
+        let settlementPoll = null;
+        let snapJsPromise = null;
+        let resumeBusy = false;
         const WA_ADMIN = '6285601913435';
 
         const openWaConfirm = function () {
@@ -338,6 +366,137 @@
                 + 'Status Pembayaran: ' + (d.statusPembayaran || 'Menunggu') + '\n\n'
                 + 'Mohon konfirmasi pendaftaran dan jadwal kursusnya. Terima kasih.';
             window.open('https://wa.me/' + WA_ADMIN + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+        };
+
+        const formatNominalPending = function (v) {
+            const n = parseInt(String(v == null ? '' : v).replace(/[^0-9]/g, ''), 10);
+            return isNaN(n) ? '-' : 'Rp ' + n.toLocaleString('id-ID');
+        };
+
+        const setPayNote = function (text, isError) {
+            if (!payNote) return;
+            payNote.textContent = text || '';
+            payNote.classList.toggle('error', !!isError);
+            payNote.hidden = !text;
+        };
+
+        const payBtnLabel = function (text) {
+            if (!payContinueBtn) return;
+            payContinueBtn.innerHTML = '<i data-lucide="credit-card" class="w-4 h-4"></i><span>' + text + '</span>';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        const loadSnapJsTrack = function (jsUrl, clientKey) {
+            if (window.snap) return Promise.resolve();
+            if (snapJsPromise) return snapJsPromise;
+            snapJsPromise = new Promise(function (resolve, reject) {
+                const s = document.createElement('script');
+                s.src = jsUrl;
+                s.setAttribute('data-client-key', clientKey);
+                s.onload = function () { resolve(); };
+                s.onerror = function () { reject(new Error('Gagal memuat Snap.js. Muat ulang halaman lalu coba lagi.')); };
+                document.head.appendChild(s);
+            });
+            return snapJsPromise;
+        };
+
+        // Setelah pop-up Snap selesai (sukses), tunggu webhook menandai lunas di Firestore.
+        // Fallback: cek langsung ke Midtrans tiap 2 siklus (jaga-jaga webhook lambat/belum diset).
+        const waitForSettlement = function (token) {
+            if (settlementPoll) clearInterval(settlementPoll);
+            let tries = 0;
+            setPayNote('Pembayaran sedang diverifikasi… halaman akan berubah otomatis. Jangan tutup halaman ini.', false);
+            settlementPoll = setInterval(async function () {
+                tries++;
+                try {
+                    const fresh = await getDoc(doc(db, 'tracking', token));
+                    if (fresh.exists() && fresh.data().statusPembayaran === 'Terverifikasi') {
+                        clearInterval(settlementPoll); settlementPoll = null;
+                        lastTracked = Object.assign({ token: token }, fresh.data());
+                        setPayNote('', false);
+                        renderTracking(lastTracked);
+                        return;
+                    }
+                } catch (e) { /* abaikan, coba lagi */ }
+                if (lastResumeOrderId && tries % 2 === 0) {
+                    try {
+                        const res = await fetch('/.netlify/functions/midtrans-qris-status?orderId=' + encodeURIComponent(lastResumeOrderId));
+                        const data = await res.json();
+                        const st = String(data.transactionStatus || '').toLowerCase();
+                        if (st === 'settlement' || (st === 'capture' && String(data.fraudStatus || '').toLowerCase() !== 'challenge')) {
+                            clearInterval(settlementPoll); settlementPoll = null;
+                            lastTracked = Object.assign({}, lastTracked, {
+                                statusPembayaran: 'Terverifikasi',
+                                transactionId: data.transactionId || '',
+                                settlementTime: data.settlementTime || data.transactionTime || ''
+                            });
+                            setPayNote('', false);
+                            renderTracking(lastTracked);
+                            return;
+                        }
+                    } catch (e) { /* abaikan */ }
+                }
+                if (tries >= 24) {
+                    clearInterval(settlementPoll); settlementPoll = null;
+                    setPayNote('Belum terdeteksi otomatis. Klik Refresh di atas beberapa saat lagi — pembayaran tetap terverifikasi di server.', false);
+                }
+            }, 5000);
+        };
+
+        const resumePayment = async function () {
+            if (resumeBusy || !lastTracked || !lastWa4) return;
+            resumeBusy = true;
+            const token = lastTracked.token;
+            const wa4 = lastWa4;
+            if (payContinueBtn) payContinueBtn.disabled = true;
+            payBtnLabel('Membuka Midtrans…');
+            setPayNote('', false);
+            try {
+                const res = await fetch('/.netlify/functions/midtrans-snap-resume', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token, wa4: wa4 })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.snapToken) {
+                    const msg = (data && data.error) || ('HTTP ' + res.status);
+                    setPayNote(msg, true);
+                    if (res.status === 409 && payNote) {
+                        payNote.innerHTML = '';
+                        payNote.appendChild(document.createTextNode(msg + ' '));
+                        const a = document.createElement('a');
+                        a.href = 'https://wa.me/' + WA_ADMIN + '?text=' + encodeURIComponent('Halo admin, saya mau lanjut pembayaran pendaftaran dengan token ' + token);
+                        a.target = '_blank';
+                        a.rel = 'noopener';
+                        a.textContent = 'Hubungi admin WhatsApp';
+                        payNote.appendChild(a);
+                    }
+                    return;
+                }
+                await loadSnapJsTrack(data.snapJsUrl, data.clientKey);
+                if (typeof window.snap === 'undefined') {
+                    throw new Error('Snap.js gagal dimuat. Muat ulang halaman lalu coba lagi.');
+                }
+                lastResumeOrderId = data.orderId || '';
+                window.snap.pay(data.snapToken, {
+                    onSuccess: function () { waitForSettlement(token); },
+                    onPending: function () {
+                        setPayNote('Menunggu pembayaran. Selesaikan sebelum kedaluwarsa — status terverifikasi otomatis.', false);
+                    },
+                    onClose: function () {
+                        setPayNote('Anda menutup pop-up. Klik tombol di atas untuk membukanya kembali.', false);
+                    },
+                    onError: function () {
+                        setPayNote('Pembayaran tidak berhasil. Silakan coba lagi atau hubungi admin.', true);
+                    }
+                });
+            } catch (err) {
+                setPayNote(String((err && err.message) || err), true);
+            } finally {
+                resumeBusy = false;
+                if (payContinueBtn) payContinueBtn.disabled = false;
+                payBtnLabel('Lanjutkan Pembayaran');
+            }
         };
 
         async function sha256hex(str) {
@@ -437,6 +596,14 @@
             const isPaid = data.statusPembayaran === 'Terverifikasi';
             if (downloadBtn) downloadBtn.hidden = !isPaid;
             if (waConfirmBtn) waConfirmBtn.hidden = !isPaid;
+            if (payPendingBox) {
+                payPendingBox.hidden = isPaid;
+                if (!isPaid) {
+                    if (payPendingNominal) payPendingNominal.textContent = formatNominalPending(data.nominalPembayaran);
+                    if (payNote) { payNote.hidden = true; payNote.textContent = ''; payNote.classList.remove('error'); }
+                    if (payContinueBtn) { payContinueBtn.disabled = false; payBtnLabel('Lanjutkan Pembayaran'); }
+                }
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
@@ -491,6 +658,7 @@
                     renderError('Nomor WhatsApp tidak cocok dengan data pendaftaran ini.');
                     return;
                 }
+                lastWa4 = wa4;
                 lastTracked = Object.assign({ token: token }, data);
                 renderTracking(lastTracked);
             } catch (error) {
@@ -514,7 +682,11 @@
             message.innerHTML = '';
             if (waConfirmBtn) waConfirmBtn.hidden = true;
             if (downloadBtn) downloadBtn.hidden = true;
+            if (payPendingBox) payPendingBox.hidden = true;
+            if (settlementPoll) { clearInterval(settlementPoll); settlementPoll = null; }
             lastTracked = null;
+            lastWa4 = '';
+            lastResumeOrderId = '';
             tokenInput.focus();
         });
 
@@ -572,6 +744,7 @@
         if (waConfirmBtn) waConfirmBtn.addEventListener('click', openWaConfirm);
         if (downloadBtn) downloadBtn.addEventListener('click', handleTrackDownload);
         if (refreshBtn) refreshBtn.addEventListener('click', refreshTrack);
+        if (payContinueBtn) payContinueBtn.addEventListener('click', resumePayment);
     </script>
 </body>
 </html>
