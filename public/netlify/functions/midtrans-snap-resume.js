@@ -12,9 +12,6 @@
 // Resume memakai PERSIS nominalPembayaran dari doc — tidak peduli
 // kuota referral, status aktif, atau harga program berubah setelahnya.
 //
-// Pagar pengaman: nominal dianggap tidak wajar jika < 50% dari harga
-// penuh program SAAT INI (hanya jika programId dikenal & harga > 0).
-//
 // Env:  MIDTRANS_SERVER_KEY / MIDTRANS_CLIENT_KEY / MIDTRANS_ENV
 // ============================================================
 
@@ -31,7 +28,6 @@ const FIRESTORE = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/da
 
 const TOKEN_RE = /^IMDKOM-[A-Z]{10}$/;
 const WA4_RE = /^[0-9]{4}$/;
-const PROGRAM_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
 
 const parsePrice = (v) => {
     const digits = String(v == null ? '' : v).replace(/[^0-9]/g, '');
@@ -103,38 +99,18 @@ exports.handler = async function (event) {
         return json(409, { error: 'Pembayaran untuk token ini sudah terverifikasi. Tidak perlu membayar lagi.' });
     }
 
-    const programId = fieldString(tr, 'programId').trim();
     const programNama = (fieldString(tr, 'programNama').trim() || 'Program Kursus').slice(0, 50);
     const namaPeserta = (fieldString(tr, 'nama').trim() || 'Peserta').slice(0, 50);
 
-    // ---------- 2. Baca nominal yang disepakati saat pendaftaran (WAJIB ada, TANPA diskon ulang) ----------
+    // ---------- 2. Baca nominal yang disepakati saat pendaftaran (WAJIB ada) ----------
     const storedNominal = parsePrice(fieldString(tr, 'nominalPembayaran'));
     if (storedNominal <= 0) {
         return json(409, { error: 'Data pembayaran tidak sesuai. Silakan hubungi admin via WhatsApp untuk menyelesaikan pembayaran.' });
     }
 
-    // ---------- 3. Pagar pengaman: nominal < 50% harga penuh program saat ini -> tolak ----------
-    // (programId tidak wajib; hanya dipakai untuk cek wajar, bukan untuk menghitung ulang harga)
-    if (programId && PROGRAM_ID_RE.test(programId)) {
-        let programDoc;
-        try {
-            programDoc = await firestoreGet(`programs/${encodeURIComponent(programId)}`);
-        } catch (e) {
-            console.error('Resume: gagal membaca program untuk cek wajar, lanjut tanpa cek:', e);
-        }
-        const hargaNum = programDoc && programDoc.fields ? parsePrice(fieldString(programDoc.fields, 'harga')) : 0;
-        const hargaPromoNum = programDoc && programDoc.fields ? parsePrice(fieldString(programDoc.fields, 'hargaPromo')) : 0;
-        const fullPrice = (hargaPromoNum > 0 && hargaNum > 0 && hargaPromoNum !== hargaNum)
-            ? hargaPromoNum
-            : (hargaPromoNum > 0 && hargaNum === 0 ? hargaPromoNum : hargaNum);
-        if (fullPrice > 0 && storedNominal < Math.round(fullPrice * 0.5)) {
-            return json(409, { error: 'Nominal pembayaran tidak wajar. Silakan hubungi admin via WhatsApp untuk menyelesaikan pembayaran.' });
-        }
-    }
-
     const grossAmount = storedNominal;
 
-    // ---------- 4. Buat sesi Snap baru (order_id: token~suffix; base token TIDAK berubah) ----------
+    // ---------- 3. Buat sesi Snap baru (order_id: token~suffix; base token TIDAK berubah) ----------
     const suffix = Date.now().toString(36);
     const orderId = token + '~' + suffix;
     const auth = 'Basic ' + Buffer.from(SERVER_KEY + ':').toString('base64');
@@ -145,7 +121,7 @@ exports.handler = async function (event) {
 
     const payload = {
         transaction_details: { order_id: orderId, gross_amount: grossAmount },
-        item_details: [{ id: 'KURSUS', price: grossAmount, quantity: 1, name: namaProgram.slice(0, 50) }],
+        item_details: [{ id: 'KURSUS', price: grossAmount, quantity: 1, name: programNama }],
         customer_details: { first_name: firstName, last_name: lastName }
     };
 
@@ -175,7 +151,6 @@ exports.handler = async function (event) {
         snapToken: data.token,
         redirectUrl: data.redirect_url || '',
         grossAmount: String(grossAmount),
-        potonganReferral: 0,
         env,
         snapJsUrl: SNAP_JS,
         clientKey: CLIENT_KEY
