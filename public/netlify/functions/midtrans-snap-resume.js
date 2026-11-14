@@ -7,9 +7,13 @@
 // "Menunggu" (user menutup pop-up Snap / refresh sebelum bayar).
 //
 // Verifikasi: token + 4 digit terakhir WhatsApp (wa4) — sama seperti
-// login di halaman tracking. Nominal TIDAK diambil dari client;
-// harga & diskon referral dihitung ulang di SERVER dari Firestore
-// (programId & kodeReferral dibaca dari doc tracking/{token}).
+// login di halaman tracking. Harga TIDAK dihitung ulang: pendaftaran
+// sudah memiliki nominal yang disepakati saat daftar (tracking doc).
+// Resume memakai PERSIS nominalPembayaran dari doc — tidak peduli
+// kuota referral, status aktif, atau harga program berubah setelahnya.
+//
+// Pagar pengaman: nominal dianggap tidak wajar jika < 50% dari harga
+// penuh program SAAT INI (hanya jika programId dikenal & harga > 0).
 //
 // Env:  MIDTRANS_SERVER_KEY / MIDTRANS_CLIENT_KEY / MIDTRANS_ENV
 // ============================================================
@@ -28,7 +32,6 @@ const FIRESTORE = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/da
 const TOKEN_RE = /^IMDKOM-[A-Z]{10}$/;
 const WA4_RE = /^[0-9]{4}$/;
 const PROGRAM_ID_RE = /^[A-Za-z0-9_-]{6,64}$/;
-const REFERRAL_RE = /^[A-Z0-9_-]{3,32}$/;
 
 const parsePrice = (v) => {
     const digits = String(v == null ? '' : v).replace(/[^0-9]/g, '');
@@ -46,20 +49,6 @@ const firestoreGet = async (path) => {
 const fieldString = (fields, key) => {
     const f = fields && fields[key];
     return f && f.stringValue !== undefined ? f.stringValue : '';
-};
-
-const fieldBool = (fields, key) => {
-    const f = fields && fields[key];
-    return !!(f && f.booleanValue === true);
-};
-
-const fieldNumber = (fields, key) => {
-    const f = fields && fields[key];
-    if (!f) return 0;
-    if (f.integerValue !== undefined) return parseInt(f.integerValue, 10) || 0;
-    if (f.doubleValue !== undefined) return parseFloat(f.doubleValue) || 0;
-    if (f.stringValue !== undefined) return parsePrice(f.stringValue);
-    return 0;
 };
 
 exports.handler = async function (event) {
@@ -115,75 +104,35 @@ exports.handler = async function (event) {
     }
 
     const programId = fieldString(tr, 'programId').trim();
-    if (!programId || !PROGRAM_ID_RE.test(programId)) {
-        return json(409, { error: 'Pendaftaran ini dibuat sebelum fitur lanjutkan pembayaran tersedia. Silakan hubungi admin via WhatsApp untuk menyelesaikan pembayaran.' });
-    }
-    const kodeReferral = fieldString(tr, 'kodeReferral').trim().toUpperCase();
+    const programNama = (fieldString(tr, 'programNama').trim() || 'Program Kursus').slice(0, 50);
     const namaPeserta = (fieldString(tr, 'nama').trim() || 'Peserta').slice(0, 50);
 
-    // ---------- 2. Hitung ulang harga program dari Firestore (seperti midtrans-snap) ----------
-    let programDoc;
-    try {
-        programDoc = await firestoreGet(`programs/${encodeURIComponent(programId)}`);
-    } catch (e) {
-        return json(502, { error: 'Gagal membaca data program.' });
-    }
-    if (!programDoc || !programDoc.fields) {
-        return json(404, { error: 'Program tidak ditemukan.' });
-    }
-    if (fieldBool(programDoc.fields, 'aktif') === false) {
-        return json(409, { error: 'Program sedang tidak tersedia.' });
+    // ---------- 2. Baca nominal yang disepakati saat pendaftaran (WAJIB ada, TANPA diskon ulang) ----------
+    const storedNominal = parsePrice(fieldString(tr, 'nominalPembayaran'));
+    if (storedNominal <= 0) {
+        return json(409, { error: 'Data pembayaran tidak sesuai. Silakan hubungi admin via WhatsApp untuk menyelesaikan pembayaran.' });
     }
 
-    const hargaNum = parsePrice(fieldString(programDoc.fields, 'harga'));
-    const hargaPromoNum = parsePrice(fieldString(programDoc.fields, 'hargaPromo'));
-    const namaProgram = fieldString(programDoc.fields, 'nama') || 'Program Kursus';
-
-    let base = (hargaPromoNum > 0 && hargaNum > 0 && hargaPromoNum !== hargaNum)
-        ? hargaPromoNum
-        : (hargaPromoNum > 0 && hargaNum === 0 ? hargaPromoNum : hargaNum);
-    if (base <= 0) return json(422, { error: 'Harga program belum diatur admin.' });
-
-    // ---------- 3. Hitung ulang diskon referral (jika ada) ----------
-    let potongan = 0;
-    if (kodeReferral && REFERRAL_RE.test(kodeReferral)) {
-        let refDoc = null;
+    // ---------- 3. Pagar pengaman: nominal < 50% harga penuh program saat ini -> tolak ----------
+    // (programId tidak wajib; hanya dipakai untuk cek wajar, bukan untuk menghitung ulang harga)
+    if (programId && PROGRAM_ID_RE.test(programId)) {
+        let programDoc;
         try {
-            refDoc = await firestoreGet(`referrals/${encodeURIComponent(kodeReferral)}`);
+            programDoc = await firestoreGet(`programs/${encodeURIComponent(programId)}`);
         } catch (e) {
-            return json(502, { error: 'Gagal membaca kode referral.' });
+            console.error('Resume: gagal membaca program untuk cek wajar, lanjut tanpa cek:', e);
         }
-        if (!refDoc || !refDoc.fields) return json(404, { error: 'Kode referral tidak ditemukan.' });
-        if (refDoc.fields.active && refDoc.fields.active.booleanValue === false) {
-            return json(409, { error: 'Kode referral sudah tidak aktif.' });
-        }
-        if (refDoc.fields.expiresAt && refDoc.fields.expiresAt.stringValue) {
-            const raw = String(refDoc.fields.expiresAt.stringValue).trim();
-            const d = new Date(raw);
-            if (!isNaN(d.getTime()) && d.getTime() <= Date.now()) {
-                return json(409, { error: 'Kode referral sudah kedaluwarsa.' });
-            }
-        }
-        const maxUse = fieldNumber(refDoc.fields, 'maxUsage');
-        const used = fieldNumber(refDoc.fields, 'usageCount');
-        if (maxUse > 0 && used >= maxUse) {
-            return json(409, { error: 'Kuota kode referral sudah habis.' });
-        }
-        const refProgramId = fieldString(refDoc.fields, 'programId');
-        if (refProgramId && refProgramId !== programId) {
-            return json(409, { error: 'Kode referral tidak berlaku untuk program ini.' });
-        }
-        const type = fieldString(refDoc.fields, 'type') === 'flat' ? 'flat' : 'percent';
-        let value = fieldNumber(refDoc.fields, 'value');
-        if (type === 'percent') value = Math.min(100, Math.max(0, value));
-        if (value > 0) {
-            potongan = type === 'percent'
-                ? Math.min(base, Math.round(base * value / 100))
-                : Math.min(base, value);
+        const hargaNum = programDoc && programDoc.fields ? parsePrice(fieldString(programDoc.fields, 'harga')) : 0;
+        const hargaPromoNum = programDoc && programDoc.fields ? parsePrice(fieldString(programDoc.fields, 'hargaPromo')) : 0;
+        const fullPrice = (hargaPromoNum > 0 && hargaNum > 0 && hargaPromoNum !== hargaNum)
+            ? hargaPromoNum
+            : (hargaPromoNum > 0 && hargaNum === 0 ? hargaPromoNum : hargaNum);
+        if (fullPrice > 0 && storedNominal < Math.round(fullPrice * 0.5)) {
+            return json(409, { error: 'Nominal pembayaran tidak wajar. Silakan hubungi admin via WhatsApp untuk menyelesaikan pembayaran.' });
         }
     }
 
-    const grossAmount = Math.max(1, base - potongan);
+    const grossAmount = storedNominal;
 
     // ---------- 4. Buat sesi Snap baru (order_id: token~suffix; base token TIDAK berubah) ----------
     const suffix = Date.now().toString(36);
@@ -226,7 +175,7 @@ exports.handler = async function (event) {
         snapToken: data.token,
         redirectUrl: data.redirect_url || '',
         grossAmount: String(grossAmount),
-        potonganReferral: potongan,
+        potonganReferral: 0,
         env,
         snapJsUrl: SNAP_JS,
         clientKey: CLIENT_KEY
