@@ -135,25 +135,25 @@ exports.handler = async function (event) {
         } catch (e) {
             return json(502, { error: 'Gagal membaca kode referral.' });
         }
-        if (!refDoc || !refDoc.fields) return json(404, { error: 'Kode referral tidak ditemukan.' });
+        if (!refDoc || !refDoc.fields) return json(404, { error: 'Kode referral tidak ditemukan.', code: 'REFERRAL_NOT_FOUND' });
         if (refDoc.fields.active && refDoc.fields.active.booleanValue === false) {
-            return json(409, { error: 'Kode referral sudah tidak aktif.' });
+            return json(409, { error: 'Kode referral sudah tidak aktif.', code: 'REFERRAL_INACTIVE' });
         }
         if (refDoc.fields.expiresAt && refDoc.fields.expiresAt.stringValue) {
             const raw = String(refDoc.fields.expiresAt.stringValue).trim();
             const d = new Date(raw);
             if (!isNaN(d.getTime()) && d.getTime() <= Date.now()) {
-                return json(409, { error: 'Kode referral sudah kedaluwarsa.' });
+                return json(409, { error: 'Kode referral sudah kedaluwarsa.', code: 'REFERRAL_EXPIRED' });
             }
         }
         const maxUse = fieldNumber(refDoc.fields, 'maxUsage');
         const used = fieldNumber(refDoc.fields, 'usageCount');
         if (maxUse > 0 && used >= maxUse) {
-            return json(409, { error: 'Kuota kode referral sudah habis.' });
+            return json(409, { error: 'Kuota kode referral sudah habis.', code: 'REFERRAL_QUOTA_FULL' });
         }
         const refProgramId = fieldString(refDoc.fields, 'programId');
         if (refProgramId && refProgramId !== programId) {
-            return json(409, { error: 'Kode referral tidak berlaku untuk program ini.' });
+            return json(409, { error: 'Kode referral tidak berlaku untuk program ini.', code: 'REFERRAL_PROGRAM_MISMATCH' });
         }
         const type = fieldString(refDoc.fields, 'type') === 'flat' ? 'flat' : 'percent';
         let value = fieldNumber(refDoc.fields, 'value');
