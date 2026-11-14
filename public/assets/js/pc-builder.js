@@ -243,111 +243,6 @@ function getMainboardTier(mb) {
     return 3;
 }
 
-function getRamTier(ram) {
-    const type = (ram.spesifikasi?.type || '').toUpperCase();
-    const capacity = ram.spesifikasi?.capacity || 8;
-    const speed = parseInt((ram.spesifikasi?.speed || '0').replace(/[^0-9]/g, '')) || 0;
-
-    let genScore = 3;
-    if (type.includes('DDR3')) genScore = 1;
-    else if (type.includes('DDR4')) genScore = 3;
-    else if (type.includes('DDR5')) genScore = 5;
-
-    let capBonus = 0;
-    if (capacity >= 64) capBonus = 2;
-    else if (capacity >= 32) capBonus = 1;
-    else if (capacity <= 4) capBonus = -1;
-
-    let speedBonus = 0;
-    if (type.includes('DDR5') && speed >= 6000) speedBonus = 1;
-    if (type.includes('DDR4') && speed >= 3600) speedBonus = 1;
-
-    return Math.min(7, Math.max(1, genScore + capBonus + speedBonus));
-}
-
-function getStorageTier(storage) {
-    const type = (storage.spesifikasi?.type || '').toUpperCase();
-    const iface = (storage.spesifikasi?.interface || '').toUpperCase();
-    const capacity = storage.spesifikasi?.capacity || 256;
-    const speedMatch = (storage.spesifikasi?.speed || '').match(/(\d+)/);
-    const speed = speedMatch ? parseInt(speedMatch[1]) : 0;
-
-    let baseTier = 2;
-    if (type.includes('HDD')) {
-        baseTier = 1;
-    } else if (type.includes('SSD')) {
-        if (iface.includes('NVME') || iface.includes('M.2')) {
-            if (speed >= 7000) baseTier = 7;
-            else if (speed >= 5000) baseTier = 6;
-            else if (speed >= 3000) baseTier = 5;
-            else if (speed >= 1500) baseTier = 4;
-            else baseTier = 3;
-        } else if (iface.includes('SATA')) {
-            baseTier = 3;
-        }
-    }
-    let capBonus = 0;
-    if (capacity >= 2000) capBonus = 1;
-    else if (capacity < 256) capBonus = -1;
-    return Math.min(7, Math.max(1, baseTier + capBonus));
-}
-
-function getPsuTier(psu) {
-    const watt = psu.spesifikasi?.wattage || 500;
-    const eff = (psu.spesifikasi?.efficiency || '').toUpperCase();
-
-    let baseTier;
-    if (watt < 400) baseTier = 1;
-    else if (watt < 500) baseTier = 2;
-    else if (watt < 600) baseTier = 3;
-    else if (watt < 700) baseTier = 4;
-    else if (watt < 800) baseTier = 5;
-    else if (watt < 1000) baseTier = 6;
-    else baseTier = 7;
-
-    let effBonus = 0;
-    if (eff.includes('TITANIUM')) effBonus = 2;
-    else if (eff.includes('PLATINUM')) effBonus = 1.5;
-    else if (eff.includes('GOLD')) effBonus = 1;
-    else if (eff.includes('SILVER')) effBonus = 0.5;
-
-    return Math.min(7, Math.round(baseTier + effBonus));
-}
-
-function getCasingTier(casing) {
-    const ff = (casing.spesifikasi?.formFactor || []).map(f => f.toUpperCase());
-    const maxGpu = casing.spesifikasi?.maxGpuLength || 0;
-
-    if (ff.includes('E-ATX') || ff.includes('EATX')) return 7;
-    if (ff.includes('ATX')) {
-        if (maxGpu >= 400) return 6;
-        if (maxGpu >= 350) return 5;
-        return 4;
-    }
-    if (ff.includes('MATX')) {
-        if (maxGpu >= 350) return 4;
-        return 3;
-    }
-    if (ff.includes('ITX')) {
-        if (maxGpu >= 330) return 6;
-        if (maxGpu >= 300) return 5;
-        return 4;
-    }
-    return 3;
-}
-
-function getComponentTier(comp) {
-    if (comp.spesifikasi?.tier) return comp.spesifikasi.tier;
-    switch (comp.kategori) {
-        case 'mainboard': return getMainboardTier(comp);
-        case 'ram':       return getRamTier(comp);
-        case 'storage':   return getStorageTier(comp);
-        case 'psu':       return getPsuTier(comp);
-        case 'casing':    return getCasingTier(comp);
-        default:          return 3;
-    }
-}
-
 // ============================================================
 // INIT
 // ============================================================
@@ -372,7 +267,6 @@ export async function initPcBuilder() {
         } catch (err) { console.error('Init dependent2 fetch error:', err); }
     }
 
-    renderProgress();
     renderSteps();
     renderSummary();
     renderStickyNav();
@@ -479,32 +373,12 @@ function renderStickyNav() {
     const unlocked = isStepUnlocked(cat.id);
     const isActive = !isDone && unlocked;
 
-// Deteksi bottleneck khusus untuk step VGA
-let bottleneckLevel = null;
-if (cat.id === 'vga' && isDone) {
-    const bn = checkBottleneck();
-    if (bn) {
-        // danger → merah, warning/info → kuning
-        if (bn.level === 'danger') bottleneckLevel = 'danger';
-        else if (bn.level === 'warning' || bn.level === 'info') bottleneckLevel = 'warning';
-    }
-}
+    let cls = 'step-nav-item';
+    if (isDone) cls += ' done';
+    else if (isActive) cls += ' active';
+    else if (!unlocked) cls += ' locked';
 
-let cls = 'step-nav-item';
-if (bottleneckLevel === 'danger') cls += ' bottleneck-danger';
-else if (bottleneckLevel === 'warning') cls += ' bottleneck-warning';
-else if (isDone) cls += ' done';
-else if (isActive) cls += ' active';
-else if (!unlocked) cls += ' locked';
-
-let title = cat.label;
-if (bottleneckLevel === 'danger') title = '🚨 Bottleneck parah terdeteksi';
-else if (bottleneckLevel === 'warning') {
-    // Bedakan pesan warning vs info
-    const bn = checkBottleneck();
-    if (bn && bn.level === 'info') title = 'ℹ️ Kurang seimbang';
-    else title = '⚠️ Bottleneck ringan terdeteksi';
-}
+    const title = cat.label;
 
     const statusLabel = isDone ? 'selesai' : (!unlocked ? 'terkunci' : (isActive ? 'aktif' : ''));
     html += `
@@ -549,9 +423,6 @@ else if (bottleneckLevel === 'warning') {
     });
 }
 
-function renderProgress() {
-    renderStickyNav();
-}
 
 // ============================================================
 // USE CASE BADGE (untuk semua step selain CPU)
@@ -764,12 +635,11 @@ function resetBuildState() {
     saveBuildToStorage();
 }
 
-window.selectCpuUseCase = function(useCaseId) {
+window.selectCpuUseCase = async function(useCaseId) {
     // Kalau ganti use case setelah pilih CPU → reset build
     if (cpuUseCase && cpuUseCase !== useCaseId && buildState.cpu) {
-        if (!confirm('Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?')) {
-            return;
-        }
+        const ok = await window.showRkConfirm('Ganti Konteks', 'Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?', 'Reset');
+        if (!ok) return;
         resetBuildState();
     }
     cpuUseCase = useCaseId;
@@ -781,11 +651,10 @@ window.selectCpuUseCase = function(useCaseId) {
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
-window.resetCpuUseCase = function() {
+window.resetCpuUseCase = async function() {
     if (buildState.cpu) {
-        if (!confirm('Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?')) {
-            return;
-        }
+        const ok = await window.showRkConfirm('Ganti Konteks', 'Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?', 'Reset');
+        if (!ok) return;
         resetBuildState();
     }
     cpuUseCase = null;
@@ -797,11 +666,10 @@ window.resetCpuUseCase = function() {
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
-window.skipCpuUseCase = function() {
+window.skipCpuUseCase = async function() {
     if (buildState.cpu && cpuUseCase !== 'custom') {
-        if (!confirm('Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?')) {
-            return;
-        }
+        const ok = await window.showRkConfirm('Ganti Konteks', 'Mengganti kebutuhan akan mereset semua komponen yang sudah dipilih. Lanjutkan?', 'Reset');
+        if (!ok) return;
         resetBuildState();
     }
     cpuUseCase = 'custom';
@@ -1762,7 +1630,6 @@ window.selectComponent = async function(categoryId, componentId) {
 
     await fetchDependentCategories(categoryId);
 
-    renderProgress();
     renderSteps();
     renderSummary();
     renderStickyNav();
@@ -1826,7 +1693,6 @@ window.clearStep = function(categoryId) {
     }
 
     saveBuildToStorage();
-    renderProgress();
     renderSteps();
     renderSummary();
     renderStickyNav();
@@ -1845,184 +1711,138 @@ function calculateTotalWatt() {
 }
 
 // ============================================================
-// BOTTLENECK
+// RENDER SUMMARY — spec card
 // ============================================================
-function checkBottleneck() {
-    if (!buildState.cpu || !buildState.vga) return null;
-    const cpu = buildState.cpu.spesifikasi;
-    const vga = buildState.vga.spesifikasi;
-    if (!cpu.tier || !vga.tier) return null;
-
-    const gapTier = Math.abs(cpu.tier - vga.tier);
-    const gapTahun = Math.abs((cpu.tahun || 2020) - (vga.tahun || 2020));
-
-    if (gapTier >= 3 && vga.tier > cpu.tier) {
-        const estimasiPerforma = Math.max(20, 100 - gapTier * 15);
-        return {
-            level: 'danger', icon: 'alert-octagon',
-            title: '⚠️ Bottleneck Parah',
-            message: `CPU Anda (${cpu.tahun || '?'}, tier ${cpu.tier} · ${TIER_LABELS[cpu.tier] || '?'}) terlalu lemah untuk VGA ini (${vga.tahun || '?'}, tier ${vga.tier}). VGA tidak akan bekerja maksimal — mungkin hanya sekitar <strong>${estimasiPerforma}%</strong> dari kemampuannya.`,
-            suggestion: `Pilih VGA maksimal tier ${cpu.tier + 1}, atau upgrade CPU ke tier ${Math.max(1, vga.tier - 1)}+.`
-        };
-    }
-
-    if (gapTier >= 3 && cpu.tier > vga.tier) {
-        return {
-            level: 'warning', icon: 'alert-triangle',
-            title: '⚠️ CPU Overkill',
-            message: `CPU Anda (tier ${cpu.tier}) jauh lebih kuat dari VGA (tier ${vga.tier}). Performa CPU terbuang.`,
-            suggestion: `Pilih VGA minimal tier ${cpu.tier - 1}, atau turunkan CPU.`
-        };
-    }
-
-    if (gapTahun >= 8) {
-        return {
-            level: 'warning', icon: 'alert-triangle',
-            title: '⚠️ Generasi Terlalu Jauh',
-            message: `CPU (${cpu.tahun}) dan VGA (${vga.tahun}) berbeda ${gapTahun} tahun.`,
-            suggestion: 'Pilih komponen era berdekatan.'
-        };
-    }
-
-    if (gapTier === 2) {
-        return {
-            level: 'info', icon: 'info',
-            title: 'ℹ️ Kurang Seimbang',
-            message: `CPU tier ${cpu.tier} dengan VGA tier ${vga.tier}. Potensi bottleneck ringan.`,
-            suggestion: 'Cari CPU & VGA tier berdekatan.'
-        };
-    }
-
-    return null;
+function requiredCount() {
+    return CATEGORIES.filter(function (c) { return c.required; }).length;
+}
+function requiredCompleted() {
+    return CATEGORIES.filter(function (c) { return c.required && buildState[c.id]; }).length;
 }
 
-// ============================================================
-// RENDER SUMMARY
-// ============================================================
 function renderSummary() {
     const desktopContainer = document.getElementById('summarySidebar');
     const mobileContainer = document.getElementById('summaryBottomSheet');
     const mobileCount = document.getElementById('mobileSummaryCount');
+    const benchCount = document.getElementById('benchCount');
 
     const totalWatt = calculateTotalWatt();
-    const requiredCount = CATEGORIES.filter(c => c.required).length;
-    const requiredCompleted = CATEGORIES.filter(c => c.required && buildState[c.id]).length;
+    const reqCount = requiredCount();
+    const reqDone = requiredCompleted();
+    const buildComplete = reqDone >= reqCount;
 
-    if (mobileCount) mobileCount.textContent = `${requiredCompleted}/${requiredCount}`;
+    if (mobileCount) mobileCount.textContent = `${reqDone}/${reqCount}`;
+    if (benchCount) benchCount.textContent = `${reqDone}`;
 
-    let html = `
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-brand">Ringkasan Build</h3>
-            <button onclick="resetBuild()" class="text-xs text-gray-600 hover:text-red-500 flex items-center gap-1">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
-            </button>
-        </div>
-        <div class="space-y-2 mb-4">
-    `;
-
-    CATEGORIES.forEach(cat => {
+    let rows = '';
+    CATEGORIES.forEach(function (cat) {
         const val = buildState[cat.id];
         const isVgaSkipped = cat.id === 'vga' && cpuUseCase === 'office' && !vgaEnabled && !val;
         let displayVal;
         if (val) displayVal = val.nama;
-        else if (isVgaSkipped) displayVal = '— Dilewati (iGPU cukup)';
+        else if (isVgaSkipped) displayVal = 'Dilewati (iGPU cukup)';
         else displayVal = cat.required ? 'Belum dipilih' : 'Opsional';
-
-        html += `
-            <div class="flex items-start gap-2 text-xs py-2 border-b border-gray-100 last:border-0">
-                <div class="w-5 h-5 rounded flex items-center justify-center bg-brand/5 flex-shrink-0 mt-0.5">
-                    <i data-lucide="${cat.icon}" class="w-3 h-3 text-brand"></i>
+        const checked = !!(val || isVgaSkipped);
+        rows += `
+            <div class="spec-row">
+                <div class="spec-row-icon">
+                    <i data-lucide="${checked ? 'check' : cat.icon}" class="w-3.5 h-3.5"></i>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <div class="font-semibold text-gray-500 text-[10px] uppercase tracking-wide">${cat.label}</div>
-                    <div class="text-gray-800 font-medium text-xs ${val ? '' : 'text-gray-500 italic'} truncate">
-                        ${displayVal}
-                    </div>
+                <div class="spec-row-body">
+                    <div class="spec-row-label">${cat.label}</div>
+                    <div class="spec-row-val ${val ? '' : 'empty'}">${val ? escapeHtml(displayVal) : displayVal}</div>
                 </div>
-            </div>
-        `;
+            </div>`;
     });
 
-    html += `</div>`;
+    const recommended = Math.ceil((totalWatt + 100) * 1.3 / 50) * 50;
+    const pct = Math.max(4, Math.min(100, Math.round((totalWatt / 750) * 100)));
 
-    if (totalWatt > 0) {
-        html += `
-            <div class="bg-brand/5 rounded-xl p-3 mb-4 flex items-center justify-between">
-                <span class="text-xs text-gray-600">Estimasi Watt</span>
-                <span class="font-bold text-brand">~${totalWatt}W</span>
+    const gaugeSVG = `
+        <svg class="watt-gauge" viewBox="0 0 80 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M 8 44 A 32 32 0 0 1 72 44" stroke="rgba(255,255,255,0.14)" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 8 44 A 32 32 0 0 1 72 44" stroke="#FFAB00" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${pct * 1.005} 100" pathLength="100" transform="rotate(0 40 44)"/>
+            <text x="40" y="40" text-anchor="middle" font-family="'Space Grotesk', sans-serif" font-size="12" font-weight="700" fill="#ffffff">${totalWatt}W</text>
+        </svg>`;
+
+    const html = `
+        <div class="spec-border" style="display:flex;align-items:center;justify-content:space-between;">
+            <h3 class="spec-card-title" style="margin:0">SPESIFIKASIKU</h3>
+            <button type="button" onclick="resetBuild()" class="spec-reset" aria-label="Reset semua komponen">Reset</button>
+        </div>
+        <div>${rows}</div>
+        <div class="watt-block">
+            ${gaugeSVG}
+            <div class="watt-readout">
+                <div class="label">Estimasi Daya</div>
+                <div class="value">~${totalWatt}W</div>
+                <div style="font-size:0.6rem;color:rgba(255,255,255,0.55);margin-top:0.2rem">PSU recommend: <strong style="color:#ffffff">&ge;${recommended}W</strong></div>
             </div>
-        `;
-    }
-
-    const bottleneck = checkBottleneck();
-    if (bottleneck) {
-        const styles = {
-            danger: { bg: 'rgba(220, 38, 38, 0.08)', border: 'rgba(220, 38, 38, 0.3)', text: '#991b1b' },
-            warning: { bg: 'rgba(245, 158, 11, 0.08)', border: 'rgba(245, 158, 11, 0.3)', text: '#92400e' },
-            info: { bg: 'rgba(59, 130, 246, 0.08)', border: 'rgba(59, 130, 246, 0.3)', text: '#1e40af' }
-        };
-        const style = styles[bottleneck.level] || styles.info;
-        html += `
-            <div class="rounded-xl p-3 mb-4" style="background: ${style.bg}; border: 1px solid ${style.border}; color: ${style.text}">
-                <div class="flex items-start gap-2">
-                    <i data-lucide="${bottleneck.icon}" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
-                    <div class="flex-1 text-xs">
-                        <p class="font-bold">${bottleneck.title}</p>
-                        <p class="mt-1 leading-relaxed">${bottleneck.message}</p>
-                        <p class="mt-1.5 italic opacity-90">💡 ${bottleneck.suggestion}</p>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    const buildComplete = requiredCompleted >= requiredCount;
-
-    html += `
-        <div class="space-y-2">
-            <button onclick="shareToWhatsApp()" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#075e54] hover:bg-[#043f36] text-white rounded-xl text-sm font-semibold"
-                    ${!buildComplete ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
-                <i data-lucide="message-circle" class="w-4 h-4"></i>
-                Konsultasi via WhatsApp
+        </div>
+        <div class="spec-actions">
+            <button type="button" class="spec-btn spec-btn-wa" ${!buildComplete ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''} onclick="shareToWhatsApp()">
+                <i data-lucide="message-circle" class="w-4 h-4"></i> Konsultasi via WhatsApp
             </button>
-            <button onclick="printBuild()" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-xl text-sm font-semibold"
-                    ${!buildComplete ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
-                <i data-lucide="printer" class="w-4 h-4"></i> Print / Save PDF
+            <button type="button" class="spec-btn spec-btn-print" ${!buildComplete ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''} onclick="printBuild()">
+                <i data-lucide="printer" class="w-4 h-4"></i> Cetak / Simpan PDF
             </button>
+        </div>
+        <div class="spec-status ${buildComplete ? 'ok' : ''}">
+            ${buildComplete
+                ? '<i data-lucide="check-circle" class="w-4 h-4"></i> Build siap! Konsultasikan ke teknisi.'
+                : '<i data-lucide="info" class="w-4 h-4"></i> Lengkapi ' + (reqCount - reqDone) + ' komponen wajib dipilih.'}
         </div>
     `;
 
-    if (!buildComplete) {
-        html += `<div class="warning-box mt-3 text-xs"><i data-lucide="info" class="w-4 h-4 inline mr-1"></i>Lengkapi <strong>${requiredCount - requiredCompleted} komponen</strong> lagi</div>`;
-    } else {
-        html += `<div class="warning-box success mt-3 text-xs"><i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i>Build siap!</div>`;
-    }
-
-    if (desktopContainer) desktopContainer.innerHTML = html;
-    if (mobileContainer) mobileContainer.innerHTML = html;
+    if (desktopContainer) { desktopContainer.innerHTML = html; desktopContainer.classList.add('spec-card'); }
+    if (mobileContainer) { mobileContainer.innerHTML = html; mobileContainer.classList.add('spec-card'); }
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
+
 // ============================================================
-// WHATSAPP SHARE
+// SPEC CONFIRM MODAL (pengganti confirm/alert)
+// ============================================================
+window.showRkConfirm = function(title, message, confirmLabel) {
+    return new Promise(function(resolve) {
+        const modal = document.getElementById('rkModal');
+        if (!modal) { resolve(window.confirm(message)); return; }
+        const t = modal.querySelector('.rk-modal-title');
+        const m = modal.querySelector('.rk-modal-body');
+        const c = modal.querySelector('.rk-modal-confirm');
+        const cancelBtn = modal.querySelector('.rk-modal-cancel');
+        if (t) t.textContent = title || 'Konfirmasi';
+        if (m) m.textContent = message || '';
+        if (c) c.textContent = confirmLabel || 'Lanjutkan';
+        const cleanup = function() { cancelBtn.removeEventListener('click', onCancel); c.removeEventListener('click', onOk); };
+        const onCancel = function() { modal.setAttribute('hidden', 'hidden'); cleanup(); resolve(false); };
+        const onOk = function() { modal.setAttribute('hidden', 'hidden'); cleanup(); resolve(true); };
+        cancelBtn.addEventListener('click', onCancel);
+        c.addEventListener('click', onOk);
+        modal.removeAttribute('hidden');
+    });
+};
+
+// ============================================================
+// EXPECT THE FOLLOWING BUILDER BLOCK
 // ============================================================
 window.shareToWhatsApp = function() {
-    const requiredCompleted = CATEGORIES.filter(c => c.required && buildState[c.id]).length;
-    const requiredCount = CATEGORIES.filter(c => c.required).length;
-    if (requiredCompleted < requiredCount) { alert('Lengkapi komponen wajib dulu.'); return; }
+    const reqCount = requiredCount();
+    const reqDone = requiredCompleted();
+    if (reqDone < reqCount) { window.showRkConfirm('Belum Lengkap', 'Lengkapi semua komponen wajib (CPU, Mainboard, RAM, Storage, PSU, Casing) sebelum mengonsultasikan build.', 'OK'); return; }
 
     let msg = `*RENCANA RAKIT KOMPUTER - IMDKOM*\n\n`;
-    CATEGORIES.forEach(cat => {
+    CATEGORIES.forEach(function (cat) {
         const val = buildState[cat.id];
         if (!val) return;
         msg += `*${cat.label.toUpperCase()}*\n• ${val.nama}\n`;
         const s = val.spesifikasi;
         switch (val.kategori) {
-            case 'cpu': msg += `• ${s.socket} · ${s.core}C/${s.thread}T · ${s.tdp}W`; if (s.tier) msg += ` · T${s.tier}`; msg += `\n`; break;
+            case 'cpu': msg += `• ${s.socket} · ${s.core}C/${s.thread}T · ${s.tdp}W\n`; break;
             case 'mainboard': msg += `• ${s.socket} · ${s.chipset} · ${s.ramType} · ${s.formFactor}\n`; break;
             case 'ram': msg += `• ${s.type} · ${s.capacity}GB · ${s.speed}\n`; break;
             case 'storage': msg += `• ${s.type} · ${s.interface} · ${s.capacity}GB\n`; break;
-            case 'vga': msg += `• ${s.vram} · ${s.tdp}W`; if (s.tier) msg += ` · T${s.tier}`; msg += `\n`; break;
+            case 'vga': msg += `• ${s.vram} · ${s.tdp}W\n`; break;
             case 'psu': msg += `• ${s.wattage}W · ${s.efficiency}\n`; break;
             case 'casing': msg += `• ${(s.formFactor || []).join('/')} · Max VGA ${s.maxGpuLength}mm\n`; break;
         }
@@ -2030,34 +1850,25 @@ window.shareToWhatsApp = function() {
     });
     const totalWatt = calculateTotalWatt();
     msg += `*ESTIMASI TOTAL WATT: ~${totalWatt}W*\n\n`;
-    const bottleneck = checkBottleneck();
-    if (bottleneck) {
-        const clean = bottleneck.message.replace(/<strong>/g, '').replace(/<\/strong>/g, '');
-        msg += `*${bottleneck.title}*\n${clean}\n💡 ${bottleneck.suggestion}\n\n`;
-    }
-    msg += `Mohon konfirmasi. Terima kasih!`;
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+    msg += `Mohon konfirmasi stok & jadwal rakit. Terima kasih!`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
 };
 
 // ============================================================
-// PRINT BUILD
+// PRINT BUILD — standalone popup A4 spec sheet
 // ============================================================
 window.printBuild = function() {
-    const requiredCompleted = CATEGORIES.filter(c => c.required && buildState[c.id]).length;
-    const requiredCount = CATEGORIES.filter(c => c.required).length;
-    if (requiredCompleted < requiredCount) { alert('Lengkapi komponen wajib dulu.'); return; }
+    const reqCount = requiredCount();
+    const reqDone = requiredCompleted();
+    if (reqDone < reqCount) { window.showRkConfirm('Belum Lengkap', 'Lengkapi semua komponen wajib sebelum mencetak spesifikasi Anda.', 'OK'); return; }
 
     const now = new Date();
     const timestamp = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
     const totalWatt = calculateTotalWatt();
-
-    const tiers = [];
-    if (buildState.cpu?.spesifikasi?.tier) tiers.push(buildState.cpu.spesifikasi.tier);
-    if (buildState.vga?.spesifikasi?.tier) tiers.push(buildState.vga.spesifikasi.tier);
-    const avgTier = tiers.length > 0 ? Math.round(tiers.reduce((a,b) => a+b, 0) / tiers.length) : null;
+    const recommended = Math.ceil((totalWatt + 100) * 1.3 / 50) * 50;
 
     let componentRows = '';
-    CATEGORIES.forEach((cat, idx) => {
+    CATEGORIES.forEach(function (cat) {
         const val = buildState[cat.id];
         if (!val) return;
         const specs = val.spesifikasi || {};
@@ -2071,102 +1882,73 @@ window.printBuild = function() {
             case 'psu': detail = `${val.brand} · ${specs.wattage}W · ${specs.efficiency}`; break;
             case 'casing': detail = `${val.brand} · ${(specs.formFactor || []).join('/')} · Max VGA ${specs.maxGpuLength}mm`; break;
         }
-        let tierBadge = '';
-        if ((val.kategori === 'cpu' || val.kategori === 'vga') && specs.tier) {
-            tierBadge = `<span style="display:inline-block;color:white;font-size:7pt;font-weight:800;padding:2px 6px;border-radius:10px;background:${TIER_COLORS[specs.tier]};">T${specs.tier}</span>`;
-        }
-        const isLast = idx === CATEGORIES.length - 1;
         componentRows += `
-            <div style="padding:6px 0;border-bottom:${isLast ? 'none' : '1px solid #f3f4f6'};">
-                <div style="color:#6b7280;font-size:7pt;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px;">${cat.label.toUpperCase()}</div>
-                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                    <span style="color:#1f2937;font-size:10.5pt;font-weight:600;">${val.nama}</span>
-                    ${tierBadge}
-                </div>
-                <div style="color:#6b7280;font-size:8pt;margin-top:1px;">${detail}</div>
+            <div style="padding:7px 4px;border-bottom:1px solid #e7e5e4;">
+                <div style="font-size:7.5pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#b45309;margin-bottom:3px;font-family:'Geist Mono',monospace;">${cat.label}</div>
+                <div style="font-size:11pt;font-weight:700;color:#0d0d0d;line-height:1.25;">${val.nama}</div>
+                <div style="font-size:8.5pt;color:#57534e;margin-top:2px;">${detail}</div>
             </div>
         `;
     });
 
-    const bottleneck = checkBottleneck();
-    let warningHTML = '';
-    if (bottleneck) {
-        const wStyles = {
-            danger: { bg: '#fef2f2', border: '#fecaca', text: '#991b1b', title: 'Bottleneck Parah' },
-            warning: { bg: '#fffbeb', border: '#fde68a', text: '#92400e', title: 'Perhatian' },
-            info: { bg: '#eff6ff', border: '#bfdbfe', text: '#1e40af', title: 'Catatan' }
-        };
-        const ws = wStyles[bottleneck.level] || wStyles.info;
-        const clean = bottleneck.message.replace(/<strong>/g, '').replace(/<\/strong>/g, '').replace(/<[^>]*>/g, '');
-        warningHTML = `
-            <div style="margin-bottom:12px;">
-                <div style="color:#1a3c5e;font-size:8pt;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding-bottom:5px;margin-bottom:6px;border-bottom:1px solid #e5e7eb;">CATATAN PENTING</div>
-                <div style="background:${ws.bg};border:1.5px solid ${ws.border};border-radius:6px;padding:10px 12px;color:${ws.text};">
-                    <div style="font-size:10pt;font-weight:700;margin-bottom:3px;">⚠️ ${ws.title}</div>
-                    <div style="font-size:8.5pt;line-height:1.5;margin-bottom:4px;">${clean}</div>
-                    <div style="font-size:8pt;font-style:italic;opacity:0.9;">💡 ${bottleneck.suggestion}</div>
-                </div>
-            </div>
-        `;
-    }
-
     const printHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Spesifikasi Komputer - IMDKOM</title><style>
-        @page { size: A4; margin: 15mm 18mm; }
+        @page { size: A4; margin: 14mm 16mm; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10pt; color: #1f2937; line-height: 1.5; }
-        .header { display: flex; align-items: center; gap: 14px; padding-bottom: 12px; border-bottom: 2.5px solid #1a3c5e; margin-bottom: 18px; }
-        .header-logo { height: 45px; }
-        .header-title { color: #1a3c5e; font-size: 16pt; font-weight: 700; line-height: 1.1; }
-        .header-subtitle { color: #6b7280; font-size: 8.5pt; margin-top: 2px; }
-        .section-title { color: #1a3c5e; font-size: 9pt; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding-bottom: 6px; margin-bottom: 4px; border-bottom: 1px solid #e5e7eb; }
-        .component-list { margin-bottom: 14px; }
-        .summary-bar { background: #1a3c5e; color: white; border-radius: 6px; padding: 10px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; }
-        .summary-cell { flex: 1; text-align: center; }
-        .summary-label { font-size: 7pt; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; margin-bottom: 3px; }
-        .summary-value { font-size: 14pt; font-weight: 800; }
-        .summary-divider { width: 1px; background: rgba(255,255,255,0.25); }
-        .consult-box { border: 1px solid #d1d5db; border-radius: 6px; padding: 10px 14px; display: flex; gap: 14px; margin-bottom: 12px; }
-        .consult-qr { width: 60px; height: 60px; flex-shrink: 0; border: 1px solid #e5e7eb; border-radius: 4px; padding: 2px; }
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10pt; color: #0d0d0d; line-height: 1.45; }
+        .kop { background: #0d0d0d; color: #ffffff; padding: 18px 22px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; }
+        .kop-brand { font-family: 'Bebas Neue','Anton',sans-serif; font-size: 28pt; line-height: 0.92; letter-spacing: 0.02em; color: #ffffff; }
+        .kop-brand span { color: #FFAB00; }
+        .kop-sub { font-family: 'Geist Mono',monospace; font-size: 6.5pt; letter-spacing: 2.4px; text-transform: uppercase; color: #FFAB00; margin-top: 4px; }
+        .kop-no { text-align: right; font-family: 'Geist Mono',monospace; font-size: 7.5pt; color: rgba(255,255,255,0.65); letter-spacing: 1px; }
+        .kop-no .k { font-size: 6pt; letter-spacing: 2px; opacity: 0.7; }
+        .section-title { font-family: 'Bebas Neue','Anton',sans-serif; font-size: 12pt; letter-spacing: 0.12em; text-transform: uppercase; color: #0d0d0d; border-bottom: 2px solid #0d0d0d; padding-bottom: 4px; margin: 14px 0 6px; }
+        .component-list { margin-bottom: 16px; }
+        .summary { background: #0d0d0d; padding: 14px 18px; display: flex; gap: 24px; }
+        .summary-cell { flex: 1; text-align: center; color: #ffffff; }
+        .summary-label { font-family: 'Geist Mono',monospace; font-size: 6.5pt; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+        .summary-value { font-family: 'Bebas Neue','Anton',sans-serif; font-size: 18pt; color: #FFAB00; line-height: 1; }
+        .consult { border: 1.5px solid #0d0d0d; padding: 12px 16px; display: flex; gap: 14px; align-items: center; margin: 14px 0; background: #fffdf3; }
+        .consult-qr { width: 74px; height: 74px; flex-shrink: 0; padding: 3px; border: 1px solid #0d0d0d; background: #ffffff; }
         .consult-qr img { width: 100%; height: 100%; object-fit: contain; }
-        .consult-title { color: #1a3c5e; font-size: 9.5pt; font-weight: 700; margin-bottom: 3px; }
-        .consult-desc { color: #6b7280; font-size: 8pt; margin-bottom: 3px; }
-        .consult-contact { color: #1a3c5e; font-size: 11pt; font-weight: 700; }
-        .footer { border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 7.5pt; color: #6b7280; }
-        .footer-brand { color: #1a3c5e; font-weight: 700; }
-        .print-actions { text-align: center; margin-top: 18px; padding: 12px; background: #f9fafb; border-radius: 8px; }
-        .print-actions button { font-family: inherit; font-size: 10pt; font-weight: 600; padding: 10px 24px; border-radius: 6px; cursor: pointer; margin: 0 4px; border: none; }
-        .btn-primary { background: #1a3c5e; color: white; }
-        .btn-secondary { background: white; color: #1a3c5e; border: 1px solid #d1d5db; }
+        .consult-title { font-family: 'Bebas Neue','Anton',sans-serif; font-size: 12pt; color: #0d0d0d; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+        .consult-desc { font-size: 8pt; color: #57534e; margin-bottom: 3px; }
+        .consult-contact { font-family: 'Geist Mono',monospace; font-size: 11pt; font-weight: 700; color: #0d0d0d; }
+        .foot { border-top: 1px solid #e7e5e4; padding-top: 6px; display: flex; justify-content: space-between; font-size: 7pt; color: #78716c; font-family: 'Manrope',sans-serif; margin-bottom: 8px; }
+        .print-actions { text-align: center; margin-top: 18px; padding: 14px; background: #f5f5f4; border: 1px solid #e7e5e4; }
+        .print-actions button { font-family: 'Geist Mono',monospace; font-size: 10pt; font-weight: 600; padding: 10px 22px; border: none; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; }
+        .btn-primary { background: #0d0d0d; color: #ffffff; }
+        .btn-secondary { background: #ffffff; color: #0d0d0d; border: 1.5px solid #0d0d0d; }
         @media print { .print-actions { display: none !important; } body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
     </style></head><body>
-        <div class="header">
-            <img src="${window.location.origin}/assets/images/logo/imd.svg" class="header-logo" onerror="this.style.display='none'">
+        <div class="kop">
             <div>
-                <div class="header-title">SPESIFIKASI KOMPUTER</div>
-                <div class="header-subtitle">IMDKOM Yogyakarta · Kursus &amp; Pelatihan • Computer Service</div>
+                <div class="kop-brand">SPESIFIKASI <span>KOMPUTER</span></div>
+                <div class="kop-sub">IMDKOM Yogyakarta - Service &amp; Rakit</div>
+            </div>
+            <div class="kop-no">
+                <div class="k">DOK</div>
+                <div>${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}</div>
             </div>
         </div>
         <div class="section-title">Daftar Komponen</div>
         <div class="component-list">${componentRows}</div>
-        <div class="summary-bar">
-            <div class="summary-cell"><div class="summary-label">Total</div><div class="summary-value">${requiredCompleted}/7</div></div>
-            <div class="summary-divider"></div>
-            <div class="summary-cell"><div class="summary-label">Watt</div><div class="summary-value">~${totalWatt}W</div></div>
-            <div class="summary-divider"></div>
-            <div class="summary-cell"><div class="summary-label">Tier</div><div class="summary-value">${avgTier ? 'T' + avgTier : '—'}</div></div>
+        <div class="section-title">Ringkasan</div>
+        <div class="summary">
+            <div class="summary-cell"><div class="summary-label">Komponen</div><div class="summary-value">${reqDone}/${reqCount}</div></div>
+            <div class="summary-cell"><div class="summary-label">Daya</div><div class="summary-value">~${totalWatt}W</div></div>
+            <div class="summary-cell"><div class="summary-label">Rekomm. PSU</div><div class="summary-value">≥${recommended}W</div></div>
         </div>
-        ${warningHTML}
-        <div class="consult-box">
-            <div class="consult-qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&margin=0&data=${encodeURIComponent('https://wa.me/6285601913435?text=Halo%20IMDKOM')}" onerror="this.style.display='none'"></div>
+        <div class="consult">
+            <div class="consult-qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&margin=0&data=${encodeURIComponent('https://wa.me/6285601913435?text=Halo%20IMDKOM')}" onerror="this.style.display='none'" alt="QR WhatsApp IMDKOM"></div>
             <div>
                 <div class="consult-title">Konsultasi Lanjutan</div>
-                <div class="consult-desc">Scan QR code atau hubungi kami untuk konsultasi lebih lanjut.</div>
-                <div class="consult-contact">WhatsApp 0856-0191-3435</div>
+                <div class="consult-desc">Scan QR atau hubungi untuk konfirmasi stok &amp; jadwal rakit.</div>
+                <div class="consult-contact">WA 0856-0191-3435</div>
             </div>
         </div>
-        <div class="footer">
-            <div>Dibuat: <strong>${timestamp}</strong></div>
-            <div class="footer-brand">IMDKOM Yogyakarta · imdkom.com</div>
+        <div class="foot">
+            <span>Dicetak: ${timestamp}</span>
+            <span><strong>IMDKOM Yogyakarta</strong></span>
         </div>
         <div class="print-actions">
             <button class="btn-primary" onclick="window.print()">Simpan sebagai PDF</button>
@@ -2175,27 +1957,31 @@ window.printBuild = function() {
     </body></html>`;
 
     const printWindow = window.open('', '_blank', 'width=900,height=750');
+    if (!printWindow) {
+        window.showRkConfirm('Pop-up Diblokir', 'Browser memblokir jendela cetak. Izinkan pop-up lalu coba lagi.', 'OK');
+        return;
+    }
     printWindow.document.write(printHTML);
     printWindow.document.close();
-    printWindow.onload = function() { setTimeout(() => printWindow.focus(), 100); };
+    printWindow.onload = function() { setTimeout(function() { printWindow.focus(); }, 100); };
 };
 
 // ============================================================
 // RESET BUILD
 // ============================================================
-window.resetBuild = function() {
-    if (!confirm('Yakin ingin mereset semua komponen?')) return;
+window.resetBuild = async function() {
+    const ok = await window.showRkConfirm('Reset Build', 'Yakin ingin menghapus semua pilihan komponen?', 'Reset');
+    if (!ok) return;
     resetBuildState();
-    cpuUseCase = null;
-    renderProgress();
+    if (typeof cpuUseCase !== 'undefined') { cpuUseCase = null; }
     renderSteps();
     renderSummary();
     renderStickyNav();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
+
 
-// ============================================================
 // LOCALSTORAGE BUILD
 // ============================================================
 function saveBuildToStorage() {
