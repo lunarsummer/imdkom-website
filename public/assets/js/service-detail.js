@@ -417,6 +417,9 @@ export async function loadDocumentations() {
                              alt="${escapeHtml(data.nama || 'Dokumentasi')}"
                              loading="eager"
                              onerror="this.onerror=null; this.src='assets/images/placeholder.svg';" />
+                        <div class="doc-marquee-overlay" aria-hidden="true">
+                            <p class="doc-marquee-title">${escapeHtml(data.nama || '')}</p>
+                        </div>
                     </div>
                 `;
             });

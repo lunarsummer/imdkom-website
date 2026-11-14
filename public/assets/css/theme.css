@@ -499,3 +499,50 @@ h2 {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     background-color: rgba(255, 255, 255, 0.95);
 }
+/* ============================================================
+   DOKUMENTASI MARQUEE — Overlay (judul dokumentasi saat hover)
+   ============================================================ */
+.tentang-marquee-item,
+.dokumentasi-marquee-item,
+.galeri-marquee-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.doc-marquee-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.35rem 0.7rem 0.6rem;
+    background: linear-gradient(to top, rgba(13, 13, 13, 0.82) 0%, rgba(13, 13, 13, 0.42) 55%, transparent 100%);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.doc-marquee-title {
+    font-family: 'Anton', 'Poppins', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #ffffff;
+    line-height: 1.2;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tentang-marquee-item:hover .doc-marquee-overlay,
+.tentang-marquee-item:focus-within .doc-marquee-overlay,
+.dokumentasi-marquee-item:hover .doc-marquee-overlay,
+.dokumentasi-marquee-item:focus-within .doc-marquee-overlay,
+.galeri-marquee-item:hover .doc-marquee-overlay,
+.galeri-marquee-item:focus-within .doc-marquee-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}

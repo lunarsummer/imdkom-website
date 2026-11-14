@@ -45,7 +45,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Geist+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/theme.css">
     <link rel="stylesheet" href="assets/css/output.css">
@@ -69,28 +69,38 @@
             .program-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
         }
 
+        :root {
+            --kk-ink: #0d0d0d;
+            --kk-body: #232830;
+            --kk-muted: #5b6169;
+            --kk-line: #e4e4e2;
+            --kk-soft: #f6f6f5;
+            --kk-accent: #0059ff;
+        }
+
         .program-card {
             background: #ffffff;
-            border: 1px solid #e8e8e8;
-            border-radius: 16px;
+            border: 1px solid var(--kk-line);
+            border-radius: 4px;
             overflow: hidden;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             display: flex;
             flex-direction: column;
             height: 100%;
         }
         .program-card:hover {
-            transform: translateY(-4px);
-            border-color: #0d0d0d;
-            box-shadow: 0 18px 40px rgba(13, 13, 13, 0.10);
+            transform: translateY(-3px);
+            border-color: var(--kk-ink);
+            box-shadow: 0 12px 32px rgba(13, 13, 13, 0.12);
         }
 
         .program-image-wrapper {
             position: relative;
             width: 100%;
             aspect-ratio: 4 / 5;
-            background: #f1f2f4;
+            background: var(--kk-soft);
             overflow: hidden;
+            border-bottom: 1px solid var(--kk-line);
         }
         .program-image-wrapper img {
             width: 100%;
@@ -112,12 +122,12 @@
             position: absolute;
             top: 0.6rem;
             left: 0.6rem;
-            background: #0d0d0d;
+            background: var(--kk-ink);
             color: #ffffff;
-            font-size: 0.7rem;
+            font-size: 0.66rem;
             font-weight: 700;
-            padding: 0.3rem 0.65rem;
-            border-radius: 999px;
+            padding: 0.26rem 0.55rem;
+            border-radius: 3px;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             z-index: 2;
@@ -127,26 +137,17 @@
             white-space: nowrap;
         }
 
-        .badge-kategori {
-            position: absolute;
-            top: auto;
-            bottom: 0.6rem;
-            right: 0.6rem;
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: #0d0d0d;
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 0.3rem 0.65rem;
-            border-radius: 999px;
-            border: 1px solid rgba(13, 13, 13, 0.08);
-            z-index: 2;
-            max-width: calc(100% - 1.2rem);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .program-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 3px;
+            padding: 0.26rem 0.55rem;
         }
+        .program-badge-tipe { background: var(--kk-ink); color: #ffffff; }
 
         .skeleton {
             background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
@@ -159,9 +160,121 @@
         }
 
         /* ============================================================
-   DOKUMENTASI MARQUEE — Continuous Scroll
+   KENAPA KAMI — gaya LOKASI WORKSHOP (dark island)
    ============================================================ */
-.dokumentasi-marquee-wrapper {
+        #kenapaKamiSection {
+            background: #0d0d0d;
+            color: #ffffff;
+            padding: 4rem 1rem 4.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        #kenapaKamiSection::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 15% 25%, rgba(255, 171, 0, 0.18), transparent 52%),
+                        radial-gradient(circle at 85% 75%, rgba(255, 171, 0, 0.08), transparent 48%);
+            pointer-events: none;
+        }
+        .kk-shell { max-width: 1180px; margin: 0 auto; position: relative; }
+        .kk-eyebrow {
+            font-family: 'Geist Mono', ui-monospace, monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: #FFAB00;
+            text-transform: uppercase;
+            margin: 0 0 1.1rem;
+        }
+        .kk-eyebrow::before { content: '— '; }
+        .kk-title {
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-size: clamp(3.2rem, 10vw, 6.5rem);
+            line-height: 0.92;
+            letter-spacing: 0.005em;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin: 0;
+            max-width: 60rem;
+        }
+        .kk-title .kk-accent { color: #FFAB00; }
+        .kk-sub {
+            margin-top: 1.35rem;
+            max-width: 38rem;
+            color: #a8a29e;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+        .keunggulan-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 2.5rem;
+        }
+        @media (min-width: 640px) {
+            .keunggulan-grid { grid-template-columns: repeat(4, 1fr); gap: 0.9rem; }
+        }
+        .keunggulan-card {
+            background: #ffffff;
+            border: 1px solid #e7e5e4;
+            border-radius: 0;
+            padding: 1.25rem 1.25rem 1.1rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .keunggulan-card:hover {
+            transform: translateY(-3px);
+            border-color: #0d0d0d;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+        }
+        .keunggulan-title {
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-weight: 400;
+            font-size: 1.6rem;
+            line-height: 1.05;
+            letter-spacing: 0.01em;
+            color: #000000;
+            text-transform: uppercase;
+            margin: 0;
+        }
+        .keunggulan-rule {
+            border: 0;
+            border-top: 1px dashed #e7e5e4;
+            margin: 0.7rem 0 0.7rem;
+        }
+        .keunggulan-text {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.8rem;
+            line-height: 1.55;
+            color: #78716c;
+            margin: 0;
+        }
+
+        /* ============================================================
+   GALERI MARQUEE — judul Bebas (senada service)
+   ============================================================ */
+        .galeri-title {
+            font-family: 'Bebas Neue', 'Anton', sans-serif;
+            font-size: clamp(3.25rem, 12vw, 6.5rem);
+            line-height: 0.92;
+            letter-spacing: 0.02em;
+            color: #0d0d0d;
+            margin: 0 0 0.85rem;
+            text-transform: uppercase;
+        }
+        .galeri-sub {
+            max-width: 38rem;
+            margin: 0 auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #1f1a00;
+            font-weight: 500;
+        }
+
+        .dokumentasi-marquee-wrapper {
     width: 100%;
     overflow: hidden;
     position: relative;
@@ -315,24 +428,80 @@
            KARTU PROGRAM — BODY & TOMBOL
            ============================================================ */
         .program-card-body {
-            padding: 0.85rem 0.9rem 0.95rem;
+            padding: 1rem 1.1rem 1.1rem;
             display: flex;
             flex-direction: column;
+            gap: 0.55rem;
             flex: 1;
         }
+        .program-topline {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
         .program-card-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            line-height: 1.3;
-            color: #0d0d0d;
+            font-size: 1.35rem;
+            line-height: 1.15;
+            color: var(--kk-ink);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             transition: color 0.2s ease;
-            margin-bottom: 0.2rem;
+            margin: 0;
         }
-        .program-card:hover .program-card-title { color: #0059ff; }
+        @media (max-width: 640px) {
+            .program-card-actions { flex-wrap: nowrap; }
+            .program-btn-primary { flex: 1; }
+        }
+        .program-card:hover .program-card-title { color: var(--kk-accent); }
+
+        .program-meta {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.76rem;
+            color: var(--kk-muted);
+        }
+        .program-meta li { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .program-meta i { color: var(--kk-muted); flex-shrink: 0; }
+
+        .program-price {
+            display: block;
+            margin-top: auto;
+            padding-top: 0.3rem;
+        }
+        .program-price .price-asli {
+            font-size: 0.7rem;
+            color: var(--kk-muted);
+            text-decoration: line-through;
+        }
+        .program-price .price-promo {
+            display: block;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--kk-ink);
+        }
+        .program-price .price-normal {
+            display: block;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--kk-ink);
+        }
+        .program-desc {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--kk-muted);
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
         .program-btn-primary,
         .program-btn-wa,
@@ -340,50 +509,66 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.375rem;
-            border-radius: 10px;
+            gap: 0.4rem;
+            border-radius: 4px;
             font-size: 0.72rem;
-            font-weight: 600;
-            padding: 0.55rem 0.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.6rem 0.7rem;
             border: 1px solid transparent;
             cursor: pointer;
-            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            text-decoration: none;
+            transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
         }
         .program-btn-primary {
-            width: 100%;
+            background: var(--kk-ink);
             color: #ffffff;
-            background: #0d0d0d;
+            border-color: var(--kk-ink);
         }
-        .program-btn-primary:hover { background: #0059ff; }
+        .program-btn-primary:hover { background: #2b2b2b; border-color: #2b2b2b; }
         .program-btn-wa {
-            color: #ffffff;
-            background: #075e54;
+            background: transparent;
+            color: var(--kk-ink);
+            border-color: var(--kk-ink);
+            width: 2.35rem;
+            padding: 0.6rem 0;
+            flex-shrink: 0;
         }
-        .program-btn-wa:hover { background: #043f36; }
+        .program-btn-wa:hover { background: var(--kk-ink); color: #ffffff; }
         .program-btn-ghost {
-            color: #0d0d0d;
-            background: #ffffff;
-            border-color: #d8d8d8;
+            background: transparent;
+            color: var(--kk-muted);
+            border: 1px solid var(--kk-line);
+            width: 2.35rem;
+            flex-shrink: 0;
+            padding: 0.6rem 0;
         }
-        .program-btn-ghost:hover {
-            color: #ffffff;
-            background: #0d0d0d;
-            border-color: #0d0d0d;
+        .program-btn-ghost:hover { border-color: var(--kk-ink); color: var(--kk-ink); }
+
+        .program-card-actions {
+            display: flex;
+            gap: 0.45rem;
+            margin-top: 0.4rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--kk-line);
         }
 
         .kursus-loadmore {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: #0d0d0d;
+            background: var(--kk-ink);
             color: #ffffff;
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 0.8rem 1.6rem;
-            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
             transition: background 0.2s ease;
         }
-        .kursus-loadmore:hover { background: #0059ff; }
+        .kursus-loadmore:hover { background: #2b2b2b; }
 
         /* ============================================================
            FOOTER (dimaksimalkan)
@@ -582,21 +767,55 @@
     </section>
 
     <!-- ============================================================
-    DOKUMENTASI — MARQUEE
+    KENAPA KAMI — sebelum galeri
     ============================================================ -->
-    <section class="py-8 sm:py-12 bg-white/40 backdrop-blur-sm" id="documentationSection">
+    <section id="kenapaKamiSection">
+        <div class="kk-shell">
+            <p class="kk-eyebrow">Kenapa Kami</p>
+            <h2 class="kk-title">Belajar dari <span class="kk-accent">Praktisi.</span></h2>
+            <p class="kk-sub">Program kursus IMDKOM disusun dan dibimbing oleh <strong style="color:#FFAB00;font-weight:600">praktisi aktif</strong> — bukan hanya teori — dengan kurikulum yang menyesuaikan kebutuhan karier Anda.</p>
+
+            <div class="keunggulan-grid">
+                <div class="keunggulan-card">
+                    <h3 class="keunggulan-title">Praktisi Aktif</h3>
+                    <hr class="keunggulan-rule" />
+                    <p class="keunggulan-text">Belajar langsung dari praktisi yang masih berkarya — bukan hanya teori di buku.</p>
+                </div>
+                <div class="keunggulan-card">
+                    <h3 class="keunggulan-title">Kurikulum Lengkap</h3>
+                    <hr class="keunggulan-rule" />
+                    <p class="keunggulan-text">Microsoft Office, desain grafis, pemrograman, dan multimedia dalam satu tempat.</p>
+                </div>
+                <div class="keunggulan-card">
+                    <h3 class="keunggulan-title">Privat &amp; Reguler</h3>
+                    <hr class="keunggulan-rule" />
+                    <p class="keunggulan-text">Pilih kelas reguler atau privat — tempo dan jadwal mengikuti kebutuhan Anda.</p>
+                </div>
+                <div class="keunggulan-card">
+                    <h3 class="keunggulan-title">Konsultasi WA</h3>
+                    <hr class="keunggulan-rule" />
+                    <p class="keunggulan-text">Konsultasikan program yang cocok dengan kebutuhan karier Anda via WhatsApp.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    DOKUMENTASI — MARQUEE (gaya service/galeri)
+    ============================================================ -->
+    <section class="py-12 sm:py-16" id="documentationSection" style="background-color:#FFFFFF">
         <div class="container mx-auto px-4 max-w-5xl mb-8">
             <div class="text-center">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand">Dokumentasi</h2>
-                <p class="text-sm sm:text-base text-gray-500 mt-2">Galeri kegiatan kursus &amp; pelatihan kami</p>
+                <h2 class="galeri-title">GALERI</h2>
+                <p class="galeri-sub">Foto langsung dari ruang kelas — proses belajar, praktik, dan wisuda.</p>
             </div>
         </div>
 
         <div class="dokumentasi-marquee-wrapper">
             <div class="dokumentasi-marquee-track" id="documentationTrack">
-                <div class="text-center text-gray-500 py-10 w-full">
-                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-brand border-t-transparent"></div>
-                    <p class="mt-3 text-sm">Memuat dokumentasi...</p>
+                <div class="text-center text-black/70 py-10 w-full">
+                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-4 border-black border-t-transparent"></div>
+                    <p class="mt-2 text-sm font-semibold tracking-wide uppercase">Memuat galeri</p>
                 </div>
             </div>
         </div>
