@@ -358,13 +358,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="form-label">Izin Dinas Pendidikan</label>
-                        <input type="text" id="izinDiknas" class="form-input" placeholder="098/Kpts/2021" />
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="form-label">NPSN</label>
                         <input type="text" id="npsn" class="form-input" placeholder="K0560748" />
+                        <p class="text-xs text-gray-400 mt-1.5">Nomor Pokok Sekolah Nasional. Ditampilkan di halaman Tentang.</p>
                     </div>
                 </div>
             </div>
@@ -586,8 +584,7 @@
                     document.getElementById('googleMaps').value = data.googleMaps || '';
                     
                     // Legalitas
-                    document.getElementById('izinDiknas').value = data.izinDiknas || '098/Kpts/2021';
-                    document.getElementById('npsn').value = data.npsn || 'K0560748';
+                    document.getElementById('npsn').value = data.npsn || data.izinDiknas || 'K0560748';
                     
                     // Tarif Service Panggil
                     document.getElementById('radiusGratis').value = data.radiusGratis !== undefined ? data.radiusGratis : 7;
@@ -598,7 +595,6 @@
                     updateTarifPreview();
                 } else {
                     // Default values
-                    document.getElementById('izinDiknas').value = '098/Kpts/2021';
                     document.getElementById('npsn').value = 'K0560748';
                     document.getElementById('radiusGratis').value = 7;
                     document.getElementById('biayaDasar').value = 20000;
@@ -686,7 +682,6 @@
                 googleMaps: document.getElementById('googleMaps').value.trim(),
                 
                 // Legalitas
-                izinDiknas: document.getElementById('izinDiknas').value.trim(),
                 npsn: document.getElementById('npsn').value.trim(),
                 
                 // Tarif Service Panggil

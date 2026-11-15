@@ -416,7 +416,7 @@ async function createDefaultFaqs() {
         },
         {
             pertanyaan: "Apakah IMDKOM memiliki izin resmi?",
-            jawaban: "Ya, IMDKOM memiliki izin dari Dinas Pendidikan dengan nomor: 098/Kpts/2021 dan NPSN: K0560748.",
+            jawaban: "Ya, IMDKOM terdaftar di Kementerian Pendidikan Kebudayaan Riset dan Teknologi dengan nomor NPSN: K0560748.",
             aktif: true,
             order: 2,
             createdAt: now,
