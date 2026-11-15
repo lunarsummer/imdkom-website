@@ -176,12 +176,19 @@ exports.handler = async function (event) {
         return json(200, { received: true, warning: 'Gagal autentikasi ke Firestore.' });
     }
 
+    const paymentType = String(body.payment_type || '').slice(0, 64);
+    const acquirer = String(body.acquirer || '').slice(0, 64);
+    const store = String(body.store || body.store_name || '').slice(0, 64);
+
     const patchFields = {
         statusPembayaran: { stringValue: 'Terverifikasi' },
         transactionId: { stringValue: String(body.transaction_id || '') },
         settlementTime: { stringValue: String(body.settlement_time || body.transaction_time || '') },
         updatedAt: { stringValue: new Date().toISOString() }
     };
+    if (paymentType) patchFields.paymentType = { stringValue: paymentType };
+    if (acquirer) patchFields.acquirer = { stringValue: acquirer };
+    if (store) patchFields.store = { stringValue: store };
 
     const fullPath = (docName) => `projects/${PROJECT_ID}/databases/(default)/documents/${docName}`;
 

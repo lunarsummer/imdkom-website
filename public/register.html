@@ -533,7 +533,7 @@
 
 
     <script type="module">
-        import { db, collection, addDoc, setDoc, getDoc, doc, getDocs, query, where } from './assets/js/firebase.js';
+        import { db, collection, addDoc, setDoc, getDoc, doc, getDocs, query, where, updateDoc } from './assets/js/firebase.js';
         import { formatRupiah, escapeHtml } from './assets/js/utils.js';
 
         // ============================================================
@@ -1165,7 +1165,7 @@
                     timestamp: new Date()
                 };
 
-                await addDoc(collection(db, 'registrations'), {
+                const registrationDocRef = await addDoc(collection(db, 'registrations'), {
                     token: token,
                     programId: programId,
                     programNama: programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : '',
@@ -1199,6 +1199,8 @@
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                 });
+                // Simpan ref doc untuk update paymentType/acquirer/store saat snap onSuccess
+                _pendingRegistrationDocId = registrationDocRef.id;
                 try {
                     const wa4 = wa.replace(/\D/g, '').slice(-4);
                     const wa4hash = await sha256hex('imdkom-wa:' + wa4);
@@ -1241,6 +1243,7 @@
                         pekerjaan: pekerjaan || '-',
                         nominalRaw: String(snapDataNominal || 0),
                         kodeReferral: (snapData && snapData.kodeReferral) || (appliedReferral ? appliedReferral.code : '') || String(kodeReferral || '').trim().toUpperCase(),
+                        registrationDocId: registrationDocRef.id,
                         createdAt: Date.now()
                     });
                 } catch (e) { /* abaikan — resume hanya fitur kenyamanan */ }
@@ -1636,6 +1639,9 @@
         const payNowNote = document.getElementById('payNowNote');
         let snapTokenCache = null;
         let snapTokenCacheSource = null; // 'fresh' | 'resume' — sesi resume bisa kedaluwarsa & harus bisa disegarkan
+        let _pendingRegistrationDocId = null; // id doc registrations untuk update channel pembayaran saat onSuccess
+        // Resume flow: kalau ada doc registrations tersimpan di pending, gunakan ref itu
+        try { if (pendingPayment && pendingPayment.registrationDocId) _pendingRegistrationDocId = pendingPayment.registrationDocId; } catch (e) { /* abaikan */ }
 
         // Buang cache sesi Snap resume agar klik berikutnya membuat sesi baru (referral dire-validasi server)
         const invalidateResumeSnapSession = function () {
@@ -1709,6 +1715,20 @@
                     if (!lastTicketData) lastTicketData = {};
                     lastTicketData.paidAt = res.settlement_time || res.transaction_time || new Date().toISOString();
                     lastTicketData.idTransaksi = res.transaction_id || '';
+                    try {
+                        const pt = String(res.payment_type || '').slice(0, 64);
+                        const acq = String(res.acquirer || '').slice(0, 64);
+                        const storeVal = String(res.store || res.store_name || '').slice(0, 64);
+                        if (_pendingRegistrationDocId && (pt || acq || storeVal)) {
+                            const patch = {};
+                            if (pt) patch.paymentType = pt;
+                            if (acq) patch.acquirer = acq;
+                            if (storeVal) patch.store = storeVal;
+                            patch.updatedAt = new Date().toISOString();
+                            updateDoc(doc(db, 'registrations', _pendingRegistrationDocId), patch)
+                                .catch(function (err) { console.error('Gagal menyimpan channel pembayaran:', err); });
+                        }
+                    } catch (e) { console.error('Gagal membaca channel Snap onSuccess:', e); }
                     stopSettlementWatch();
                     lunasRendered = false;
                     onPaymentLunas();

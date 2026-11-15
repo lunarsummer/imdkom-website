@@ -576,6 +576,41 @@
             return 'Rp ' + Number(digits).toLocaleString('id-ID');
         }
 
+        // Channel pembayaran dari Midtrans (QRIS/VA BRI/BCA/dll).
+        // Fallback ke metodePembayaran lama kalau data channel tidak ada.
+        function paymentMethodLabel(d) {
+            if (!d) return '-';
+            const pt = String(d.paymentType || '').trim().toLowerCase();
+            const acq = String(d.acquirer || '').trim().toLowerCase();
+            const store = String(d.store || '').trim().toLowerCase();
+            if (pt) {
+                switch (pt) {
+                    case 'qris': return 'QRIS';
+                    case 'gopay': return 'GoPay';
+                    case 'shopeepay': return 'ShopeePay';
+                    case 'credit_card': return 'Kartu Kredit';
+                    case 'bank_transfer':
+                        if (acq) return 'Transfer ' + acq.toUpperCase() + ' (VA)';
+                        return 'VA / Transfer Bank';
+                    case 'echannel': return 'Mandiri Bill Payment';
+                    case 'cstore':
+                        if (store === 'alfamart') return 'Alfamart';
+                        if (store === 'indomaret') return 'Indomaret';
+                        return store ? ('Gerai ' + store.charAt(0).toUpperCase() + store.slice(1)) : 'Gerai cstore';
+                    case 'akulaku': return 'Akulaku';
+                    case 'kredivo': return 'Kredivo';
+                    case 'bca_klikpay': return 'BCA KlikPay';
+                    case 'briksclick': return 'Bri Mobile (BRI Internet Banking)';
+                    case 'klikbca': case 'klik_bca': return 'KlikBCA';
+                    case 'cimb_clicks': return 'CIMB Clicks';
+                    default: return pt.charAt(0).toUpperCase() + pt.slice(1).replace(/_/g, ' ');
+                }
+            }
+            const legacy = String(d.metodePembayaran || '').trim().toLowerCase();
+            if (legacy && legacy !== 'snap') return d.metodePembayaran;
+            return 'Snap (Midtrans)';
+        }
+
         function fmtDateTime(iso) {
             if (!iso) return '-';
             const d = new Date(iso);
@@ -654,7 +689,7 @@
                 field('Pekerjaan', data.pekerjaan) +
                 field('Alasan Memilih Program', alasan, true);
 
-            const metode = data.metodePembayaran === 'snap' ? 'Snap (Midtrans)' : (data.metodePembayaran || '-');
+            const metode = paymentMethodLabel(data);
             const gridPembayaran = document.getElementById('gridPembayaran');
             gridPembayaran.innerHTML =
                 field('Program', data.programNama || data.programId) +
@@ -1175,7 +1210,7 @@
             ctx = ctx || {};
             const alasan = Array.isArray(d.alasan) ? d.alasan.join(', ') : (d.alasan || '-');
             const jenisKelamin = d.jenisKelamin === 'L' ? 'Laki-laki' : (d.jenisKelamin === 'P' ? 'Perempuan' : (d.jenisKelamin || '-'));
-            const metode = d.metodePembayaran === 'snap' ? 'Snap (Midtrans)' : (d.metodePembayaran || '-');
+            const metode = paymentMethodLabel(d);
             const lahir = [d.tempatLahir, d.tanggalLahir ? fmtDateID(d.tanggalLahir) : ''].filter(Boolean).join(', ');
             const potongan = formatRpFromDigits(d.potonganReferral) + (d.kodeReferral ? ' (Kode: ' + String(d.kodeReferral).trim().toUpperCase() + ')' : '');
             const catatan = String(d.catatan || '').trim();
@@ -1227,7 +1262,7 @@
         function buildPrintReceiptHtml(d, ctx) {
             ctx = ctx || {};
             const bayarOk = String(d.statusPembayaran || '') === 'Terverifikasi';
-            const metode = d.metodePembayaran === 'snap' ? 'Snap (Midtrans)' : (d.metodePembayaran || '-');
+            const metode = paymentMethodLabel(d);
             const statusHtml = '<span class="pf-status ' + (bayarOk ? 'pf-status-lunas' : 'pf-status-wait') + '">' + (bayarOk ? 'LUNAS' : 'MENUNGGU') + '</span>';
             const potongan = formatRpFromDigits(d.potonganReferral);
             const kategoriProgram = ctx.kategori || '-';

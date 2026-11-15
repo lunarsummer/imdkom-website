@@ -738,10 +738,36 @@
                 return day + ' ' + mo + ' ' + m[1] + ' ' + m[4] + ':' + m[5];
             };
             const setT = function (id, v) { const el = document.getElementById(id); if (el) el.textContent = v || '-'; };
+            const paymentMethodLabel = function (rec) {
+                if (!rec) return 'Snap (Midtrans)';
+                const pt = String(rec.paymentType || '').trim().toLowerCase();
+                const acq = String(rec.acquirer || '').trim().toLowerCase();
+                const storeVal = String(rec.store || '').trim().toLowerCase();
+                if (pt) {
+                    switch (pt) {
+                        case 'qris': return 'QRIS';
+                        case 'gopay': return 'GoPay';
+                        case 'shopeepay': return 'ShopeePay';
+                        case 'credit_card': return 'Kartu Kredit';
+                        case 'bank_transfer': return acq ? ('Transfer ' + acq.toUpperCase() + ' (VA)') : 'VA / Transfer Bank';
+                        case 'echannel': return 'Mandiri Bill Payment';
+                        case 'cstore':
+                            if (storeVal === 'alfamart') return 'Alfamart';
+                            if (storeVal === 'indomaret') return 'Indomaret';
+                            return storeVal ? ('Gerai ' + storeVal.charAt(0).toUpperCase() + storeVal.slice(1)) : 'Gerai cstore';
+                        case 'akulaku': return 'Akulaku';
+                        case 'kredivo': return 'Kredivo';
+                        default: return pt.charAt(0).toUpperCase() + pt.slice(1).replace(/_/g, ' ');
+                    }
+                }
+                const legacy = String(rec.metodePembayaran || '').trim().toLowerCase();
+                if (legacy && legacy !== 'snap') return rec.metodePembayaran;
+                return 'Snap (Midtrans)';
+            };
             setT('trProgram', d.programNama || '-');
             setT('trNama', d.nama || '-');
             setT('trNominal', d.nominalPembayaran || '-');
-            setT('trMetode', d.metodePembayaran || 'Snap (Midtrans)');
+            setT('trMetode', paymentMethodLabel(d));
             setT('trTransactionId', d.transactionId || '-');
             setT('trPaidAt', fmtPaid(d.settlementTime || d.transactionTime || ''));
             setT('trToken', d.token || '-');
