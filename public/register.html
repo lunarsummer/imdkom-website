@@ -885,7 +885,7 @@
                     const privatBase = promoPrivat > 0 ? promoPrivat : normalBase;
                     const privatPriceHtml = (promoPrivat > 0 && normalBase > 0 && promoPrivat !== normalBase)
                         ? '<span class="text-xs text-gray-500 line-through">' + escapeHtml(formatRupiah(normalBase)) + '</span><br><span class="text-brand font-semibold">' + escapeHtml(formatRupiah(privatBase)) + '</span>'
-                        : '<span class="text-brand font-semibold">' + escapeHtml(formatRupiah(privatBase || normalBase)) + '</span><span class="text-xs text-gray-500 block">Privat = Reguler + ' + (persenPrivat || 0) + '%</span>';
+                        : '<span class="text-brand font-semibold">' + escapeHtml(formatRupiah(privatBase || normalBase)) + '</span>';
                     kelasOptions.insertAdjacentHTML('beforeend',
                         '<label class="flex items-start gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg cursor-pointer hover:border-brand transition-colors">' +
                             '<input type="radio" name="kelasPilihan" value="privat" class="mt-1" ' + (currentKelas === 'privat' ? 'checked' : '') + ' />' +
