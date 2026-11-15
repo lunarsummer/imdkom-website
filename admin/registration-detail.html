@@ -115,6 +115,10 @@
         .pf-doc-title { font-family: 'Fraunces', 'Space Grotesk', serif; font-weight: 560; font-size: 13.2pt; line-height: 1.12; color: #1a3c5e; margin: 0; letter-spacing: 0.005em; }
         .pf-doc-no { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 6.4pt; color: #334155; margin: 2.2pt 0 0; letter-spacing: 0.05em; }
         .pf-doc-date { font-family: 'Inter', sans-serif; font-size: 5.9pt; color: #94a3b8; margin: 1pt 0 0; letter-spacing: 0.03em; }
+        .pf-watermark { position: absolute; top: 50%; left: 50%; width: 150mm; max-width: 78%; opacity: 0.055; transform: translate(-50%, -50%) rotate(-24deg); pointer-events: none; z-index: 0; }
+        .pf-watermark svg { width: 100%; height: auto; display: block; }
+        .pf-wrap { position: relative; z-index: 1; }
+
         .pf-rule { border: 0; border-top: 1.5pt solid #1a3c5e; margin: 4mm 0 5mm; position: relative; }
         .pf-rule::after { content: ''; position: absolute; left: 0; top: -1.5pt; width: 30mm; border-top: 2.4pt solid #b45309; }
 
@@ -1228,7 +1232,9 @@
             const potongan = formatRpFromDigits(d.potonganReferral);
             const kategoriProgram = ctx.kategori || '-';
 
-            let html = pfHeadHtml('Kwitansi Pembayaran', 'NO. KWT-' + (d.token || '-'), statusHtml);
+            let html = '<div class="pf-watermark" aria-hidden="true">' + imdMarkSvg('pf-watermark-logo') + '</div>';
+            html += '<div class="pf-wrap">';
+            html += pfHeadHtml('Kwitansi Pembayaran', 'NO. KWT-' + (d.token || '-'), statusHtml);
             html += '<div class="pf-sec">Peserta &amp; Program</div><div class="pf-grid">' +
                 pfCell('Program Kursus', d.programNama || d.programId, 3) +
                 pfCell('Kategori Program', kategoriProgram) +
@@ -1248,6 +1254,7 @@
             '</div>';
             html += pfSignHtml(d);
             html += pfFootHtml('KWT-' + (d.token || '-'), d);
+            html += '</div>';
             return html;
         }
 
