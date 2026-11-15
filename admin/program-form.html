@@ -160,8 +160,8 @@
                     <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
                     Metode Pembayaran
                 </a>
-            </div>
-        </div>
+                    </div>
+                </div>
 
         <a href="services.html" class="nav-link">
             <i data-lucide="wrench" class="w-4 h-4"></i>
@@ -262,6 +262,7 @@
                             <option value="Kursus Reguler">Kursus Reguler</option>
                             <option value="Kursus Privat">Kursus Privat</option>
                             <option value="Kursus Singkat">Kursus Singkat</option>
+                            <option value="Kursus Online">Kursus Online</option>
                             <option value="Sertifikasi">Sertifikasi</option>
                             <option value="Microsoft Office">Microsoft Office</option>
                             <option value="Lainnya">Lainnya</option>
@@ -316,6 +317,52 @@
                                value="1" 
                                min="1" />
                         <p class="text-xs text-gray-400 mt-1">Program lain akan otomatis digeser.</p>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- KELAS & BIAYA — Reguler / Privat (berlaku untuk semua kategori) -->
+                <!-- ============================================================ -->
+                <div class="mt-4 p-4 bg-slate-50 border border-gray-200 rounded-lg">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="badge-percent" class="w-4 h-4 text-brand"></i>
+                        <h4 class="text-sm font-semibold text-gray-700">Kelas &amp; Biaya</h4>
+                        <span class="text-xs text-gray-400 font-normal">(berlaku untuk semua kategori)</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-3">
+                            <p class="text-xs font-semibold text-gray-600 uppercase tracking-wide">Sediakan Kelas</p>
+                            <label class="flex items-start gap-2.5 cursor-pointer p-2.5 bg-white border border-gray-200 rounded-lg hover:border-brand transition-colors">
+                                <input type="checkbox" id="kelasRegulerAktif" class="w-4 h-4 mt-0.5 text-brand focus:ring-brand border-gray-300 rounded" checked />
+                                <span>
+                                    <span class="text-sm font-semibold text-gray-800 block">Kelas Reguler</span>
+                                    <span class="text-xs text-gray-500 block">Harga = field "Harga" di atas (promo = field "Harga Promo").</span>
+                                </span>
+                            </label>
+                            <label class="flex items-start gap-2.5 cursor-pointer p-2.5 bg-white border border-gray-200 rounded-lg hover:border-brand transition-colors">
+                                <input type="checkbox" id="kelasPrivatAktif" class="w-4 h-4 mt-0.5 text-brand focus:ring-brand border-gray-300 rounded" />
+                                <span>
+                                    <span class="text-sm font-semibold text-gray-800 block">Kelas Privat</span>
+                                    <span class="text-xs text-gray-500 block">Harga privat dihitung dari persen di bawah (promo manual opsional).</span>
+                                </span>
+                            </label>
+                            <p class="text-xs text-red-600 hidden" id="kelasError">* Minimal satu kelas harus aktif.</p>
+                        </div>
+
+                        <div class="space-y-3 md:border-l md:border-gray-200 md:pl-4">
+                            <p class="text-xs font-semibold text-gray-600 uppercase tracking-wide">Biaya Privat</p>
+                            <div>
+                                <label for="persenPrivat" class="block text-xs font-medium text-gray-600 mb-1">Persen Privat di atas Reguler <span class="text-gray-400 font-normal">(mis. 25 = +25%)</span></label>
+                                <input type="number" id="persenPrivat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-sm" min="0" max="200" step="1" placeholder="25" />
+                                <p class="text-xs text-gray-400 mt-1">Contoh: Reguler Rp 1.000.000 + 25% &rarr; Privat Rp 1.250.000</p>
+                            </div>
+                            <div>
+                                <label for="hargaPromoPrivat" class="block text-xs font-medium text-gray-600 mb-1">Harga Promo Privat <span class="text-gray-400 font-normal">(opsional)</span></label>
+                                <input type="text" id="hargaPromoPrivat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none font-medium text-sm" placeholder="Rp 1.400.000" inputmode="numeric" />
+                                <p class="text-xs text-gray-400 mt-1">Kosongkan kalau tidak ada promo khusus privat.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -583,6 +630,19 @@
 
         attachRupiahFormatter(document.getElementById('harga'));
         attachRupiahFormatter(document.getElementById('hargaPromo'));
+        attachRupiahFormatter(document.getElementById('hargaPromoPrivat'));
+
+        // Validasi minimal 1 kelas aktif (toggle live)
+        (function () {
+            const reg = document.getElementById('kelasRegulerAktif');
+            const pvt = document.getElementById('kelasPrivatAktif');
+            const err = document.getElementById('kelasError');
+            if (!reg || !pvt || !err) return;
+            const sync = function () { err.classList.toggle('hidden', reg.checked || pvt.checked); };
+            reg.addEventListener('change', sync);
+            pvt.addEventListener('change', sync);
+            sync();
+        })();
 
         // ============================================================
         // HITUNG TOTAL JAM
@@ -782,6 +842,8 @@
             }
 
             // Mode 3: Tambah program baru (default)
+            const defaultPersen = document.getElementById('persenPrivat');
+            if (defaultPersen && !defaultPersen.value) defaultPersen.value = '25';
         }
 
         // ============================================================
@@ -814,6 +876,12 @@
                 document.getElementById('level').value = data.level || '';
                 document.getElementById('hargaPromo').value = data.hargaPromo || '';
                 document.getElementById('labelPromo').value = data.labelPromo || '';
+                document.getElementById('kelasRegulerAktif').checked = data.kelasRegulerAktif !== false;
+                document.getElementById('kelasPrivatAktif').checked = data.kelasPrivatAktif === true;
+                document.getElementById('persenPrivat').value = (typeof data.persenPrivat === 'number' && isFinite(data.persenPrivat)) ? data.persenPrivat : (parseFloat(data.persenPrivat) || 25);
+                document.getElementById('hargaPromoPrivat').value = data.hargaPromoPrivat || '';
+                const syncErr = document.getElementById('kelasError');
+                if (syncErr) syncErr.classList.toggle('hidden', document.getElementById('kelasRegulerAktif').checked || document.getElementById('kelasPrivatAktif').checked);
                 updateTotalJamInfo();
                 
                 materiList.innerHTML = '';
@@ -873,6 +941,8 @@
                 document.getElementById('deskripsi').value = data.deskripsi || '';
                 document.getElementById('deskripsiSingkat').value = data.deskripsiSingkat || '';
                 document.getElementById('level').value = data.level || '';
+                const defaultPersen = document.getElementById('persenPrivat');
+                if (defaultPersen && !defaultPersen.value) defaultPersen.value = '25';
 
                 // Thumbnail dari submission
                 if (data.thumbnailUrl) {
@@ -922,6 +992,15 @@
             const materiValues = getMateriValues();
             const benefitValues = getBenefitValues();
 
+            const kelasRegulerAktif = document.getElementById('kelasRegulerAktif').checked;
+            const kelasPrivatAktif = document.getElementById('kelasPrivatAktif').checked;
+            if (!kelasRegulerAktif && !kelasPrivatAktif) {
+                messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Minimal satu kelas (Reguler atau Privat) harus aktif di bagian "Kelas &amp; Biaya".</p>`;
+                const err = document.getElementById('kelasError');
+                if (err) err.classList.remove('hidden');
+                return;
+            }
+
             if (materiValues.length === 0) {
                 messageEl.innerHTML = `<p class="text-red-600 font-medium">❌ Materi wajib diisi minimal 1 item.</p>`;
                 return;
@@ -950,6 +1029,8 @@
             if (typeof lucide !== 'undefined') lucide.createIcons();
             messageEl.innerHTML = '';
 
+            const _persenInput = document.getElementById('persenPrivat');
+            const _persenNum = (_persenInput && _persenInput.value !== '' && isFinite(parseFloat(_persenInput.value))) ? Math.min(200, Math.max(0, parseFloat(_persenInput.value))) : 25;
             const data = {
                 nama: document.getElementById('nama').value.trim(),
                 kategori: document.getElementById('kategori').value,
@@ -967,6 +1048,10 @@
                 level: document.getElementById('level').value.trim(),
                 hargaPromo: document.getElementById('hargaPromo').value.trim(),
                 labelPromo: document.getElementById('labelPromo').value.trim(),
+                kelasRegulerAktif: kelasRegulerAktif,
+                kelasPrivatAktif: kelasPrivatAktif,
+                persenPrivat: _persenNum,
+                hargaPromoPrivat: document.getElementById('hargaPromoPrivat').value.trim(),
             };
 
             try {

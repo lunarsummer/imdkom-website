@@ -377,6 +377,11 @@
             <div class="reg-card space-y-4">
                 <h2 class="reg-section-title">Program Kursus</h2>
                 <div id="regProgramDetail" class="reg-info-box" hidden></div>
+                <fieldset class="reg-field" id="kelasWrap" hidden>
+                    <legend class="reg-label">Pilih Kelas <span class="text-red-700" aria-hidden="true">*</span></legend>
+                    <div id="kelasOptions" class="space-y-2"></div>
+                    <p class="text-xs text-gray-500 mt-1">Kelas menentukan biaya pendaftaran. Admin dapat mengaktifkan Reguler dan/atau Privat.</p>
+                </fieldset>
                 <fieldset class="reg-field">
                     <legend class="reg-label">Alasan Memilih Program <span class="text-red-700" aria-hidden="true">*</span></legend>
                     <div id="regAlasan" class="space-y-2">
@@ -649,6 +654,11 @@
         const params = new URLSearchParams(window.location.search);
         let currentHarga = '';
         let currentHargaPromo = '';
+        let currentPersenPrivat = 25;
+        let currentHargaPrivatPromo = '';
+        let currentKelasRegulerAktif = true;
+        let currentKelasPrivatAktif = false;
+        let currentKelas = 'reguler';
         let lastTicketData = null;
 
         // ============================================================
@@ -728,8 +738,30 @@
             return Math.round(Number(String(v || '').replace(/[^0-9]/g, '')) || 0);
         }
 
+        function computeRegulerBase() {
+            const promoVal = parseDigits(currentHargaPromo);
+            const hargaVal = parseDigits(currentHarga);
+            return (promoVal > 0 && hargaVal > 0 && promoVal !== hargaVal) ? promoVal
+                : (promoVal > 0 && hargaVal === 0 ? promoVal : hargaVal);
+        }
+        function computePrivatNormal() {
+            const base = parseDigits(currentHarga);
+            const persen = Number(currentPersenPrivat) || 0;
+            return Math.round(base * (1 + persen / 100));
+        }
+        function computePrivatBase() {
+            const promoPrivat = parseDigits(currentHargaPrivatPromo);
+            if (promoPrivat > 0) return promoPrivat;
+            return computePrivatNormal();
+        }
+        function currentNormalHarga() {
+            return currentKelas === 'privat' ? computePrivatNormal() : parseDigits(currentHarga);
+        }
+        function currentPromoHarga() {
+            return currentKelas === 'privat' ? parseDigits(currentHargaPrivatPromo) : parseDigits(currentHargaPromo);
+        }
         function getBaseBiaya() {
-            return parseDigits(currentHargaPromo) || parseDigits(currentHarga);
+            return currentKelas === 'privat' ? computePrivatBase() : computeRegulerBase();
         }
 
         function referralDiscount(base) {
@@ -751,8 +783,8 @@
             const note = document.getElementById('paymentBiayaNote');
             if (!wrap || !el) return;
             const base = getBaseBiaya();
-            const promoVal = parseDigits(currentHargaPromo);
-            const hargaVal = parseDigits(currentHarga);
+            const promoVal = currentPromoHarga();
+            const hargaVal = currentNormalHarga();
             if (base <= 0) {
                 wrap.classList.add('hidden');
                 return;
@@ -791,6 +823,10 @@
             let programGambar = '';
             let harga = '';
             let hargaPromo = '';
+            let persenPrivat = 25;
+            let hargaPromoPrivat = '';
+            let kelasRegulerAktif = true;
+            let kelasPrivatAktif = false;
             try {
                 const programSnap = await getDoc(doc(db, 'programs', programId));
                 if (programSnap.exists()) {
@@ -801,10 +837,73 @@
                     hargaPromo = p.hargaPromo || '';
                     currentHarga = harga;
                     currentHargaPromo = hargaPromo;
+                    persenPrivat = (typeof p.persenPrivat === 'number' && isFinite(p.persenPrivat)) ? p.persenPrivat : (parseFloat(p.persenPrivat) || 25);
+                    hargaPromoPrivat = p.hargaPromoPrivat || '';
+                    kelasRegulerAktif = p.kelasRegulerAktif !== false;
+                    kelasPrivatAktif = p.kelasPrivatAktif === true;
+                    currentPersenPrivat = persenPrivat;
+                    currentHargaPrivatPromo = hargaPromoPrivat;
+                    currentKelasRegulerAktif = kelasRegulerAktif;
+                    currentKelasPrivatAktif = kelasPrivatAktif;
                 }
             } catch (e) {
                 programInfo.innerHTML = '<p class="text-sm" style="color:#b91c1c">Detail program belum tersedia. Anda tetap bisa melanjutkan pendaftaran.</p>';
                 return;
+            }
+
+            // Default kelas: pending payment apabila ada, else : kelas tersedia pertama
+            let resumedKelas = null;
+            try { resumedKelas = (pendingPayment && pendingPayment.kelas) || null; } catch (e) { /* ignore */ }
+            if (resumedKelas === 'privat' && kelasPrivatAktif) currentKelas = 'privat';
+            else if (resumedKelas === 'reguler' && kelasRegulerAktif) currentKelas = 'reguler';
+            else if (kelasRegulerAktif && !kelasPrivatAktif) currentKelas = 'reguler';
+            else if (!kelasRegulerAktif && kelasPrivatAktif) currentKelas = 'privat';
+            else if (kelasPrivatAktif) currentKelas = 'reguler';
+            else currentKelas = 'reguler';
+
+            // Render kelas options
+            const kelasWrap = document.getElementById('kelasWrap');
+            const kelasOptions = document.getElementById('kelasOptions');
+            if (kelasWrap && kelasOptions) {
+                kelasOptions.innerHTML = '';
+                if (kelasRegulerAktif) {
+                    const regulerPromo = parseDigits(hargaPromo);
+                    const regulerNormal = parseDigits(harga);
+                    const regulerBase = regulerPromo > 0 ? regulerPromo : regulerNormal;
+                    const regulerPriceHtml = (regulerPromo > 0 && regulerNormal > 0 && regulerPromo !== regulerNormal)
+                        ? '<span class="text-xs text-gray-500 line-through">' + escapeHtml(formatRupiah(regulerNormal)) + '</span><br><span class="text-brand font-semibold">' + escapeHtml(formatRupiah(regulerBase)) + '</span>'
+                        : '<span class="text-brand font-semibold">' + escapeHtml(formatRupiah(regulerBase || regulerNormal)) + '</span>';
+                    kelasOptions.insertAdjacentHTML('beforeend',
+                        '<label class="flex items-start gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg cursor-pointer hover:border-brand transition-colors">' +
+                            '<input type="radio" name="kelasPilihan" value="reguler" class="mt-1" ' + (currentKelas === 'reguler' ? 'checked' : '') + ' />' +
+                            '<span><span class="text-sm font-semibold text-gray-800 block">Kelas Reguler</span><span class="text-xs text-gray-600 block mt-0.5">' + regulerPriceHtml + '</span></span>' +
+                        '</label>');
+                }
+                if (kelasPrivatAktif) {
+                    const normalBase = Math.round(parseDigits(harga) * (1 + (persenPrivat || 0) / 100));
+                    const promoPrivat = parseDigits(hargaPromoPrivat);
+                    const privatBase = promoPrivat > 0 ? promoPrivat : normalBase;
+                    const privatPriceHtml = (promoPrivat > 0 && normalBase > 0 && promoPrivat !== normalBase)
+                        ? '<span class="text-xs text-gray-500 line-through">' + escapeHtml(formatRupiah(normalBase)) + '</span><br><span class="text-brand font-semibold">' + escapeHtml(formatRupiah(privatBase)) + '</span>'
+                        : '<span class="text-brand font-semibold">' + escapeHtml(formatRupiah(privatBase || normalBase)) + '</span><span class="text-xs text-gray-500 block">Privat = Reguler + ' + (persenPrivat || 0) + '%</span>';
+                    kelasOptions.insertAdjacentHTML('beforeend',
+                        '<label class="flex items-start gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg cursor-pointer hover:border-brand transition-colors">' +
+                            '<input type="radio" name="kelasPilihan" value="privat" class="mt-1" ' + (currentKelas === 'privat' ? 'checked' : '') + ' />' +
+                            '<span><span class="text-sm font-semibold text-gray-800 block">Kelas Privat</span><span class="text-xs text-gray-600 block mt-0.5">' + privatPriceHtml + '</span></span>' +
+                        '</label>');
+                }
+                const showWrap = kelasRegulerAktif || kelasPrivatAktif;
+                kelasWrap.hidden = !showWrap;
+                kelasOptions.querySelectorAll('input[name="kelasPilihan"]').forEach(function (radio) {
+                    radio.addEventListener('change', function () {
+                        currentKelas = this.value;
+                        // Ivalidate cached Snap session — harga berbeda untuk kelas ini
+                        try { snapTokenCache = null; snapTokenCacheSource = null; } catch (e) { /* ignore */ }
+                        savePendingPayment({ kelas: currentKelas, snapSession: null });
+                        renderBiaya();
+                        updatePaymentGate();
+                    });
+                });
             }
             const hasPromo = String(hargaPromo || '').trim() !== '';
             let biayaHtml = '';
@@ -819,6 +918,7 @@
             }
             programInfo.innerHTML = mediaHtml + '<p class="text-sm"><strong>Program:</strong> ' + escapeHtml(programNama) + '</p><p class="text-sm mt-1"><strong>Biaya:</strong><br>' + biayaHtml + '</p>';
             renderBiaya();
+            updatePaymentGate();
             programDetail.innerHTML = '<p class="text-sm"><strong>Nama:</strong> ' + escapeHtml(programNama) + '</p>';
             programDetail.hidden = false;
         }
@@ -890,6 +990,11 @@
             const nikEl = document.getElementById('regNik');
             if (nikWrap && !nikWrap.classList.contains('hidden') && !String((nikEl && nikEl.value) || '').trim()) {
                 missing.push('NIK');
+            }
+            const kelasWrap = document.getElementById('kelasWrap');
+            if (kelasWrap && !kelasWrap.hidden) {
+                const kelasChecked = document.querySelector('input[name="kelasPilihan"]:checked');
+                if (!kelasChecked) missing.push('Pilihan Kelas (Reguler/Privat)');
             }
             return missing;
         }
@@ -1064,6 +1169,7 @@
                     token: token,
                     programId: programId,
                     programNama: programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : '',
+                    kelas: currentKelas,
                     nama: nama,
                     whatsapp: wa,
                     email: email,
@@ -1102,6 +1208,7 @@
                         programId: programId || '',
                         nama: nama,
                         programNama: programName,
+                        kelas: currentKelas,
                         statusPembayaran: 'Menunggu',
                         statusVerifikasiData: 'Menunggu',
                         jadwalTerbit: false,
@@ -1122,6 +1229,7 @@
                         token: token,
                         programId: programId || '',
                         programNama: (programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : '') || programId,
+                        kelas: currentKelas,
                         nama: nama,
                         email: email,
                         wa: wa,
@@ -1570,6 +1678,7 @@
                     token: token,
                     programId: programId,
                     kodeReferral: kodeReferralSnap,
+                    kelas: currentKelas,
                     nama: (document.getElementById('regNama') || {}).value || (pendingPayment && pendingPayment.nama) || 'Peserta',
                     wa: (document.getElementById('regWa') || {}).value || (pendingPayment && pendingPayment.wa) || '',
                     email: emailVal,

@@ -529,6 +529,15 @@
                     return;
                 }
                 currentRegistration = snap.data();
+                // Preload kategori program untuk kebutuhan print (sinkron saat klik Cetak)
+                window.__printKategori = '-';
+                if (currentRegistration.programId) {
+                    getDoc(doc(db, 'programs', currentRegistration.programId))
+                        .then(function (pSnap) {
+                            if (pSnap.exists()) window.__printKategori = pSnap.data().kategori || '-';
+                        })
+                        .catch(function (err) { console.error('Gagal memuat kategori program untuk print:', err); });
+                }
                 renderDetail(currentRegistration);
                 pageLoading.classList.add('hidden');
                 pageContent.classList.remove('hidden');
@@ -645,6 +654,7 @@
             const gridPembayaran = document.getElementById('gridPembayaran');
             gridPembayaran.innerHTML =
                 field('Program', data.programNama || data.programId) +
+                field('Kelas', data.kelas === 'privat' ? 'Privat' : (data.kelas === 'reguler' ? 'Reguler' : '-')) +
                 field('Metode Pembayaran', metode) +
                 field('Nominal Pembayaran', formatRpFromDigits(data.nominalPembayaran)) +
                 field('Harga Sebelum Diskon', formatRpFromDigits(data.hargaSebelumDiskon)) +
@@ -1151,13 +1161,21 @@
             '</div>';
         }
 
-        function buildPrintFormHtml(d) {
+        function kelasLabel(k) {
+            if (k === 'privat') return 'Privat';
+            if (k === 'reguler') return 'Reguler';
+            return '-';
+        }
+
+        function buildPrintFormHtml(d, ctx) {
+            ctx = ctx || {};
             const alasan = Array.isArray(d.alasan) ? d.alasan.join(', ') : (d.alasan || '-');
             const jenisKelamin = d.jenisKelamin === 'L' ? 'Laki-laki' : (d.jenisKelamin === 'P' ? 'Perempuan' : (d.jenisKelamin || '-'));
             const metode = d.metodePembayaran === 'snap' ? 'Snap (Midtrans)' : (d.metodePembayaran || '-');
             const lahir = [d.tempatLahir, d.tanggalLahir ? fmtDateID(d.tanggalLahir) : ''].filter(Boolean).join(', ');
             const potongan = formatRpFromDigits(d.potonganReferral) + (d.kodeReferral ? ' (Kode: ' + String(d.kodeReferral).trim().toUpperCase() + ')' : '');
             const catatan = String(d.catatan || '').trim();
+            const kategoriProgram = ctx.kategori || '-';
 
             let html = pfHeadHtml('Form Pendaftaran Kursus', 'NO. FORM-PDK/' + (d.token || '-'), '');
             html += '<div class="pf-sec">Data Diri</div><div class="pf-grid">' +
@@ -1183,6 +1201,8 @@
             '</div>';
             html += '<div class="pf-sec">Program &amp; Pembayaran</div><div class="pf-grid">' +
                 pfCell('Program Kursus', d.programNama || d.programId, 3) +
+                pfCell('Kategori Program', kategoriProgram) +
+                pfCell('Kelas', kelasLabel(d.kelas)) +
                 pfCell('Metode Pembayaran', metode) +
                 pfCell('Nominal Pembayaran', formatRpFromDigits(d.nominalPembayaran)) +
                 pfCell('Harga Sebelum Diskon', formatRpFromDigits(d.hargaSebelumDiskon)) +
@@ -1200,15 +1220,19 @@
             return html;
         }
 
-        function buildPrintReceiptHtml(d) {
+        function buildPrintReceiptHtml(d, ctx) {
+            ctx = ctx || {};
             const bayarOk = String(d.statusPembayaran || '') === 'Terverifikasi';
             const metode = d.metodePembayaran === 'snap' ? 'Snap (Midtrans)' : (d.metodePembayaran || '-');
             const statusHtml = '<span class="pf-status ' + (bayarOk ? 'pf-status-lunas' : 'pf-status-wait') + '">' + (bayarOk ? 'LUNAS' : 'MENUNGGU') + '</span>';
             const potongan = formatRpFromDigits(d.potonganReferral);
+            const kategoriProgram = ctx.kategori || '-';
 
             let html = pfHeadHtml('Kwitansi Pembayaran', 'NO. KWT-' + (d.token || '-'), statusHtml);
             html += '<div class="pf-sec">Peserta &amp; Program</div><div class="pf-grid">' +
                 pfCell('Program Kursus', d.programNama || d.programId, 3) +
+                pfCell('Kategori Program', kategoriProgram) +
+                pfCell('Kelas', kelasLabel(d.kelas)) +
                 pfCell('Nama Peserta', d.nama, 2) +
                 pfCell('No. WhatsApp', d.whatsapp) +
                 pfCell('Email', d.email, 2) +
@@ -1235,13 +1259,27 @@
             return ('IMDKOM - ' + base + ' - ' + namePart + (tokenPart ? ' - ' + tokenPart : '')).slice(0, 120);
         }
 
-        function printDocument(kind) {
+        async function printDocument(kind) {
             if (!currentRegistration) return;
+            const d = currentRegistration;
+            let kategoriProgram = window.__printKategori && window.__printKategori !== '-' ? window.__printKategori : '-';
+            if (!kategoriProgram || kategoriProgram === '-') {
+                if (d.programId) {
+                    try {
+                        const snap = await getDoc(doc(db, 'programs', d.programId));
+                        if (snap.exists()) kategoriProgram = snap.data().kategori || '-';
+                    } catch (e) {
+                        console.error('Gagal membaca kategori program untuk print:', e);
+                    }
+                }
+            }
+            if (kategoriProgram && kategoriProgram !== '-') window.__printKategori = kategoriProgram;
+            const ctx = { kategori: kategoriProgram };
             const printArea = document.getElementById('printArea');
             if (kind === 'kwitansi') {
-                printArea.innerHTML = buildPrintReceiptHtml(currentRegistration);
+                printArea.innerHTML = buildPrintReceiptHtml(d, ctx);
             } else {
-                printArea.innerHTML = buildPrintFormHtml(currentRegistration);
+                printArea.innerHTML = buildPrintFormHtml(d, ctx);
             }
             const prevTitle = document.title;
             let restored = false;

@@ -92,6 +92,7 @@ exports.handler = async function (event) {
     const wa = String(body.wa || '').slice(0, 20);
     const email = String(body.email || '').slice(0, 100).trim().toLowerCase();
     const alamat = String(body.alamat || '').slice(0, 200).trim();
+    const kelas = (String(body.kelas || 'reguler').trim().toLowerCase() === 'privat') ? 'privat' : 'reguler';
 
     if (!TOKEN_RE.test(token)) return json(400, { error: 'Token tidak valid. Refresh halaman.' });
     if (!PROGRAM_ID_RE.test(programId)) return json(400, { error: 'Program ID tidak valid.' });
@@ -116,15 +117,37 @@ exports.handler = async function (event) {
         return json(409, { error: 'Program sedang tidak tersedia.' });
     }
 
+    const fields = programDoc.fields;
+    const kelasRegulerAktif = !(fields.kelasRegulerAktif && fields.kelasRegulerAktif.booleanValue === false);
+    const kelasPrivatAktif = !!(fields.kelasPrivatAktif && fields.kelasPrivatAktif.booleanValue === true);
+    if (kelas === 'privat' && !kelasPrivatAktif) {
+        return json(409, { error: 'Kelas privat tidak tersedia untuk program ini.', code: 'KELAS_PRIVAT_INACTIVE' });
+    }
+    if (kelas === 'reguler' && !kelasRegulerAktif) {
+        return json(409, { error: 'Kelas reguler tidak tersedia untuk program ini.', code: 'KELAS_REGULER_INACTIVE' });
+    }
+
     const hargaNum = parsePrice(fieldString(programDoc.fields, 'harga'));
     const hargaPromoNum = parsePrice(fieldString(programDoc.fields, 'hargaPromo'));
     const namaProgram = fieldString(programDoc.fields, 'nama') || 'Program Kursus';
 
-    // Pakai harga promo jika lebih murah & valid
-    let base = (hargaPromoNum > 0 && hargaNum > 0 && hargaPromoNum !== hargaNum)
-        ? hargaPromoNum
-        : (hargaPromoNum > 0 && hargaNum === 0 ? hargaPromoNum : hargaNum);
-    if (base <= 0) return json(422, { error: 'Harga program belum diatur admin.' });
+    let base;
+    if (kelas === 'privat') {
+        const persen = Math.min(200, Math.max(0, fieldNumber(programDoc.fields, 'persenPrivat') || 25));
+        const regulerBase = (hargaPromoNum > 0 && hargaNum > 0 && hargaPromoNum !== hargaNum)
+            ? hargaPromoNum
+            : (hargaPromoNum > 0 && hargaNum === 0 ? hargaPromoNum : hargaNum);
+        const privatNormal = Math.round(hargaNum * (1 + persen / 100));
+        const promoPrivat = parsePrice(fieldString(programDoc.fields, 'hargaPromoPrivat'));
+        base = promoPrivat > 0 ? promoPrivat : (privatNormal > 0 ? privatNormal : regulerBase);
+        if (base <= 0) return json(422, { error: 'Harga program belum diatur admin.' });
+    } else {
+        // Pemakaian harga promo jika lebih murah & valid (sama seperti sebelum)
+        base = (hargaPromoNum > 0 && hargaNum > 0 && hargaPromoNum !== hargaNum)
+            ? hargaPromoNum
+            : (hargaPromoNum > 0 && hargaNum === 0 ? hargaPromoNum : hargaNum);
+        if (base <= 0) return json(422, { error: 'Harga program belum diatur admin.' });
+    }
 
     // ---------- 2. Hitung diskon referral (jika ada) ----------
     let potongan = 0;
@@ -201,7 +224,7 @@ exports.handler = async function (event) {
 
     const payload = {
         transaction_details: { order_id: orderId, gross_amount: grossAmount },
-        item_details: [{ id: 'KURSUS', price: grossAmount, quantity: 1, name: namaProgram.slice(0, 50) }],
+        item_details: [{ id: kelas === 'privat' ? 'KURSUS-PRIVAT' : 'KURSUS', price: grossAmount, quantity: 1, name: (namaProgram + (kelas === 'privat' ? ' (Privat)' : '')).slice(0, 50) }],
         customer_details
     };
 
@@ -232,6 +255,7 @@ exports.handler = async function (event) {
         redirectUrl: data.redirect_url || '',
         grossAmount: String(grossAmount),
         potonganReferral: potongan,
+        kelas,
         env,
         snapJsUrl: SNAP_JS,
         clientKey: CLIENT_KEY
