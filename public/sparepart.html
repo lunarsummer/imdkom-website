@@ -1620,6 +1620,7 @@ function initBounceHint() {
     if (hintShown && hintTime && (Date.now() - parseInt(hintTime)) < ONE_HOUR) {
         console.log('⏭️ Hint sudah pernah ditampilkan, skip');
         return;
+    }
     
     // Cek apakah track benar-benar bisa di-scroll (ada card tersembunyi)
     const canScroll = track.scrollWidth > track.clientWidth + 10;
@@ -1627,6 +1628,7 @@ function initBounceHint() {
     if (!canScroll) {
         console.log('⏭️ Tidak ada card tersembunyi, skip bounce');
         return;
+    }
     
     console.log('✨ Menampilkan bounce hint');
     
@@ -1638,6 +1640,7 @@ function initBounceHint() {
         // Tampilkan indicator chevron
         if (indicator) {
             indicator.classList.add('show');
+        }
         
         // Hapus class setelah animasi selesai
         setTimeout(() => {
@@ -1645,6 +1648,7 @@ function initBounceHint() {
             
             if (indicator) {
                 indicator.classList.remove('show');
+            }
         }, 1900);  // durasi animasi + sedikit buffer
         
         // Simpan ke localStorage
@@ -1652,7 +1656,9 @@ function initBounceHint() {
         localStorage.setItem('bounce_hint_time', Date.now().toString());
         
     }, 300);  // delay 300ms sebelum mulai (biar user sempat lihat halaman)
+}
     </script>
 
 </body>
 </html>
+
