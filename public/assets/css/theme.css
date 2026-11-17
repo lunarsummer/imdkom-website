@@ -133,14 +133,52 @@ body {
    CUSTOM COMPONENTS
    ============================================================ */
 
-/* Floating WhatsApp Button */
+/* Floating WhatsApp Button (single source — jangan override per halaman) */
 .floating-wa {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: pulse-wa 2s ease-out infinite;
+}
+
+@keyframes pulse-wa {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55); }
+    70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
 
 .floating-wa:hover {
     transform: scale(1.05);
+    animation: none;
     box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+#floatingWhatsApp {
+    position: fixed;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    right: calc(1.25rem + env(safe-area-inset-right, 0px));
+    width: 54px;
+    height: 54px;
+    z-index: 30;
+}
+
+@media (min-width: 640px) {
+    #floatingWhatsApp {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 56px;
+        height: 56px;
+    }
+}
+
+#floatingWhatsApp:focus-visible {
+    outline: 2px solid #0057ad;
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .floating-wa {
+        animation: none;
+        transition: none;
+    }
 }
 
 /* Course & Service Items */
@@ -398,6 +436,135 @@ h2 {
 .nav-link-active:hover {
     background-color: #0057ad;
     color: white;
+}
+
+/* ============================================================
+   HAMBURGER TOGGLE — tombol menu mobile (morph garis → X)
+   Hanya berlaku di bawah breakpoint lg (< 1024px); desktop tidak tersentuh.
+   ============================================================ */
+@media (max-width: 1023.98px) {
+.mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    transition: background-color 0.22s cubic-bezier(0.16, 1, 0.3, 1), color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-menu-btn:hover {
+    background-color: rgba(26, 60, 94, 0.08);
+}
+
+.mobile-menu-btn:focus-visible {
+    outline: 2px solid #0057ad;
+    outline-offset: 2px;
+}
+
+.hb-box {
+    position: relative;
+    display: block;
+    width: 22px;
+    height: 16px;
+}
+
+.hb-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background-color: currentColor;
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hb-line-top { top: 0; }
+.hb-line-mid { top: 7px; }
+.hb-line-bot { top: 14px; }
+
+.mobile-menu-btn:hover .hb-line-mid {
+    transform: scaleX(0.62);
+    transform-origin: left center;
+}
+
+.mobile-menu-btn[aria-expanded="true"] {
+    color: #0057ad;
+}
+
+.mobile-menu-btn[aria-expanded="true"] .hb-line-top {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-menu-btn[aria-expanded="true"] .hb-line-mid {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.mobile-menu-btn[aria-expanded="true"] .hb-line-bot {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Panel menu mobile — collapse/expand via grid-rows (murah, tanpa animasi height) */
+.mobile-nav {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-6px);
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+    transition: grid-template-rows 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0s linear 0.28s;
+}
+
+.mobile-nav.is-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    visibility: visible;
+    transition: grid-template-rows 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0s;
+}
+
+.mobile-nav-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mobile-menu-btn,
+    .hb-line {
+        transition: opacity 0.15s ease, background-color 0.15s ease;
+    }
+
+    .mobile-menu-btn:hover .hb-line-mid {
+        transform: none;
+    }
+
+    .mobile-menu-btn[aria-expanded="true"] .hb-line-top,
+    .mobile-menu-btn[aria-expanded="true"] .hb-line-bot,
+    .mobile-menu-btn[aria-expanded="true"] .hb-line-mid {
+        transition: none;
+    }
+
+    .mobile-nav {
+        transform: none;
+        transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+    }
+
+    .mobile-nav.is-open {
+        transform: none;
+        transition: opacity 0.15s ease, visibility 0s;
+    }
+}
 }
 
 .mobile-menu-highlight {

@@ -1249,9 +1249,6 @@
             color: #a8a29e;
         }
         .empty-state h3 { font-family: 'Bebas Neue', 'Anton', sans-serif; font-size: 1.25rem; color: #0d0d0d; letter-spacing: 0.03em; text-transform: uppercase; margin: 0; }
-
-        .floating-wa { box-shadow: 0 10px 24px rgba(13, 13, 13, 0.4) !important; }
-        .floating-wa:hover { box-shadow: 0 12px 28px rgba(13, 13, 13, 0.5) !important; }
         .sticky-step-nav > .container { padding-block: 8px; }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1285,6 +1282,7 @@
 <!-- ============================================================ -->
 <!-- NAVIGATION                                                   -->
 <!-- ============================================================ -->
+<!-- NAVBAR:sticky -->
 <nav id="mainNavbar" class="bg-white border-b border-gray-200 py-3 sticky top-0 z-40">
     <div class="container mx-auto px-4 flex items-center justify-between">
         <a href="/" class="flex items-center gap-3 logo-shine">
@@ -1292,8 +1290,12 @@
             <span class="text-sm text-gray-500 hidden xl:inline">Kursus &amp; Pelatihan · Computer Service</span>
         </a>
 
-        <button id="mobileMenuBtn" class="lg:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
-            <i data-lucide="menu" class="w-6 h-6"></i>
+        <button id="mobileMenuBtn" class="lg:hidden text-gray-600 hover:text-brand focus:outline-none mobile-menu-btn" aria-label="Buka menu" aria-expanded="false" aria-controls="mobileNav">
+            <span class="hb-box" aria-hidden="true">
+                <span class="hb-line hb-line-top"></span>
+                <span class="hb-line hb-line-mid"></span>
+                <span class="hb-line hb-line-bot"></span>
+            </span>
         </button>
 
         <div id="mainNav" class="hidden lg:flex items-center gap-2">
@@ -1307,8 +1309,8 @@
         </div>
     </div>
 
-    <div id="mobileNav" class="hidden lg:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-        <div class="container mx-auto px-4 flex flex-col gap-2">
+    <div id="mobileNav" class="lg:hidden mobile-nav bg-white/95 backdrop-blur-md border-t border-white/40 mt-3">
+        <div class="mobile-nav-inner container mx-auto px-4 flex flex-col gap-2 py-3">
             <a href="/" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
             <a href="/kursus" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
             <a href="/service" class="mobile-menu-highlight">

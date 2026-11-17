@@ -101,13 +101,7 @@
             outline: none;
         }
 
-        @keyframes pulse-wa {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
-        }
-        .floating-wa { animation: pulse-wa 2s infinite; }
-
-        html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
         [data-lucide] { stroke-width: 2; }
 
         .modal-overlay {
@@ -754,16 +748,7 @@
             border: 1px solid #fecaca;
             border-radius: 0.3rem;
         }
-        @media (max-width: 480px) {
-            .floating-wa {
-                width: 2.75rem !important;
-                height: 2.75rem !important;
-                bottom: 1.25rem !important;
-                right: 1.25rem !important;
-            }
-        }
-
-    </style>
+</style>
 </head>
 <body class="font-sans bg-white">
 
@@ -778,8 +763,12 @@
             <span class="text-sm text-gray-500 hidden xl:inline">Kursus &amp; Pelatihan · Computer Service</span>
         </a>
 
-        <button id="mobileMenuBtn" class="lg:hidden text-gray-600 hover:text-brand focus:outline-none p-1" aria-label="Toggle menu">
-            <i data-lucide="menu" class="w-6 h-6"></i>
+        <button id="mobileMenuBtn" class="lg:hidden text-gray-600 hover:text-brand focus:outline-none mobile-menu-btn" aria-label="Buka menu" aria-expanded="false" aria-controls="mobileNav">
+            <span class="hb-box" aria-hidden="true">
+                <span class="hb-line hb-line-top"></span>
+                <span class="hb-line hb-line-mid"></span>
+                <span class="hb-line hb-line-bot"></span>
+            </span>
         </button>
 
         <div id="mainNav" class="hidden lg:flex items-center gap-2">
@@ -793,8 +782,8 @@
         </div>
     </div>
 
-    <div id="mobileNav" class="hidden lg:hidden bg-white/95 backdrop-blur-md border-t border-white/40 mt-3 py-3">
-        <div class="container mx-auto px-4 flex flex-col gap-2">
+    <div id="mobileNav" class="lg:hidden mobile-nav bg-white/95 backdrop-blur-md border-t border-white/40 mt-3">
+        <div class="mobile-nav-inner container mx-auto px-4 flex flex-col gap-2 py-3">
             <a href="/" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
             <a href="/kursus" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
             <a href="/service" class="mobile-menu-highlight">

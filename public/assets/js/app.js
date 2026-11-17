@@ -1246,25 +1246,29 @@ export async function loadAllServices() {
 // INITIALIZATION
 // ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
-    const path = window.location.pathname;
-    
-    if (path.endsWith('/') || path === '/' || path === '') {
+    // Ambil segmen terakhir path sebagai nama halaman, supaya routing
+    // konsisten di Netlify (pretty URL '/kursus'), Live Server dengan
+    // root repo ('/public/kursus.html') maupun root public ('/kursus.html').
+    const page = (window.location.pathname.toLowerCase().replace(/\/+$/, '').split('/').pop() || '')
+        .replace(/\.html$/, '');
+
+    if (page === '' || page === 'index') {
         await loadLandingPageContent();
         await loadCoursePreview();
         await loadServicePreview();
         await loadTestimonials();
         await loadFaqs();
     }
-    
-    if (path.endsWith('/kursus')) {
+
+    if (page === 'kursus') {
         await loadAllPrograms();
     }
-    
-    if (path.endsWith('/program-detail')) {
+
+    if (page === 'program-detail') {
         await loadProgramDetail();
     }
-    
-    if (path.endsWith('/service')) {
+
+    if (page === 'service') {
         await loadAllServices();
     }
 });

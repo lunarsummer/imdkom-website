@@ -54,16 +54,35 @@
         var btn = nav.querySelector('#mobileMenuBtn');
         var mobileNav = nav.querySelector('#mobileNav');
         if (!btn || !mobileNav) return;
+
+        function setOpen(open) {
+            mobileNav.classList.toggle('is-open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            btn.setAttribute('aria-label', open ? 'Tutup menu' : 'Buka menu');
+        }
+
+        function isOpen() {
+            return mobileNav.classList.contains('is-open');
+        }
+
         btn.addEventListener('click', function () {
-            mobileNav.classList.toggle('hidden');
+            setOpen(!isOpen());
         });
         mobileNav.querySelectorAll('a').forEach(function (link) {
             link.addEventListener('click', function () {
-                mobileNav.classList.add('hidden');
+                setOpen(false);
             });
         });
         document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') mobileNav.classList.add('hidden');
+            if (event.key === 'Escape' && isOpen()) {
+                setOpen(false);
+                btn.focus();
+            }
+        });
+        document.addEventListener('click', function (event) {
+            if (isOpen() && !nav.contains(event.target)) {
+                setOpen(false);
+            }
         });
     }
 
