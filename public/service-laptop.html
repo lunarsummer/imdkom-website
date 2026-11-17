@@ -70,7 +70,7 @@
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- 🎨 THEME CSS -->
     <link rel="stylesheet" href="assets/css/theme.css">
@@ -119,10 +119,10 @@
         }
 
         /* ============================================================
-           DISPLAY TOKENS (Anton + Poppins)
+           DISPLAY TOKENS (Bebas Neue + Poppins)
            ============================================================ */
         .ant {
-            font-family: 'Anton', 'Poppins', sans-serif;
+            font-family: 'Bebas Neue', 'Poppins', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.01em;
         }
@@ -179,23 +179,26 @@
            ============================================================ */
         .menu-track {
             display: flex;
-            gap: 0.65rem;
+            gap: 0.5rem;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             padding-bottom: 0.5rem;
             margin-top: 1.5rem;
+            scroll-padding-left: calc(50% + 0.25rem);
         }
         .menu-track::-webkit-scrollbar { display: none; width: 0; height: 0; }
-        .menu-page {
-            display: flex;
-            gap: 0.65rem;
-            flex-shrink: 0;
-            min-width: 100%;
+        .menu-card {
+            flex: 0 0 calc(50% - 0.25rem);
             scroll-snap-align: start;
-            scroll-snap-stop: always;
+        }
+        .menu-card-booking {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            scroll-snap-align: none;
+            flex: 0 0 calc(50% - 0.25rem);
         }
         @media (min-width: 1024px) {
             .menu-track {
@@ -203,8 +206,9 @@
                 grid-template-columns: repeat(4, 1fr);
                 overflow: visible;
                 scroll-snap-type: none;
+                scroll-padding-left: 0;
             }
-            .menu-page { display: contents; }
+            .menu-card-booking { position: relative; left: auto; }
         }
         .menu-card {
             position: relative;
@@ -330,7 +334,7 @@
            ============================================================ */
         .pl-section { padding: 2rem 0 2.5rem; background: #ffffff; }
         .pl-title {
-            font-family: 'Anton', 'Poppins', sans-serif;
+            font-family: 'Bebas Neue', 'Poppins', sans-serif;
             font-size: clamp(1.4rem, 4vw, 2rem);
             text-transform: uppercase;
             color: #0d0d0d;
@@ -356,7 +360,7 @@
         }
         .pl-head svg { color: #6ea3ff; flex: none; }
         .pl-head h3 {
-            font-family: 'Anton', 'Poppins', sans-serif;
+            font-family: 'Bebas Neue', 'Poppins', sans-serif;
             text-transform: uppercase;
             font-size: 0.85rem;
             letter-spacing: 0.06em;
@@ -521,7 +525,7 @@
         .kursus-footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
         @media (min-width: 768px) { .kursus-footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; } }
         .kursus-footer-title {
-            font-family: 'Anton', 'Poppins', sans-serif;
+            font-family: 'Bebas Neue', 'Poppins', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             font-size: 1.35rem;
@@ -792,61 +796,47 @@
                 </div>
 
                 <div class="menu-track" id="serviceCardsTrack" aria-label="Menu service">
+                    <button type="button" onclick="openBookingModal('laptop', 'Service Laptop')" class="menu-card menu-card-dark menu-card-booking" aria-label="Booking service">
+                        <span class="menu-badge">Populer</span>
+                        <div class="menu-head"><div class="menu-icon"><i data-lucide="calendar-check" class="w-6 h-6"></i></div><div><h2 class="menu-title">Booking</h2><p class="menu-sub">Jadwalkan service Anda</p></div></div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                    </button>
 
-                    <!-- PAGE 1 -->
-                    <div class="menu-page">
-                        <button type="button" onclick="openConsultationModal('laptop', 'Service Laptop')" class="menu-card">
-                            <div class="menu-head"><div class="menu-icon"><i data-lucide="message-circle" class="w-6 h-6"></i></div><div><h2 class="menu-title">Konsultasi</h2><p class="menu-sub">Tanya masalah perangkat Anda</p></div></div>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
-                        </button>
+                    <a href="/service-laptop" class="menu-card is-current" aria-current="page">
+                        <span class="menu-badge">Di Sini</span>
+                        <div class="menu-head"><div class="menu-icon"><i data-lucide="laptop" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Laptop</h2><p class="menu-sub">Semua merek laptop</p></div></div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                    </a>
 
-                        <button type="button" onclick="openBookingModal('laptop', 'Service Laptop')" class="menu-card menu-card-dark" aria-label="Booking service">
-                            <span class="menu-badge">Populer</span>
-                            <div class="menu-head"><div class="menu-icon"><i data-lucide="calendar-check" class="w-6 h-6"></i></div><div><h2 class="menu-title">Booking</h2><p class="menu-sub">Jadwalkan service Anda</p></div></div>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
-                        </button>
-                    </div>
+                    <a href="/service-pc" class="menu-card">
+                        <div class="menu-head"><div class="menu-icon"><i data-lucide="monitor" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service PC</h2><p class="menu-sub">Desktop &amp; komputer rakitan</p></div></div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                    </a>
 
-                    <!-- PAGE 2 -->
-                    <div class="menu-page">
-                        <a href="/service-laptop" class="menu-card is-current" aria-current="page">
-                            <span class="menu-badge">Di Sini</span>
-                            <div class="menu-head"><div class="menu-icon"><i data-lucide="laptop" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Laptop</h2><p class="menu-sub">Semua merek laptop</p></div></div>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
-                        </a>
+                    <a href="/service-printer" class="menu-card">
+                        <div class="menu-head"><div class="menu-icon"><i data-lucide="printer" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Printer</h2><p class="menu-sub">Semua merek printer</p></div></div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                    </a>
 
-                        <a href="/service-pc" class="menu-card">
-                            <div class="menu-head"><div class="menu-icon"><i data-lucide="monitor" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service PC</h2><p class="menu-sub">Desktop &amp; komputer rakitan</p></div></div>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
-                        </a>
-                    </div>
+                    <a href="/service-panggil" class="menu-card">
+                        <div class="menu-head"><div class="menu-icon"><i data-lucide="home" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Panggil</h2><p class="menu-sub">Teknisi ke lokasi</p></div></div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                    </a>
 
-                    <!-- PAGE 3 -->
-                    <div class="menu-page">
-                        <a href="/service-printer" class="menu-card">
-                            <div class="menu-head"><div class="menu-icon"><i data-lucide="printer" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Printer</h2><p class="menu-sub">Semua merek printer</p></div></div>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
-                        </a>
+                    <a href="/sparepart" class="menu-card">
+                        <div class="menu-head"><div class="menu-icon"><i data-lucide="cpu" class="w-6 h-6"></i></div><div><h2 class="menu-title">Sparepart</h2><p class="menu-sub">Suku cadang berkualitas</p></div></div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                    </a>
 
-                        <a href="/service-panggil" class="menu-card">
-                            <div class="menu-head"><div class="menu-icon"><i data-lucide="home" class="w-6 h-6"></i></div><div><h2 class="menu-title">Service Panggil</h2><p class="menu-sub">Teknisi ke lokasi</p></div></div>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
-                        </a>
-                    </div>
+                    <a href="/rakit-komputer" class="menu-card">
+                        <div class="menu-head"><div class="menu-icon"><i data-lucide="wrench" class="w-6 h-6"></i></div><div><h2 class="menu-title">Rakit Komputer</h2><p class="menu-sub">Build PC custom</p></div></div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                    </a>
 
-                    <!-- PAGE 4 -->
-                    <div class="menu-page">
-                        <a href="/sparepart" class="menu-card">
-                            <div class="menu-head"><div class="menu-icon"><i data-lucide="cpu" class="w-6 h-6"></i></div><div><h2 class="menu-title">Sparepart</h2><p class="menu-sub">Suku cadang berkualitas</p></div></div>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
-                        </a>
-
-                        <a href="/rakit-komputer" class="menu-card">
-                            <div class="menu-head"><div class="menu-icon"><i data-lucide="wrench" class="w-6 h-6"></i></div><div><h2 class="menu-title">Rakit Komputer</h2><p class="menu-sub">Build PC custom</p></div></div>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
-                        </a>
-                    </div>
-
+                    <button type="button" onclick="openConsultationModal('laptop', 'Service Laptop')" class="menu-card">
+                        <div class="menu-head"><div class="menu-icon"><i data-lucide="message-circle" class="w-6 h-6"></i></div><div><h2 class="menu-title">Konsultasi</h2><p class="menu-sub">Tanya masalah perangkat Anda</p></div></div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 menu-arrow"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1624,8 +1614,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 track.classList.remove('scrolling');
             }, 150);
         }, { passive: true });
+
     });
-        
+
     // ============================================================
 // BOUNCE HINT — Animasi bounce horizontal saat pertama buka
 // ============================================================
@@ -1648,7 +1639,6 @@ function initBounceHint() {
     if (hintShown && hintTime && (Date.now() - parseInt(hintTime)) < ONE_HOUR) {
         console.log('⏭️ Hint sudah pernah ditampilkan, skip');
         return;
-    }
     
     // Cek apakah track benar-benar bisa di-scroll (ada card tersembunyi)
     const canScroll = track.scrollWidth > track.clientWidth + 10;
@@ -1656,7 +1646,6 @@ function initBounceHint() {
     if (!canScroll) {
         console.log('⏭️ Tidak ada card tersembunyi, skip bounce');
         return;
-    }
     
     console.log('✨ Menampilkan bounce hint');
     
@@ -1668,7 +1657,6 @@ function initBounceHint() {
         // Tampilkan indicator chevron
         if (indicator) {
             indicator.classList.add('show');
-        }
         
         // Hapus class setelah animasi selesai
         setTimeout(() => {
@@ -1676,7 +1664,6 @@ function initBounceHint() {
             
             if (indicator) {
                 indicator.classList.remove('show');
-            }
         }, 1900);  // durasi animasi + sedikit buffer
         
         // Simpan ke localStorage
@@ -1684,7 +1671,6 @@ function initBounceHint() {
         localStorage.setItem('bounce_hint_time', Date.now().toString());
         
     }, 300);  // delay 300ms sebelum mulai (biar user sempat lihat halaman)
-}
     </script>
 
 </body>
