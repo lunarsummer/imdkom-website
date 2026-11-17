@@ -95,12 +95,6 @@ async function initWhatsAppButtons() {
         e.preventDefault();
         openWhatsAppGeneric();
     });
-
-    // Floating WhatsApp (semua halaman)
-    bindClick('floatingWhatsApp', (e) => {
-        e.preventDefault();
-        openWhatsAppGeneric();
-    });
 }
 
 // ============================================================

@@ -133,54 +133,6 @@ body {
    CUSTOM COMPONENTS
    ============================================================ */
 
-/* Floating WhatsApp Button (single source — jangan override per halaman) */
-.floating-wa {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    animation: pulse-wa 2s ease-out infinite;
-}
-
-@keyframes pulse-wa {
-    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55); }
-    70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-}
-
-.floating-wa:hover {
-    transform: scale(1.05);
-    animation: none;
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-}
-
-#floatingWhatsApp {
-    position: fixed;
-    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
-    right: calc(1.25rem + env(safe-area-inset-right, 0px));
-    width: 54px;
-    height: 54px;
-    z-index: 30;
-}
-
-@media (min-width: 640px) {
-    #floatingWhatsApp {
-        bottom: 1.5rem;
-        right: 1.5rem;
-        width: 56px;
-        height: 56px;
-    }
-}
-
-#floatingWhatsApp:focus-visible {
-    outline: 2px solid #0057ad;
-    outline-offset: 3px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .floating-wa {
-        animation: none;
-        transition: none;
-    }
-}
-
 /* Course & Service Items */
 .course-item:hover, .service-item:hover {
     opacity: 0.85;

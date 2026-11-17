@@ -279,31 +279,6 @@ section {
     color: var(--brand-color);
 }
 
-/* ---------- Floating WhatsApp ---------- */
-.floating-wa {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    background-color: #075e54;
-    color: var(--white);
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    z-index: 999;
-}
-
-.floating-wa:hover {
-    color: var(--white);
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-}
-
 /* ---------- Admin ---------- */
 .admin-wrapper {
     min-height: 100vh;
@@ -371,12 +346,6 @@ section {
         padding: 0.5rem 1.2rem;
     }
     
-    .floating-wa {
-        width: 48px;
-        height: 48px;
-        bottom: 1rem;
-        right: 1rem;
-    }
     
     section {
         padding: 2.5rem 0;
