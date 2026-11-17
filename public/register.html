@@ -110,7 +110,13 @@
             align-items: center;
             gap: 0.65rem;
         }
-        .reg-section-title::before {
+        .bill-body { padding: 1rem 1.1rem; display: grid; gap: 0.6rem 1rem; }
+        .bill-row { display: flex; gap: 0.75rem; justify-content: space-between; align-items: baseline; border-bottom: 1px dashed #eef0f3; padding-bottom: 0.45rem; }
+        .bill-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .bill-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6b7280; flex: 0 0 auto; }
+        .bill-value { font-size: 0.88rem; font-weight: 600; color: #0d0d0d; text-align: right; overflow-wrap: anywhere; }
+        .bill-amount { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.reg-section-title::before {
             counter-increment: step;
             content: counter(step, decimal-leading-zero);
             display: inline-flex;
@@ -404,57 +410,75 @@
                         <option value="teman">Teman atau Saudara</option>
                     </select>
                 </div>
+                <button type="button" id="regSubmitBtn" class="reg-submit w-full" style="margin-top:0.5rem">Submit Pendaftaran</button>
+                <p class="reg-submit-hint">Setelah di-submit, Anda dapat memeriksa ringkasan tagihan dan membayar.</p>
             </div>
 
-            <div class="reg-card space-y-4">
-                <h2 class="reg-section-title">Pembayaran</h2>
-                <div id="paymentLocked" class="py-4 text-center">
-                    <i data-lucide="lock" class="w-7 h-7 mx-auto text-gray-400"></i>
-                    <p class="font-bold text-gray-800 text-sm mt-2">Pembayaran belum aktif</p>
-                    <p class="text-xs text-gray-500 mt-1">Lengkapi dulu data wajib pada bagian di atas untuk mengaktifkan pembayaran.</p>
-                    <p id="paymentLockedHint" class="text-xs font-semibold text-brand mt-2"></p>
-                </div>
-                <div id="paymentBody" class="hidden space-y-4">
-                <div id="paymentBiayaWrap" class="pay-checkout">
-                    <div class="pay-checkout-top">
-                        <div class="pay-checkout-merchant">
-                            <span class="pay-checkout-logo">IMDKOM</span>
-                            <div>
-                                <p class="pay-checkout-merchant-name">IMDKOM Yogyakarta</p>
-                                <p class="pay-checkout-merchant-sub">Kursus &amp; Computer Service</p>
+            <div class="reg-card space-y-4" id="billSection" hidden>
+                <h2 class="reg-section-title">Ringkasan Pembayaran</h2>
+                <div id="billView" class="bill-view">
+                    <div class="pay-checkout">
+                        <div class="pay-checkout-top">
+                            <div class="pay-checkout-merchant">
+                                <span class="pay-checkout-logo">IMDKOM</span>
+                                <div>
+                                    <p class="pay-checkout-merchant-name">IMDKOM Yogyakarta</p>
+                                    <p class="pay-checkout-merchant-sub">Kursus &amp; Computer Service</p>
+                                </div>
+                            </div>
+                            <div class="pay-checkout-secure">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                                Midtrans Secured
                             </div>
                         </div>
-                        <div class="pay-checkout-secure">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                            Midtrans Secured
+                        <div class="bill-body">
+                            <div class="bill-row"><span class="bill-label">Nama</span><span class="bill-value" id="billNama">-</span></div>
+                            <div class="bill-row"><span class="bill-label">WhatsApp</span><span class="bill-value" id="billWa">-</span></div>
+                            <div class="bill-row"><span class="bill-label">Email</span><span class="bill-value" id="billEmail">-</span></div>
+                            <div class="bill-row"><span class="bill-label">Program</span><span class="bill-value" id="billProgram">-</span></div>
+                            <div class="bill-row"><span class="bill-label">Kelas</span><span class="bill-value" id="billKelas">-</span></div>
+                            <div class="bill-row"><span class="bill-label">Sumber Info</span><span class="bill-value" id="billSumber">-</span></div>
+                        </div>
+                        <div class="pay-checkout-divider"></div>
+                        <div class="bill-body">
+                            <div class="bill-row"><span class="bill-label">Harga Program</span><span class="bill-value bill-amount" id="billHargaNormal">-</span></div>
+                            <div class="bill-row"><span class="bill-label">Diskon Promo</span><span class="bill-value bill-amount" id="billDiskonPromo">-</span></div>
+                            <div class="bill-row"><span class="bill-label">Potongan Referral</span><span class="bill-value bill-amount" id="billPotonganRef">-</span></div>
+                        </div>
+                        <div class="pay-checkout-divider"></div>
+                        <div class="pay-checkout-body">
+                            <p class="pay-checkout-label">Total Pembayaran</p>
+                            <p class="pay-checkout-amount" id="billTotal">-</p>
+                            <p id="billTotalNote" class="pay-checkout-note hidden"></p>
                         </div>
                     </div>
-                    <div class="pay-checkout-body">
-                        <p class="pay-checkout-label">Total Pembayaran</p>
-                        <p class="pay-checkout-amount" id="paymentBiaya">-</p>
-                        <p id="paymentBiayaNote" class="pay-checkout-note hidden"></p>
+                    <p class="mt-3 text-xs text-gray-500" id="billCommitNote">Ringkasan dibuat dari data yang Anda isi. Periksa kembali sebelum Konfirmasi &amp; Bayar. Klik Ubah Data untuk memperbaiki.</p>
+                    <div class="flex flex-col sm:flex-row gap-2 mt-3">
+                        <button type="button" id="billEditBtn" class="reg-upload-btn" style="flex:1">Ubah Data</button>
+                        <button type="button" id="billConfirmBtn" class="pay-btn-primary" style="flex:1.4;margin-top:0"><span>Konfirmasi &amp; Bayar</span></button>
                     </div>
+                    <p class="mt-2 text-xs text-gray-500">Lanjutkan ke QRIS, e-wallet, transfer bank, atau kartu kredit/debit. Pembayaran terverifikasi otomatis oleh Midtrans.</p>
                 </div>
+            </div>
+            <div class="reg-card space-y-4" id="paymentCard">
+                <h2 class="reg-section-title">Pembayaran</h2>
                 <div class="reg-field" id="referralWrap">
                     <label class="reg-label" for="regKodeReferral">Kode Referral</label>
                     <div class="flex gap-2">
-                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional â€” mis. SAHABAT10" autocapitalize="characters" maxlength="24" />
+                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional — mis. SAHABAT10" autocapitalize="characters" maxlength="24" />
                         <button type="button" id="regApplyReferralBtn" class="reg-upload-btn shrink-0" style="width:auto;padding-left:1rem;padding-right:1rem">Terapkan</button>
                     </div>
                     <p id="regReferralInfo" class="hidden text-xs font-semibold text-emerald-700 mt-1.5"></p>
                     <p id="regReferralError" class="hidden text-xs font-semibold text-red-700 mt-1.5"></p>
-                    <p id="regReferralHint" class="text-xs text-gray-400 mt-1.5">Masukkan kode sebelum pembayaran.</p>
+                    <p id="regReferralHint" class="text-xs text-gray-400 mt-1.5">Masukkan kode sebelum Anda Submit. Potongan akan otomatis diterapkan di Ringkasan Pembayaran.</p>
                 </div>
-                <p class="text-sm text-gray-600">Klik <strong>Bayar via Midtrans</strong> untuk membayar (QRIS, GoPay, transfer bank &amp; lainnya). Pembayaran terverifikasi otomatis, tanpa perlu unggah bukti.</p>
                 <div class="reg-field">
                     <label class="reg-label" for="regCatatan">Catatan untuk Admin <span class="font-normal text-gray-400">(opsional)</span></label>
                     <textarea id="regCatatan" class="reg-textarea" rows="2" placeholder="Mis. saya ingin kelas mulai bulan depan"></textarea>
                 </div>
-                <button type="button" id="payNowBtn" class="pay-btn-primary"><span>Bayar via Midtrans</span></button>
-                </div>
+                <p class="text-sm text-gray-600">Klik <strong>Submit Pendaftaran</strong> di atas untuk melihat Ringkasan Pembayaran (rincian program, kelas, harga, diskon, &amp; total). Anda akan diminta konfirmasi pembayaran setelah itu.</p>
             </div>
-
-            <div class="reg-card">
+<div class="reg-card">
                 <label class="flex items-start gap-2 cursor-pointer">
                     <input id="regAgreement" class="mt-1 reg-checkbox" type="checkbox" required />
                     <span class="text-sm text-gray-600">Saya menyatakan data yang saya isi benar dan setuju dengan proses pendaftaran serta kebijakan yang berlaku.</span>
@@ -475,7 +499,7 @@
 
         <div id="regSuccess" class="reg-success hidden mt-6" role="status">
             <p class="text-lg text-emerald-800 font-bold" id="regSuccessTitle">Pembayaran hampir selesai!</p>
-            <p class="text-sm text-gray-700 mt-1" id="regSuccessHint">Tekan <strong>Bayar via Midtrans</strong> di bawah ini untuk lanjut membayar. Kwitansi &amp; konfirmasi WhatsApp muncul setelah pembayaran berhasil.</p>
+            <p class="text-sm text-gray-700 mt-1" id="regSuccessHint">Tekan <strong>Konfirmasi &amp; Bayar</strong> di bawah ini untuk melanjutkan pembayaran. Kwitansi &amp; konfirmasi WhatsApp muncul setelah pembayaran berhasil.</p>
             <p class="text-sm text-gray-600 mt-2">Simpan <strong>TOKEN PENDAFTARAN</strong> di bawah &mdash; dipakai untuk tracking di <a class="text-brand underline" href="/tracking">/tracking</a> (dengan 4 digit terakhir WhatsApp Anda) dan juga saat konfirmasi ke WhatsApp admin:</p>
             <div class="flex items-center gap-2 mt-2 max-w-md">
                 <input id="regToken" class="reg-input bg-transparent font-mono text-lg tracking-widest" readonly aria-label="Token pendaftaran" />
@@ -487,7 +511,7 @@
                 <div class="pay-await-body">
                     <p class="pay-await-title">Menunggu pembayaran</p>
                     <p class="pay-await-text">Pop-up Snap akan terbuka otomatis. Jika tertutup, klik tombol di bawah.</p>
-                    <button type="button" id="payNowRetryBtn" class="pay-btn-primary" style="margin-top:0.6rem"><span>Bayar via Midtrans</span></button>
+                    <button type="button" id="payNowRetryBtn" class="pay-btn-primary" style="margin-top:0.6rem"><span>Konfirmasi &amp; Bayar</span></button>
                     <button type="button" id="payCheckStatusBtn" class="pay-btn-primary hidden" style="margin-top:0.5rem;background:#0d0d0d;"><span>Periksa Status Pembayaran</span></button>
                     <p id="payNowNote" class="pay-await-note hidden"></p>
                 </div>
@@ -657,6 +681,8 @@
         const params = new URLSearchParams(window.location.search);
         let currentHarga = '';
         let currentHargaPromo = '';
+        let currentProgramNama = 'Program';
+        let currentProgramGambar = '';
         let currentPersenPrivat = 25;
         let currentHargaPrivatPromo = '';
         let currentKelasRegulerAktif = true;
@@ -780,40 +806,65 @@
             return Math.max(0, base - referralDiscount(base));
         }
 
-        function renderBiaya() {
-            const wrap = document.getElementById('paymentBiayaWrap');
-            const el = document.getElementById('paymentBiaya');
-            const note = document.getElementById('paymentBiayaNote');
-            if (!wrap || !el) return;
+        function sumberLabel() {
+            const v = document.getElementById('regSumber').value || '';
+            const sel = document.getElementById('regSumber');
+            const opt = sel ? Array.from(sel.options).find(function (o) { return o.value === v; }) : null;
+            return opt ? opt.text : '-';
+        }
+
+        function computeBillBreakdown() {
+            const normalPrice = currentNormalHarga();
+            const promoPrice = currentPromoHarga();
+            const promoDiscount = Math.max(0, normalPrice - promoPrice);
             const base = getBaseBiaya();
-            const promoVal = currentPromoHarga();
-            const hargaVal = currentNormalHarga();
-            if (base <= 0) {
-                wrap.classList.add('hidden');
-                return;
-            }
-            const disc = referralDiscount(base);
-            const final = base - disc;
-            let html = '';
-            if (promoVal > 0 && hargaVal > 0 && promoVal !== hargaVal) {
-                html += '<span class="text-xs text-gray-500 line-through">' + escapeHtml(formatRupiah(hargaVal)) + '</span><br>';
-            }
-            if (disc > 0) {
-                html += '<span class="text-sm text-gray-500 line-through">' + escapeHtml(formatRupiah(base)) + '</span><br>';
-                html += '<span class="text-brand">' + escapeHtml(formatRupiah(final)) + '</span>';
+            const referralDisc = referralDiscount(base);
+            const final = Math.max(0, base - referralDisc);
+            return { normalPrice: normalPrice, promoPrice: promoPrice, promoDiscount: promoDiscount, base: base, referralDisc: referralDisc, final: final };
+        }
+
+        function fillBill(data) {
+            const d = data || {};
+            const set = function (id, v) { const el = document.getElementById(id); if (el) el.textContent = v || '-'; };
+            set('billNama', d.nama || '');
+            set('billWa', d.wa || '');
+            set('billEmail', d.email || '');
+            set('billProgram', currentProgramNama || '-');
+            set('billKelas', (currentKelas === 'privat' ? 'Kelas Privat' : 'Kelas Reguler'));
+            set('billSumber', sumberLabel());
+            const b = computeBillBreakdown();
+            const fmt = function (n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); };
+            set('billHargaNormal', b.normalPrice > 0 ? fmt(b.normalPrice) : '-');
+            set('billDiskonPromo', b.promoDiscount > 0 ? '- ' + fmt(b.promoDiscount) : 'Rp 0');
+            set('billPotonganRef', b.referralDisc > 0 ? '- ' + fmt(b.referralDisc) : 'Rp 0');
+            set('billTotal', b.final > 0 ? fmt(b.final) : '-');
+            updateBillPaymentNote();
+        }
+
+        function updateBillPaymentNote() {
+            const note = document.getElementById('billTotalNote');
+            if (!note) return;
+            const b = computeBillBreakdown();
+            if (b.referralDisc > 0 && appliedReferral) {
+                note.textContent = 'Sudah termasuk potongan kode ' + appliedReferral.code + '.';
+                note.classList.remove('hidden');
             } else {
-                html += '<span class="text-brand">' + escapeHtml(formatRupiah(base)) + '</span>';
+                note.classList.add('hidden');
             }
-            el.innerHTML = html;
-            wrap.classList.remove('hidden');
-            if (note) {
-                if (disc > 0 && appliedReferral) {
-                    note.textContent = 'Potongan kode ' + appliedReferral.code + ': -' + formatRupiah(disc);
-                    note.classList.remove('hidden');
-                } else {
-                    note.classList.add('hidden');
-                }
-            }
+        }
+
+        function renderBiaya() {
+    const formEl = document.getElementById('regForm');
+    const billSection = document.getElementById('billSection');
+    if (billSection && !billSection.hidden && (!formEl || formEl.classList.contains('hidden'))) {
+        fillBill({
+            nama: (document.getElementById('regNama') || {}).value || '',
+            wa: (document.getElementById('regWa') || {}).value || '',
+            email: (document.getElementById('regEmail') || {}).value || ''
+        });
+    } else {
+        updateBillPaymentNote();
+    }
         }
 
         async function loadProgramInfo() {
@@ -835,7 +886,9 @@
                 if (programSnap.exists()) {
                     const p = programSnap.data();
                     programNama = p.nama || programNama;
+                    currentProgramNama = programNama;
                     programGambar = p.gambar || '';
+                    currentProgramGambar = programGambar;
                     harga = p.harga || '';
                     hargaPromo = p.hargaPromo || '';
                     currentHarga = harga;
@@ -1004,13 +1057,12 @@
 
         function updatePaymentGate() {
             const missing = getMissingFields();
-            const locked = document.getElementById('paymentLocked');
-            const body = document.getElementById('paymentBody');
-            const hint = document.getElementById('paymentLockedHint');
             const ok = missing.length === 0;
-            if (locked) locked.classList.toggle('hidden', ok);
-            if (body) body.classList.toggle('hidden', !ok);
-            if (hint) hint.textContent = ok ? '' : 'Kurang: ' + missing.join(', ');
+            const submitBtn = document.getElementById('regSubmitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = !ok;
+                submitBtn.innerHTML = ok ? '<span>Submit Pendaftaran</span>' : '<span>Lengkapi dulu data di atas</span>';
+            }
             return ok;
         }
 
@@ -1250,11 +1302,7 @@
                         createdAt: Date.now()
                     });
                 } catch (e) { /* abaikan — resume hanya fitur kenyamanan */ }
-                successEl.classList.remove('hidden');
-                const payPanelNominal = document.getElementById('payPanelNominal');
-                if (payPanelNominal) payPanelNominal.textContent = snapDataNominal ? formatRupiah(snapDataNominal) : '-';
-                form.classList.add('hidden');
-                successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (billEl) billEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 messageEl.innerHTML = '';
                 registrationDone = true;
                 return true;
@@ -1265,6 +1313,7 @@
         };
 
         // ================= SNAP PAYMENT: lazy-load snap.js =================
+        const billEl = document.getElementById('billSection');
         let snapJsPromise = null;
         function loadSnapJs(jsUrl, clientKey) {
             if (window.snap) return Promise.resolve();
@@ -1438,10 +1487,14 @@
             const resetWrap = document.getElementById('regResumeResetWrap');
             if (resetWrap) resetWrap.classList.add('hidden');
             fillReceipt(lastTicketData || {});
+            const billElSuccess = document.getElementById('billSection');
+            if (billElSuccess) { billElSuccess.hidden = true; billElSuccess.classList.add('hidden'); }
             const waitPanel = document.getElementById('regPaymentPanel');
             if (waitPanel) waitPanel.classList.add('hidden');
             const receipt = document.getElementById('regTicket');
             if (receipt) receipt.classList.remove('hidden');
+            const successWrap = document.getElementById('regSuccess');
+            if (successWrap) successWrap.classList.remove('hidden');
             if (downloadTicketBtn) downloadTicketBtn.classList.remove('hidden');
             if (waConfirmBtn) waConfirmBtn.classList.remove('hidden');
             setBothPayButtons(true, 'Terbayar');
@@ -1637,7 +1690,7 @@
 
 
         // ================= BAYAR (registrasi + buka Snap) =================
-        const payNowBtn = document.getElementById('payNowBtn');
+        const billConfirmBtn = document.getElementById('billConfirmBtn');
         const payNowRetryBtn = document.getElementById('payNowRetryBtn');
         const payNowNote = document.getElementById('payNowNote');
         let snapTokenCache = null;
@@ -1656,15 +1709,15 @@
         };
 
         const setBothPayButtons = function (disabled, label) {
-            [payNowBtn, payNowRetryBtn].forEach(function (b) {
+            [billConfirmBtn, payNowRetryBtn].forEach(function (b) {
                 if (!b) return;
                 b.disabled = disabled;
                 if (label) b.innerHTML = '<span>' + label + '</span>';
             });
         };
 
-        // Minta Snap token. Dipanggil lebih dulu sebelum registrasi disimpan (alur baru),
-        // sehingga referral tidak valid → error inline & registrasi TIDAK tersimpan.
+        // Minta Snap token saat Konfirmasi & Bayar, sebelum registrasi disimpan. Referral
+        // tidak valid → error inline & registrasi TIDAK tersimpan.
         const requestSnapToken = async function () {
             // Resume: pakai sesi Snap yang tersimpan (< 6 jam) bila ada —
             // transaksi Midtrans & diskon referral tetap sama seperti sebelum refresh.
@@ -1739,18 +1792,18 @@
                 },
                 onPending: function () {
                     showQrisToast('pending', 'Menunggu pembayaran', 'Selesaikan pembayaran Anda sebelum kedaluwarsa. Status diverifikasi otomatis oleh Midtrans.');
-                    setBothPayButtons(false, 'Bayar via Midtrans');
+                    setBothPayButtons(false, 'Konfirmasi & Bayar');
                     if (payNowNote) { payNowNote.textContent = 'Selesaikan pembayaran Anda sebelum kedaluwarsa.'; payNowNote.classList.remove('hidden'); }
                     startSettlementWatch();
                 },
                 onError: function () {
                     invalidateResumeSnapSession();
                     showQrisToast('error', 'Pembayaran gagal', 'Pembayaran tidak berhasil. Silakan coba lagi.');
-                    setBothPayButtons(false, 'Bayar via Midtrans');
+                    setBothPayButtons(false, 'Konfirmasi & Bayar');
                 },
                 onClose: function () {
-                    setBothPayButtons(false, 'Bayar via Midtrans');
-                    if (payNowNote) { payNowNote.textContent = 'Pembayaran belum selesai. Klik "Bayar via Midtrans" untuk mencoba lagi.'; payNowNote.classList.remove('hidden'); }
+                    setBothPayButtons(false, 'Konfirmasi & Bayar');
+                    if (payNowNote) { payNowNote.textContent = 'Pembayaran belum selesai. Klik "Konfirmasi & Bayar" untuk mencoba lagi.'; payNowNote.classList.remove('hidden'); }
                 }
             });
         };
@@ -1765,7 +1818,7 @@
                         hideLoadingOverlay();
                         setReferralState('error', referralErrorMessage(r.code, r.message));
                         if (refInput) refInput.focus();
-                        setBothPayButtons(false, 'Bayar via Midtrans');
+                        setBothPayButtons(false, 'Konfirmasi & Bayar');
                         return;
                     }
                     throw new Error(r.message + (r.code ? ' [' + r.code + ']' : ''));
@@ -1776,7 +1829,7 @@
                 hideLoadingOverlay();
                 const msg = String((err && err.message) || err);
                 showQrisToast('error', 'Pembayaran gagal', msg);
-                setBothPayButtons(false, 'Bayar via Midtrans');
+                setBothPayButtons(false, 'Konfirmasi & Bayar');
             }
         };
 
@@ -1807,15 +1860,15 @@
                 return;
             }
 
-            // Alur baru: minta Snap token DULU (validasi referral di server),
-            // simpan pendaftaran HANYA jika token valid, baru buka pop-up.
+            // Minta Snap token DULU (validasi referral di server), simpan pendaftaran
+            // HANYA jika token valid, baru buka pop-up pembayaran.
             btn.disabled = true;
             btn.innerHTML = '<span>Menyiapkan pembayaran...</span>';
             const r = await requestSnapToken();
             if (!r.ok) {
                 hideLoadingOverlay();
                 btn.disabled = false;
-                btn.innerHTML = '<span>Bayar via Midtrans</span>';
+                btn.innerHTML = '<span>Konfirmasi &amp; Bayar</span>';
                 if (r.referralError) {
                     setReferralState('error', referralErrorMessage(r.code, r.message));
                     if (refInput) refInput.focus();
@@ -1833,7 +1886,7 @@
                 snapTokenCacheSource = null;
                 savePendingPayment({ snapSession: null });
                 btn.disabled = false;
-                btn.innerHTML = '<span>Bayar via Midtrans</span>';
+                btn.innerHTML = '<span>Konfirmasi &amp; Bayar</span>';
                 return;
             }
             btn.disabled = true;
@@ -1844,11 +1897,69 @@
                 hideLoadingOverlay();
                 console.error('Snap gagal:', err);
                 showQrisToast('error', 'Pembayaran gagal', String((err && err.message) || err));
-                setBothPayButtons(false, 'Bayar via Midtrans');
+                setBothPayButtons(false, 'Konfirmasi & Bayar');
             }
         };
 
-        if (payNowBtn) payNowBtn.addEventListener('click', function () { handlePayNow(payNowBtn); });
+        if (billConfirmBtn) billConfirmBtn.addEventListener('click', function () { handlePayNow(billConfirmBtn); });
+        const submitRegBtn = document.getElementById('regSubmitBtn');
+        if (submitRegBtn) {
+            submitRegBtn.addEventListener('click', function () {
+                if (submitRegBtn.disabled) return;
+                const agreement = document.getElementById('regAgreement');
+                if (agreement && !agreement.checked) {
+                    messageEl.innerHTML = '<p class="reg-error">Anda wajib mencentang persetujuan terlebih dahulu.</p>';
+                    agreement.focus();
+                    return;
+                }
+                messageEl.innerHTML = '';
+                showBillAfterSubmit();
+            });
+        }
+
+        function showBillAfterSubmit() {
+            const formEl = document.getElementById('regForm');
+            const payCard = document.getElementById('paymentCard');
+            const successElRem = document.getElementById('regSuccess');
+            const billEl = document.getElementById('billSection');
+            if (successElRem) successElRem.classList.add('hidden');
+            if (formEl) formEl.classList.add('hidden');
+            if (payCard) payCard.classList.add('hidden');
+            const note = document.getElementById('billCommitNote');
+            if (note) {
+                note.textContent = registrationDone
+                    ? 'Pendaftaran Anda sudah dibuat. Perubahan data akan membuat pendaftaran baru dan pendaftaran lama tetap tersimpan sebagai pembayaran pending.'
+                    : 'Ringkasan dibuat dari data yang Anda isi. Periksa kembali sebelum Konfirmasi & Bayar. Klik Ubah Data untuk memperbaiki.';
+            }
+            fillBill({
+                nama: (document.getElementById('regNama') || {}).value || '',
+                wa: (document.getElementById('regWa') || {}).value || '',
+                email: (document.getElementById('regEmail') || {}).value || ''
+            });
+            if (billEl) { billEl.hidden = false; billEl.classList.remove('hidden'); billEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        }
+
+        const billEditBtn = document.getElementById('billEditBtn');
+        function restoreFormAfterSubmit() {
+            const bill = document.getElementById('billSection');
+            const formEl = document.getElementById('regForm');
+            const payCard = document.getElementById('paymentCard');
+            if (bill) { bill.hidden = true; bill.classList.add('hidden'); }
+            if (formEl) formEl.classList.remove('hidden');
+            if (payCard) payCard.classList.remove('hidden');
+            // Reset submit button
+            const submitBtn = document.getElementById('regSubmitBtn');
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<span>Submit Pendaftaran</span>'; }
+            // Jika Konfirmasi & Bayar sudah pernah dijalankan, pendaftaran barusan dibuat
+            // dan tidak bisa diedit dari client. Beri tanda agar Bill berikutnya membuat
+            // pendaftaran baru, bukan dianggap sebagai resume dari doc lama.
+            registrationDone = false;
+            snapTokenCache = null;
+            snapTokenCacheSource = null;
+            try { savePendingPayment({ snapSession: null }); } catch (e) { /* abaikan */ }
+            if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        if (billEditBtn) billEditBtn.addEventListener('click', restoreFormAfterSubmit);
         if (payNowRetryBtn) payNowRetryBtn.addEventListener('click', function () { handlePayNow(payNowRetryBtn); });
         const payCheckBtn = document.getElementById('payCheckStatusBtn');
         if (payCheckBtn) payCheckBtn.addEventListener('click', manualCheckStatus);
@@ -1959,7 +2070,8 @@
 
         // ================= RESUME: lanjutkan pendaftaran yang belum dibayar =================
         const setupResume = async function () {
-            lastTicketData = {
+            currentProgramNama = pendingPayment.programNama || currentProgramNama;
+                        lastTicketData = {
                 token: token,
                 nama: pendingPayment.nama || '',
                 email: pendingPayment.email || '',
@@ -1977,16 +2089,23 @@
                 timestamp: new Date(pendingPayment.createdAt || Date.now())
             };
             registrationDone = true;
-            form.classList.add('hidden');
-            const titleEl = document.getElementById('regSuccessTitle');
-            const hintEl = document.getElementById('regSuccessHint');
-            if (titleEl) { titleEl.textContent = 'Pendaftaran Menunggu Pembayaran'; titleEl.style.color = '#92400e'; }
-            if (hintEl) { hintEl.innerHTML = 'Pendaftaran program <strong>' + escapeHtml(pendingPayment.programNama || '-') + '</strong> tersimpan di perangkat ini. Klik <strong>Bayar via Midtrans</strong> di bawah untuk menyelesaikan pembayaran sesuai program yang dipilih.'; }
-            successEl.classList.remove('hidden');
-            const resetWrap = document.getElementById('regResumeResetWrap');
-            if (resetWrap) resetWrap.classList.remove('hidden');
+            // tampilkan bill view langsung (sama seperti setelah submit baru)
+            // pakai fungsi yang sama supaya sumber data konsisten
+            const bybill = document.getElementById('billSection');
+            if (bybill) { bybill.hidden = false; bybill.classList.remove('hidden'); }
+            const formElB = document.getElementById('regForm');
+            if (formElB) formElB.classList.add('hidden');
+            const payCardB = document.getElementById('paymentCard');
+            if (payCardB) payCardB.classList.add('hidden');
+            // isi bill dari pendingPayment
+            fillBill({
+                nama: pendingPayment.nama || '',
+                wa: pendingPayment.wa || '',
+                email: pendingPayment.email || ''
+            });
             const note = document.getElementById('payNowNote');
-            if (note) { note.textContent = 'Sesi pembayaran sebelumnya belum selesai. Klik tombol di bawah untuk membuka kembali pop-up Midtrans.'; note.classList.remove('hidden'); }
+            // catatan tampil di bawah bill
+ if (note) { note.textContent = 'Sesi pembayaran sebelumnya belum selesai. Klik Konfirmasi & Bayar untuk melanjutkan pembayaran.'; note.classList.remove('hidden'); }
             try {
                 const snap = await getDoc(doc(db, 'tracking', token));
                 if (snap.exists() && snap.data().statusPembayaran === 'Terverifikasi') {
@@ -1997,7 +2116,7 @@
                     return;
                 }
             } catch (e) { /* abaikan — user tetap bisa klik Bayar */ }
-            successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (billEl) billEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
         const resumeResetBtn = document.getElementById('regResumeResetBtn');
@@ -2011,10 +2130,9 @@
         }
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
+        await loadProgramInfo();
         if (pendingPayment) {
             await setupResume();
-        } else {
-            await loadProgramInfo();
         }
         toggleNik();
         updatePaymentGate();
