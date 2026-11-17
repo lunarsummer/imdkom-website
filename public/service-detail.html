@@ -756,7 +756,7 @@ html { scroll-behavior: smooth; }
     NAVIGATION
     ============================================================ -->
     <!-- NAVBAR:fixed -->
-<nav id="mainNavbar" class="bg-white/80 backdrop-blur-md border-b border-white/40 py-3 fixed top-0 left-0 right-0 z-50 is-fixed">
+<nav id="mainNavbar" class="bg-white/80 backdrop-blur-md border-b border-white/40 navbar-mobile-pad lg:py-3 fixed top-0 left-0 right-0 z-50 is-fixed">
     <div class="container mx-auto px-4 flex items-center justify-between">
         <a href="/" class="flex items-center gap-3 logo-shine">
             <img src="assets/images/logo/imd.svg" alt="IMDKOM — Kursus & Service Komputer Yogyakarta" class="h-7 w-auto" loading="eager" />
@@ -782,8 +782,9 @@ html { scroll-behavior: smooth; }
         </div>
     </div>
 
-    <div id="mobileNav" class="lg:hidden mobile-nav bg-white/95 backdrop-blur-md border-t border-white/40 mt-3">
-        <div class="mobile-nav-inner container mx-auto px-4 flex flex-col gap-2 py-3">
+    <div id="mobileNav" class="lg:hidden mobile-nav bg-white/95 backdrop-blur-md">
+        <div class="mobile-nav-inner">
+            <div class="container mx-auto px-4 flex flex-col gap-2 py-3">
             <a href="/" class="text-gray-600 hover:text-brand py-1.5">Beranda</a>
             <a href="/kursus" class="text-gray-600 hover:text-brand py-1.5">Kursus &amp; Pelatihan</a>
             <a href="/service" class="mobile-menu-highlight">
@@ -797,6 +798,7 @@ html { scroll-behavior: smooth; }
             <a href="/tentang" class="text-gray-600 hover:text-brand py-1.5">Tentang</a>
             <a href="/karir" class="text-gray-600 hover:text-brand py-1.5">Karir</a>
             <a href="/kontak" class="text-gray-600 hover:text-brand py-1.5">Kontak</a>
+            </div>
         </div>
     </div>
 </nav>

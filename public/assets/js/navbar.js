@@ -11,11 +11,27 @@
     var isFixed = nav.id === 'mainNavbar' && nav.classList.contains('is-fixed');
 
     function currentPage() {
-        var path = window.location.pathname.replace(/\/+$/, '').toLowerCase();
-        if (!path) path = '/';
-        if (path === '/program-detail' || path === '/program-detail.html') return '/kursus';
-        if (path.indexOf('/service') === 0) return '/service';
-        return path;
+        // Segmen terakhir path sebagai nama halaman, konsisten di Netlify
+        // (pretty URL) maupun Live Server / server lokal ('/public/kursus.html').
+        var page = (window.location.pathname.toLowerCase().replace(/\/+$/, '').split('/').pop() || '')
+            .replace(/\.html$/, '');
+        var map = {
+            '': '/',
+            'index': '/',
+            'kursus': '/kursus',
+            'program-detail': '/kursus',
+            'service': '/service',
+            'service-laptop': '/service',
+            'service-pc': '/service',
+            'service-printer': '/service',
+            'service-panggil': '/service',
+            'service-detail': '/service',
+            'rakit-komputer': '/rakit-komputer',
+            'tentang': '/tentang',
+            'karir': '/karir',
+            'kontak': '/kontak'
+        };
+        return Object.prototype.hasOwnProperty.call(map, page) ? map[page] : null;
     }
 
     function setNavHeightVar(nav) {
@@ -39,6 +55,7 @@
 
     function applyActive(nav) {
         var active = currentPage();
+        if (!active) return;
         nav.querySelectorAll('#mainNav a, #mobileNav a').forEach(function (link) {
             var href = (link.getAttribute('href') || '').toLowerCase();
             if (href !== active) return;

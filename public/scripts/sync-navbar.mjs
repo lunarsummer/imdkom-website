@@ -14,8 +14,8 @@ const PUBLIC = fileURLToPath(new URL('..', import.meta.url));
 const MASTER = join(PUBLIC, 'components', 'navbar.html');
 
 const VARIANT_CLASS = {
-  sticky: 'bg-white border-b border-gray-200 py-3 sticky top-0 z-40',
-  fixed: 'bg-white/80 backdrop-blur-md border-b border-white/40 py-3 fixed top-0 left-0 right-0 z-50 is-fixed'
+  sticky: 'bg-white border-b border-gray-200 navbar-mobile-pad lg:py-3 sticky top-0 z-40',
+  fixed: 'bg-white/80 backdrop-blur-md border-b border-white/40 navbar-mobile-pad lg:py-3 fixed top-0 left-0 right-0 z-50 is-fixed'
 };
 
 const master = readFileSync(MASTER, 'utf8');
