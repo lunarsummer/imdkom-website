@@ -1,291 +1,289 @@
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+  rules_version = '2';
+  service cloud.firestore {
+    match /databases/{database}/documents {
 
-    // ============================================================
-    // HELPER FUNCTIONS
-    // ============================================================
-    function isSignedIn() {
-      return request.auth != null;
-    }
+      // ============================================================
+      // HELPER FUNCTIONS
+      // ============================================================
+      function isSignedIn() {
+        return request.auth != null;
+      }
 
-    function getUserData() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
-    }
+      function getUserData() {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+      }
 
-    function isAdmin() {
-      return isSignedIn() && getUserData().role == 'admin';
-    }
+      function isAdmin() {
+        return isSignedIn() && getUserData().role == 'admin';
+      }
 
-    // ⭐ Support multiple status: active, aktif, approved
-    function isActive() {
-      return isSignedIn() && 
-             getUserData().status in ['active', 'aktif', 'approved'];
-    }
+      // ⭐ Support multiple status: active, aktif, approved
+      function isActive() {
+        return isSignedIn() && 
+              getUserData().status in ['active', 'aktif', 'approved'];
+      }
 
-    function isTentor() {
-      return isSignedIn() && 
-             getUserData().role == 'tentor' && 
-             getUserData().status in ['active', 'aktif', 'approved'];
-    }
+      function isTentor() {
+        return isSignedIn() && 
+              getUserData().role == 'tentor' && 
+              getUserData().status in ['active', 'aktif', 'approved'];
+      }
 
-    // ============================================================
-    // USERS
-    // ============================================================
-    match /users/{uid} {
-      // User bisa baca dokumennya sendiri, admin bisa baca semua
-      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+      // ============================================================
+      // USERS
+      // ============================================================
+      match /users/{uid} {
+        // User bisa baca dokumennya sendiri, admin bisa baca semua
+        allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
 
-      // Registrasi tentor baru (status harus 'pending')
-      allow create: if isSignedIn() &&
-                       request.auth.uid == uid &&
-                       request.resource.data.role == 'tentor' &&
-                       request.resource.data.status == 'pending';
-
-      // User bisa update profil sendiri (kecuali role & status)
-      // Admin bisa update semua (termasuk approve/reject)
-      allow update: if isAdmin() ||
-                       (isSignedIn() &&
+        // Registrasi tentor baru (status harus 'pending')
+        allow create: if isSignedIn() &&
                         request.auth.uid == uid &&
-                        request.resource.data.role == resource.data.role &&
-                        request.resource.data.status == resource.data.status);
+                        request.resource.data.role == 'tentor' &&
+                        request.resource.data.status == 'pending';
 
-      // Hanya admin yang bisa hapus user
-      allow delete: if isAdmin();
-    }
+        // User bisa update profil sendiri (kecuali role & status)
+        // Admin bisa update semua (termasuk approve/reject)
+        allow update: if isAdmin() ||
+                        (isSignedIn() &&
+                          request.auth.uid == uid &&
+                          request.resource.data.role == resource.data.role &&
+                          request.resource.data.status == resource.data.status);
 
-    // ============================================================
-    // PROGRAMS (Kursus)
-    // ============================================================
-    match /programs/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+        // Hanya admin yang bisa hapus user
+        allow delete: if isAdmin();
+      }
 
-    // ============================================================
-    // JOBS (Karir / Lowongan)
-    // ============================================================
-    match /jobs/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // PROGRAMS (Kursus)
+      // ============================================================
+      match /programs/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // SERVICES (Computer Service)
-    // ============================================================
-    match /services/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // JOBS (Karir / Lowongan)
+      // ============================================================
+      match /jobs/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // PC COMPONENTS (Rakit Komputer)
-    // ============================================================
-    match /pc_components/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // SERVICES (Computer Service)
+      // ============================================================
+      match /services/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // PRICELISTS
-    // ============================================================
-    match /pricelists/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // PC COMPONENTS (Rakit Komputer)
+      // ============================================================
+      match /pc_components/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // DOCUMENTATIONS
-    // ============================================================
-    match /documentations/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // PRICELISTS
+      // ============================================================
+      match /pricelists/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // TESTIMONIALS
-    // ============================================================
-    match /testimonials/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // DOCUMENTATIONS
+      // ============================================================
+      match /documentations/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // FAQS
-    // ============================================================
-    match /faqs/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // TESTIMONIALS
+      // ============================================================
+      match /testimonials/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // LANDING PAGE (hero, sticker, about, contact, footer)
-    // ============================================================
-    match /landingPage/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // FAQS
+      // ============================================================
+      match /faqs/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // SETTINGS
-    // ============================================================
-    match /settings/{id} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+      // ============================================================
+      // LANDING PAGE (hero, sticker, about, contact, footer)
+      // ============================================================
+      match /landingPage/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // CONSULTATIONS (Konsultasi dari publik)
-    // ============================================================
-    match /consultations/{id} {
-      allow read: if isAdmin();
-      allow create: if true;
-      allow update, delete: if isAdmin();
-    }
+      // ============================================================
+      // SETTINGS
+      // ============================================================
+      match /settings/{id} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
 
-    // ============================================================
-    // PROGRAM SUBMISSIONS (Usulan program dari tentor)
-    // ============================================================
-    match /programSubmissions/{id} {
-      // Tentor bisa baca usulan miliknya sendiri, admin bisa baca semua
-      allow read: if isSignedIn() &&
-                     (resource.data.tentorId == request.auth.uid || isAdmin());
+      // ============================================================
+      // CONSULTATIONS (Konsultasi dari publik)
+      // ============================================================
+      match /consultations/{id} {
+        allow read: if isAdmin();
+        allow create: if true;
+        allow update, delete: if isAdmin();
+      }
 
-      // Tentor bisa buat usulan dengan status draft/pending_review
-      allow create: if isTentor() &&
-                       request.resource.data.tentorId == request.auth.uid &&
-                       request.resource.data.status in ['draft', 'pending_review'];
+      // ============================================================
+      // PROGRAM SUBMISSIONS (Usulan program dari tentor)
+      // ============================================================
+      match /programSubmissions/{id} {
+        // Tentor bisa baca usulan miliknya sendiri, admin bisa baca semua
+        allow read: if isSignedIn() &&
+                      (resource.data.tentorId == request.auth.uid || isAdmin());
 
-      // Tentor bisa update usulan sendiri (yang masih draft/rejected)
-      // tentorId tidak boleh diubah
-      // Admin bisa update semua (untuk approve/reject)
-      allow update: if (isTentor() &&
-                        resource.data.tentorId == request.auth.uid &&
-                        request.resource.data.tentorId == resource.data.tentorId &&
-                        resource.data.status in ['draft', 'rejected']) ||
-                       isAdmin();
+        // Tentor bisa buat usulan dengan status draft/pending_review
+        allow create: if isTentor() &&
+                        request.resource.data.tentorId == request.auth.uid &&
+                        request.resource.data.status in ['draft', 'pending_review'];
 
-      // Tentor bisa hapus usulan sendiri (draft/rejected), admin bisa hapus semua
-      allow delete: if isAdmin() ||
-                       (isTentor() &&
-                        resource.data.tentorId == request.auth.uid &&
-                        resource.data.status in ['draft', 'rejected']);
-    }
+        // Tentor bisa update usulan sendiri (yang masih draft/rejected)
+        // tentorId tidak boleh diubah
+        // Admin bisa update semua (untuk approve/reject)
+        allow update: if (isTentor() &&
+                          resource.data.tentorId == request.auth.uid &&
+                          request.resource.data.tentorId == resource.data.tentorId &&
+                          resource.data.status in ['draft', 'rejected']) ||
+                        isAdmin();
 
-    // ============================================================
-    // SCHEDULES (Jadwal mengajar)
-    // Admin: CRUD penuh
-    // Tentor: hanya update sesi & penilaian (field lain tidak boleh berubah)
-    // ============================================================
-    match /schedules/{id} {
-      // Tentor hanya bisa baca jadwal miliknya, admin bisa baca semua
-      allow read: if isSignedIn() &&
-                     (resource.data.tentorId == request.auth.uid || isAdmin());
+        // Tentor bisa hapus usulan sendiri (draft/rejected), admin bisa hapus semua
+        allow delete: if isAdmin() ||
+                        (isTentor() &&
+                          resource.data.tentorId == request.auth.uid &&
+                          resource.data.status in ['draft', 'rejected']);
+      }
 
-      // Hanya admin yang bisa create/delete
-      allow create, delete: if isAdmin();
+      // ============================================================
+      // SCHEDULES (Jadwal mengajar)
+      // Admin: CRUD penuh
+      // Tentor: hanya update sesi & penilaian (field lain tidak boleh berubah)
+      // ============================================================
+      match /schedules/{id} {
+        // Tentor hanya bisa baca jadwal miliknya, admin bisa baca semua
+        allow read: if isSignedIn() &&
+                      (resource.data.tentorId == request.auth.uid || isAdmin());
 
-      // Tentor update terbatas: hanya sesi, penilaian, status, updatedAt
-      // Field lain harus SAMA dengan nilai lama
-      allow update: if isAdmin() ||
-                       (isSignedIn() &&
-                        resource.data.tentorId == request.auth.uid &&
-                        request.resource.data.tentorId == resource.data.tentorId &&
-                        request.resource.data.tentorNama == resource.data.tentorNama &&
-                        request.resource.data.pesertaNama == resource.data.pesertaNama &&
-                        request.resource.data.programId == resource.data.programId &&
-                        request.resource.data.programNama == resource.data.programNama &&
-                        request.resource.data.totalPertemuan == resource.data.totalPertemuan &&
-                        request.resource.data.kelas == resource.data.kelas &&
-                        request.resource.data.jamMulai == resource.data.jamMulai &&
-                        request.resource.data.jamSelesai == resource.data.jamSelesai &&
-                        request.resource.data.durasiMenit == resource.data.durasiMenit &&
-                        request.resource.data.ruang == resource.data.ruang &&
-                        request.resource.data.catatan == resource.data.catatan &&
-                        request.resource.data.createdAt == resource.data.createdAt &&
-                        request.resource.data.createdBy == resource.data.createdBy);
-    }
+        // Hanya admin yang bisa create/delete
+        allow create, delete: if isAdmin();
 
-    // ============================================================
-    // REFERRALS (Kode diskon pendaftaran — doc id = kode uppercase)
-    // Publik: get 1 kode saja (tidak bisa list)
-    // Admin:  list + CRUD
-    // ============================================================
-    match /referrals/{code} {
-      allow get: if true;
-      allow list: if isAdmin();
-      allow write: if isAdmin();
-    }
+        // Tentor update terbatas: hanya sesi, penilaian, status, updatedAt
+        // Field lain harus SAMA dengan nilai lama
+        allow update: if isAdmin() ||
+                        (isSignedIn() &&
+                          resource.data.tentorId == request.auth.uid &&
+                          request.resource.data.tentorId == resource.data.tentorId &&
+                          request.resource.data.tentorNama == resource.data.tentorNama &&
+                          request.resource.data.pesertaNama == resource.data.pesertaNama &&
+                          request.resource.data.programId == resource.data.programId &&
+                          request.resource.data.programNama == resource.data.programNama &&
+                          request.resource.data.totalPertemuan == resource.data.totalPertemuan &&
+                          request.resource.data.kelas == resource.data.kelas &&
+                          request.resource.data.jamMulai == resource.data.jamMulai &&
+                          request.resource.data.jamSelesai == resource.data.jamSelesai &&
+                          request.resource.data.durasiMenit == resource.data.durasiMenit &&
+                          request.resource.data.ruang == resource.data.ruang &&
+                          request.resource.data.catatan == resource.data.catatan &&
+                          request.resource.data.createdAt == resource.data.createdAt &&
+                          request.resource.data.createdBy == resource.data.createdBy);
+      }
 
-    // ============================================================
-    // REGISTRATIONS (Pendaftaran kursus online — tanpa login)
-    // Validasi ketat agar client tidak bisa menyuntik field aneh /
-    // data palsu (mis. nominalPembayaran "1").
-    // ============================================================
-    function isValidRegistration() {
-      let d = request.resource.data;
-      return d.token is string
-          && d.token.matches('^IMDKOM-[A-Z]{10}$')
-          && d.programId is string
-          && d.programId.size() >= 6 && d.programId.size() <= 64
-          && d.programNama is string
-          && d.programNama.size() <= 100
-          && d.nama is string
-          && d.nama.size() >= 2 && d.nama.size() <= 100
-          && d.whatsapp is string
-          && d.whatsapp.matches('^[0-9]{9,15}$')
-          && d.email is string
-          && d.email.size() <= 100
-          && d.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
-          && d.provinsi is string && d.provinsi.size() >= 2 && d.provinsi.size() <= 100
-          && d.kabupaten is string && d.kabupaten.size() >= 2 && d.kabupaten.size() <= 100
-          && d.kecamatan is string && d.kecamatan.size() >= 2 && d.kecamatan.size() <= 100
-          && d.kelurahan is string && d.kelurahan.size() >= 2 && d.kelurahan.size() <= 100
-          && d.alamatDetail is string && d.alamatDetail.size() >= 5 && d.alamatDetail.size() <= 200
-          && (d.nik == '' || (d.nik is string && d.nik.matches('^[0-9]{16}$')))
-          && d.status == 'Menunggu'
-          && d.metodePembayaran == 'snap'
-          && d.nominalPembayaran is string
-          && d.nominalPembayaran.matches('^[0-9]{1,12}$')
-          && d.hargaSebelumDiskon is string
-          && d.potonganReferral is string
-          && d.potonganReferral.matches('^[0-9]{1,12}$')
-          && d.createdAt is string
-          && d.updatedAt is string;
-    }
+      // ============================================================
+      // REFERRALS (Kode diskon pendaftaran — doc id = kode uppercase)
+      // Publik: get 1 kode saja (tidak bisa list)
+      // Admin:  list + CRUD
+      // ============================================================
+      match /referrals/{code} {
+        allow get: if true;
+        allow list: if isAdmin();
+        allow write: if isAdmin();
+      }
 
-    match /registrations/{id} {
-      // Form publik (tanpa login) bisa membuat pendaftaran,
-      // TANPA bisa menentukan status/nominal sembarangan.
-      allow create: if isValidRegistration();
+      // ============================================================
+      // REGISTRATIONS (Pendaftaran kursus online — tanpa login)
+      // Validasi ketat agar client tidak bisa menyuntik field aneh /
+      // data palsu (mis. nominalPembayaran "1").
+      // ============================================================
+      function isValidRegistration() {
+        let d = request.resource.data;
+        return d.token is string
+            && d.token.matches('^IMDKOM-[A-Z]{10}$')
+            && d.programId is string
+            && d.programId.size() >= 6 && d.programId.size() <= 64
+            && d.programNama is string
+            && d.programNama.size() <= 100
+            && d.nama is string
+            && d.nama.size() >= 2 && d.nama.size() <= 100
+            && d.whatsapp is string
+            && d.whatsapp.matches('^[0-9]{9,15}$')
+            && d.email is string
+            && (d.email == '' || (d.email.size() <= 100 && d.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')))
+            && d.provinsi is string && d.provinsi.size() >= 2 && d.provinsi.size() <= 100
+            && d.kabupaten is string && d.kabupaten.size() >= 2 && d.kabupaten.size() <= 100
+            && d.kecamatan is string && d.kecamatan.size() >= 2 && d.kecamatan.size() <= 100
+            && d.kelurahan is string && d.kelurahan.size() >= 2 && d.kelurahan.size() <= 100
+            && d.alamatDetail is string && d.alamatDetail.size() >= 5 && d.alamatDetail.size() <= 200
+            && d.status == 'Menunggu'
+            && d.metodePembayaran == 'snap'
+            && d.nominalPembayaran is string
+            && d.nominalPembayaran.matches('^[0-9]{1,12}$')
+            && d.hargaSebelumDiskon is string
+            && d.potonganReferral is string
+            && d.potonganReferral.matches('^[0-9]{1,12}$')
+            && d.createdAt is string
+            && d.updatedAt is string;
+      }
 
-      // Admin yang bisa membaca / memverifikasi / menghapus data pendaftaran
-      allow read, update, delete: if isAdmin();
-    }
+      match /registrations/{id} {
+        // Form publik (tanpa login) bisa membuat pendaftaran,
+        // TANPA bisa menentukan status/nominal sembarangan.
+        allow create: if isValidRegistration();
 
-    // ============================================================
-    // TRACKING (Peserta unduh status via token — doc id = token)
-    // ============================================================
-    match /tracking/{token} {
-      // Peserta yang tahu tokennya bisa membaca doc miliknya (tidak bisa list)
-      allow get: if true;
-      allow list: if false;
+        // Admin yang bisa membaca / memverifikasi / menghapus data pendaftaran
+        allow read, update, delete: if isAdmin();
+      }
 
-      // Peserta membuat mirror statusnya sendiri saat registrasi
-      // (doc id = token, field tidak bisa menimpa data terverifikasi)
-      allow create: if request.resource.data.token == token
-                       && request.resource.data.token.matches('^IMDKOM-[A-Z]{10}$')
-                       && request.resource.data.jadwalTerbit == false
-                       && request.resource.data.nama is string
-                       && request.resource.data.nama.size() <= 100
-                       && request.resource.data.programNama is string
-                       && request.resource.data.programNama.size() <= 100
-                       && (!request.resource.data.keys().hasAny(['nominalPembayaran']) || (request.resource.data.nominalPembayaran is string && request.resource.data.nominalPembayaran.size() <= 30))
-                       && (!request.resource.data.keys().hasAny(['metodePembayaran']) || (request.resource.data.metodePembayaran is string && request.resource.data.metodePembayaran.size() <= 30))
-                       && (!request.resource.data.keys().hasAny(['kodeReferral']) || (request.resource.data.kodeReferral is string && request.resource.data.kodeReferral.size() <= 40));
+      // ============================================================
+      // TRACKING (Peserta unduh status via token — doc id = token)
+      // ============================================================
+      match /tracking/{token} {
+        // Peserta yang tahu tokennya bisa membaca doc miliknya (tidak bisa list)
+        allow get: if true;
+        allow list: if false;
 
-      // Admin yang memperbarui status verifikasi / jadwal
-      allow update, delete: if isAdmin();
+        // Peserta membuat mirror statusnya sendiri saat registrasi
+        // (doc id = token, field tidak bisa menimpa data terverifikasi)
+        allow create: if request.resource.data.token == token
+                        && request.resource.data.token.matches('^IMDKOM-[A-Z]{10}$')
+                        && request.resource.data.jadwalTerbit == false
+                        && request.resource.data.nama is string
+                        && request.resource.data.nama.size() <= 100
+                        && request.resource.data.programNama is string
+                        && request.resource.data.programNama.size() <= 100
+                        && (!request.resource.data.keys().hasAny(['nominalPembayaran']) || (request.resource.data.nominalPembayaran is string && request.resource.data.nominalPembayaran.size() <= 30))
+                        && (!request.resource.data.keys().hasAny(['metodePembayaran']) || (request.resource.data.metodePembayaran is string && request.resource.data.metodePembayaran.size() <= 30))
+                        && (!request.resource.data.keys().hasAny(['kodeReferral']) || (request.resource.data.kodeReferral is string && request.resource.data.kodeReferral.size() <= 40));
+
+        // Admin yang memperbarui status verifikasi / jadwal
+        allow update, delete: if isAdmin();
+      }
     }
   }
-}
