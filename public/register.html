@@ -1990,6 +1990,10 @@
         }
         const regWaDigits = document.getElementById('regWa');
         if (regWaDigits) {
+            regWaDigits.addEventListener('beforeinput', function(e) {
+                if (e.inputType !== 'insertText' && e.inputType !== 'insertCompositionText') return;
+                if (e.data && /\D/.test(e.data)) e.preventDefault();
+            });
             regWaDigits.addEventListener('input', function() {
                 const start = this.selectionStart;
                 this.value = this.value.replace(/\D/g, '').slice(0, 15);
