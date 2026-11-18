@@ -934,7 +934,7 @@ html { scroll-behavior: smooth; }
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
                         <div class="relative">
                             <i data-lucide="user" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="consultationNama" required
+                            <input type="text" id="consultationNama" required maxlength="25"
                                    class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-none focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                    placeholder="Contoh: Budi Santoso" />
                         </div>
@@ -944,7 +944,8 @@ html { scroll-behavior: smooth; }
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp *</label>
                         <div class="relative">
                             <i data-lucide="phone" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="tel" id="consultationWa" required
+                            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" />
+                        <input type="tel" id="consultationWa" required inputmode="numeric" minlength="9" maxlength="15" pattern="[0-9]{9,15}"
                                    class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-none focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                    placeholder="08xxxxxxxxxx" />
                         </div>
@@ -954,7 +955,7 @@ html { scroll-behavior: smooth; }
                         <label class="block text-sm font-medium text-gray-700 mb-1">Device / Perangkat *</label>
                         <div class="relative">
                             <i data-lucide="laptop" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                            <input type="text" id="consultationDevice" required
+                            <input type="text" id="consultationDevice" required maxlength="60"
                                    class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-none focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base"
                                    placeholder="Contoh: Asus VivoBook A412" />
                         </div>
@@ -964,9 +965,10 @@ html { scroll-behavior: smooth; }
                         <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Masalah *</label>
                         <div class="relative">
                             <i data-lucide="file-text" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
-                            <textarea id="consultationMasalah" required rows="3"
+                            <textarea id="consultationMasalah" required rows="3" maxlength="300"
                                       class="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur-sm border border-white/50 rounded-none focus:ring-2 focus:ring-brand focus:border-brand outline-none text-base resize-none"
                                       placeholder="Ceritakan masalah perangkat Anda..."></textarea>
+                        <p class="mt-1 text-xs text-gray-400 text-right"><span id="consultationMasalahCount">0</span>/300</p>
                         </div>
                     </div>
 

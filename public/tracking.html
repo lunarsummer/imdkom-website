@@ -526,6 +526,13 @@
             return Array.from(new Uint8Array(buffer)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
         }
 
+        function escapeHtmlTrack(value) {
+            if (value === null || value === undefined) return '-';
+            const div = document.createElement('div');
+            div.textContent = String(value);
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
         function formatTanggal(value) {
             if (!value) return '-';
             const d = new Date(value + 'T00:00:00');
@@ -534,7 +541,7 @@
         }
 
         function renderError(text) {
-            message.innerHTML = '<div class="alert alert-error"><i data-lucide="alert-circle" class="w-4 h-4" style="margin-top:1px;flex-shrink:0"></i><span>' + text + '</span></div>';
+            message.innerHTML = '<div class="alert alert-error"><i data-lucide="alert-circle" class="w-4 h-4" style="margin-top:1px;flex-shrink:0"></i><span>' + escapeHtmlTrack(text) + '</span></div>';
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
@@ -575,20 +582,20 @@
                 if (list.length > 0) {
                     html += list.map(function(item, index) {
                         return '<div class="jadwal-row"><span class="jadwal-key">Pertemuan ' + (index + 1) + '</span>' +
-                            '<span class="jadwal-val">' + formatTanggal(item.tanggal) +
-                            '<br><span class="jadwal-sub">' + (item.jamMulai || '-') + ' - ' + (item.jamSelesai || '-') +
-                            (item.ruang ? ' · ' + item.ruang : '') + (item.kelas ? ' · ' + item.kelas : '') + '</span></span></div>';
+                            '<span class="jadwal-val">' + escapeHtmlTrack(formatTanggal(item.tanggal)) +
+                            '<br><span class="jadwal-sub">' + escapeHtmlTrack(item.jamMulai || '-') + ' - ' + escapeHtmlTrack(item.jamSelesai || '-') +
+                            (item.ruang ? ' · ' + escapeHtmlTrack(item.ruang) : '') + (item.kelas ? ' · ' + escapeHtmlTrack(item.kelas) : '') + '</span></span></div>';
                     }).join('');
                     const first = list[0] || {};
                     if (first.tentorNama) {
-                        html += '<div class="jadwal-row"><span class="jadwal-key">Tentor</span><span class="jadwal-val">' + first.tentorNama + '</span></div>';
+                        html += '<div class="jadwal-row"><span class="jadwal-key">Tentor</span><span class="jadwal-val">' + escapeHtmlTrack(first.tentorNama) + '</span></div>';
                     }
                     if (first.programNama) {
-                        html += '<div class="jadwal-row"><span class="jadwal-key">Program</span><span class="jadwal-val">' + first.programNama + '</span></div>';
+                        html += '<div class="jadwal-row"><span class="jadwal-key">Program</span><span class="jadwal-val">' + escapeHtmlTrack(first.programNama) + '</span></div>';
                     }
                     const catatan = list.map(function(item) { return item.catatan; }).find(Boolean);
                     if (catatan) {
-                        html += '<div class="jadwal-row"><span class="jadwal-key">Catatan</span><span class="jadwal-val">' + catatan + '</span></div>';
+                        html += '<div class="jadwal-row"><span class="jadwal-key">Catatan</span><span class="jadwal-val">' + escapeHtmlTrack(catatan) + '</span></div>';
                     }
                 } else if (data.jadwal) {
                     const j = data.jadwal;
@@ -601,10 +608,10 @@
                         ['Total Pertemuan', String(j.totalPertemuan || 1) + ' kali']
                     ];
                     html = rows.map(function(row) {
-                        return '<div class="jadwal-row"><span class="jadwal-key">' + row[0] + '</span><span class="jadwal-val">' + row[1] + '</span></div>';
+                        return '<div class="jadwal-row"><span class="jadwal-key">' + escapeHtmlTrack(row[0]) + '</span><span class="jadwal-val">' + escapeHtmlTrack(row[1]) + '</span></div>';
                     }).join('');
                     if (j.catatan) {
-                        html += '<div class="jadwal-row"><span class="jadwal-key">Catatan</span><span class="jadwal-val">' + j.catatan + '</span></div>';
+                        html += '<div class="jadwal-row"><span class="jadwal-key">Catatan</span><span class="jadwal-val">' + escapeHtmlTrack(j.catatan) + '</span></div>';
                     }
                 }
                 jadwalDetail.innerHTML = html;

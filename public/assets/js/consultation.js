@@ -52,6 +52,24 @@ function initConsultationForm() {
     if (form.dataset.listenerAttached === 'true') return;
     form.dataset.listenerAttached = 'true';
 
+    // WA hanya angka, maks 15 digit
+    const waInput = document.getElementById('consultationWa');
+    if (waInput) {
+        waInput.addEventListener('input', function () {
+            this.value = this.value.replace(/\D/g, '').slice(0, 15);
+        });
+    }
+
+    // Counter karakter untuk Deskripsi Masalah (maks 300)
+    const masalahInput = document.getElementById('consultationMasalah');
+    const masalahCount = document.getElementById('consultationMasalahCount');
+    if (masalahInput && masalahCount) {
+        masalahCount.textContent = String(masalahInput.value.length);
+        masalahInput.addEventListener('input', function () {
+            masalahCount.textContent = String(this.value.length);
+        });
+    }
+
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -66,17 +84,35 @@ function initConsultationForm() {
         submitBtn.textContent = 'Mengirim...';
         messageEl.innerHTML = '';
 
-        // Ambil data (safe access)
+        // Ambil data (safe access) + strip karakter code (< dan >) di semua field teks
+        const stripCode = (s) => String(s || '').replace(/[<>]/g, '').trim();
         const slug = document.getElementById('consultationService')?.value || '';
-        const nama = document.getElementById('consultationNama')?.value.trim() || '';
-        const wa = document.getElementById('consultationWa')?.value.trim() || '';
-        const device = document.getElementById('consultationDevice')?.value.trim() || '';
-        const masalah = document.getElementById('consultationMasalah')?.value.trim() || '';
+        const nama = stripCode(document.getElementById('consultationNama')?.value);
+        const wa = String(document.getElementById('consultationWa')?.value || '').replace(/\D/g, '').trim();
+        const device = stripCode(document.getElementById('consultationDevice')?.value);
+        const masalah = stripCode(document.getElementById('consultationMasalah')?.value);
+
+        // Honeypot: bot mengisi field tersembunyi "website" → tolak diam-diam
+        const honeypot = this.querySelector('input[name="website"]');
+        if (honeypot && honeypot.value) {
+            form.reset();
+            closeConsultationModal();
+            messageEl.innerHTML = '';
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHTML;
+            return;
+        }
         const serviceLabel = document.getElementById('consultationServiceLabel')?.textContent || 'Service';
 
         // Validasi
         if (!nama || !wa || !device || !masalah) {
             messageEl.innerHTML = `<p class="text-red-600 text-sm">Mohon lengkapi semua field.</p>`;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHTML;
+            return;
+        }
+        if (wa.length < 9 || wa.length > 15) {
+            messageEl.innerHTML = `<p class="text-red-600 text-sm">Nomor WhatsApp harus 9–15 digit angka.</p>`;
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnHTML;
             return;

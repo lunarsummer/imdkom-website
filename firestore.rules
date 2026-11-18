@@ -139,7 +139,26 @@
       // ============================================================
       match /consultations/{id} {
         allow read: if isAdmin();
-        allow create: if true;
+        // Publik bisa buat konsultasi, tapi harus sesuai skema (anti-spam/anti-injeksi)
+        allow create: if request.resource.data.keys().hasOnly(['serviceSlug','nama','whatsapp','device','masalah','status','createdAt','updatedAt'])
+                        && request.resource.data.serviceSlug is string
+                        && request.resource.data.serviceSlug.size() <= 40
+                        && request.resource.data.nama is string
+                        && request.resource.data.nama.size() <= 25
+                        && !request.resource.data.nama.matches('.*[<>].*')
+                        && request.resource.data.whatsapp is string
+                        && request.resource.data.whatsapp.matches('^[0-9]{9,15}$')
+                        && request.resource.data.device is string
+                        && request.resource.data.device.size() <= 60
+                        && !request.resource.data.device.matches('.*[<>].*')
+                        && request.resource.data.masalah is string
+                        && request.resource.data.masalah.size() <= 300
+                        && !request.resource.data.masalah.matches('.*[<>].*')
+                        && request.resource.data.status == 'pending'
+                        && request.resource.data.createdAt is string
+                        && request.resource.data.createdAt.size() <= 40
+                        && request.resource.data.updatedAt is string
+                        && request.resource.data.updatedAt.size() <= 40;
         allow update, delete: if isAdmin();
       }
 
@@ -224,23 +243,50 @@
       // ============================================================
       function isValidRegistration() {
         let d = request.resource.data;
-        return d.token is string
+        return d.keys().hasOnly(['token','programId','programNama','kelas','nama','whatsapp','email',
+                                 'tempatLahir','tanggalLahir','jenisKelamin','alamat','alamatDetail',
+                                 'provinsi','kabupaten','kecamatan','kelurahan','pendidikan','jurusan',
+                                 'pekerjaan','alasan','sumber','status','metodePembayaran','nominalPembayaran',
+                                 'hargaSebelumDiskon','potonganReferral','kodeReferral','kodeReferralProgramId',
+                                 'catatan','createdAt','updatedAt'])
+            && d.token is string
             && d.token.matches('^IMDKOM-[A-Z]{10}$')
             && d.programId is string
             && d.programId.size() >= 6 && d.programId.size() <= 64
             && d.programNama is string
             && d.programNama.size() <= 100
             && d.nama is string
-            && d.nama.size() >= 2 && d.nama.size() <= 100
+            && d.nama.size() >= 2 && d.nama.size() <= 25
+            && !d.nama.matches('.*[<>].*')
             && d.whatsapp is string
             && d.whatsapp.matches('^[0-9]{9,15}$')
             && d.email is string
             && (d.email == '' || (d.email.size() <= 100 && d.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')))
+            && d.tempatLahir is string
+            && d.tempatLahir.size() >= 2 && d.tempatLahir.size() <= 50
+            && !d.tempatLahir.matches('.*[<>].*')
+            && d.tanggalLahir is string
+            && d.tanggalLahir.size() <= 10
+            && d.jenisKelamin is string
+            && d.jenisKelamin.size() <= 2
+            && d.alamat is string
+            && d.alamat.size() <= 500
+            && !d.alamat.matches('.*[<>].*')
             && d.provinsi is string && d.provinsi.size() >= 2 && d.provinsi.size() <= 100
             && d.kabupaten is string && d.kabupaten.size() >= 2 && d.kabupaten.size() <= 100
             && d.kecamatan is string && d.kecamatan.size() >= 2 && d.kecamatan.size() <= 100
             && d.kelurahan is string && d.kelurahan.size() >= 2 && d.kelurahan.size() <= 100
             && d.alamatDetail is string && d.alamatDetail.size() >= 5 && d.alamatDetail.size() <= 200
+            && !d.alamatDetail.matches('.*[<>].*')
+            && (!d.keys().hasAny(['pendidikan']) || (d.pendidikan is string && d.pendidikan.size() <= 60 && !d.pendidikan.matches('.*[<>].*')))
+            && (!d.keys().hasAny(['jurusan']) || (d.jurusan is string && d.jurusan.size() <= 40 && !d.jurusan.matches('.*[<>].*')))
+            && (!d.keys().hasAny(['pekerjaan']) || (d.pekerjaan is string && d.pekerjaan.size() <= 40 && !d.pekerjaan.matches('.*[<>].*')))
+            && (!d.keys().hasAny(['sumber']) || (d.sumber is string && d.sumber.size() <= 20))
+            && (!d.keys().hasAny(['kelas']) || (d.kelas is string && d.kelas.size() <= 10))
+            && (!d.keys().hasAny(['alasan']) || (d.alasan is list && d.alasan.size() <= 4))
+            && (!d.keys().hasAny(['catatan']) || (d.catatan is string && d.catatan.size() <= 150 && !d.catatan.matches('.*[<>].*')))
+            && (!d.keys().hasAny(['kodeReferral']) || (d.kodeReferral is string && d.kodeReferral.size() <= 15))
+            && (!d.keys().hasAny(['kodeReferralProgramId']) || (d.kodeReferralProgramId is string && d.kodeReferralProgramId.size() <= 64))
             && d.status == 'Menunggu'
             && d.metodePembayaran == 'snap'
             && d.nominalPembayaran is string
@@ -249,7 +295,9 @@
             && d.potonganReferral is string
             && d.potonganReferral.matches('^[0-9]{1,12}$')
             && d.createdAt is string
-            && d.updatedAt is string;
+            && d.createdAt.size() <= 40
+            && d.updatedAt is string
+            && d.updatedAt.size() <= 40;
       }
 
       match /registrations/{id} {
@@ -272,15 +320,23 @@
         // Peserta membuat mirror statusnya sendiri saat registrasi
         // (doc id = token, field tidak bisa menimpa data terverifikasi)
         allow create: if request.resource.data.token == token
-                        && request.resource.data.token.matches('^IMDKOM-[A-Z]{10}$')
-                        && request.resource.data.jadwalTerbit == false
-                        && request.resource.data.nama is string
-                        && request.resource.data.nama.size() <= 100
-                        && request.resource.data.programNama is string
-                        && request.resource.data.programNama.size() <= 100
-                        && (!request.resource.data.keys().hasAny(['nominalPembayaran']) || (request.resource.data.nominalPembayaran is string && request.resource.data.nominalPembayaran.size() <= 30))
-                        && (!request.resource.data.keys().hasAny(['metodePembayaran']) || (request.resource.data.metodePembayaran is string && request.resource.data.metodePembayaran.size() <= 30))
-                        && (!request.resource.data.keys().hasAny(['kodeReferral']) || (request.resource.data.kodeReferral is string && request.resource.data.kodeReferral.size() <= 40));
+                       && request.resource.data.token.matches('^IMDKOM-[A-Z]{10}$')
+                       && request.resource.data.jadwalTerbit == false
+                       && request.resource.data.keys().hasOnly(['token','programId','nama','programNama','kelas','statusPembayaran','statusVerifikasiData','jadwalTerbit','jadwal','wa4hash','nominalPembayaran','hargaSebelumDiskon','potonganReferral','metodePembayaran','kodeReferral','updatedAt'])
+                       && request.resource.data.nama is string
+                       && request.resource.data.nama.size() <= 25
+                       && !request.resource.data.nama.matches('.*[<>].*')
+                       && request.resource.data.programNama is string
+                       && request.resource.data.programNama.size() <= 100
+                       && !request.resource.data.programNama.matches('.*[<>].*')
+                       && (!request.resource.data.keys().hasAny(['nominalPembayaran']) || (request.resource.data.nominalPembayaran is string && request.resource.data.nominalPembayaran.size() <= 30 && !request.resource.data.nominalPembayaran.matches('.*[<>].*')))
+                       && (!request.resource.data.keys().hasAny(['metodePembayaran']) || (request.resource.data.metodePembayaran is string && request.resource.data.metodePembayaran.size() <= 30))
+                       && (!request.resource.data.keys().hasAny(['kodeReferral']) || (request.resource.data.kodeReferral is string && request.resource.data.kodeReferral.size() <= 40))
+                       && (!request.resource.data.keys().hasAny(['wa4hash']) || (request.resource.data.wa4hash is string && request.resource.data.wa4hash.size() <= 128))
+                       && (!request.resource.data.keys().hasAny(['kelas']) || (request.resource.data.kelas is string && request.resource.data.kelas.size() <= 10))
+                       && (!request.resource.data.keys().hasAny(['statusPembayaran']) || (request.resource.data.statusPembayaran is string && request.resource.data.statusPembayaran.size() <= 30))
+                       && (!request.resource.data.keys().hasAny(['statusVerifikasiData']) || (request.resource.data.statusVerifikasiData is string && request.resource.data.statusVerifikasiData.size() <= 30))
+                       && (!request.resource.data.keys().hasAny(['updatedAt']) || (request.resource.data.updatedAt is string && request.resource.data.updatedAt.size() <= 40));
 
         // Admin yang memperbarui status verifikasi / jadwal
         allow update, delete: if isAdmin();

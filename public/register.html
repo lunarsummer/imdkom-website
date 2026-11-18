@@ -305,15 +305,16 @@
         </div>
 
         <form id="regForm" class="space-y-6">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" />
             <div class="reg-card space-y-4">
                 <h2 class="reg-section-title">Data Pribadi</h2>
                 <div class="reg-field">
                     <label class="reg-label" for="regNama">Nama Peserta <span class="text-red-700" aria-hidden="true">*</span></label>
-                    <input id="regNama" class="reg-input" type="text" placeholder="Nama lengkap" maxlength="100" required />
+                    <input id="regNama" class="reg-input" type="text" placeholder="Nama lengkap" maxlength="25" required />
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regTempat">Tempat Lahir <span class="text-red-700" aria-hidden="true">*</span></label>
-                    <input id="regTempat" class="reg-input" type="text" placeholder="Kota / kabupaten" required />
+                    <input id="regTempat" class="reg-input" type="text" placeholder="Kota / kabupaten" maxlength="50" required />
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regTanggalLahir">Tanggal Lahir <span class="text-red-700" aria-hidden="true">*</span></label>
@@ -361,7 +362,7 @@
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regEmail">Email <span class="text-gray-400 font-normal">(opsional)</span></label>
-                    <input id="regEmail" class="reg-input" type="email" placeholder="nama@email.com" maxlength="100" />
+                    <input id="regEmail" class="reg-input" type="email" placeholder="nama@email.com" maxlength="60" />
                 </div>
             </div>
 
@@ -369,15 +370,15 @@
                 <h2 class="reg-section-title">Pendidikan dan Pekerjaan</h2>
                 <div class="reg-field">
                     <label class="reg-label" for="regPendidikan">Pendidikan Terakhir - Asal Sekolah / Perguruan Tinggi</label>
-                    <input id="regPendidikan" class="reg-input" type="text" placeholder="Mis. SMA Negeri 1 Yogyakarta" />
+                    <input id="regPendidikan" class="reg-input" type="text" placeholder="Mis. SMA Negeri 1 Yogyakarta" maxlength="60" />
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regJurusan">Jurusan</label>
-                    <input id="regJurusan" class="reg-input" type="text" placeholder="Mis. IPA / RPL" />
+                    <input id="regJurusan" class="reg-input" type="text" placeholder="Mis. IPA / RPL" maxlength="40" />
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regPekerjaan">Pekerjaan</label>
-                    <input id="regPekerjaan" class="reg-input" type="text" placeholder="Opsional" />
+                    <input id="regPekerjaan" class="reg-input" type="text" placeholder="Opsional" maxlength="40" />
                 </div>
             </div>
 
@@ -456,7 +457,7 @@
                 <div class="reg-field" id="referralWrap">
                     <label class="reg-label" for="regKodeReferral">Kode Referral</label>
                     <div class="flex gap-2">
-                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional — mis. SAHABAT10" autocapitalize="characters" maxlength="24" />
+                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional — mis. SAHABAT10" autocapitalize="characters" maxlength="15" pattern="[A-Za-z0-9-]{1,15}" />
                         <button type="button" id="regApplyReferralBtn" class="reg-upload-btn shrink-0" style="width:auto;padding-left:1rem;padding-right:1rem">Terapkan</button>
                     </div>
                     <p id="regReferralInfo" class="hidden text-xs font-semibold text-emerald-700 mt-1.5"></p>
@@ -465,7 +466,8 @@
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regCatatan">Catatan untuk Admin <span class="font-normal text-gray-400">(opsional)</span></label>
-                    <textarea id="regCatatan" class="reg-textarea" rows="2" placeholder="Mis. saya ingin kelas mulai bulan depan"></textarea>
+                    <textarea id="regCatatan" class="reg-textarea" rows="2" maxlength="150" placeholder="Mis. saya ingin kelas mulai bulan depan"></textarea>
+                    <p class="mt-1 text-xs text-gray-400 text-right"><span id="regCatatanCount">0</span>/150</p>
                 </div>
                 <label class="flex items-start gap-2 cursor-pointer" id="agreementWrap" for="regAgreement">
                     <input id="regAgreement" class="mt-1 reg-checkbox" type="checkbox" />
@@ -1115,26 +1117,30 @@
         // ================= REGISTRASI =================
         // Validasi & kumpulkan field — tidak menulis apa pun ke Firestore.
         const collectRegistrationData = function () {
+            // Honeypot: bot mengisi "website" → tolak diam-diam
+            const hp = document.querySelector('#regForm input[name="website"]');
+            if (hp && hp.value) return null;
+            const stripCode = (s) => String(s || '').replace(/[<>]/g, '').trim();
             if (!document.getElementById('regAgreement').checked) {
                 messageEl.innerHTML = '<p class="reg-error">Anda wajib mencentang persetujuan terlebih dahulu.</p>';
                 return null;
             }
-            const nama = document.getElementById('regNama').value.trim();
+            const nama = stripCode(document.getElementById('regNama').value);
             const wa = document.getElementById('regWa').value.replace(/\D/g, '').trim();
             const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const tempatLahir = document.getElementById('regTempat').value.trim();
+            const tempatLahir = stripCode(document.getElementById('regTempat').value);
             const tanggalLahir = document.getElementById('regTanggalLahir').value;
             const jenisKelamin = document.getElementById('regJk').value;
             const wil = getWilayah();
-            const alamatDetail = document.getElementById('regAlamatDetail').value.trim();
+            const alamatDetail = stripCode(document.getElementById('regAlamatDetail').value);
             const alamat = [alamatDetail, wil.kelurahan, wil.kecamatan, wil.kabupaten, wil.provinsi].filter(Boolean).join(', ');
-            const pendidikan = document.getElementById('regPendidikan').value.trim();
-            const jurusan = document.getElementById('regJurusan').value.trim();
-            const pekerjaan = document.getElementById('regPekerjaan').value.trim();
+            const pendidikan = stripCode(document.getElementById('regPendidikan').value);
+            const jurusan = stripCode(document.getElementById('regJurusan').value);
+            const pekerjaan = stripCode(document.getElementById('regPekerjaan').value);
             const sumber = document.getElementById('regSumber').value;
             const alasan = Array.from(document.querySelectorAll('#regAlasan .reg-checkbox:checked')).filter(function(c) { return c.checked; }).map(function(c) { return c.value; });
-            const catatan = document.getElementById('regCatatan').value.trim();
-            const kodeReferral = String((document.getElementById('regKodeReferral') || {}).value || '').trim().toUpperCase();
+            const catatan = stripCode(document.getElementById('regCatatan').value);
+            const kodeReferral = String((document.getElementById('regKodeReferral') || {}).value || '').trim().toUpperCase().replace(/[^A-Z0-9-]/g, '');
             const ticketProgramName = programDetail ? (programDetail.textContent || '').replace('Nama:', '').trim() : programId;
             const emailError = validateEmailField(email);
             if (emailError) { messageEl.innerHTML = '<p class="reg-error">' + escapeHtml(emailError) + '</p>'; return null; }
@@ -1971,6 +1977,22 @@
                 const start = this.selectionStart;
                 this.value = this.value.toLowerCase();
                 try { this.setSelectionRange(start, start); } catch (e) { /* noop */ }
+            });
+        }
+        const refCharFilter = document.getElementById('regKodeReferral');
+        if (refCharFilter) {
+            refCharFilter.addEventListener('input', function() {
+                const start = this.selectionStart;
+                this.value = this.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 15);
+                try { this.setSelectionRange(start, start); } catch (e) { /* noop */ }
+            });
+        }
+        const catatanInput = document.getElementById('regCatatan');
+        const catatanCount = document.getElementById('regCatatanCount');
+        if (catatanInput && catatanCount) {
+            catatanCount.textContent = String(catatanInput.value.length);
+            catatanInput.addEventListener('input', function() {
+                catatanCount.textContent = String(this.value.length);
             });
         }
 
