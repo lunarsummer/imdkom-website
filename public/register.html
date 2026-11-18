@@ -69,6 +69,7 @@
             transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
         }
         .reg-input, .reg-textarea, .reg-select { text-transform: uppercase; }
+        .reg-input[type="email"] { text-transform: none; }
         .reg-input:focus, .reg-select:focus, .reg-textarea:focus {
             border-color: #0059ff;
             background: #ffffff;
@@ -1984,6 +1985,14 @@
             refCharFilter.addEventListener('input', function() {
                 const start = this.selectionStart;
                 this.value = this.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 15);
+                try { this.setSelectionRange(start, start); } catch (e) { /* noop */ }
+            });
+        }
+        const regWaDigits = document.getElementById('regWa');
+        if (regWaDigits) {
+            regWaDigits.addEventListener('input', function() {
+                const start = this.selectionStart;
+                this.value = this.value.replace(/\D/g, '').slice(0, 15);
                 try { this.setSelectionRange(start, start); } catch (e) { /* noop */ }
             });
         }
