@@ -804,6 +804,8 @@
         }
 
         let resumePotonganOverride = null;
+        // true setelah pendaftaran tersimpan & tervalidasi (dipakai updatePaymentGate)
+        let registrationDone = false;
 
         function computeBillBreakdown() {
             const normalPrice = currentNormalHarga();
@@ -1009,7 +1011,9 @@
 
         function updatePaymentGate() {
             const missing = getMissingFields();
-            const ok = missing.length === 0;
+            // Resume: pendaftaran sudah tersimpan & tervalidasi di Firestore —
+            // jangan mengunci tombol bayar hanya karena field tidak ter-restore ke UI.
+            const ok = registrationDone || missing.length === 0;
             const submitBtn = document.getElementById('regSubmitBtn');
             if (submitBtn) {
                 submitBtn.disabled = !ok;
@@ -1143,7 +1147,6 @@
                 pendidikan, jurusan, pekerjaan, sumber, alasan, catatan, kodeReferral, ticketProgramName };
         };
 
-        let registrationDone = false;
         const doRegister = async function (snapData) {
             const snapDataNominal = snapData && Number(snapData.grossAmount) > 0 ? Number(snapData.grossAmount) : (getFinalBiaya() ? getFinalBiaya() : 0);
             const snapPotongan = snapData && Number(snapData.potonganReferral) > 0 ? Number(snapData.potonganReferral) : referralDiscount(getBaseBiaya());
