@@ -278,6 +278,47 @@
         .pay-await-note { font-size: 0.72rem; font-weight: 600; color: #92400e; margin-top: 0.35rem; }
 
         .receipt-web { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #6b7280; text-align: center; padding: 0.55rem 1rem 0.75rem; margin: 0; text-wrap: pretty; }
+
+        .reg-howto { margin-top: 1.1rem; border-top: 1px solid var(--reg-line); padding-top: 0.9rem; }
+        .reg-howto-title { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #6b7280; margin: 0 0 0.65rem; }
+        .reg-howto-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 0.9rem; }
+        .reg-howto-list li { display: flex; gap: 0.5rem; font-size: 0.72rem; line-height: 1.35; color: #4b5563; }
+        .reg-howto-list strong { color: #0d0d0d; font-weight: 700; }
+        .reg-howto-num { flex-shrink: 0; width: 1.25rem; height: 1.25rem; border-radius: 999px; background: #eef3ff; color: #0059ff; font-size: 0.68rem; font-weight: 800; display: grid; place-items: center; }
+        @media (min-width: 640px) { .reg-howto-list { grid-template-columns: repeat(4, 1fr); } }
+
+        .reg-steps { scroll-margin-top: 1rem; }
+        .reg-steps-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; }
+        .reg-step-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; text-align: center; font-size: 0.68rem; font-weight: 600; color: #9ca3af; line-height: 1.25; }
+        .reg-step-num { width: 1.75rem; height: 1.75rem; border-radius: 999px; border: 1.5px solid #d7dbe2; background: #ffffff; color: #6b7280; font-size: 0.78rem; font-weight: 700; display: grid; place-items: center; transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+        .reg-step-item.is-active { color: #0d0d0d; }
+        .reg-step-item.is-active .reg-step-num { background: #0059ff; border-color: #0059ff; color: #ffffff; }
+        .reg-step-item.is-done { color: #065f46; }
+        .reg-step-item.is-done .reg-step-num { background: #e8f7ef; border-color: #34d399; color: #065f46; }
+        @media (max-width: 639px) {
+            .reg-step-label { display: none; }
+        }
+        .reg-steps-track { margin-top: 0.6rem; height: 3px; border-radius: 999px; background: #eceef2; overflow: hidden; }
+        .reg-steps-progress { display: block; width: 0; height: 100%; background: #0059ff; border-radius: inherit; transition: width 0.25s ease; }
+
+        .reg-step-panel[hidden] { display: none; }
+        .reg-step-panel > .reg-card + .reg-card { margin-top: 1.25rem; }
+        [data-step-title]:focus { outline: none; }
+        .reg-step-nav { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.85rem; }
+        @media (min-width: 640px) {
+            .reg-step-nav { flex-direction: row; justify-content: flex-end; }
+            .reg-step-btn-back { margin-right: auto; }
+        }
+        .reg-step-btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; border-radius: 0.75rem; padding: 0.8rem 1.1rem; font-size: 0.87rem; font-weight: 700; border: 1px solid transparent; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease; }
+        @media (min-width: 640px) { .reg-step-btn { width: auto; min-width: 9.5rem; } }
+        .reg-step-btn-next { background: #0059ff; color: #ffffff; }
+        .reg-step-btn-next:hover { background: #0040c0; transform: translateY(-1px); }
+        .reg-step-btn-back { background: #ffffff; border-color: #d7dbe2; color: #374151; }
+        .reg-step-btn-back:hover { background: #f7f7f5; }
+        .reg-step-btn:disabled { background: #9ca3af; border-color: #9ca3af; color: #ffffff; cursor: not-allowed; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            .reg-steps-progress, .reg-step-num, .reg-step-btn { transition: none; }
+        }
     </style>
 </head>
 <body class="font-sans min-h-screen">
@@ -303,12 +344,45 @@
             <h1 class="reg-title ant">Daftar Program <span class="accent">Kursus</span></h1>
             <p class="text-sm text-gray-500">Isi data berikut untuk mendaftarkan diri. Anda tidak perlu membuat akun. Kolom bertanda <span class="text-red-700" aria-hidden="true">*</span> wajib&nbsp;diisi.</p>
             <div id="regProgramInfo" class="reg-info-box mt-3"></div>
+            <div class="reg-howto" aria-label="Cara daftar">
+                <p class="reg-howto-title">Cara daftar</p>
+                <ol class="reg-howto-list">
+                    <li><span class="reg-howto-num" aria-hidden="true">1</span><span><strong>Isi data</strong><br />Identitas, alamat, program</span></li>
+                    <li><span class="reg-howto-num" aria-hidden="true">2</span><span><strong>Bayar</strong><br />Aman via Midtrans</span></li>
+                    <li><span class="reg-howto-num" aria-hidden="true">3</span><span><strong>Terverifikasi</strong><br />Otomatis, tanpa konfirmasi manual</span></li>
+                    <li><span class="reg-howto-num" aria-hidden="true">4</span><span><strong>Kwitansi &amp; token</strong><br />Cek jadwal di /tracking</span></li>
+                </ol>
+            </div>
         </div>
 
         <form id="regForm" class="space-y-6">
             <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" />
+
+            <nav class="reg-steps" aria-label="Langkah pendaftaran">
+                <ol class="reg-steps-list">
+                    <li class="reg-step-item is-active" data-step-item="1" aria-current="step">
+                        <span class="reg-step-num" aria-hidden="true">1</span>
+                        <span class="reg-step-label">Data Pribadi</span>
+                    </li>
+                    <li class="reg-step-item" data-step-item="2">
+                        <span class="reg-step-num" aria-hidden="true">2</span>
+                        <span class="reg-step-label">Alamat</span>
+                    </li>
+                    <li class="reg-step-item" data-step-item="3">
+                        <span class="reg-step-num" aria-hidden="true">3</span>
+                        <span class="reg-step-label">Pendidikan &amp; Program</span>
+                    </li>
+                    <li class="reg-step-item" data-step-item="4">
+                        <span class="reg-step-num" aria-hidden="true">4</span>
+                        <span class="reg-step-label">Ringkasan &amp; Bayar</span>
+                    </li>
+                </ol>
+                <div class="reg-steps-track" aria-hidden="true"><span id="regStepsProgress" class="reg-steps-progress"></span></div>
+            </nav>
+
+            <section class="reg-step-panel" data-step="1">
             <div class="reg-card space-y-4">
-                <h2 class="reg-section-title">Data Pribadi</h2>
+                <h2 class="reg-section-title" data-step-title tabindex="-1">Data Pribadi</h2>
                 <div class="reg-field">
                     <label class="reg-label" for="regNama">Nama Peserta <span class="text-red-700" aria-hidden="true">*</span></label>
                     <input id="regNama" class="reg-input" type="text" placeholder="Nama lengkap" maxlength="25" required />
@@ -330,7 +404,24 @@
                     </select>
                 </div>
                 <div class="reg-field">
-                    <label class="reg-label" for="regProvinsi">Alamat — Provinsi <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <label class="reg-label" for="regWa">Nomor WhatsApp <span class="text-red-700" aria-hidden="true">*</span></label>
+                    <input id="regWa" class="reg-input" type="tel" placeholder="08xxxxxxxxxx" maxlength="15" minlength="9" pattern="[0-9]{9,15}" inputmode="numeric" required />
+                </div>
+                <div class="reg-field">
+                    <label class="reg-label" for="regEmail">Email <span class="text-gray-400 font-normal">(opsional)</span></label>
+                    <input id="regEmail" class="reg-input" type="email" placeholder="nama@email.com" maxlength="60" />
+                </div>
+            </div>
+            <div class="reg-step-nav">
+                <button type="button" class="reg-step-btn reg-step-btn-next" data-step-next="2">Lanjut ke Alamat</button>
+            </div>
+            </section>
+
+            <section class="reg-step-panel" data-step="2" hidden>
+            <div class="reg-card space-y-4">
+                <h2 class="reg-section-title" data-step-title tabindex="-1">Alamat</h2>
+                <div class="reg-field">
+                    <label class="reg-label" for="regProvinsi">Provinsi <span class="text-red-700" aria-hidden="true">*</span></label>
                     <select id="regProvinsi" class="reg-select" required>
                         <option value="">Memuat daftar provinsi...</option>
                     </select>
@@ -355,20 +446,18 @@
                 </div>
                 <div class="reg-field">
                     <label class="reg-label" for="regAlamatDetail">Detail Alamat <span class="text-red-700" aria-hidden="true">*</span></label>
-                    <textarea id="regAlamatDetail" class="reg-textarea" rows="2" placeholder="Jalan, nomor, RT/RW, patokan (mis. Jl. Kaliurang km 7, no 38, RT 03/RW 02)" maxlength="200" required></textarea>
-                </div>
-                <div class="reg-field">
-                    <label class="reg-label" for="regWa">Nomor WhatsApp <span class="text-red-700" aria-hidden="true">*</span></label>
-                    <input id="regWa" class="reg-input" type="tel" placeholder="08xxxxxxxxxx" maxlength="15" minlength="9" pattern="[0-9]{9,15}" inputmode="numeric" required />
-                </div>
-                <div class="reg-field">
-                    <label class="reg-label" for="regEmail">Email <span class="text-gray-400 font-normal">(opsional)</span></label>
-                    <input id="regEmail" class="reg-input" type="email" placeholder="nama@email.com" maxlength="60" />
+                    <textarea id="regAlamatDetail" class="reg-textarea" rows="3" placeholder="Jalan, nomor, RT/RW, patokan (mis. Jl. Kaliurang km 7, no 38, RT 03/RW 02)" maxlength="200" required></textarea>
                 </div>
             </div>
+            <div class="reg-step-nav">
+                <button type="button" class="reg-step-btn reg-step-btn-back" data-step-back="1">Kembali</button>
+                <button type="button" class="reg-step-btn reg-step-btn-next" data-step-next="3">Lanjut ke Pendidikan &amp; Program</button>
+            </div>
+            </section>
 
+            <section class="reg-step-panel" data-step="3" hidden>
             <div class="reg-card space-y-4">
-                <h2 class="reg-section-title">Pendidikan dan Pekerjaan</h2>
+                <h2 class="reg-section-title" data-step-title tabindex="-1">Pendidikan dan Pekerjaan</h2>
                 <div class="reg-field">
                     <label class="reg-label" for="regPendidikan">Pendidikan Terakhir - Asal Sekolah / Perguruan Tinggi</label>
                     <input id="regPendidikan" class="reg-input" type="text" placeholder="Mis. SMA Negeri 1 Yogyakarta" maxlength="60" />
@@ -410,11 +499,20 @@
                         <option value="teman">Teman atau Saudara</option>
                     </select>
                 </div>
-                <button type="button" id="regSubmitBtn" class="reg-submit w-full" style="margin-top:0.5rem">Submit Pendaftaran</button>
-                <p class="reg-submit-hint">Klik Submit Pendaftaran untuk melihat ringkasan pembayaran di bawah tombol. Referral dan pembayaran aktif setelah ringkasan tampil.</p>
+            </div>
+            <div class="reg-step-nav">
+                <button type="button" class="reg-step-btn reg-step-btn-back" data-step-back="2">Kembali</button>
+                <button type="button" id="regSubmitBtn" class="reg-step-btn reg-step-btn-next" data-step-next="4">Lanjut ke Ringkasan</button>
+            </div>
+            <p class="reg-submit-hint">Ringkasan, kode referral, dan pembayaran ada di langkah berikutnya.</p>
+            </section>
+
+            <section class="reg-step-panel" data-step="4" hidden>
+            <div class="reg-card space-y-4" id="paymentCard">
+                <h2 class="reg-section-title" data-step-title tabindex="-1">Ringkasan &amp; Pembayaran</h2>
 
                 <div id="billInline" class="bill-inline" hidden>
-                    <p class="bill-inline-title">Ringkasan Pembayaran</p>
+                    <p class="bill-inline-title">Rincian Biaya</p>
                     <div class="pay-checkout">
                         <div class="pay-checkout-top">
                             <div class="pay-checkout-merchant">
@@ -451,10 +549,7 @@
                     </div>
                     <p class="bill-inline-note">Ringkasan dibuat dari isian Anda dan akan diperbarui otomatis saat data berubah.</p>
                 </div>
-            </div>
 
-            <div class="reg-card space-y-4" id="paymentCard" hidden>
-                <h2 class="reg-section-title">Pembayaran</h2>
                 <div class="reg-field" id="referralWrap">
                     <label class="reg-label" for="regKodeReferral">Kode Referral</label>
                     <div class="flex gap-2">
@@ -478,6 +573,10 @@
                 <p id="paymentResumeNote" class="hidden text-xs text-amber-700">Sesi pembayaran sebelumnya belum selesai. Klik Konfirmasi &amp; Bayar untuk membuka kembali Midtrans.</p>
                 <button type="button" id="payNowBtn" class="pay-btn-primary"><span>Konfirmasi &amp; Bayar</span></button>
             </div>
+            <div class="reg-step-nav">
+                <button type="button" class="reg-step-btn reg-step-btn-back" data-step-back="3">Kembali ke Pendidikan &amp; Program</button>
+            </div>
+            </section>
             <div id="regMessage" class="text-sm" role="alert"></div>
         </form>
 
@@ -1017,16 +1116,115 @@
             // Resume: pendaftaran sudah tersimpan & tervalidasi di Firestore —
             // jangan mengunci tombol bayar hanya karena field tidak ter-restore ke UI.
             const ok = registrationDone || missing.length === 0;
-            const submitBtn = document.getElementById('regSubmitBtn');
-            if (submitBtn) {
-                submitBtn.disabled = !ok;
-                submitBtn.innerHTML = ok ? '<span>Submit Pendaftaran</span>' : '<span>Lengkapi dulu data di atas</span>';
-            }
             const inline = document.getElementById('billInline');
             const payBtn = document.getElementById('payNowBtn');
             if (payBtn) payBtn.disabled = !ok || !inline || inline.hidden;
             return ok;
         }
+
+        // ================= STEPPER 4 LANGKAH =================
+        let currentStep = 1;
+        const TOTAL_STEPS = 4;
+
+        function getMissingForStep(step) {
+            const val = function (id) {
+                const el = document.getElementById(id);
+                return el ? String(el.value || '').trim() : '';
+            };
+            const missing = [];
+            if (step === 1) {
+                if (!val('regNama')) missing.push('Nama Peserta');
+                if (!val('regTempat')) missing.push('Tempat Lahir');
+                if (!val('regTanggalLahir')) missing.push('Tanggal Lahir');
+                if (!val('regJk')) missing.push('Jenis Kelamin');
+                if (val('regWa').replace(/\D/g, '').length < 9) missing.push('Nomor WhatsApp (min. 9 digit)');
+                const email = val('regEmail');
+                if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) missing.push('Format Email');
+            } else if (step === 2) {
+                const wil = getWilayah();
+                if (!wil.provinsi) missing.push('Provinsi');
+                if (!wil.kabupaten) missing.push('Kabupaten/Kota');
+                if (!wil.kecamatan) missing.push('Kecamatan');
+                if (!wil.kelurahan) missing.push('Kelurahan/Desa');
+                if (val('regAlamatDetail').length < 5) missing.push('Detail Alamat');
+            } else if (step === 3) {
+                if (document.querySelectorAll('#regAlasan .reg-checkbox:checked').length === 0) {
+                    missing.push('Alasan Memilih Program');
+                }
+                const kelasWrap = document.getElementById('kelasWrap');
+                if (kelasWrap && !kelasWrap.hidden && !document.querySelector('input[name="kelasPilihan"]:checked')) {
+                    missing.push('Pilihan Kelas');
+                }
+            }
+            return missing;
+        }
+
+        function goToStep(step, opts) {
+            opts = opts || {};
+            const target = Math.min(TOTAL_STEPS, Math.max(1, Number(step) || 1));
+            currentStep = target;
+            document.querySelectorAll('.reg-step-panel').forEach(function (panel) {
+                panel.hidden = Number(panel.dataset.step) !== target;
+            });
+            document.querySelectorAll('.reg-step-item').forEach(function (item) {
+                const n = Number(item.dataset.stepItem);
+                item.classList.toggle('is-active', n === target);
+                item.classList.toggle('is-done', n < target);
+                if (n === target) item.setAttribute('aria-current', 'step');
+                else item.removeAttribute('aria-current');
+            });
+            const progress = document.getElementById('regStepsProgress');
+            if (progress) progress.style.width = Math.round(((target - 1) / (TOTAL_STEPS - 1)) * 100) + '%';
+            if (target === 4) {
+                const inline = document.getElementById('billInline');
+                if (inline) inline.hidden = false;
+                fillBill({
+                    nama: (document.getElementById('regNama') || {}).value || '',
+                    wa: (document.getElementById('regWa') || {}).value || '',
+                    email: (document.getElementById('regEmail') || {}).value || ''
+                });
+            }
+            updatePaymentGate();
+            if (opts.scroll !== false) {
+                const nav = document.querySelector('.reg-steps');
+                const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (nav && nav.scrollIntoView) nav.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+            }
+            if (opts.focus !== false) {
+                const title = document.querySelector('.reg-step-panel[data-step="' + target + '"] [data-step-title]');
+                if (title) {
+                    try { title.focus({ preventScroll: true }); } catch (e) { title.focus(); }
+                }
+            }
+        }
+
+        function showStepMessage(missing) {
+            const el = document.getElementById('regMessage');
+            if (!el) return;
+            if (!missing || !missing.length) {
+                el.innerHTML = '';
+                return;
+            }
+            el.innerHTML = '<p class="reg-error">Lengkapi dulu: ' + missing.join(', ') + '.</p>';
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (el.scrollIntoView) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+        }
+
+        document.querySelectorAll('[data-step-next]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const target = Number(btn.dataset.stepNext) || (currentStep + 1);
+                const missing = getMissingForStep(currentStep);
+                if (missing.length) { showStepMessage(missing); return; }
+                showStepMessage([]);
+                goToStep(target);
+            });
+        });
+        document.querySelectorAll('[data-step-back]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                showStepMessage([]);
+                goToStep(Number(btn.dataset.stepBack) || (currentStep - 1));
+            });
+        });
 
         form.addEventListener('input', function () { updatePaymentGate(); renderBiaya(); });
         form.addEventListener('change', function () { updatePaymentGate(); renderBiaya(); });
@@ -1879,26 +2077,10 @@
                 handlePayNow(payNowBtn);
             });
         }
-        const submitRegBtn = document.getElementById('regSubmitBtn');
-        if (submitRegBtn) {
-            submitRegBtn.addEventListener('click', function () {
-                if (submitRegBtn.disabled) return;
-                messageEl.innerHTML = '';
-                showSummary();
-            });
-        }
         function showSummary() {
+            goToStep(4, { scroll: false, focus: false });
             const inline = document.getElementById('billInline');
-            const payCard = document.getElementById('paymentCard');
-            if (inline) inline.hidden = false;
-            if (payCard) payCard.hidden = false;
-            fillBill({
-                nama: (document.getElementById('regNama') || {}).value || '',
-                wa: (document.getElementById('regWa') || {}).value || '',
-                email: (document.getElementById('regEmail') || {}).value || ''
-            });
-            updatePaymentGate();
-            if (inline) inline.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            if (inline) inline.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         if (payNowRetryBtn) payNowRetryBtn.addEventListener('click', function () { handlePayNow(payNowRetryBtn); });
         const payCheckBtn = document.getElementById('payCheckStatusBtn');
@@ -2080,6 +2262,7 @@
         if (pendingPayment) {
             await setupResume();
         }
+        goToStep(currentStep, { scroll: false, focus: false });
         updatePaymentGate();
     </script>
 </body>
