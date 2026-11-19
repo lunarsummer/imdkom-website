@@ -553,7 +553,7 @@
                 <div class="reg-field" id="referralWrap">
                     <label class="reg-label" for="regKodeReferral">Kode Referral</label>
                     <div class="flex gap-2">
-                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional — mis. SAHABAT10" autocapitalize="characters" maxlength="15" pattern="[A-Za-z0-9-]{1,15}" />
+                        <input id="regKodeReferral" class="reg-input flex-1" type="text" placeholder="Opsional — mis. SAHABAT10" autocapitalize="characters" maxlength="15" pattern="[A-Za-z0-9\-]{1,15}" />
                         <button type="button" id="regApplyReferralBtn" class="reg-upload-btn shrink-0" style="width:auto;padding-left:1rem;padding-right:1rem">Terapkan</button>
                     </div>
                     <p id="regReferralInfo" class="hidden text-xs font-semibold text-emerald-700 mt-1.5"></p>
@@ -854,6 +854,7 @@
         const copyTokenBtn = document.getElementById('regCopyToken');
 
         let appliedReferral = null; // { code, type, value }
+        let referralCleared = false; // user menghapus kode referral dari sesi resume
 
         function parseDigits(v) {
             return Math.round(Number(String(v || '').replace(/[^0-9]/g, '')) || 0);
@@ -1305,8 +1306,16 @@
             });
             refInput.addEventListener('input', function() {
                 const v = String(this.value || '').trim().toUpperCase().replace(/\s+/g, '');
+                const staleCode = String((pendingPayment && pendingPayment.kodeReferral) || '').toUpperCase();
                 if (appliedReferral && v !== appliedReferral.code) {
                     appliedReferral = null;
+                    renderBiaya();
+                    setReferralState('clear', '');
+                } else if (!appliedReferral && staleCode && v !== staleCode) {
+                    // Sesi resume membawa kode referral lama. Jika diubah/dihapus,
+                    // jangan kirim kode lama itu lagi ke server.
+                    referralCleared = true;
+                    resumePotonganOverride = null;
                     renderBiaya();
                     setReferralState('clear', '');
                 }
@@ -1890,26 +1899,39 @@
 
             const wilNow = getWilayah();
             const alamatValNow = document.getElementById('regAlamatDetail') ? document.getElementById('regAlamatDetail').value.trim() : '';
-            let alamatVal = [alamatValNow, wilNow.kelurahan, wilNow.kecamatan, wilNow.kabupaten, wilNow.provinsi].filter(Boolean).join(', ');
+            let alamatVal = '';
+            if (wilNow.provinsiId && wilNow.kabupatenId && wilNow.kecamatanId && wilNow.kelurahanId) {
+                alamatVal = [alamatValNow, wilNow.kelurahan, wilNow.kecamatan, wilNow.kabupaten, wilNow.provinsi].filter(Boolean).join(', ');
+            }
             if (!alamatVal && pendingPayment && pendingPayment.alamat) alamatVal = pendingPayment.alamat;
             const emailVal = (document.getElementById('regEmail') || {}).value || (pendingPayment && pendingPayment.email) || '';
-            const kodeReferralSnap = appliedReferral ? appliedReferral.code : ((pendingPayment && pendingPayment.kodeReferral) || '');
-            const res = await fetch('/.netlify/functions/midtrans-snap', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    token: token,
-                    programId: programId,
-                    kodeReferral: kodeReferralSnap,
-                    kelas: currentKelas,
-                    nama: (document.getElementById('regNama') || {}).value || (pendingPayment && pendingPayment.nama) || 'Peserta',
-                    wa: (document.getElementById('regWa') || {}).value || (pendingPayment && pendingPayment.wa) || '',
-                    email: emailVal,
-                    alamat: alamatVal
-                })
-            });
-            const data = await res.json();
+            const kodeReferralSnap = appliedReferral
+                ? appliedReferral.code
+                : (referralCleared ? '' : ((pendingPayment && pendingPayment.kodeReferral) || ''));
+            let res;
+            let data = {};
+            try {
+                res = await fetch('/.netlify/functions/midtrans-snap', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: token,
+                        programId: programId,
+                        kodeReferral: kodeReferralSnap,
+                        kelas: currentKelas,
+                        nama: (document.getElementById('regNama') || {}).value || (pendingPayment && pendingPayment.nama) || 'Peserta',
+                        wa: (document.getElementById('regWa') || {}).value || (pendingPayment && pendingPayment.wa) || '',
+                        email: emailVal,
+                        alamat: alamatVal
+                    })
+                });
+                data = await res.json().catch(function () { return {}; });
+            } catch (err) {
+                console.error('[midtrans-snap] gagal menghubungi server:', err);
+                return { ok: false, code: 'NETWORK', message: 'Gagal menghubungi server pembayaran. Periksa koneksi lalu coba lagi.' };
+            }
             if (!res.ok || !data.snapToken) {
+                console.error('[midtrans-snap] HTTP ' + res.status, data);
                 const code = String((data && data.code) || '');
                 const message = (data && data.error) || ('HTTP ' + res.status);
                 return { ok: false, code: code, message: message, referralError: code.indexOf('REFERRAL_') === 0 };
